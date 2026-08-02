@@ -4,6 +4,8 @@ Plataforma de descoberta de experiências locais: bares, restaurantes, eventos, 
 
 ## Estado desta entrega
 
+> **Nota:** esta versão está em modo demonstração (`SHOWCASE_MODE=true`), com dados mockados e pagamentos desativados. Ainda não há Supabase, Mercado Pago ou autenticação real configurados — isso está previsto para o próximo lote de trabalho.
+
 - site público responsivo em modo demonstração;
 - Radar, Índice Noite DF, perfil rápido, ranking, timeline, agenda e roteiro turístico;
 - páginas de planos e painel parceiro demonstrativo;
@@ -17,9 +19,9 @@ Plataforma de descoberta de experiências locais: bares, restaurantes, eventos, 
 
 ```bash
 cp .env.example .env.local
-npm install
-npm run check
-npm run dev
+pnpm install
+pnpm run check
+pnpm run dev
 ```
 
 Acesse `http://localhost:3000`.
