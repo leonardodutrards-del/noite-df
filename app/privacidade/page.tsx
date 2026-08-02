@@ -1,0 +1,3 @@
+import Link from 'next/link';
+
+export default function PrivacyPage(){return <main className="container legal"><Link className="brand" href="/">Noite DF</Link><h1>Política de Privacidade</h1><p>Esta versão de demonstração coleta apenas eventos técnicos necessários ao funcionamento. Antes do lançamento comercial, esta política deverá ser revisada juridicamente para refletir autenticação, pagamentos, analytics, avaliações e tratamento de dados pessoais.</p><h2>Dados de parceiros</h2><p>Dados cadastrais, contatos e informações de cobrança serão tratados para administrar páginas, assinaturas e suporte.</p><h2>Contato</h2><p>Inclua aqui o canal oficial da empresa antes da publicação.</p></main>}

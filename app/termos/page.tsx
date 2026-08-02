@@ -1,0 +1,3 @@
+import Link from 'next/link';
+
+export default function TermsPage(){return <main className="container legal"><Link className="brand" href="/">Noite DF</Link><h1>Termos de Uso</h1><p>O Noite DF organiza informações fornecidas por estabelecimentos, usuários e fontes públicas. Horários, preços e eventos podem mudar; o usuário deve confirmar informações sensíveis diretamente com o estabelecimento.</p><h2>Parceiros</h2><p>O parceiro é responsável pela veracidade das informações enviadas. Conteúdo poderá passar por revisão, ser suspenso ou expirar.</p><h2>Pagamentos</h2><p>Assinaturas comerciais não estão disponíveis durante o modo vitrine.</p></main>}

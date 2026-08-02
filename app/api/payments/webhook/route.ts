@@ -1,0 +1,2 @@
+import { NextRequest, NextResponse } from 'next/server';
+export async function POST(request:NextRequest){const body=await request.json().catch(()=>({}));console.info('[mercado-pago-webhook]',{type:body.type,action:body.action,dataId:body.data?.id,receivedAt:new Date().toISOString()});/* Produção: validar x-signature, consultar o recurso na API e persistir de forma idempotente. */return NextResponse.json({received:true});}
