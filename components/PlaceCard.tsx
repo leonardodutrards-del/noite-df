@@ -3,6 +3,8 @@ import { RatingBreakdown } from '@/components/RatingBreakdown';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
+  const instagramUrl = place.instagram?.trim();
+
   return (
     <article className="card">
       <h3>{place.name}</h3>
@@ -31,7 +33,10 @@ export function PlaceCard({ place }: { place: Place }) {
       </div>
       <div className="meta">
         <span>⭐ {place.rating ?? 'A confirmar'}</span>
-        <a href={mapsUrl} target="_blank" rel="noreferrer">Ver no mapa</a>
+        <div>
+          {instagramUrl ? <a href={instagramUrl} target="_blank" rel="noreferrer">Instagram ↗</a> : null}
+          <a href={mapsUrl} target="_blank" rel="noreferrer">Ver no mapa</a>
+        </div>
       </div>
     </article>
   );

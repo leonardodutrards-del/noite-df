@@ -10,8 +10,6 @@ import { PlaceCard } from '@/components/PlaceCard';
 import { EventCard } from '@/components/EventCard';
 import { recommendPlaces } from '@/lib/recommend';
 
-const regions = ['todos', 'Sobradinho', 'Planaltina', 'Granja do Torto / Brasília'];
-const vibes = ['todas', 'piseiro', 'sertanejo', 'boteco', 'família', 'agro', 'shows'];
 const radar = ['🔥 Bombando', '🟢 Tranquilo', '🎤 Shows', '🤠 Sertanejo', '🥁 Pagode', '🍷 Date', '👨‍👩‍👧 Família', '🍻 Happy hour'];
 
 export function ExperienceHub() {
@@ -20,6 +18,8 @@ export function ExperienceHub() {
   const [vibe, setVibe] = useState('todas');
   const [budget, setBudget] = useState('Até R$ 120');
   const [duration, setDuration] = useState('1 noite');
+  const regions = useMemo(() => ['todos', ...Array.from(new Set(places.map((place) => place.region))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
+  const vibes = useMemo(() => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
   const filteredPlaces = useMemo(() => recommendPlaces(query, region, vibe), [query, region, vibe]);
   const rankings = useMemo(() => [...places].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0)), []);
 

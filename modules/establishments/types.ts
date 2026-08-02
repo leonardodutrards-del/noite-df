@@ -33,7 +33,7 @@ export type Establishment = {
   id: string;
   name: string;
   region: string;
-  type: 'Bar' | 'Restaurante' | 'Boate' | 'Casa de show' | 'Evento agro' | 'Gastrobar';
+  type: 'Bar' | 'Restaurante' | 'Boate' | 'Casa de show' | 'Evento agro' | 'Gastrobar' | 'Pub' | 'Complexo gastronômico' | 'Clube / espaço de eventos';
   description: string;
   address: string;
   vibe: string[];
