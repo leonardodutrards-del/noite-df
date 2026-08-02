@@ -5,4 +5,6 @@ export type {
   WeeklyScheduleItem,
   Promotion,
   RatingBreakdown,
+  PublicRatingSource,
+  PublicRatingSummary,
 } from '@/modules/establishments/types';

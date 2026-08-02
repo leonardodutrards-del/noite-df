@@ -29,6 +29,25 @@ export type RatingBreakdown = {
   reviewCount: number;
 };
 
+export type PublicRatingSource = {
+  provider: 'google' | 'tripadvisor' | 'facebook' | 'official' | 'other';
+  label: string;
+  url: string;
+  rating?: number;
+  reviewCount?: number;
+  collectedAt: string;
+  matchedBy: string[];
+  status: 'confirmed' | 'needs_review' | 'unavailable';
+  observation?: string;
+};
+
+export type PublicRatingSummary = {
+  average?: number;
+  totalReviews?: number;
+  sourceCount: number;
+  calculatedAt: string;
+};
+
 export type Establishment = {
   id: string;
   name: string;
@@ -53,4 +72,6 @@ export type Establishment = {
   lastUpdated: string;
   publicationStatus?: PublicationStatus;
   source?: DataSource;
+  publicRatings?: PublicRatingSource[];
+  publicRatingSummary?: PublicRatingSummary;
 };

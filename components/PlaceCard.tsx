@@ -1,5 +1,6 @@
 import { Place } from '@/data/places';
 import { RatingBreakdown } from '@/components/RatingBreakdown';
+import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
@@ -25,6 +26,7 @@ export function PlaceCard({ place }: { place: Place }) {
         </div>
       )}
       {place.ratingBreakdown && <RatingBreakdown rating={place.ratingBreakdown} />}
+      {place.publicRatings && place.publicRatings.length > 0 && <PublicRatingsSummary sources={place.publicRatings} />}
       <div className="schedule-mini">
         <strong>Agenda</strong>
         {place.weeklySchedule.slice(0, 2).map((item) => (
