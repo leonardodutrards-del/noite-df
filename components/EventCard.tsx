@@ -1,17 +1,26 @@
 import { EventItem } from '@/data/events';
+import { hasRealValue } from '@/lib/data-quality';
 
 export function EventCard({ event }: { event: EventItem }) {
   return (
     <article className="card event">
-      <div className="event-date">{event.dateLabel}</div>
+      {hasRealValue(event.dateLabel) && <div className="event-date">{event.dateLabel}</div>}
       <div>
         <h3>{event.title}</h3>
-        <p>{event.description}</p>
+        {hasRealValue(event.description) && <p>{event.description}</p>}
         <div className="tags">
-          <span className="tag">{event.place}</span>
-          <span className="tag">{event.region}</span>
-          <span className="tag">{event.category}</span>
+          {hasRealValue(event.place) && <span className="tag">{event.place}</span>}
+          {hasRealValue(event.region) && <span className="tag">{event.region}</span>}
+          {hasRealValue(event.category) && <span className="tag">{event.category}</span>}
         </div>
+        {(event.source?.label || event.source?.verifiedAt) && (
+          <div style={{ marginTop: '8px' }}>
+            <small style={{ color: 'var(--muted)', fontSize: '11px' }}>
+              {event.source.label ? `Fonte: ${event.source.label}` : ''}
+              {event.source.verifiedAt ? ` · Verificado em ${event.source.verifiedAt}` : ''}
+            </small>
+          </div>
+        )}
       </div>
     </article>
   );

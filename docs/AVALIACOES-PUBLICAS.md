@@ -1,8 +1,8 @@
 # Relatório de avaliações públicas
 
-- Total de estabelecimentos analisados: 51
+- Total de estabelecimentos analisados: 50
 - Total com correspondência confirmada: 8
-- Total pendente de revisão: 23
+- Total pendente de revisão: 22
 - Total sem avaliação localizada: 20
 - Data da coleta: 2026-08-02
 - Fontes consultadas: Google Maps, TripAdvisor, Facebook oficial, Instagram oficial, sites oficiais e perfis públicos.
@@ -28,7 +28,6 @@
 - Narguimania Show Bar
 - Bar Stilo 10
 - Oito Gastrobar
-- Puxadinho Cozinha e Bar
 - Porks Sobradinho
 - Chopp Brasília Bier Sobradinho
 - Clube 27 Bar

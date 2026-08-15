@@ -13,6 +13,10 @@ const labels: Array<[keyof RatingBreakdownType, string]> = [
 ];
 
 export function RatingBreakdown({ rating }: { rating: RatingBreakdownType }) {
+  if (!rating || !rating.reviewCount || rating.reviewCount <= 0 || !rating.overall || rating.overall <= 0) {
+    return null;
+  }
+
   return (
     <div className="ratings-box">
       <div className="ratings-head">

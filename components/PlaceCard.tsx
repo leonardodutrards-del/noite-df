@@ -1,25 +1,49 @@
+'use client';
+
+import Link from 'next/link';
 import { Place } from '@/data/places';
 import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
+import { getConfirmedCrowdStatus, getConfirmedSchedules, hasConfirmedRating, hasRealValue } from '@/lib/data-quality';
+import { track } from '@/lib/analytics';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
   const instagramUrl = place.instagram?.trim();
+  const confirmedCrowd = getConfirmedCrowdStatus(place.crowdStatus);
+  const confirmedSchedule = getConfirmedSchedules(place.weeklySchedule);
+  const isRatingConfirmed = hasConfirmedRating(place);
+
+  const hasValidPromo = place.currentPromotion &&
+    hasRealValue(place.currentPromotion.title) &&
+    hasRealValue(place.currentPromotion.description);
 
   return (
     <article className="card">
-      <h3>{place.name}</h3>
-      <p>{place.description}</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+        <h3 style={{ margin: 0 }}>
+          <Link
+            href={`/lugar/${place.id}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+            onClick={() => track('place_view', { placeId: place.id, placeName: place.name })}
+          >
+            {place.name}
+          </Link>
+        </h3>
+      </div>
+      <p style={{ marginTop: '8px' }}>{place.description}</p>
       <div className="tags">
         {place.verified && <span className="tag verified">✔ verificado</span>}
         {place.ownerManaged && <span className="tag">gerenciado pelo local</span>}
-        <span className="tag">lotação: {place.crowdStatus}</span>
-        <span className="tag">{place.region}</span>
-        <span className="tag">{place.type}</span>
-        <span className="tag">{place.price}</span>
-        {place.vibe.slice(0, 3).map((tag) => <span className="tag" key={tag}>{tag}</span>)}
+        {confirmedCrowd && <span className="tag">lotação: {confirmedCrowd}</span>}
+        {hasRealValue(place.region) && <span className="tag">{place.region}</span>}
+        {hasRealValue(place.type) && <span className="tag">{place.type}</span>}
+        {hasRealValue(place.price) && <span className="tag">{place.price}</span>}
+        {place.vibe.filter((tag) => hasRealValue(tag)).slice(0, 3).map((tag) => (
+          <span className="tag" key={tag}>{tag}</span>
+        ))}
       </div>
-      {place.currentPromotion && (
+      {hasValidPromo && place.currentPromotion && (
         <div className="promo">
           <strong>{place.currentPromotion.title}</strong>
           <span>{place.currentPromotion.description}</span>
@@ -27,19 +51,56 @@ export function PlaceCard({ place }: { place: Place }) {
       )}
       {place.ratingBreakdown && <RatingBreakdown rating={place.ratingBreakdown} />}
       {place.publicRatings && place.publicRatings.length > 0 && <PublicRatingsSummary sources={place.publicRatings} />}
-      <div className="schedule-mini">
-        <strong>Agenda</strong>
-        {place.weeklySchedule.slice(0, 2).map((item) => (
-          <span key={`${item.day}-${item.title}`}>{item.day}: {item.title} · {item.time}</span>
-        ))}
-      </div>
+      {confirmedSchedule.length > 0 && (
+        <div className="schedule-mini">
+          <strong>Agenda confirmada</strong>
+          {confirmedSchedule.slice(0, 2).map((item) => (
+            <span key={`${item.day}-${item.title}`}>{item.day}: {item.title} · {item.time}</span>
+          ))}
+        </div>
+      )}
       <div className="meta">
-        <span>⭐ {place.rating ?? 'A confirmar'}</span>
-        <div>
-          {instagramUrl ? <a href={instagramUrl} target="_blank" rel="noreferrer">Instagram ↗</a> : null}
-          <a href={mapsUrl} target="_blank" rel="noreferrer">Ver no mapa</a>
+        {isRatingConfirmed && place.rating !== undefined ? (
+          <span>⭐ {place.rating.toFixed(1)}</span>
+        ) : (
+          <span />
+        )}
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <Link
+            href={`/lugar/${place.id}`}
+            style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}
+            onClick={() => track('place_view', { placeId: place.id, placeName: place.name })}
+          >
+            Ver detalhes
+          </Link>
+          {instagramUrl && hasRealValue(instagramUrl) ? (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => track('instagram_click', { placeId: place.id, placeName: place.name })}
+            >
+              Instagram ↗
+            </a>
+          ) : null}
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => track('map_click', { placeId: place.id, placeName: place.name })}
+          >
+            Ver no mapa
+          </a>
         </div>
       </div>
+      {(place.source?.label || place.lastUpdated) && (
+        <div style={{ marginTop: '10px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
+          <small style={{ color: 'var(--muted)', fontSize: '11px', display: 'block' }}>
+            {place.source?.label ? `Fonte: ${place.source.label}` : ''}
+            {place.lastUpdated ? ` · Verificado em ${place.lastUpdated}` : ''}
+          </small>
+        </div>
+      )}
     </article>
   );
 }
