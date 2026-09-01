@@ -692,6 +692,64 @@ class AuthService {
       }
     }
   }
+
+  public async convertToPartner(userId: string, establishmentId: string, establishmentName: string): Promise<AuthUser> {
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error('Usuário não encontrado.');
+    }
+
+    if (user.role !== 'visitor') {
+      throw new Error('Apenas visitantes podem se tornar parceiros.');
+    }
+
+    // Atualizar usuário
+    const now = new Date().toISOString();
+    user.role = 'partner';
+    user.establishmentId = establishmentId;
+    user.establishmentName = establishmentName;
+    user.updatedAt = now;
+
+    // Atualizar em Supabase se configurado
+    if (this.isSupabaseConfigured()) {
+      try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '');
+        const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (supabaseUrl && serviceKey) {
+          await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`, {
+            method: 'PATCH',
+            headers: {
+              apikey: serviceKey,
+              Authorization: `Bearer ${serviceKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              role: 'partner',
+              establishment_id: establishmentId,
+              updated_at: now,
+            }),
+          });
+        }
+      } catch {
+        // Fallback gracefully
+      }
+    }
+
+    await this.logAudit({
+      actorId: user.id,
+      actorEmail: user.email,
+      actorRole: 'partner',
+      action: 'visitor_promoted_to_partner',
+      entityType: 'profile',
+      entityId: user.id,
+      details: {
+        establishmentId,
+        establishmentName,
+      },
+    });
+
+    return this.sanitizeUser(user);
+  }
 }
 
 export const authService = new AuthService();

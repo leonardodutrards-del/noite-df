@@ -77,3 +77,36 @@ export type Establishment = {
   publicRatings?: PublicRatingSource[];
   publicRatingSummary?: PublicRatingSummary;
 };
+
+export interface CreateEstablishmentInput {
+  name: string;
+  type: Establishment['type'];
+  description: string;
+  region: string;
+  address: string;
+  phone?: string;
+  whatsapp?: string;
+  instagram?: string;
+  website?: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+export interface PartnershipRequest {
+  id: string;
+  userId: string;
+  establishmentId: string;
+  establishmentName: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  approvedAt?: string;
+  rejectionReason?: string;
+}
+
+export interface EstablishmentOwner {
+  establishmentId: string;
+  ownerId: string;
+  ownerEmail: string;
+  ownerName: string;
+  addedAt: string;
+}

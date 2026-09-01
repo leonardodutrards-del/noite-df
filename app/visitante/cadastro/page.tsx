@@ -107,6 +107,23 @@ export default function VisitorSignupPage() {
               </p>
             </div>
           </div>
+
+          <hr className="my-8" />
+
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+            <h2 className="font-semibold text-purple-900 mb-2">
+              🚀 É dono de estabelecimento?
+            </h2>
+            <p className="text-purple-800 text-sm mb-4">
+              Faça parte do Noite DF como parceiro e aumente a visibilidade do seu bar, restaurante ou espaço de eventos.
+            </p>
+            <a
+              href="/parceiro/onboarding"
+              className="inline-block px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 font-medium text-sm"
+            >
+              Cadastrar Estabelecimento
+            </a>
+          </div>
         </div>
       </div>
     </div>
