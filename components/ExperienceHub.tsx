@@ -54,6 +54,7 @@ export function ExperienceHub() {
           <a href="#ranking">Ranking</a>
           <a href="#agenda">Agenda</a>
           <a href="/planos">Para estabelecimentos</a>
+          <a href="/login" style={{ color: 'var(--accent)', fontWeight: 700 }}>Área do Parceiro</a>
         </nav>
       </header>
 

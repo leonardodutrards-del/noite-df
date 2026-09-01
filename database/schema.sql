@@ -1,8 +1,8 @@
--- Modelo inicial de domínio. Execute somente após escolher o provedor PostgreSQL.
+-- Modelo inicial de domínio Noite DF. Execute no Supabase SQL Editor.
 create extension if not exists pgcrypto;
 
 create type publication_status as enum ('draft', 'pending_review', 'published', 'expired', 'suspended');
-create type user_role as enum ('visitor', 'partner', 'operator', 'admin');
+create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'partner', 'admin');
 create type review_status as enum ('pending', 'published', 'rejected', 'removed');
 create type claim_status as enum ('pending', 'approved', 'rejected', 'revoked');
 
@@ -10,7 +10,9 @@ create table profiles (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email text unique not null,
-  role user_role not null default 'visitor',
+  role text not null default 'partner',
+  establishment_id uuid,
+  last_sign_in_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -38,6 +40,8 @@ create table establishments (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table profiles add constraint fk_profiles_establishment foreign key (establishment_id) references establishments(id) on delete set null;
 
 create table establishment_tags (
   establishment_id uuid references establishments(id) on delete cascade,
@@ -129,9 +133,12 @@ create table moderation_reviews (
 create table audit_log (
   id bigserial primary key,
   actor_id uuid references profiles(id),
-  entity_type text not null,
-  entity_id uuid,
+  actor_email text,
+  actor_role text,
   action text not null,
+  entity_type text not null,
+  entity_id text,
+  details jsonb not null default '{}'::jsonb,
   before_data jsonb,
   after_data jsonb,
   created_at timestamptz not null default now()
@@ -173,44 +180,44 @@ create index events_starts_at_idx on events(starts_at);
 create index establishments_region_idx on establishments(region);
 
 -- Assinaturas e faturamento (Mercado Pago)
-CREATE TABLE IF NOT EXISTS subscription_accounts (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  establishment_id UUID,
-  plan_code TEXT NOT NULL CHECK (plan_code IN ('pro','premium','enterprise')),
-  provider TEXT NOT NULL DEFAULT 'mercado_pago',
-  provider_subscription_id TEXT UNIQUE,
-  payer_email TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'pending',
-  amount_cents INTEGER NOT NULL,
-  current_period_end TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+create table if not exists subscription_accounts (
+  id uuid primary key default gen_random_uuid(),
+  establishment_id uuid,
+  plan_code text not null check (plan_code in ('pro','premium','enterprise')),
+  provider text not null default 'mercado_pago',
+  provider_subscription_id text unique,
+  payer_email text not null,
+  status text not null default 'pending',
+  amount_cents integer not null,
+  current_period_end timestamptz,
+  refunded_at timestamptz,
+  refund_reason text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
-CREATE TABLE IF NOT EXISTS payment_webhook_events (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  provider TEXT NOT NULL DEFAULT 'mercado_pago',
-  provider_event_id TEXT,
-  event_type TEXT,
-  payload JSONB NOT NULL,
-  processed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE(provider, provider_event_id)
+create table if not exists payment_webhook_events (
+  id uuid primary key default gen_random_uuid(),
+  provider text not null default 'mercado_pago',
+  provider_event_id text,
+  event_type text,
+  payload jsonb not null,
+  processed_at timestamptz,
+  created_at timestamptz not null default now(),
+  unique(provider, provider_event_id)
 );
 
--- Segurança inicial para Supabase. Ajuste após implementar autenticação.
+-- Políticas RLS
 alter table profiles enable row level security;
 alter table establishments enable row level security;
 alter table events enable row level security;
 alter table promotions enable row level security;
 alter table reviews enable row level security;
 alter table interactions enable row level security;
+alter table audit_log enable row level security;
+alter table subscription_accounts enable row level security;
 
--- Conteúdo público somente quando publicado.
 create policy "public_read_published_establishments" on establishments for select using (publication_status = 'published');
 create policy "public_read_published_events" on events for select using (publication_status = 'published');
 create policy "public_read_published_promotions" on promotions for select using (publication_status = 'published');
 create policy "public_read_published_reviews" on reviews for select using (status = 'published');
-
--- Escritas administrativas e de parceiros devem ser feitas pelo backend usando service role
--- até que as políticas por usuário e reivindicação sejam implementadas.

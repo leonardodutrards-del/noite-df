@@ -1,5 +1,7 @@
 import type { PublicationStatus, DataSource } from '@/modules/shared/types';
 
+export type { PublicationStatus, DataSource };
+
 export type CrowdStatus = 'tranquilo' | 'movimentado' | 'lotado' | 'a confirmar';
 
 export type WeeklyScheduleItem = {
