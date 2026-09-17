@@ -8,6 +8,7 @@ export function EventCard({ event }: { event: EventItem }) {
       <div>
         <h3>{event.title}</h3>
         {hasRealValue(event.description) && <p>{event.description}</p>}
+        <p className="field-hint">{event.admissionNote ?? 'Entrada e couvert: valores não informados. Confirme com a organização.'}</p>
         <div className="tags">
           {hasRealValue(event.place) && <span className="tag">{event.place}</span>}
           {hasRealValue(event.region) && <span className="tag">{event.region}</span>}
