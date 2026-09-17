@@ -11,7 +11,7 @@ const figueiredo = 'https://linktr.ee/figueiredocozinhaebar';
 const figueiredoInstagram = 'https://www.instagram.com/figueiredocozinhaebar/';
 
 export const contactUpdates: Record<string, Partial<Establishment>> = {
-  'quintal-tia-sandra': { businessContact: contact('61996426143', 'https://quintaldatiasandra.com.br/', '61996426143'), agendaUrl: 'https://quintaldatiasandra.com.br/programacao/' },
+  'quintal-tia-sandra': { businessContact: contact('61996426143', 'https://quintaldatiasandra.com.br/', '61996426143'), agendaUrl: 'https://quintaldatiasandra.com.br/programacao/', operatingHours: { text: 'Terça a domingo: almoço a partir das 11h. Confirme o encerramento e horários especiais com o local.', sourceUrl: 'https://www.quintaldatiasandra.com.br/', checkedAt: '2026-09-17' }, admissionNote: 'Em noites com apresentações ao vivo, há couvert artístico a partir de R$ 10,00, segundo o cardápio. Confirme o valor da data com a casa.' },
   'na-banca-sobradinho': { businessContact: contact('61994426002', 'https://acuolina.com/pt/na-banca') },
   'savassi-valparaiso': { businessContact: contact('6136294244', 'https://savassicarnedesol.com.br/') },
   'savassi-guara': { businessContact: contact('6133822534', 'https://savassicarnedesol.com.br/', '6133822534') },
@@ -46,7 +46,7 @@ export const contactUpdates: Record<string, Partial<Establishment>> = {
   'figueiredo-cozinha-e-bar-planaltina': { businessContact: contact('61998738835', figueiredo, '61998738835'), instagram: figueiredoInstagram, operatingHours: hours('Todos os dias: 11h à meia-noite, conforme a biografia da marca. Confirme exceções com a unidade.', figueiredoInstagram), agendaUrl: figueiredoInstagram },
   'figueiredo-cozinha-e-bar': { businessContact: contact('61999294322', figueiredo, '61999294322'), operatingHours: hours('Todos os dias: 11h à meia-noite, conforme a biografia da marca. Confirme exceções com a unidade.', figueiredoInstagram), agendaUrl: figueiredoInstagram },
   'meatz-burger-sudoeste': { businessContact: contact('61936181537', 'https://deliverydireto.com.br/meatzburger/sudoeste/pages/contato', '61936181537'), agendaUrl: 'https://deliverydireto.com.br/meatzburger/sudoeste/pages/sobre-nos' },
-  'ticiana-werner-wine-bar': { businessContact: contact('6132269947', 'https://www.ticianawerner.com.br/contato.php', '61982636847') },
+  'ticiana-werner-wine-bar': { businessContact: contact('6132269947', 'https://www.ticianawerner.com.br/contato.php', '61982636847'), agendaUrl: 'https://www.ticianawerner.com.br/' },
   'dudu-bar': { businessContact: contact('6130486001', 'https://dudubar.com.br/'), operatingHours: hours('Segunda a quinta: 12h às 15h e 18h à meia-noite. Sexta e sábado: 12h à 1h30. Domingo: 12h às 17h.', 'https://dudubar.com.br/'), agendaUrl: 'https://dudubar.com.br/' },
   'infinu-comunidade-criativa': { businessContact: contact('61994086787', 'https://www.infinu.com.br/', '61994086787'), agendaUrl: 'https://www.infinu.com.br/' },
   'mormaii-surf-bar': { businessContact: contact('6132481265', 'https://www.pontao.com.br/restaurantes/mormaii-surf-bar/'), agendaUrl: 'https://www.pontao.com.br/restaurantes/mormaii-surf-bar/' },
