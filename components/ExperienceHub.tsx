@@ -55,6 +55,7 @@ export function ExperienceHub() {
           <a href="#lugares">Lugares</a>
           <a href="#ranking">Ranking</a>
           <a href="#agenda">Agenda</a>
+          <a href="/fim-de-semana">Fim de semana</a>
           <a href="/planos">Para estabelecimentos</a>
           <a href="/login" style={{ color: 'var(--accent)', fontWeight: 700 }}>Área do Parceiro</a>
         </nav>
@@ -95,6 +96,7 @@ export function ExperienceHub() {
           </div>
           <div className="hero-actions">
             <a className="button" href="#lugares">Explorar agora</a>
+            <a className="button ghost" href="/fim-de-semana">Indicações do fim de semana</a>
             <a className="button ghost" href="/planos">Cadastrar meu local</a>
           </div>
         </div>
@@ -211,6 +213,7 @@ export function ExperienceHub() {
           <div>
             <span className="eyebrow">Agenda inteligente</span>
             <h2>O que acontece nesta semana</h2>
+            <p><a href="/fim-de-semana">Ver indicações do fim de semana →</a></p>
             <p>Apenas eventos verificados e confirmados com fontes oficiais.</p>
           </div>
         </div>
