@@ -10,42 +10,35 @@ function VisitorLoginContent() {
   const token = searchParams.get('token');
 
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(Boolean(token));
   const [error, setError] = useState<string>();
   const [message, setMessage] = useState<string>();
   const [step, setStep] = useState<'email' | 'verify' | 'success'>('email');
 
-  // Se há token na URL, verificar automaticamente
   useEffect(() => {
-    if (token) {
-      handleVerifyToken(token);
-    }
-  }, [token]);
-
-  const handleVerifyToken = async (verificationToken: string) => {
-    setIsLoading(true);
-    setError(undefined);
-
-    try {
-      const response = await fetch(`/api/auth/verify-token?token=${verificationToken}`);
-
-      if (!response.ok) {
-        const errorData = await response.json() as { error?: string };
-        throw new Error(errorData.error || 'Link inválido ou expirado');
-      }
-
-      const data = await response.json() as { token?: string; user?: { email: string } };
-
-      if (data.token) {
+    if (!token) return;
+    const controller = new AbortController();
+    let redirect: ReturnType<typeof setTimeout> | undefined;
+    async function verify() {
+      try {
+        const response = await fetch(`/api/auth/verify-token?token=${encodeURIComponent(token!)}`, { signal: controller.signal });
+        const data = await response.json() as { token?: string; error?: string };
+        if (!response.ok || !data.token) throw new Error(data.error || 'Link inválido ou expirado');
+        if (controller.signal.aborted) return;
         localStorage.setItem('auth_token', data.token);
+        setError(undefined);
         setStep('success');
-        setTimeout(() => router.push('/'), 2000);
+        redirect = setTimeout(() => router.push('/'), 2000);
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          setError(err instanceof Error ? err.message : 'Erro ao verificar link');
+          setIsLoading(false);
+        }
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao verificar link');
-      setIsLoading(false);
     }
-  };
+    void verify();
+    return () => { controller.abort(); if (redirect) clearTimeout(redirect); };
+  }, [token, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -11,6 +11,8 @@ export type EventItem = {
   sourceStatus: 'manual' | 'api-futura';
   startsAt?: string;
   endsAt?: string;
+  // Editorial visibility cutoff; not a claim about the event's closing time.
+  expiresAt?: string;
   publicationStatus?: PublicationStatus;
   source?: DataSource;
 };

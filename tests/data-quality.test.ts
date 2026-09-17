@@ -62,7 +62,7 @@ describe('Data Quality and Truth Filters', () => {
 
   it('elimina eventos fictícios, de demonstração ou com fontes placeholder', () => {
     // Both seed events have placeholder descriptions ("Espaço reservado", "Exemplo de evento local")
-    for (const event of events) {
+    for (const event of events.filter(event => ['agenda-granja-torto', 'piseiro-planaltina'].includes(event.id))) {
       expect(isConfirmedEvent(event)).toBe(false);
     }
 

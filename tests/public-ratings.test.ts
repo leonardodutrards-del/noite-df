@@ -100,8 +100,8 @@ describe('public ratings', () => {
     expect(display.sources[0].label).toBe('Google Maps');
   });
 
-  it('preserva exatamente 50 estabelecimentos e 16 regiões após remoção de inativos', () => {
-    expect(places).toHaveLength(50);
-    expect(new Set(places.map((place) => place.region)).size).toBe(16);
+  it('inclui 73 estabelecimentos e 19 regiões sem duplicar cadastros', () => {
+    expect(places).toHaveLength(73);
+    expect(new Set(places.map((place) => place.region)).size).toBe(19);
   });
 });

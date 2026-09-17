@@ -11,11 +11,11 @@ import {
 } from '@/lib/curated-routes';
 
 describe('SEO, Slugs and Sitemap consistency', () => {
-  it('garante que todos os 50 estabelecimentos possuem IDs únicos e válidos para slugs', () => {
-    expect(places).toHaveLength(50);
+  it('garante que todos os 73 estabelecimentos possuem IDs únicos e válidos para slugs', () => {
+    expect(places).toHaveLength(73);
     const slugs = places.map((p) => p.id);
     const uniqueSlugs = new Set(slugs);
-    expect(uniqueSlugs.size).toBe(50);
+    expect(uniqueSlugs.size).toBe(places.length);
 
     for (const slug of slugs) {
       expect(slug).toMatch(/^[a-z0-9\u00C0-\u017F-]+$/i);

@@ -60,11 +60,19 @@ export type Establishment = {
   vibe: string[];
   music: string[];
   audience: string[];
-  price: '$' | '$$' | '$$$' | '$$$$';
+  price?: '$' | '$$' | '$$$' | '$$$$';
   rating?: number;
   ratingBreakdown?: RatingBreakdown;
   instagram?: string;
   whatsapp?: string;
+  businessContact?: {
+    phone: string;
+    whatsapp?: string;
+    sourceUrl: string;
+    checkedAt: string;
+  };
+  operatingHours?: { text: string; sourceUrl: string; checkedAt: string };
+  agendaUrl?: string;
   mapsQuery: string;
   verified: boolean;
   ownerManaged: boolean;

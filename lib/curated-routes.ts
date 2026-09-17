@@ -3,6 +3,9 @@ import type { Establishment } from '@/modules/establishments/types';
 import { normalizeString } from '@/lib/data-quality';
 
 export const REGION_SLUG_MAP: Record<string, string> = {
+  'setor-de-clubes-sul': 'Setor de Clubes Sul',
+  'sig': 'SIG',
+  'saan': 'SAAN',
   'asa-norte': 'Asa Norte',
   'asa-sul': 'Asa Sul',
   'aguas-claras': 'Águas Claras',

@@ -16,7 +16,7 @@ export function EventCard({ event }: { event: EventItem }) {
         {(event.source?.label || event.source?.verifiedAt) && (
           <div style={{ marginTop: '8px' }}>
             <small style={{ color: 'var(--muted)', fontSize: '11px' }}>
-              {event.source.label ? `Fonte: ${event.source.label}` : ''}
+              {event.source.url ? <a href={event.source.url} target="_blank" rel="noreferrer">Conferir programação na fonte ↗</a> : event.source.label ? `Fonte: ${event.source.label}` : ''}
               {event.source.verifiedAt ? ` · Verificado em ${event.source.verifiedAt}` : ''}
             </small>
           </div>

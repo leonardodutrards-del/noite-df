@@ -37,7 +37,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
   const hasConsent = formData.consentEmail || formData.consentWhatsapp;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="account-form visitor-form">
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1">
           Email *
@@ -67,7 +67,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border border-gray-300 rounded-md"
-          placeholder="(11) 99999-9999"
+          placeholder="(61) 99999-9999"
           disabled={isLoading}
         />
       </div>
@@ -91,11 +91,11 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
       {/* LGPD Consent Checkboxes */}
       <fieldset className="border border-gray-300 rounded-md p-4">
         <legend className="text-sm font-semibold mb-3">
-          Consentimento LGPD - Selecione abaixo como você quer nos ouvir:
+          Como deseja receber novidades?
         </legend>
 
         <div className="space-y-3">
-          <div className="flex items-start">
+          <div className="check-row">
             <input
               type="checkbox"
               id="consentEmail"
@@ -110,7 +110,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
             </label>
           </div>
 
-          <div className="flex items-start">
+          <div className="check-row">
             <input
               type="checkbox"
               id="consentWhatsapp"
@@ -134,7 +134,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
                   Que tipo de conteúdo você gostaria de receber?
                 </label>
 
-                <div className="flex items-center ml-2">
+                <div className="check-row">
                   <input
                     type="checkbox"
                     id="consentPromotions"
@@ -149,7 +149,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
                   </label>
                 </div>
 
-                <div className="flex items-center ml-2">
+                <div className="check-row">
                   <input
                     type="checkbox"
                     id="consentTickets"
@@ -164,7 +164,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
                   </label>
                 </div>
 
-                <div className="flex items-center ml-2">
+                <div className="check-row">
                   <input
                     type="checkbox"
                     id="consentCourtesy"
@@ -185,7 +185,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
           {!hasConsent && (
             <div className="bg-yellow-50 border border-yellow-200 rounded p-2 mt-2">
               <p className="text-xs text-yellow-800">
-                ⚠️ Você deve aceitar pelo menos um canal de comunicação (Email ou WhatsApp)
+                Para receber novidades, escolha E-mail ou WhatsApp. Você também pode explorar o guia sem criar conta.
               </p>
             </div>
           )}
@@ -198,7 +198,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
       </fieldset>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded p-3">
+        <div className="notice error" role="alert">
           <p className="text-sm text-red-800">{error}</p>
         </div>
       )}
@@ -208,7 +208,7 @@ export function ConsentForm({ onSubmit, isLoading = false, error }: ConsentFormP
         disabled={isLoading || !hasConsent}
         className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
       >
-        {isLoading ? 'Criando conta...' : 'Criar Conta e Aceitar Consentimento'}
+        {isLoading ? 'Criando conta...' : 'Criar conta com estas preferências'}
       </button>
     </form>
   );
