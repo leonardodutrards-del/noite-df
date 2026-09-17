@@ -1,4 +1,5 @@
 import type { Establishment } from '@/modules/establishments/types';
+import { menuUpdates } from './menu-updates';
 
 const contact = (phone: string, sourceUrl: string, whatsapp?: string): Establishment['businessContact'] => ({
   phone, whatsapp, sourceUrl, checkedAt: '2026-09-16',
@@ -53,5 +54,5 @@ export const contactUpdates: Record<string, Partial<Establishment>> = {
 };
 
 export function enrichContact(place: Establishment): Establishment {
-  return { ...place, ...contactUpdates[place.id] };
+  return { ...place, ...contactUpdates[place.id], ...(menuUpdates[place.id] ? { menu: menuUpdates[place.id] } : {}) };
 }

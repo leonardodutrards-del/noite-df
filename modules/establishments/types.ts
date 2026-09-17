@@ -73,6 +73,11 @@ export type Establishment = {
   };
   operatingHours?: { text: string; sourceUrl: string; checkedAt: string };
   agendaUrl?: string;
+  menu?: {
+    url: string;
+    checkedAt: string;
+    examples?: { name: string; price: number; note?: string }[];
+  };
   mapsQuery: string;
   verified: boolean;
   ownerManaged: boolean;

@@ -198,6 +198,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
           )}
 
           <PlaceContact place={place} />
+          {placeEvents.length === 0 && <p className="field-hint">Nenhum evento com data confirmada cadastrado neste perfil no momento. Consulte a programação, a entrada e o couvert diretamente com o local.</p>}
           {placeEvents.length > 0 && (
             <div style={{ margin: '24px 0', padding: '16px', background: 'var(--card-2)', borderRadius: '16px' }}>
               <h3 style={{ margin: '0 0 12px' }}>Eventos confirmados</h3>
@@ -206,6 +207,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
                   <strong>{evt.title}</strong>
                   <p style={{ margin: '4px 0', fontSize: '13px' }}>{evt.description}</p>
                   <small style={{ color: 'var(--muted)' }}>{evt.dateLabel}</small>
+                  <p className="field-hint">{evt.admissionNote ?? 'Entrada e couvert: valores não informados. Confirme com a organização.'}</p>
                   {evt.source?.url && <p><a href={evt.source.url} target="_blank" rel="noreferrer">Conferir programação e ingressos ↗</a></p>}
                 </div>
               ))}

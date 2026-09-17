@@ -3,13 +3,16 @@ import type { EventItem } from '@/modules/events/types';
 const event = (id: string, title: string, place: string, region: string, dateLabel: string,
   description: string, url: string, expiresAt: string, startsAt?: string): EventItem => ({
   id, title, place, region, dateLabel, description, startsAt, expiresAt,
+  admissionNote: id.startsWith('contexto-')
+    ? 'O organizador informa couvert artístico obrigatório para ingressos VIP. Valor do couvert e demais ingressos não informado na descrição. Consulte o lote e as condições na fonte.'
+    : undefined,
   category: 'Programação divulgada pelo organizador', sourceStatus: 'manual', publicationStatus: 'published',
   source: { kind: 'official', label: 'Canal oficial do estabelecimento ou organizador', url, verifiedAt: '2026-09-16' },
 });
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
-  event('contexto-love-2026-09-18', 'Deu Mó Love — Doze por Oito', 'Contexto Bar', 'Setor de Clubes Sul', '18/09/2026 · Sexta-feira',
+  event('contexto-love-2026-09-18', 'Deu Mó Love — Doze por Oito', 'Contexto Bar', 'Setor de Clubes Sul', '18/09/2026 · A partir das 18h',
     'Pagode com Doze por Oito. Confirme horário, classificação e ingressos no canal do local.',
     'https://www.sympla.com.br/evento/deu-mo-love-18-09-varanda-do-contexto/3558908', '2026-09-19T06:00:00-03:00'),
   event('contexto-sabado-2026-09-19', 'Sábado Mágico e feijoada', 'Contexto Bar', 'Setor de Clubes Sul', '19/09/2026 · A partir das 12h',
