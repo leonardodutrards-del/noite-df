@@ -11,8 +11,8 @@ import { EventCard } from '@/components/EventCard';
 import { recommendPlaces } from '@/lib/recommend';
 import { hasConfirmedRating, isConfirmedEvent } from '@/lib/data-quality';
 import { track } from '@/lib/analytics';
+import { matchesRadar, radarOptions, type RadarFilter } from '@/lib/radar';
 
-const radar = ['🔥 Bombando', '🟢 Tranquilo', '🎤 Shows', '🤠 Sertanejo', '🥁 Pagode', '🍷 Date', '👨‍👩‍👧 Família', '🍻 Happy hour'];
 
 export function ExperienceHub() {
   const [query, setQuery] = useState('');
@@ -20,10 +20,12 @@ export function ExperienceHub() {
   const [vibe, setVibe] = useState('todas');
   const [budget, setBudget] = useState('Até R$ 120');
   const [duration, setDuration] = useState('1 noite');
+  const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
 
   const regions = useMemo(() => ['todos', ...Array.from(new Set(places.map((place) => place.region))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
   const vibes = useMemo(() => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
-  const filteredPlaces = useMemo(() => recommendPlaces(query, region, vibe), [query, region, vibe]);
+  const filteredPlaces = useMemo(() => recommendPlaces(query, region, vibe).filter(place => !radarFilter || matchesRadar(place, radarFilter)), [query, region, vibe, radarFilter]);
+  const selectedRadar = radarOptions.find(option => option.id === radarFilter);
 
   // Ranking strictly requires a confirmed numerical rating
   const rankings = useMemo(() => {
@@ -131,16 +133,20 @@ export function ExperienceHub() {
           </div>
         </div>
         <div className="chip-grid">
-          {radar.map((item, index) => (
+          {radarOptions.map((option) => (
             <button
-              key={item}
+              key={option.id}
+              type="button"
+              aria-pressed={radarFilter === option.id}
+              aria-controls="lugares"
               onClick={() => {
-                const selectedVibe = index === 3 ? 'sertanejo' : index === 4 ? 'pagode' : index === 5 ? 'date' : index === 6 ? 'família' : index === 7 ? 'happy hour' : 'todas';
-                setVibe(selectedVibe);
-                track('search', { query, region, vibe: selectedVibe });
+                const next = radarFilter === option.id ? null : option.id;
+                setRadarFilter(next);
+                track('search', { query, region, vibe, radar: next ?? 'todos' });
+                document.getElementById('lugares')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
             >
-              {item}
+              {option.label}
             </button>
           ))}
         </div>
@@ -152,6 +158,7 @@ export function ExperienceHub() {
             <span className="eyebrow">Guia inteligente</span>
             <h2>Lugares para você</h2>
             <p>{filteredPlaces.length} opções encontradas · fonte e última atualização visíveis em cada perfil.</p>
+            {selectedRadar && <p className="radar-selection">{selectedRadar.label}: {selectedRadar.description} <button type="button" onClick={() => setRadarFilter(null)}>Limpar filtro</button></p>}
           </div>
         </div>
         {filteredPlaces.length ? (
@@ -164,6 +171,7 @@ export function ExperienceHub() {
           <div className="empty">
             <h3>Nenhum resultado com esses filtros</h3>
             <p>Remova um filtro ou escolha outra região.</p>
+            {radarFilter && <button className="button ghost" type="button" onClick={() => setRadarFilter(null)}>Mostrar todos os perfis</button>}
           </div>
         )}
       </section>

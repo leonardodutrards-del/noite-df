@@ -89,3 +89,9 @@ textarea { min-height: 120px; resize: vertical; border: 1px solid var(--border);
 .card .meta > div { flex-wrap: wrap; }
 @media(max-width:900px) { .account-page .topbar { align-items: flex-start; flex-wrap: wrap; } .account-page .topbar nav { display: flex; gap: 14px; font-size: 14px; } }
 @media(max-width:480px) { .account-page.container { padding: 16px; } .account-panel { border-radius: 20px; } }
+
+.chip-grid button[aria-pressed="true"] { background: #ff5c35; border-color: #ff5c35; color: #fff; }
+.chip-grid button:focus-visible, .radar-selection button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.radar-selection { margin: 12px 0 0; color: var(--muted); }
+.radar-selection button { margin-left: 8px; border: 0; background: none; color: var(--accent); font-weight: 700; text-decoration: underline; cursor: pointer; }
+#lugares { scroll-margin-top: 20px; }
