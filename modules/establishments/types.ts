@@ -76,8 +76,9 @@ export type Establishment = {
   menu?: {
     url: string;
     checkedAt: string;
-    examples?: { name: string; price: number; note?: string }[];
+    examples?: { name: string; price: number; from?: boolean; note?: string }[];
   };
+  admissionNote?: string;
   mapsQuery: string;
   verified: boolean;
   ownerManaged: boolean;
