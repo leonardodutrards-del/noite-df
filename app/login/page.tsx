@@ -47,11 +47,6 @@ function LoginForm() {
     }
   };
 
-  const fillDemoCredentials = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setError(null);
-  };
 
   return (
     <div style={{ maxWidth: 480, margin: '40px auto 80px' }}>
@@ -120,34 +115,7 @@ function LoginForm() {
           </p>
         </div>
 
-        <div style={{ marginTop: 24, background: 'rgba(255,255,255,0.03)', padding: 16, borderRadius: 16, border: '1px solid var(--border)' }}>
-          <small style={{ display: 'block', color: 'var(--muted)', marginBottom: 8, fontWeight: 700 }}>
-            Credenciais de teste rápido:
-          </small>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button
-              type="button"
-              onClick={() => fillDemoCredentials('parceiro@fivebar.com.br', 'Parceiro@123456')}
-              style={{ background: 'var(--card-2)', fontSize: 12, padding: '8px 12px', textAlign: 'left', borderRadius: 8 }}
-            >
-              🏢 Dono Five Sport Bar (parceiro@fivebar.com.br)
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemoCredentials('parceiro@pinella.com.br', 'Parceiro@123456')}
-              style={{ background: 'var(--card-2)', fontSize: 12, padding: '8px 12px', textAlign: 'left', borderRadius: 8 }}
-            >
-              🏢 Dono Pinella Bar (parceiro@pinella.com.br)
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemoCredentials('admin@noitedf.com.br', 'Admin@123456')}
-              style={{ background: 'var(--card-2)', fontSize: 12, padding: '8px 12px', textAlign: 'left', borderRadius: 8 }}
-            >
-              🛡️ Master Admin (admin@noitedf.com.br)
-            </button>
-          </div>
-        </div>
+
       </div>
     </div>
   );
@@ -155,7 +123,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="container">
+    <main className="container account-page">
       <header className="topbar">
         <Link className="brand" href="/">Noite DF</Link>
         <nav>

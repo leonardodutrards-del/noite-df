@@ -6,6 +6,7 @@ import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 import { getConfirmedCrowdStatus, getConfirmedSchedules, hasConfirmedRating, hasRealValue } from '@/lib/data-quality';
 import { track } from '@/lib/analytics';
+import { PlaceContact } from '@/components/PlaceContact';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
@@ -59,6 +60,7 @@ export function PlaceCard({ place }: { place: Place }) {
           ))}
         </div>
       )}
+      <PlaceContact place={place} compact />
       <div className="meta">
         {isRatingConfirmed && place.rating !== undefined ? (
           <span>⭐ {place.rating.toFixed(1)}</span>

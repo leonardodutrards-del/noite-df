@@ -5,6 +5,7 @@ import { places } from '@/data/places';
 import { events } from '@/data/events';
 import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
+import { PlaceContact } from '@/components/PlaceContact';
 import {
   getConfirmedCrowdStatus,
   getConfirmedSchedules,
@@ -193,6 +194,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
             </div>
           )}
 
+          <PlaceContact place={place} />
           {placeEvents.length > 0 && (
             <div style={{ margin: '24px 0', padding: '16px', background: 'var(--card-2)', borderRadius: '16px' }}>
               <h3 style={{ margin: '0 0 12px' }}>Eventos confirmados</h3>

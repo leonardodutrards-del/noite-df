@@ -10,6 +10,7 @@ export default function CadastroPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmation, setConfirmation] = useState('');
   const [establishmentName, setEstablishmentName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +18,8 @@ export default function CadastroPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (loading) return;
+    if (password !== confirmation) { setError('As senhas precisam ser iguais.'); return; }
     setLoading(true);
 
     try {
@@ -46,7 +49,7 @@ export default function CadastroPage() {
   };
 
   return (
-    <main className="container">
+    <main className="container account-page">
       <header className="topbar">
         <Link className="brand" href="/">Noite DF</Link>
         <nav>
@@ -57,30 +60,29 @@ export default function CadastroPage() {
       </header>
 
       <div style={{ maxWidth: 520, margin: '30px auto 80px' }}>
-        <div className="panel" style={{ padding: 32 }}>
+        <div className="panel account-panel" style={{ padding: 32 }}>
           <span className="badge" style={{ marginBottom: 16 }}>Parceiro Noite DF</span>
-          <h1 style={{ fontSize: '2.2rem', margin: '8px 0 12px' }}>Cadastro de Estabelecimento</h1>
+          <h1 style={{ fontSize: '2.2rem', margin: '8px 0 12px' }}>Crie sua conta de parceiro</h1>
           <p style={{ marginBottom: 20, fontSize: 14 }}>
-            Crie sua conta para atualizar horários, agenda, lotação ao vivo e promoções do seu espaço.
+            Identifique seu estabelecimento e acesse a área do parceiro.
           </p>
 
           <div className="notice" style={{ fontSize: 13, marginBottom: 24, padding: 14 }}>
-            🔒 <b>Acesso simplificado:</b> Login direto por e-mail e senha. Não exigimos autenticação em 2 etapas para parceiros.
+            <b>Quer descobrir lugares para sair?</b><br /><Link href="/visitante/cadastro">Criar conta de visitante →</Link><br /><Link href="/">Explorar sem criar conta</Link>
           </div>
 
           {error && (
-            <div className="notice" style={{ borderColor: 'rgba(255, 77, 109, 0.4)', background: 'rgba(255, 77, 109, 0.1)', color: '#ff9d9d', marginBottom: 20 }}>
+            <div role="alert" className="notice" style={{ borderColor: 'rgba(255, 77, 109, 0.4)', background: 'rgba(255, 77, 109, 0.1)', color: '#ff9d9d', marginBottom: 20 }}>
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16 }}>
+          <form className="account-form" aria-busy={loading} onSubmit={handleSubmit} style={{ display: 'grid', gap: 16 }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
+              <label htmlFor="partner-name" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
                 Seu nome completo
               </label>
-              <input
-                type="text"
+              <input id="partner-name" autoComplete="name" disabled={loading}                 type="text"
                 placeholder="Ex: Carlos Eduardo Silveira"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -90,11 +92,10 @@ export default function CadastroPage() {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
+              <label htmlFor="establishment-name" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
                 Nome do Estabelecimento
               </label>
-              <input
-                type="text"
+              <input id="establishment-name" autoComplete="organization" disabled={loading}                 type="text"
                 placeholder="Ex: Bar do Galego, Sunset Gastrobar..."
                 value={establishmentName}
                 onChange={(e) => setEstablishmentName(e.target.value)}
@@ -104,11 +105,10 @@ export default function CadastroPage() {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
+              <label htmlFor="partner-email" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
                 E-mail corporativo / comercial
               </label>
-              <input
-                type="email"
+              <input id="partner-email" autoComplete="email" disabled={loading}                 type="email"
                 placeholder="contato@seuestabelecimento.com.br"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -118,11 +118,10 @@ export default function CadastroPage() {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
+              <label htmlFor="partner-password" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
                 Senha de acesso (mínimo 6 caracteres)
               </label>
-              <input
-                type="password"
+              <input id="partner-password" autoComplete="new-password" disabled={loading}                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -132,10 +131,11 @@ export default function CadastroPage() {
               />
             </div>
 
+            <div><label htmlFor="confirm-password">Confirme sua senha</label><input id="confirm-password" type="password" autoComplete="new-password" required minLength={6} disabled={loading} value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>
             <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 12, padding: 16 }}>
-              {loading ? 'Criando sua conta...' : 'Cadastrar e Acessar Painel'}
+              {loading ? 'Criando sua conta...' : 'Criar conta de parceiro'}
             </button>
-          </form>
+          </form><p className="field-hint">Consulte os <Link href="/termos">Termos de Uso</Link> e a <Link href="/privacidade">Política de Privacidade</Link>.</p>
 
           <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14, textAlign: 'center' }}>
             <p style={{ margin: 0 }}>
