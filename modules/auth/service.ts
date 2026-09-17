@@ -14,18 +14,27 @@ interface StoredUser extends AuthUser {
   passwordHash: string;
 }
 
-const DEFAULT_USERS: StoredUser[] = [
-  {
-    id: 'usr_admin_1',
-    email: 'admin@noitedf.com.br',
+// Production credentials are supplied through encrypted hosting environment variables.
+const adminEmail = process.env.NOITE_DF_ADMIN_EMAIL?.trim().toLowerCase();
+const adminPassword = process.env.NOITE_DF_ADMIN_PASSWORD;
+const configuredAdmin: StoredUser[] = adminEmail && adminEmail.includes('@') && adminPassword && adminPassword.length >= 16
+  ? [
+    {
+      id: 'usr_admin_1',
+    email: adminEmail,
     name: 'Administrador',
     role: 'admin',
-    passwordHash: hashPassword('Admin@123456'),
+    passwordHash: hashPassword(adminPassword),
     totpEnabled: false, // TODO: Implementar geração de TOTP em produção
     lastSignInAt: new Date(Date.now() - 3600000).toISOString(),
     createdAt: '2026-08-01T00:00:00.000Z',
     updatedAt: '2026-08-01T00:00:00.000Z',
-  },
+    },
+  ]
+  : [];
+
+// Demonstration accounts are available only for development and tests.
+const demoUsers: StoredUser[] = process.env.NODE_ENV === 'production' ? [] : [
   {
     id: 'usr_partner_five_1',
     email: 'parceiro@fivebar.com.br',
@@ -49,14 +58,16 @@ const DEFAULT_USERS: StoredUser[] = [
     lastSignInAt: new Date(Date.now() - 14400000).toISOString(),
     createdAt: '2026-08-03T14:30:00.000Z',
     updatedAt: '2026-08-03T14:30:00.000Z',
-  },
+  }
 ];
+
+const DEFAULT_USERS: StoredUser[] = [...configuredAdmin, ...demoUsers];
 
 const DEFAULT_AUDIT_LOGS: AuditLogEntry[] = [
   {
     id: 'aud_init_1',
     actorId: 'usr_admin_1',
-    actorEmail: 'admin@noitedf.com.br',
+    actorEmail: adminEmail ?? 'admin@noitedf.com.br',
     actorRole: 'admin',
     action: 'system_initialized',
     entityType: 'system',
