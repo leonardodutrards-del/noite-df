@@ -1,27 +1,9 @@
-# Inclusão de estabelecimentos — 16/09/2026
+# Revisão de cadastros e contatos
 
-Seis inclusões no catálogo estático, mantendo os 50 registros anteriores.
-Nenhuma migração ou escrita em Supabase foi executada.
+Base preservada: 50 registros originais. Total preparado: 73 locais em 19 regiões, incluindo 13 adições identificadas na planilha fornecida. 37 locais possuem telefone consultado em fonte pública. A consulta não equivale a teste de ligação ou confirmação pelo proprietário.
 
-| Local | Região | Fonte de identidade e endereço |
-| --- | --- | --- |
-| Meatz Burger | Sudoeste | https://deliverydireto.com.br/meatzburger/sudoeste/pages/sobre-nos |
-| Figueiredo Cozinha e Bar | Planaltina DF | https://linktr.ee/figueiredocozinhaebar |
-| Xique Xique | Asa Norte | https://www.restaurantexiquexique.com.br/ |
-| Xique Xique | Asa Sul | https://www.restaurantexiquexique.com.br/ |
-| Alfredo’s Pizzaria | Asa Norte | https://www.alfredospizzaria.com.br/ |
-| Alfredo’s Pizzaria | Asa Sul | https://www.alfredospizzaria.com.br/ |
+Oito eventos com datas e fontes oficiais foram incluídos. Datas vencidas são filtradas; valores de ingresso, couvert e cardápios ainda não foram validados integralmente. Sem informação de cobrança não significa entrada gratuita.
 
-As unidades da mesma marca são distintas por região e endereço. Figueiredo
-Valparaíso já existia e foi preservado. Alfredo’s Asa Sul fica dentro do Infinu,
-mas é uma operação identificada separadamente pelo site da pizzaria.
+A planilha de 188 locais foi triada. Apenas registros confirmados foram aproveitados; não foi feita importação integral. Registros sem identidade, endereço ou fonte suficiente permanecem pendentes fora da base publicada. As comunidades de divulgação não foram publicadas como audiência própria.
 
-Preço tornou-se opcional no tipo TypeScript; a interface já oculta valores ausentes.
-Não foram inferidos preços, avaliações, músicas, lotação ou vínculo de parceria.
-Os horários do Xique Xique são os publicados pelo site consultado; não representam
-confirmação em tempo real. Meatz confirma entrega e retirada, não atendimento no salão.
-Links de mapa continuam sendo buscas com nome e endereço, conforme a implementação
-existente; não são fichas do Google Maps verificadas. Fotos não foram copiadas.
-
-Comparação de duplicatas limitada ao catálogo versionado. Não houve acesso à base
-privada de parceiros. Não se trata de importação de banco do Google ou do ChatGPT.
+Formulários de criação de conta reorganizados. Não houve migração do banco nem alteração de credenciais. Correções de lint no visitante e indentação do CI. Validação local: 69 testes, build e lint sem erros (4 avisos preexistentes).

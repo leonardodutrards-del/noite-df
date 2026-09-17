@@ -11,8 +11,8 @@ import {
 } from '@/lib/curated-routes';
 
 describe('SEO, Slugs and Sitemap consistency', () => {
-  it('garante que todos os 56 estabelecimentos possuem IDs únicos e válidos para slugs', () => {
-    expect(places).toHaveLength(56);
+  it('garante que todos os 73 estabelecimentos possuem IDs únicos e válidos para slugs', () => {
+    expect(places).toHaveLength(73);
     const slugs = places.map((p) => p.id);
     const uniqueSlugs = new Set(slugs);
     expect(uniqueSlugs.size).toBe(places.length);

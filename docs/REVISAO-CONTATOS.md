@@ -1,15 +1,9 @@
-# Revisão de contatos e cadastro
+# Revisão de cadastros e contatos
 
-Etapa em andamento, consultada em 16/09/2026.
+Base preservada: 50 registros originais. Total preparado: 73 locais em 19 regiões, incluindo 13 adições identificadas na planilha fornecida. 37 locais possuem telefone consultado em fonte pública. A consulta não equivale a teste de ligação ou confirmação pelo proprietário.
 
-- Mantidos os 50 registros existentes e adicionados seis locais com fontes oficiais.
-- Contatos com telefone em 12 registros; WhatsApp somente quando publicado como tal pela fonte.
-- Horários separados de programação de eventos. Links de agenda não significam que eventos semanais tenham sido confirmados.
-- Formulários de parceiro e visitante reorganizados; confirmação de senha no parceiro; credenciais demonstrativas removidas da tela de login.
-- Validação: 66 testes e build Next.js passaram. A validação não comprova persistência de contas em produção. O lint geral possui dois erros preexistentes no login de visitante e no hook de autenticação.
+Oito eventos com datas e fontes oficiais foram incluídos. Datas vencidas são filtradas; valores de ingresso, couvert e cardápios ainda não foram validados integralmente. Sem informação de cobrança não significa entrada gratuita.
 
-## Pendências
+A planilha de 188 locais foi triada. Apenas registros confirmados foram aproveitados; não foi feita importação integral. Registros sem identidade, endereço ou fonte suficiente permanecem pendentes fora da base publicada. As comunidades de divulgação não foram publicadas como audiência própria.
 
-Revisão dos contatos restantes; confirmar agendas com data; Contexto, Oscarito, Complexo Fora do Eixo e Galpão dos Brutos solicitados para inclusão. Rancho do Vaqueiro já cadastrado, atualizar sem duplicar. Site do Contexto contém telefone aparentemente ilustrativo e rodapé de modelo, não importar esses contatos. Instagram exige sessão autenticada nesta navegação.
-
-Esta etapa não altera esquema de banco e não resolve a persistência existente da autenticação.
+Formulários de criação de conta reorganizados. Não houve migração do banco nem alteração de credenciais. Correções de lint no visitante e indentação do CI. Validação local: 69 testes, build e lint sem erros (4 avisos preexistentes).

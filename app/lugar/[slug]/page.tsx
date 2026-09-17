@@ -18,6 +18,9 @@ interface PlacePageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Refresh dated programming so expired entries leave the public page.
+export const revalidate = 300;
+
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 export async function generateStaticParams() {
@@ -203,6 +206,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
                   <strong>{evt.title}</strong>
                   <p style={{ margin: '4px 0', fontSize: '13px' }}>{evt.description}</p>
                   <small style={{ color: 'var(--muted)' }}>{evt.dateLabel}</small>
+                  {evt.source?.url && <p><a href={evt.source.url} target="_blank" rel="noreferrer">Conferir programação e ingressos ↗</a></p>}
                 </div>
               ))}
             </div>

@@ -1,23 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { AuthUser } from '@/modules/auth/types';
 
 export function useVisitorAuth() {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = false;
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Verificar se há token no localStorage
-    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-
-    if (token) {
-      // TODO: Validar token no servidor
-      setUser(null); // Placeholder
-    }
-
-    setIsLoading(false);
-  }, []);
-
+  // Session restoration is not implemented in this hook.
   const logout = useCallback(() => {
     localStorage.removeItem('auth_token');
     setUser(null);

@@ -6,7 +6,7 @@ import { recommendPlaces } from '@/lib/recommend';
 describe('September establishment additions', () => {
   it('keeps identifiers unique across old and new records', () => {
     expect(new Set(places.map(p => p.id)).size).toBe(places.length);
-    expect(places).toHaveLength(56);
+    expect(places).toHaveLength(73);
   });
   it('makes the new records discoverable in their regions', () => {
     for (const place of additionalPlaces) {

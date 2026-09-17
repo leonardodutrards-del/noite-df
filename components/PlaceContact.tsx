@@ -14,7 +14,7 @@ export function PlaceContact({ place, compact = false }: { place: Establishment;
       {validPhone && <a className="button ghost" href={`tel:+55${digits}`}>Ligar {phoneLabel}</a>}
       {validWhatsapp && <a className="button ghost" href={`https://wa.me/55${whatsapp}`} target="_blank" rel="noreferrer">Contato pelo WhatsApp ↗</a>}
       {!compact && <>
-        {contact && <p className="field-hint">Contato publicado pelo local. <a href={contact.sourceUrl} target="_blank" rel="noreferrer">Ver fonte</a> · Consultado em {contact.checkedAt}.</p>}
+        {contact && <p className="field-hint">Contato consultado em fonte pública. <a href={contact.sourceUrl} target="_blank" rel="noreferrer">Ver fonte</a> · Consultado em {contact.checkedAt}.</p>}
         {place.operatingHours && <div className="contact-section"><h2>Horários de funcionamento</h2><p>{place.operatingHours.text}</p><a href={place.operatingHours.sourceUrl} target="_blank" rel="noreferrer">Consultar horários na fonte ↗</a></div>}
         {agendaUrl && <div className="contact-section"><h2>Agenda da semana</h2><p>Confira a programação mais recente e confirme data, horário e reservas diretamente com o local.</p><a href={agendaUrl} target="_blank" rel="noreferrer">Consultar programação no canal do local ↗</a></div>}
       </>}

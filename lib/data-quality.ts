@@ -42,7 +42,9 @@ export function isPlaceholder(value: unknown): boolean {
       return true;
     }
     const normalized = normalizeString(trimmed);
-    return PLACEHOLDER_PATTERNS.some((pattern) => normalized === pattern || normalized.includes(pattern));
+    return PLACEHOLDER_PATTERNS.some((pattern) =>
+      normalized === pattern || (!['-', '—'].includes(pattern) && normalized.includes(pattern))
+    );
   }
 
   return false;
@@ -105,8 +107,8 @@ export function isConfirmedEvent(event?: EventItem | null): boolean {
   }
 
   // Check if date has expired
-  if (event.endsAt) {
-    const ends = new Date(event.endsAt).getTime();
+  if (event.expiresAt || event.endsAt) {
+    const ends = new Date(event.expiresAt ?? event.endsAt!).getTime();
     if (!Number.isNaN(ends) && ends < Date.now()) {
       return false;
     }
