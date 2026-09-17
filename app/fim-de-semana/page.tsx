@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export default function WeekendPage() {
   const window = getWeekendWindow();
   const weekendEvents = getWeekendEvents(events);
-  const eventPlaces = [...new Set(weekendEvents.map(event => event.place))];
+  const eventPlaces = Array.from(new Set(weekendEvents.map(event => event.place)));
   const suggestedPlaces = eventPlaces
     .map(name => places.find(place => place.name === name))
     .filter((place): place is (typeof places)[number] => !!place);
