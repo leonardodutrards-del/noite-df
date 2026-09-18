@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { researchedEvents } from '@/data/seeds/events-2026-09';
 import { getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
+import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
+import { places } from '@/data/places';
 
 afterEach(() => vi.useRealTimers());
 
@@ -19,5 +21,15 @@ describe('Indicações do fim de semana', () => {
     expect(items.some(event => event.id === 'oscarito-sexta-2026-09-18')).toBe(true);
     expect(items.some(event => event.id === 'oscarito-quinta-2026-09-17')).toBe(false);
     expect(items.some(event => event.id === 'brutos-volkstreme-2026-10-18')).toBe(false);
+  });
+
+  it('sugere apenas estabelecimentos com programação do fim de semana, sem lista fixa', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-18T10:00:00-03:00'));
+    const events = getWeekendEvents(researchedEvents, new Date());
+    const recommendations = getWeekendRecommendations(places, events);
+    expect(recommendations.length).toBeGreaterThan(0);
+    expect(recommendations.every(place => events.some(event => event.place === place.name))).toBe(true);
+    expect(getWeekendRecommendations(places, [])).toEqual([]);
   });
 });
