@@ -33,6 +33,7 @@ export function PlaceCard({ place }: { place: Place }) {
         </h3>
       </div>
       <p style={{ marginTop: '8px' }}>{place.description}</p>
+      {hasRealValue(place.address) && <p style={{ marginTop: '6px', color: 'var(--muted)', fontSize: '13px' }}>📍 {place.address}</p>}
       <div className="tags">
         {place.verified && <span className="tag verified">✔ verificado</span>}
         {place.ownerManaged && <span className="tag">gerenciado pelo local</span>}
@@ -92,6 +93,9 @@ export function PlaceCard({ place }: { place: Place }) {
             onClick={() => track('map_click', { placeId: place.id, placeName: place.name })}
           >
             Ver no mapa
+          </a>
+          <a href={mapsUrl} target="_blank" rel="noreferrer" aria-label={`Buscar avaliações de ${place.name} no Google Maps`}>
+            Buscar avaliações no Google ↗
           </a>
         </div>
       </div>
