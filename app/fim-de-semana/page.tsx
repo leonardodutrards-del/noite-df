@@ -40,7 +40,7 @@ export default function WeekendPage() {
           <div className="empty"><h3>Aguardando indicações confirmadas</h3><p>Os locais aparecem aqui quando a programação do fim de semana é publicada em fonte oficial.</p></div>
         )}
       </section>
-      <p style={{ margin: '32px 0' }}><Link href="/#agenda">Ver agenda completa →</Link></p>
+      <p style={{ margin: '32px 0', display: 'flex', gap: '20px', flexWrap: 'wrap' }}><Link href="/#agenda">Ver agenda completa →</Link><Link href="/historico">Consultar histórico de eventos →</Link></p>
     </main>
   );
 }
