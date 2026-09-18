@@ -24,10 +24,12 @@ describe('Dated official programming', () => {
   it('removes September programming after its editorial cutoff without discarding October', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-22T12:00:00-03:00'));
-    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['contexto-surra-modao-2026-09-23', 'galpao17-dark-side-2026-09-25', 'brutos-volkstreme-2026-10-18']);
+    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['contexto-surra-modao-2026-09-23', 'galpao17-dark-side-2026-09-25', 'contexto-surra-modao-2026-09-30', 'brutos-volkstreme-2026-10-18']);
     vi.setSystemTime(new Date('2026-09-24T12:00:00-03:00'));
-    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['galpao17-dark-side-2026-09-25', 'brutos-volkstreme-2026-10-18']);
+    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['galpao17-dark-side-2026-09-25', 'contexto-surra-modao-2026-09-30', 'brutos-volkstreme-2026-10-18']);
     vi.setSystemTime(new Date('2026-09-26T12:00:00-03:00'));
+    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['contexto-surra-modao-2026-09-30', 'brutos-volkstreme-2026-10-18']);
+    vi.setSystemTime(new Date('2026-10-02T12:00:00-03:00'));
     expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['brutos-volkstreme-2026-10-18']);
     vi.setSystemTime(new Date('2026-10-20T12:00:00-03:00'));
     expect(researchedEvents.filter(isConfirmedEvent)).toEqual([]);
