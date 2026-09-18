@@ -4,21 +4,14 @@ import { places } from '@/data/places';
 import { EventCard } from '@/components/EventCard';
 import { PlaceCard } from '@/components/PlaceCard';
 import { getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
+import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
 
 export const dynamic = 'force-dynamic';
 
 export default function WeekendPage() {
   const window = getWeekendWindow();
   const weekendEvents = getWeekendEvents(events);
-  const eventPlaces = Array.from(new Set(weekendEvents.map(event => event.place)));
-  const suggestedPlaces = eventPlaces
-    .map(name => places.find(place => place.name === name))
-    .filter((place): place is (typeof places)[number] => !!place);
-  const fallbackIds = ['quintal-tia-sandra', 'porks-sobradinho', 'trends-pub', 'rancho-do-vaqueiro'];
-  const otherPlaces = fallbackIds
-    .map(id => places.find(place => place.id === id))
-    .filter((place): place is (typeof places)[number] => !!place && !suggestedPlaces.some(item => item.id === place.id));
-  const recommendations = [...suggestedPlaces, ...otherPlaces].slice(0, 8);
+  const recommendations = getWeekendRecommendations(places, weekendEvents);
 
   return (
     <main className="container">
@@ -40,8 +33,12 @@ export default function WeekendPage() {
         )}
       </section>
       <section aria-labelledby="weekend-places">
-        <div className="section-title"><div><h2 id="weekend-places">Lugares para considerar</h2><p>Explore os perfis e confirme a programação diretamente com cada casa. A presença nesta lista não indica evento ou mesa disponível.</p></div></div>
-        <div className="grid">{recommendations.map(place => <PlaceCard key={place.id} place={place} />)}</div>
+        <div className="section-title"><div><h2 id="weekend-places">Onde ir neste fim de semana</h2><p>Locais com eventos confirmados para estas datas, ordenados pela quantidade de eventos; quando há avaliações numéricas verificadas, elas ajudam a desempatar. Não há indicações pagas nesta seleção. Confira disponibilidade e ingressos com cada casa.</p></div></div>
+        {recommendations.length ? (
+          <div className="grid">{recommendations.map(place => <PlaceCard key={place.id} place={place} />)}</div>
+        ) : (
+          <div className="empty"><h3>Aguardando indicações confirmadas</h3><p>Os locais aparecem aqui quando a programação do fim de semana é publicada em fonte oficial.</p></div>
+        )}
       </section>
       <p style={{ margin: '32px 0' }}><Link href="/#agenda">Ver agenda completa →</Link></p>
     </main>
