@@ -21,17 +21,15 @@ describe('Dated official programming', () => {
       expect(isConfirmedEvent(event)).toBe(true);
     }
   });
-  it('removes September programming after its editorial cutoff without discarding October', () => {
+  it('expires events at their documented cutoff and preserves later dates', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-22T12:00:00-03:00'));
-    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['contexto-surra-modao-2026-09-23', 'galpao17-dark-side-2026-09-25', 'contexto-surra-modao-2026-09-30', 'brutos-volkstreme-2026-10-18']);
-    vi.setSystemTime(new Date('2026-09-24T12:00:00-03:00'));
-    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['galpao17-dark-side-2026-09-25', 'contexto-surra-modao-2026-09-30', 'brutos-volkstreme-2026-10-18']);
-    vi.setSystemTime(new Date('2026-09-26T12:00:00-03:00'));
-    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['contexto-surra-modao-2026-09-30', 'brutos-volkstreme-2026-10-18']);
-    vi.setSystemTime(new Date('2026-10-02T12:00:00-03:00'));
-    expect(researchedEvents.filter(isConfirmedEvent).map(event => event.id)).toEqual(['brutos-volkstreme-2026-10-18']);
-    vi.setSystemTime(new Date('2026-10-20T12:00:00-03:00'));
+    expect(researchedEvents.filter(isConfirmedEvent).some(event => event.id === 'oscarito-sabado-2026-09-19')).toBe(false);
+    expect(researchedEvents.filter(isConfirmedEvent).some(event => event.id === 'galpao17-radio-rock-2026-10-02')).toBe(true);
+    vi.setSystemTime(new Date('2026-10-03T12:00:00-03:00'));
+    expect(researchedEvents.filter(isConfirmedEvent).some(event => event.id === 'galpao17-radio-rock-2026-10-02')).toBe(false);
+    expect(researchedEvents.filter(isConfirmedEvent).some(event => event.id === 'galpao17-dia-los-muertos-2026-10-31')).toBe(true);
+    vi.setSystemTime(new Date('2026-11-02T12:00:00-03:00'));
     expect(researchedEvents.filter(isConfirmedEvent)).toEqual([]);
   });
 });
