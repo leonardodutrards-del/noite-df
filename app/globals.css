@@ -86,7 +86,15 @@ textarea { min-height: 120px; resize: vertical; border: 1px solid var(--border);
 .place-contact .button { font-size: 13px; }
 .place-contact .field-hint, .contact-section { flex-basis: 100%; }
 .contact-section { border-top: 1px solid var(--border); padding-top: 12px; }
-.card .meta > div { flex-wrap: wrap; }
+.card .meta > div { flex-wrap: wrap; min-width: 0; }
+.card .meta a { display: inline-flex; align-items: center; min-height: 44px; }
+.searchbar > input, .searchbar > select { min-width: 0; width: 100%; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media(max-width:900px) {
+  .topbar { flex-wrap: wrap; gap: 12px; }
+  .topbar nav { display: flex; width: 100%; flex-wrap: nowrap; overflow-x: auto; gap: 18px; padding-bottom: 8px; }
+  .topbar nav a { white-space: nowrap; display: inline-flex; align-items: center; min-height: 44px; }
+}
 @media(max-width:900px) { .account-page .topbar { align-items: flex-start; flex-wrap: wrap; } .account-page .topbar nav { display: flex; gap: 14px; font-size: 14px; } }
 @media(max-width:480px) { .account-page.container { padding: 16px; } .account-panel { border-radius: 20px; } }
 
