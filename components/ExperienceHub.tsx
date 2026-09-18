@@ -68,12 +68,16 @@ export function ExperienceHub() {
           <p>Descubra experiências locais por vibe, região, orçamento e programação confirmada.</p>
           <div className="searchbar">
             <input
+              id="busca"
+              name="busca"
               aria-label="Busca"
               placeholder="Bar, música, evento ou cidade..."
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
             />
             <select
+              id="regiao"
+              name="regiao"
               aria-label="Região"
               value={region}
               onChange={(e) => {
@@ -84,6 +88,8 @@ export function ExperienceHub() {
               {regions.map((i) => <option key={i}>{i}</option>)}
             </select>
             <select
+              id="vibe"
+              name="vibe"
               aria-label="Vibe"
               value={vibe}
               onChange={(e) => {
@@ -105,7 +111,7 @@ export function ExperienceHub() {
           <h2>Recomendação rápida</h2>
           <label>
             Quanto pretende gastar?
-            <select value={budget} onChange={(e) => setBudget(e.target.value)}>
+            <select id="orcamento" name="orcamento" value={budget} onChange={(e) => setBudget(e.target.value)}>
               <option>Até R$ 60</option>
               <option>Até R$ 120</option>
               <option>Até R$ 250</option>
@@ -114,7 +120,7 @@ export function ExperienceHub() {
           </label>
           <label>
             Quanto tempo ficará?
-            <select value={duration} onChange={(e) => setDuration(e.target.value)}>
+            <select id="duracao" name="duracao" value={duration} onChange={(e) => setDuration(e.target.value)}>
               <option>1 noite</option>
               <option>2 dias</option>
               <option>3 dias</option>
