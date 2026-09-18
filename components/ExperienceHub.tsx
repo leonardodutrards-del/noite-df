@@ -26,6 +26,13 @@ export function ExperienceHub() {
   const vibes = useMemo(() => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
   const filteredPlaces = useMemo(() => recommendPlaces(query, region, vibe).filter(place => !radarFilter || matchesRadar(place, radarFilter)), [query, region, vibe, radarFilter]);
   const selectedRadar = radarOptions.find(option => option.id === radarFilter);
+  const hasFilters = Boolean(query || region !== 'todos' || vibe !== 'todas' || radarFilter);
+  const clearFilters = () => {
+    setQuery('');
+    setRegion('todos');
+    setVibe('todas');
+    setRadarFilter(null);
+  };
 
   // Ranking strictly requires a confirmed numerical rating
   const rankings = useMemo(() => {
@@ -65,7 +72,7 @@ export function ExperienceHub() {
         <div>
           <span className="badge">Brasília além do roteiro óbvio</span>
           <h1>Onde vale a pena ir hoje no DF?</h1>
-          <p>Descubra experiências locais por vibe, região, orçamento e programação confirmada.</p>
+          <p>Encontre bares, restaurantes e eventos no DF e Entorno. Escolha sua região e o estilo da sua noite.</p>
           <div className="searchbar">
             <input
               id="busca"
@@ -85,7 +92,7 @@ export function ExperienceHub() {
                 track('search', { query, region: e.target.value, vibe });
               }}
             >
-              {regions.map((i) => <option key={i}>{i}</option>)}
+              {regions.map((i) => <option key={i} value={i}>{i === 'todos' ? 'Todas as regiões' : i}</option>)}
             </select>
             <select
               id="vibe"
@@ -97,7 +104,7 @@ export function ExperienceHub() {
                 track('search', { query, region, vibe: e.target.value });
               }}
             >
-              {vibes.map((i) => <option key={i}>{i}</option>)}
+              {vibes.map((i) => <option key={i} value={i}>{i === 'todas' ? 'Todos os estilos' : i}</option>)}
             </select>
           </div>
           <div className="hero-actions">
@@ -108,7 +115,7 @@ export function ExperienceHub() {
         </div>
         <aside className="panel decision-card">
           <span className="eyebrow">Seu perfil de hoje</span>
-          <h2>Recomendação rápida</h2>
+          <h2>Planeje sua saída</h2>
           <label>
             Quanto pretende gastar?
             <select id="orcamento" name="orcamento" value={budget} onChange={(e) => setBudget(e.target.value)}>
@@ -130,6 +137,7 @@ export function ExperienceHub() {
           <p className="recommendation">
             Sugestão: {vibe === 'todas' ? 'comece pelo Radar da Cidade' : `priorize ${vibe}`} em {region === 'todos' ? 'todo o DF' : region}, com orçamento {budget.toLowerCase()} durante {duration}.
           </p>
+          <small>Orçamento e duração são referências para seu planejamento; não filtram os resultados nem representam preços confirmados.</small>
         </aside>
       </section>
 
@@ -165,7 +173,8 @@ export function ExperienceHub() {
           <div>
             <span className="eyebrow">Guia inteligente</span>
             <h2>Lugares para você</h2>
-            <p>{filteredPlaces.length} opções encontradas · fonte e última atualização visíveis em cada perfil.</p>
+            <p role="status" aria-live="polite">{filteredPlaces.length} opções encontradas · fonte e última atualização em cada perfil.</p>
+            {hasFilters && <button className="button ghost" type="button" onClick={clearFilters}>Limpar todos os filtros</button>}
             {selectedRadar && <p className="radar-selection">{selectedRadar.label}: {selectedRadar.description} <button type="button" onClick={() => setRadarFilter(null)}>Limpar filtro</button></p>}
           </div>
         </div>
@@ -179,7 +188,7 @@ export function ExperienceHub() {
           <div className="empty">
             <h3>Nenhum resultado com esses filtros</h3>
             <p>Remova um filtro ou escolha outra região.</p>
-            {radarFilter && <button className="button ghost" type="button" onClick={() => setRadarFilter(null)}>Mostrar todos os perfis</button>}
+            <button className="button ghost" type="button" onClick={clearFilters}>Mostrar todos os locais</button>
           </div>
         )}
       </section>
@@ -218,7 +227,7 @@ export function ExperienceHub() {
         <div className="section-title">
           <div>
             <span className="eyebrow">Agenda inteligente</span>
-            <h2>O que acontece nesta semana</h2>
+            <h2>Próximos eventos confirmados</h2>
             <p><a href="/fim-de-semana">Ver indicações do fim de semana →</a></p>
             <p>Apenas eventos verificados e confirmados com fontes oficiais.</p>
           </div>
@@ -231,7 +240,7 @@ export function ExperienceHub() {
           </div>
         ) : (
           <div className="empty">
-            <h3>Nenhum evento confirmado para hoje.</h3>
+            <h3>Nenhum próximo evento confirmado.</h3>
             <p>Os eventos são exibidos apenas quando checados e validados com fontes oficiais.</p>
           </div>
         )}
@@ -267,7 +276,7 @@ export function ExperienceHub() {
         <div className="panel">
           <span className="eyebrow">Turismo inteligente</span>
           <h2>Monte seu roteiro</h2>
-          <p>Escolha duração, orçamento e vibe. O sistema organiza uma sequência de lugares e eventos para reduzir tempo de pesquisa.</p>
+          <p>Use os filtros para encontrar lugares do seu estilo e consulte a agenda para planejar sua saída.</p>
           <ol>
             <li>Comece com gastronomia local e petiscos.</li>
             <li>Escolha um estabelecimento ou evento compatível com sua vibe.</li>
@@ -287,7 +296,7 @@ export function ExperienceHub() {
 
       <footer className="footer">
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
-          <div>Noite DF · guia de experiências locais com informação confiável e sem placeholders.</div>
+          <div>Noite DF · descubra lugares e programação com fontes verificáveis.</div>
           <div style={{ display: 'flex', gap: '14px' }}>
             <a href="/privacidade" style={{ color: 'var(--muted)', fontSize: '13px' }}>Privacidade</a>
             <a href="/termos" style={{ color: 'var(--muted)', fontSize: '13px' }}>Termos</a>
