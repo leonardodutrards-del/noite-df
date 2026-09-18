@@ -5,7 +5,7 @@ const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
-  title: { default: 'Noite DF — Onde vale a pena ir hoje?', template: '%s | Noite DF' },
+  title: { default: 'Noite DF', template: '%s | Noite DF' },
   description: 'Agenda, bares, restaurantes, eventos e experiências locais do Distrito Federal, com curadoria e informação atualizada.',
   applicationName: 'Noite DF',
   manifest: '/manifest.webmanifest',
