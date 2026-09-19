@@ -12,6 +12,21 @@ const event = (id: string, title: string, place: string, region: string, dateLab
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
+  event('ticiana-alysson-2026-09-18', 'Alysson Takaki — Love songs', 'Ticiana Werner Wine Bar', 'Asa Sul', '18/09/2026 · 19h30 às 23h',
+    'Música ao vivo na varanda. Local: CLS 201, Bloco C, lojas 05–11, Asa Sul. Consulte condições com o restaurante.',
+    'https://www.ticianawerner.com.br/musica.php', '2026-09-18T23:00:00-03:00', '2026-09-18T19:30:00-03:00', '2026-09-18'),
+  event('ticiana-pj-camargo-2026-09-19', 'PJ Camargo — Jazz lounge', 'Ticiana Werner Wine Bar', 'Asa Sul', '19/09/2026 · 12h30 às 15h30',
+    'Música ao vivo na varanda. Local: CLS 201, Bloco C, lojas 05–11, Asa Sul. Consulte condições com o restaurante.',
+    'https://www.ticianawerner.com.br/musica.php', '2026-09-19T15:30:00-03:00', '2026-09-19T12:30:00-03:00', '2026-09-18'),
+  event('ticiana-bee-2026-09-19', 'Bee — Pop, Jazz e Bossa', 'Ticiana Werner Wine Bar', 'Asa Sul', '19/09/2026 · 19h30 às 23h',
+    'Música ao vivo na varanda. Local: CLS 201, Bloco C, lojas 05–11, Asa Sul. Consulte condições com o restaurante.',
+    'https://www.ticianawerner.com.br/musica.php', '2026-09-19T23:00:00-03:00', '2026-09-19T19:30:00-03:00', '2026-09-18'),
+  event('ticiana-breno-2026-09-21', 'Breno — Pop, Bossa, Internacional e Jazz', 'Ticiana Werner Wine Bar', 'Asa Sul', '21/09/2026 · 19h30 às 23h',
+    'Música ao vivo na varanda. Local: CLS 201, Bloco C, lojas 05–11, Asa Sul. Consulte condições com o restaurante.',
+    'https://www.ticianawerner.com.br/musica.php', '2026-09-21T23:00:00-03:00', '2026-09-21T19:30:00-03:00', '2026-09-18'),
+  event('ticiana-marcus-2026-09-22', 'Marcus Lopes — Pop', 'Ticiana Werner Wine Bar', 'Asa Sul', '22/09/2026 · 19h30 às 23h',
+    'Música ao vivo na varanda. Local: CLS 201, Bloco C, lojas 05–11, Asa Sul. Consulte condições com o restaurante.',
+    'https://www.ticianawerner.com.br/musica.php', '2026-09-22T23:00:00-03:00', '2026-09-22T19:30:00-03:00', '2026-09-18'),
   event('contexto-love-2026-09-18', 'Deu Mó Love — Doze por Oito', 'Contexto Bar', 'Setor de Clubes Sul', '18/09/2026 · A partir das 18h',
     'Pagode com Doze por Oito. Confirme horário, classificação e ingressos no canal do local.',
     'https://www.sympla.com.br/evento/deu-mo-love-18-09-varanda-do-contexto/3558908', '2026-09-19T06:00:00-03:00'),
