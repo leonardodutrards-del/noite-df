@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import type { AuthResult, AuthUser, AuditLogEntry, LoginInput, SignUpInput, SignUpVisitorInput, VisitorLoginInput, VerificationToken, UserRole, ConsentLGPD, VerificationResult } from './types';
+import { isSupabaseAuthEnabled, supabaseLogout, supabasePasswordLogin, supabasePasswordSignUp, supabaseSendMagicLink, supabaseValidateAccessToken } from '@/lib/supabase-auth';
 
 const PASSWORD_SCHEME = 'scrypt-v1';
 
@@ -110,6 +111,10 @@ class AuthService {
   }
 
   public async signUp(input: SignUpInput): Promise<AuthResult> {
+    if (isSupabaseAuthEnabled()) {
+      const result = await supabasePasswordSignUp(input);
+      return { user: result.user, token: result.token };
+    }
     assertLegacyAuthAllowed();
     const email = input.email.trim().toLowerCase();
     const name = input.name.trim();
@@ -217,6 +222,13 @@ class AuthService {
   }
 
   public async login(credentials: LoginInput): Promise<AuthResult> {
+    if (isSupabaseAuthEnabled()) {
+      const result = await supabasePasswordLogin(
+        credentials.email.trim().toLowerCase(),
+        credentials.password
+      );
+      return { user: result.user, token: result.token };
+    }
     assertLegacyAuthAllowed();
     const email = credentials.email.trim().toLowerCase();
     const password = credentials.password;
@@ -280,6 +292,10 @@ class AuthService {
 
   public async logout(token: string): Promise<void> {
     if (!token) return;
+    if (isSupabaseAuthEnabled()) {
+      await supabaseLogout(token);
+      return;
+    }
     const session = this.sessions.get(token);
     if (session) {
       const user = this.users.get(session.userId);
@@ -299,6 +315,9 @@ class AuthService {
 
   public async validateSession(token: string): Promise<AuthUser | null> {
     if (!token) return null;
+    if (isSupabaseAuthEnabled()) {
+      return supabaseValidateAccessToken(token);
+    }
     const session = this.sessions.get(token);
     if (!session) return null;
 
@@ -559,6 +578,24 @@ class AuthService {
   }
 
   public async requestVerificationLink(email: string, type: 'login' | 'signup' = 'login'): Promise<VerificationToken> {
+    if (isSupabaseAuthEnabled()) {
+      if (type !== 'login') {
+        throw new Error('Use o cadastro padrão para criar uma conta.');
+      }
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      await supabaseSendMagicLink(
+        email.trim().toLowerCase(),
+        `${appUrl}/api/auth/callback`
+      );
+      const now = new Date().toISOString();
+      return {
+        token: 'managed-by-supabase',
+        email: email.trim().toLowerCase(),
+        expiresAt: Date.now() + 15 * 60 * 1000,
+        createdAt: now,
+        type,
+      };
+    }
     assertLegacyAuthAllowed();
     const normalizedEmail = email.trim().toLowerCase();
 
