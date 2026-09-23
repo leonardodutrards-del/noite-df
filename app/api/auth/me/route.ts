@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionUserFromRequest } from '@/modules/auth/session';
+import { getSessionUserFromRequest, isMasterAdminUser } from '@/modules/auth/session';
 
 export async function GET(request: NextRequest) {
   const user = await getSessionUserFromRequest(request);
@@ -8,5 +8,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
   }
 
-  return NextResponse.json({ user });
+  return NextResponse.json({ user, isMasterAdmin: isMasterAdminUser(user) });
 }
