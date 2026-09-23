@@ -133,8 +133,8 @@ export async function supabasePasswordSignUp(input: SignUpInput) {
       data: {
         name: input.name,
         role,
-        establishment_id: input.establishmentId ?? null,
-        establishment_name: input.establishmentName ?? null,
+        establishment_id: null,
+        establishment_name: null,
       },
     }),
   });
@@ -144,7 +144,6 @@ export async function supabasePasswordSignUp(input: SignUpInput) {
     email: payload.user.email ?? input.email,
     name: input.name,
     role,
-    establishmentId: input.establishmentId,
   });
   return {
     user,
