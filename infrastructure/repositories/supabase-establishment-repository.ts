@@ -9,8 +9,16 @@ type SupabaseRow = {
   description: string | null;
   region: string;
   address: string;
+  phone: string | null;
   instagram: string | null;
   whatsapp: string | null;
+  website: string | null;
+  agenda_url: string | null;
+  operating_hours: Record<string, unknown> | null;
+  menu: Record<string, unknown> | null;
+  admission_note: string | null;
+  contact_source_url: string | null;
+  contact_checked_at: string | null;
   price_range: string | null;
   vibe: string[] | null;
   music: string[] | null;
@@ -174,6 +182,19 @@ function rowToEstablishment(row: SupabaseRow): Establishment {
     price: (row.price_range || '$$') as Establishment['price'],
     instagram: row.instagram || undefined,
     whatsapp: row.whatsapp || undefined,
+    businessContact:
+      row.phone || row.whatsapp
+        ? {
+            phone: row.phone || row.whatsapp || '',
+            whatsapp: row.whatsapp || undefined,
+            sourceUrl: row.contact_source_url || row.website || row.instagram || '',
+            checkedAt: row.contact_checked_at || new Date(row.updated_at).toISOString().split('T')[0],
+          }
+        : undefined,
+    operatingHours: (row.operating_hours || undefined) as Establishment['operatingHours'],
+    agendaUrl: row.agenda_url || undefined,
+    menu: (row.menu || undefined) as Establishment['menu'],
+    admissionNote: row.admission_note || undefined,
     mapsQuery: row.maps_query || `${row.name} ${row.region} DF`,
     verified: Boolean(row.verified_at),
     ownerManaged: row.owner_managed ?? false,
@@ -199,6 +220,16 @@ function establishmentPatchToRow(establishment: Partial<Establishment>): Record<
   if (establishment.address !== undefined) row.address = establishment.address;
   if (establishment.instagram !== undefined) row.instagram = establishment.instagram;
   if (establishment.whatsapp !== undefined) row.whatsapp = establishment.whatsapp;
+  if (establishment.businessContact !== undefined) {
+    row.phone = establishment.businessContact.phone;
+    row.whatsapp = establishment.businessContact.whatsapp ?? row.whatsapp;
+    row.contact_source_url = establishment.businessContact.sourceUrl;
+    row.contact_checked_at = establishment.businessContact.checkedAt;
+  }
+  if (establishment.operatingHours !== undefined) row.operating_hours = establishment.operatingHours;
+  if (establishment.agendaUrl !== undefined) row.agenda_url = establishment.agendaUrl;
+  if (establishment.menu !== undefined) row.menu = establishment.menu;
+  if (establishment.admissionNote !== undefined) row.admission_note = establishment.admissionNote;
   if (establishment.price !== undefined) row.price_range = establishment.price;
   if (establishment.vibe !== undefined) row.vibe = establishment.vibe;
   if (establishment.music !== undefined) row.music = establishment.music;
