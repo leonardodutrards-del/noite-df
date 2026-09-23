@@ -198,6 +198,7 @@ create table if not exists subscription_accounts (
   plan_code text not null check (plan_code in ('pro','premium','enterprise')),
   provider text not null default 'mercado_pago',
   provider_subscription_id text unique,
+  provider_payment_id text,
   payer_email text not null,
   status text not null default 'pending',
   amount_cents integer not null,
