@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authService } from '@/modules/auth/service';
 import { requireAuth } from '@/modules/auth/session';
+import { partnershipService } from '@/modules/partnerships/service';
 import type { CreateEstablishmentInput } from '@/modules/establishments/types';
 
 export async function POST(request: NextRequest) {
   try {
     const user = await requireAuth(request);
-
     if (user.role !== 'visitor') {
       return NextResponse.json(
-        { error: 'Apenas visitantes podem criar um estabelecimento para se tornarem parceiros.' },
+        { error: 'Apenas visitantes podem solicitar a gestão de um estabelecimento.' },
         { status: 403 }
       );
     }
 
-    const body = await request.json() as CreateEstablishmentInput;
-
-    // Validar campos obrigatórios
+    const body = (await request.json()) as CreateEstablishmentInput;
     if (!body.name || !body.type || !body.region || !body.address) {
       return NextResponse.json(
         { error: 'Nome, tipo, região e endereço são obrigatórios.' },
@@ -24,49 +21,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Gerar ID do estabelecimento
-    const establishmentId = body.name
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-
-    // TODO: Em produção, integrar com EstablishmentService e persistir em Supabase
-    // Por agora, apenas promover o usuário a partner
-
-    // Converter visitante para partner
-    const updatedUser = await authService.convertToPartner(user.id, establishmentId, body.name);
-
+    const claim = await partnershipService.createClaim(user, body);
     return NextResponse.json(
       {
         success: true,
-        message: 'Parabéns! Você agora é um parceiro Noite DF.',
-        user: updatedUser,
+        message: 'Solicitação enviada para análise. O acesso de parceiro será liberado após aprovação.',
+        claim,
       },
-      { status: 201 }
+      { status: 202 }
     );
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Erro ao criar estabelecimento.';
-
-    if (message.includes('UNAUTHORIZED')) {
+    const message = error instanceof Error ? error.message : 'Erro ao enviar solicitação.';
+    if (message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Autenticação necessária.' }, { status: 401 });
+    }
+    if (message.startsWith('FORBIDDEN')) {
+      return NextResponse.json({ error: 'Acesso não permitido.' }, { status: 403 });
+    }
+    if (message === 'CLAIM_ALREADY_PENDING') {
       return NextResponse.json(
-        { error: 'Autenticação necessária.' },
-        { status: 401 }
+        { error: 'Já existe uma solicitação pendente para este estabelecimento.' },
+        { status: 409 }
       );
     }
-
-    if (message.includes('apenas')) {
-      return NextResponse.json(
-        { error: message },
-        { status: 403 }
-      );
-    }
-
-    console.error('Error creating establishment:', error);
-    return NextResponse.json(
-      { error: 'Erro ao criar estabelecimento. Por favor, tente novamente.' },
-      { status: 500 }
-    );
+    console.error('claim-establishment', error);
+    return NextResponse.json({ error: 'Não foi possível enviar a solicitação.' }, { status: 500 });
   }
 }
