@@ -94,13 +94,9 @@ function LoginForm() {
         </form>
 
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14 }}>
-          <p style={{ margin: 0, marginBottom: 12, textAlign: 'center' }}>
-            <strong style={{ display: 'block', marginBottom: 8 }}>Visitante?</strong>
-            <Link href="/visitante/login" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-              Acesso rápido por email
-            </Link>
-            {' • '}
-            <Link href="/visitante/cadastro" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+          <p style={{ margin: 0, textAlign: 'center' }}>
+            Ainda não tem conta?{' '}
+            <Link href="/cadastro" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
               Criar conta
             </Link>
           </p>
