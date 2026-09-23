@@ -101,7 +101,11 @@ class AuthService {
   public async signUp(input: SignUpInput): Promise<AuthResult> {
     if (isSupabaseAuthEnabled()) {
       const result = await supabasePasswordSignUp(input);
-      return { user: result.user, token: result.token };
+      return {
+        user: result.user,
+        token: result.token,
+        requiresEmailConfirmation: result.requiresEmailConfirmation,
+      };
     }
     assertLegacyAuthAllowed();
     const email = input.email.trim().toLowerCase();
