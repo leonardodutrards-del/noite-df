@@ -37,7 +37,11 @@ export default function CadastroPage() {
         throw new Error(data.error || 'Erro ao realizar cadastro.');
       }
 
-      router.push('/parceiro/onboarding');
+      if (data.requiresEmailConfirmation) {
+        router.push('/login?confirmacao=pendente');
+      } else {
+        router.push('/parceiro/onboarding');
+      }
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar conta.');
