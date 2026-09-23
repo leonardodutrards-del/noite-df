@@ -95,6 +95,7 @@ export interface VerificationToken {
 export interface AuthResult {
   user: AuthUser;
   token: string;
+  requiresEmailConfirmation?: boolean;
 }
 
 export interface VerificationResult {

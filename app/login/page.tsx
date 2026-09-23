@@ -8,6 +8,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect');
+  const confirmationPending = searchParams.get('confirmacao') === 'pendente';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,6 +58,12 @@ function LoginForm() {
           Acesse a área autenticada para gerenciar seu estabelecimento ou administrar o portal.
         </p>
 
+        {confirmationPending && !error && (
+          <div className="notice" style={{ marginBottom: 20 }}>
+            Conta criada. Confirme seu e-mail antes de entrar, caso a confirmação esteja habilitada no Supabase.
+          </div>
+        )}
+
         {error && (
           <div className="notice" style={{ borderColor: 'rgba(255, 77, 109, 0.4)', background: 'rgba(255, 77, 109, 0.1)', color: '#ff9d9d', marginBottom: 20 }}>
             {error}
@@ -94,13 +101,9 @@ function LoginForm() {
         </form>
 
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14 }}>
-          <p style={{ margin: 0, marginBottom: 12, textAlign: 'center' }}>
-            <strong style={{ display: 'block', marginBottom: 8 }}>Visitante?</strong>
-            <Link href="/visitante/login" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-              Acesso rápido por email
-            </Link>
-            {' • '}
-            <Link href="/visitante/cadastro" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+          <p style={{ margin: 0, textAlign: 'center' }}>
+            Ainda não tem conta?{' '}
+            <Link href="/cadastro" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
               Criar conta
             </Link>
           </p>

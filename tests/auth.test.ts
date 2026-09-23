@@ -64,6 +64,7 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
       name: 'João Silva',
       email: 'joao@bardogalego.com.br',
       password: 'SenhaForte@2026',
+      role: 'partner',
       establishmentName: 'Bar do Galego',
     });
 
