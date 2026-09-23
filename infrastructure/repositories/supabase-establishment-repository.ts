@@ -242,7 +242,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
       const rows = (await fetchFromTable('establishments', {
         publication_status: 'eq.published',
       })) as unknown[];
-      return rows.map((row) => rowToEstablishment(row as SupabaseRow & Record<string, unknown>));
+      return rows.map((row) => rowToEstablishment(row as SupabaseRow));
     } catch (error) {
       console.error('Error listing published establishments:', error);
       return [];
