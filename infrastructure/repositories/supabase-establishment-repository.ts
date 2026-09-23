@@ -127,7 +127,7 @@ async function updateRow(
   let url = `${cfg.url}/rest/v1/${table}`;
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(filters)) {
-    params.append(`${key}=eq.${value}`, '');
+    params.append(key, `eq.${value}`);
   }
   url += `?${params.toString()}`;
 
@@ -242,7 +242,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
         updated_at: new Date().toISOString(),
       };
 
-      const rows = (await updateRow('establishments', { id: `eq.${id}` }, updateData)) as unknown[];
+      const rows = (await updateRow('establishments', { id }, updateData)) as unknown[];
       if (rows.length === 0) return null;
       return rowToEstablishment(rows[0] as SupabaseRow & Record<string, unknown>);
     } catch (error) {
