@@ -30,6 +30,7 @@ export default function PartnerPage() {
   const router = useRouter();
 
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [isMasterAdmin, setIsMasterAdmin] = useState(false);
   const [establishment, setEstablishment] = useState<Establishment | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -57,6 +58,7 @@ export default function PartnerPage() {
         }
         const authData = await authRes.json();
         setUser(authData.user);
+        setIsMasterAdmin(Boolean(authData.isMasterAdmin));
 
         const estRes = await fetch('/api/parceiro/establishment');
         if (estRes.ok) {
@@ -191,7 +193,7 @@ export default function PartnerPage() {
               👁️ Ver Página Pública
             </Link>
           )}
-          {user?.role === 'admin' && (
+          {isMasterAdmin && (
             <Link
               href="/admin"
               className="button light"
