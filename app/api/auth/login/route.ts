@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/service';
 import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from '@/modules/auth/session';
+import { checkAuthRateLimit, requestIp } from '@/lib/security-rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,6 +11,19 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json({ error: 'E-mail e senha são obrigatórios.' }, { status: 400 });
+    }
+
+    const allowed = await checkAuthRateLimit({
+      ip: requestIp(request.headers),
+      email,
+      limit: 8,
+      windowSeconds: 15 * 60,
+    });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas. Tente novamente mais tarde.' },
+        { status: 429 }
+      );
     }
 
     const { user, token } = await authService.login({ email, password });
