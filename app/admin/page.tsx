@@ -7,6 +7,24 @@ import type { Establishment, PublicationStatus } from '@/modules/establishments/
 import type { SubscriptionAccount } from '@/modules/payments/types';
 import type { AuditLogEntry, AuthUser } from '@/modules/auth/types';
 
+type MasterOverview = {
+  generatedAt: string;
+  users: number;
+  establishments: number;
+  publishedEstablishments: number;
+  suspendedEstablishments: number;
+  pendingClaims: number;
+  activeSubscriptions: number;
+  monthlyRecurringRevenueCents: number;
+  interactions30d: number;
+  views30d: number;
+  whatsappClicks30d: number;
+  mapClicks30d: number;
+  instagramClicks30d: number;
+  favorites30d: number;
+  auditEvents: number;
+};
+
 type PartnerClaim = {
   id: string;
   establishmentId: string;
@@ -27,6 +45,7 @@ export default function AdminPage() {
   const [payments, setPayments] = useState<SubscriptionAccount[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   const [claims, setClaims] = useState<PartnerClaim[]>([]);
+  const [overview, setOverview] = useState<MasterOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
@@ -52,13 +71,18 @@ export default function AdminPage() {
         }
         setUser(authData.user);
 
-        const [estRes, claimsRes, payRes, audRes] = await Promise.all([
+        const [overviewRes, estRes, claimsRes, payRes, audRes] = await Promise.all([
+          fetch('/api/admin/overview'),
           fetch('/api/admin/establishments'),
           fetch('/api/admin/claims'),
           fetch('/api/admin/payments'),
           fetch('/api/admin/audit-log'),
         ]);
 
+        if (overviewRes.ok && isMounted) {
+          const d = await overviewRes.json();
+          setOverview(d.overview || null);
+        }
         if (estRes.ok && isMounted) {
           const d = await estRes.json();
           setEstablishments(d.establishments || []);
@@ -91,12 +115,17 @@ export default function AdminPage() {
 
   const reloadData = async () => {
     try {
-      const [estRes, claimsRes, payRes, audRes] = await Promise.all([
+      const [overviewRes, estRes, claimsRes, payRes, audRes] = await Promise.all([
+        fetch('/api/admin/overview'),
         fetch('/api/admin/establishments'),
         fetch('/api/admin/claims'),
         fetch('/api/admin/payments'),
         fetch('/api/admin/audit-log'),
       ]);
+      if (overviewRes.ok) {
+        const d = await overviewRes.json();
+        setOverview(d.overview || null);
+      }
       if (estRes.ok) {
         const d = await estRes.json();
         setEstablishments(d.establishments || []);
@@ -304,28 +333,69 @@ export default function AdminPage() {
       {/* Estatísticas Gerais */}
       <div className="metrics-grid" style={{ marginBottom: 32 }}>
         <article>
+          <span>Usuários</span>
+          <strong>{overview?.users ?? 0}</strong>
+        </article>
+        <article>
           <span>Total de Lugares</span>
-          <strong>{establishments.length}</strong>
+          <strong>{overview?.establishments ?? establishments.length}</strong>
         </article>
         <article>
           <span>Publicados</span>
-          <strong style={{ color: '#4ade80' }}>{publishedCount}</strong>
+          <strong style={{ color: '#4ade80' }}>
+            {overview?.publishedEstablishments ?? publishedCount}
+          </strong>
         </article>
         <article>
-          <span>Bloqueados / Suspensos</span>
-          <strong style={{ color: '#ff4d6d' }}>{suspendedCount}</strong>
+          <span>Suspensos</span>
+          <strong style={{ color: '#ff4d6d' }}>
+            {overview?.suspendedEstablishments ?? suspendedCount}
+          </strong>
         </article>
         <article>
-          <span>Solicitações Pendentes</span>
-          <strong>{pendingClaimsCount}</strong>
+          <span>Claims Pendentes</span>
+          <strong>{overview?.pendingClaims ?? pendingClaimsCount}</strong>
         </article>
         <article>
           <span>Assinaturas Ativas</span>
-          <strong>{activePaymentsCount}</strong>
+          <strong>{overview?.activeSubscriptions ?? activePaymentsCount}</strong>
         </article>
         <article>
-          <span>Ações Auditadas</span>
-          <strong>{auditLogs.length}</strong>
+          <span>MRR Real</span>
+          <strong>
+            {((overview?.monthlyRecurringRevenueCents ?? 0) / 100).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
+          </strong>
+        </article>
+        <article>
+          <span>Interações · 30 dias</span>
+          <strong>{overview?.interactions30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Visualizações · 30 dias</span>
+          <strong>{overview?.views30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>WhatsApp · 30 dias</span>
+          <strong>{overview?.whatsappClicks30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Rotas · 30 dias</span>
+          <strong>{overview?.mapClicks30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Instagram · 30 dias</span>
+          <strong>{overview?.instagramClicks30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Favoritos · 30 dias</span>
+          <strong>{overview?.favorites30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Eventos de Auditoria</span>
+          <strong>{overview?.auditEvents ?? auditLogs.length}</strong>
         </article>
       </div>
 
