@@ -4,7 +4,7 @@
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
-    CREATE TYPE user_role AS ENUM ('visitor', 'partner', 'operator', 'admin', 'partner', 'admin');
+    CREATE TYPE user_role AS ENUM ('visitor', 'partner', 'operator', 'admin');
   ELSE
     BEGIN
       ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'partner';
@@ -21,9 +21,9 @@ END $$;
 
 -- 2. Atualizar a tabela de perfis (profiles)
 ALTER TABLE IF EXISTS profiles
-  ADD COLUMN IF NOT EXISTS establishment_id UUID REFERENCES establishments(id) ON DELETE SET NULL,
-  ADD COLUMN IF NOT EXISTS last_sign_in_at TIMESTAMPTZ,
-  ALTER COLUMN role TYPE TEXT;
+  ADD COLUMN IF NOT EXISTS auth_user_id UUID UNIQUE REFERENCES auth.users(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS establishment_id TEXT REFERENCES establishments(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS last_sign_in_at TIMESTAMPTZ;
 
 -- 3. Atualizar a tabela de auditoria (audit_log)
 ALTER TABLE IF EXISTS audit_log
@@ -45,11 +45,11 @@ ALTER TABLE subscription_accounts ENABLE ROW LEVEL SECURITY;
 -- Políticas para profiles:
 DROP POLICY IF EXISTS "users_read_own_profile" ON profiles;
 CREATE POLICY "users_read_own_profile" ON profiles
-  FOR SELECT USING (auth.uid() = id);
+  FOR SELECT USING (auth.uid() = auth_user_id);
 
 DROP POLICY IF EXISTS "users_update_own_profile" ON profiles;
 CREATE POLICY "users_update_own_profile" ON profiles
-  FOR UPDATE USING (auth.uid() = id);
+  FOR UPDATE USING (auth.uid() = auth_user_id) WITH CHECK (auth.uid() = auth_user_id);
 
 -- Políticas para establishments:
 DROP POLICY IF EXISTS "public_read_published_establishments" ON establishments;
