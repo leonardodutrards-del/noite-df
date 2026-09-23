@@ -1,19 +1,27 @@
 # Noite DF
 
-Plataforma de descoberta de experiências locais: bares, restaurantes, eventos, agenda semanal, radar da cidade, ranking e ferramentas para estabelecimentos.
+Plataforma de descoberta de experiências locais em Brasília/DF: bares, restaurantes, eventos, agenda, Radar da Cidade, recomendações e ferramentas para estabelecimentos.
 
-## Estado desta entrega
+## Estado atual
 
-> **Nota:** esta versão está em modo demonstração (`SHOWCASE_MODE=true`), com dados mockados e pagamentos desativados. Ainda não há Supabase, Mercado Pago ou autenticação real configurados — isso está previsto para o próximo lote de trabalho.
+O projeto já possui uma base operacional de produção:
 
-- site público responsivo em modo demonstração;
-- Radar, Índice Noite DF, perfil rápido, ranking, timeline, agenda e roteiro turístico;
-- páginas de planos e painel parceiro demonstrativo;
-- API inicial de analytics com persistência opcional no Supabase;
-- criação inicial de assinaturas Mercado Pago;
-- esquema PostgreSQL para operação, moderação, avaliações, parceiros, auditoria e pagamentos;
-- SEO, sitemap, robots, manifest PWA, termos e privacidade provisórios;
-- configuração de deploy para Vercel na região de São Paulo.
+- site público responsivo e catálogo curado;
+- busca, Radar da Cidade, agenda, SEO, sitemap e PWA;
+- autenticação persistente via Supabase Auth;
+- cadastro público sempre como `visitor`;
+- promoção para `partner` somente após reivindicação e aprovação administrativa;
+- Painel Master protegido por papel `admin` + allowlist privada `MASTER_ADMIN_EMAIL`;
+- painel do parceiro com persistência no Supabase;
+- analytics reais por estabelecimento;
+- fila de reivindicações e moderação;
+- auditoria persistente;
+- integração Mercado Pago com validação de webhook, idempotência e sincronização;
+- reembolso real em produção quando existe `provider_payment_id`;
+- headers de segurança e rate limiting de login;
+- deploy automatizado na Vercel.
+
+Pagamentos continuam condicionados a `PAYMENTS_ENABLED=true` e `SHOWCASE_MODE=false`.
 
 ## Rodar localmente
 
@@ -26,19 +34,17 @@ pnpm run dev
 
 Acesse `http://localhost:3000`.
 
-## Modo demonstração
+## Segurança
 
-Sem Supabase, o catálogo usa seeds e analytics responde com `persisted: false`. Sem Mercado Pago, a API de assinatura retorna 503 com uma mensagem de configuração.
+Nunca inclua credenciais ou valores reais de secrets no Git.
+
+Variáveis sensíveis como `SUPABASE_SERVICE_ROLE_KEY`, `MERCADO_PAGO_ACCESS_TOKEN`,
+`MERCADO_PAGO_WEBHOOK_SECRET` e `MASTER_ADMIN_EMAIL` devem ser configuradas apenas
+no ambiente de execução.
+
+O Painel Master em `/admin` retorna 404 para qualquer sessão que não corresponda ao
+usuário Master configurado.
 
 ## Produção
 
-Leia [DEPLOY.md](./DEPLOY.md). Credenciais nunca devem ser incluídas no Git ou no ZIP.
-
-## Próximos lotes
-
-1. autenticação e autorização por papéis;
-2. repositórios PostgreSQL reais para catálogo e agenda;
-3. painel administrativo com revisão e publicação;
-4. reivindicação e painel do parceiro;
-5. webhook Mercado Pago com validação e idempotência;
-6. avaliações, denúncias, reputação e métricas reais.
+Leia [DEPLOY.md](./DEPLOY.md) antes de ativar pagamentos ou migrar dados.
