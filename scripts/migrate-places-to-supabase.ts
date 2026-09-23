@@ -1,5 +1,5 @@
 /**
- * Script para migrar os 50 estabelecimentos do seed para o Supabase.
+ * Script para migrar os estabelecimentos do seed atual para o Supabase.
  * 
  * Uso:
  * npx tsx scripts/migrate-places-to-supabase.ts
@@ -64,6 +64,16 @@ async function insertPlace(place: (typeof places)[0]) {
     phone: null,
     website: null,
     price_range: place.price,
+    vibe: place.vibe,
+    music: place.music,
+    audience: place.audience,
+    maps_query: place.mapsQuery,
+    owner_managed: place.ownerManaged ?? false,
+    crowd_status: place.crowdStatus ?? 'a confirmar',
+    weekly_schedule: place.weeklySchedule ?? [],
+    current_promotion: place.currentPromotion ?? null,
+    public_ratings: place.publicRatings ?? [],
+    public_rating_summary: place.publicRatingSummary ?? null,
     publication_status: place.publicationStatus || 'published',
     verified_at: null,
     accessibility: {},
@@ -123,16 +133,6 @@ async function insertTags(place: (typeof places)[0]) {
   if (!response.ok) {
     console.warn(`Warning: Failed to insert tags for ${place.name}: ${response.status}`);
   }
-}
-
-async function insertPublicRatings(place: (typeof places)[0]) {
-  const cfg = config();
-
-  if (!place.publicRatings || place.publicRatings.length === 0) return;
-
-  // Store publicRatings as JSON in a custom table or extend the establishments table
-  // For now, we'll skip this as it requires schema extension
-  // TODO: Create a public_ratings table if needed
 }
 
 async function main() {
