@@ -11,7 +11,6 @@ export default function CadastroPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
-  const [establishmentName, setEstablishmentName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +29,6 @@ export default function CadastroPage() {
           name,
           email,
           password,
-          establishmentName,
         }),
       });
 
@@ -39,10 +37,10 @@ export default function CadastroPage() {
         throw new Error(data.error || 'Erro ao realizar cadastro.');
       }
 
-      router.push('/parceiro');
+      router.push('/parceiro/onboarding');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao cadastrar parceiro.');
+      setError(err instanceof Error ? err.message : 'Erro ao criar conta.');
     } finally {
       setLoading(false);
     }
@@ -61,14 +59,16 @@ export default function CadastroPage() {
 
       <div style={{ maxWidth: 520, margin: '30px auto 80px' }}>
         <div className="panel account-panel" style={{ padding: 32 }}>
-          <span className="badge" style={{ marginBottom: 16 }}>Parceiro Noite DF</span>
-          <h1 style={{ fontSize: '2.2rem', margin: '8px 0 12px' }}>Crie sua conta de parceiro</h1>
+          <span className="badge" style={{ marginBottom: 16 }}>Conta Noite DF</span>
+          <h1 style={{ fontSize: '2.2rem', margin: '8px 0 12px' }}>Crie sua conta</h1>
           <p style={{ marginBottom: 20, fontSize: 14 }}>
-            Identifique seu estabelecimento e acesse a área do parceiro.
+            Crie sua conta com segurança. Se você representa um estabelecimento, poderá solicitar a gestão após entrar.
           </p>
 
           <div className="notice" style={{ fontSize: 13, marginBottom: 24, padding: 14 }}>
-            <b>Quer descobrir lugares para sair?</b><br /><Link href="/visitante/cadastro">Criar conta de visitante →</Link><br /><Link href="/">Explorar sem criar conta</Link>
+            <b>Representa um estabelecimento?</b><br />
+            Depois do cadastro, você poderá solicitar a gestão do local. O acesso de parceiro só é liberado após aprovação do Master Admin.<br />
+            <Link href="/">Explorar sem criar conta</Link>
           </div>
 
           {error && (
@@ -92,19 +92,6 @@ export default function CadastroPage() {
             </div>
 
             <div>
-              <label htmlFor="establishment-name" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
-                Nome do Estabelecimento
-              </label>
-              <input id="establishment-name" autoComplete="organization" disabled={loading}                 type="text"
-                placeholder="Ex: Bar do Galego, Sunset Gastrobar..."
-                value={establishmentName}
-                onChange={(e) => setEstablishmentName(e.target.value)}
-                required
-                style={{ width: '100%' }}
-              />
-            </div>
-
-            <div>
               <label htmlFor="partner-email" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
                 E-mail corporativo / comercial
               </label>
@@ -119,21 +106,21 @@ export default function CadastroPage() {
 
             <div>
               <label htmlFor="partner-password" style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>
-                Senha de acesso (mínimo 6 caracteres)
+                Senha de acesso (mínimo 12 caracteres)
               </label>
               <input id="partner-password" autoComplete="new-password" disabled={loading}                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={12}
                 style={{ width: '100%' }}
               />
             </div>
 
-            <div><label htmlFor="confirm-password">Confirme sua senha</label><input id="confirm-password" type="password" autoComplete="new-password" required minLength={6} disabled={loading} value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>
+            <div><label htmlFor="confirm-password">Confirme sua senha</label><input id="confirm-password" type="password" autoComplete="new-password" required minLength={12} disabled={loading} value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>
             <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 12, padding: 16 }}>
-              {loading ? 'Criando sua conta...' : 'Criar conta de parceiro'}
+              {loading ? 'Criando sua conta...' : 'Criar conta'}
             </button>
           </form><p className="field-hint">Consulte os <Link href="/termos">Termos de Uso</Link> e a <Link href="/privacidade">Política de Privacidade</Link>.</p>
 
