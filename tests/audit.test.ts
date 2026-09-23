@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { authService } from '@/modules/auth/service';
+import { seedAuthTestUsers, TEST_USERS } from './auth-fixtures';
 import { establishmentService } from '@/modules/establishments/service';
 import { paymentAdminService } from '@/modules/payments/service';
 import { establishmentRepository } from '@/infrastructure/repositories/in-memory-establishment-repository';
 
 describe('Auditoria e Rastreabilidade de Ações', () => {
   beforeEach(() => {
-    authService.resetToDefaults();
+    seedAuthTestUsers();
     establishmentRepository.reset();
     paymentAdminService.resetToDefaults();
   });
@@ -43,8 +44,8 @@ describe('Auditoria e Rastreabilidade de Ações', () => {
 
   it('registra before_data e after_data em alterações de estabelecimentos', async () => {
     const { user: partner } = await authService.login({
-      email: 'parceiro@fivebar.com.br',
-      password: 'Parceiro@123456',
+      email: TEST_USERS.five.email,
+      password: TEST_USERS.five.password,
     });
 
     const beforePlace = await establishmentRepository.findById('five-sport-bar');
@@ -62,7 +63,7 @@ describe('Auditoria e Rastreabilidade de Ações', () => {
     );
 
     expect(updateLog).toBeDefined();
-    expect(updateLog?.actorEmail).toBe('parceiro@fivebar.com.br');
+    expect(updateLog?.actorEmail).toBe(TEST_USERS.five.email);
     expect(updateLog?.actorRole).toBe('partner');
     expect((updateLog?.beforeData as { description?: string })?.description).toBe(beforePlace?.description);
     expect((updateLog?.afterData as { description?: string })?.description).toBe(
@@ -72,8 +73,8 @@ describe('Auditoria e Rastreabilidade de Ações', () => {
 
   it('registra suspensão administrativa com justificativa', async () => {
     const { user: master } = await authService.login({
-      email: 'admin@noitedf.com.br',
-      password: 'Admin@123456',
+      email: TEST_USERS.admin.email,
+      password: TEST_USERS.admin.password,
     });
 
     await establishmentService.blockEstablishment('pinella', master, 'Denúncia de horário irregular');
@@ -82,7 +83,7 @@ describe('Auditoria e Rastreabilidade de Ações', () => {
     const blockLog = logs.find((l) => l.action === 'block_establishment' && l.entityId === 'pinella');
 
     expect(blockLog).toBeDefined();
-    expect(blockLog?.actorEmail).toBe('admin@noitedf.com.br');
+    expect(blockLog?.actorEmail).toBe(TEST_USERS.admin.email);
     expect(blockLog?.details?.reason).toBe('Denúncia de horário irregular');
     expect((blockLog?.afterData as { publicationStatus?: string })?.publicationStatus).toBe('suspended');
   });
