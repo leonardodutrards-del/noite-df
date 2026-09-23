@@ -20,15 +20,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nome é obrigatório.' }, { status: 400 });
     }
 
-    const { user, token } = await authService.signUp({
+    const { user, token, requiresEmailConfirmation } = await authService.signUp({
       email,
       password,
       name,
       role: 'visitor',
     });
 
-    const response = NextResponse.json({ user }, { status: 201 });
-    response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+    const response = NextResponse.json(
+      { user, requiresEmailConfirmation: Boolean(requiresEmailConfirmation) },
+      { status: 201 }
+    );
+
+    if (token) {
+      response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+    }
 
     return response;
   } catch (error) {
