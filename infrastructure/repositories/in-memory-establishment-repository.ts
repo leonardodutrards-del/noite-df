@@ -22,7 +22,7 @@ export class InMemoryEstablishmentRepository implements EstablishmentRepository 
 
   async listPublished(): Promise<Establishment[]> {
     return Array.from(this.places.values()).filter(
-      (place) => place.publicationStatus !== 'suspended' && place.publicationStatus !== 'expired'
+      (place) => place.publicationStatus === 'published'
     );
   }
 
@@ -56,5 +56,4 @@ export class InMemoryEstablishmentRepository implements EstablishmentRepository 
   }
 }
 
-// Export for testing and development purposes
 export const establishmentRepository = new InMemoryEstablishmentRepository();
