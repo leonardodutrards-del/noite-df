@@ -25,8 +25,8 @@ describe('SEO, Slugs and Sitemap consistency', () => {
     expect(slugs).not.toContain('puxadinho-cozinha-e-bar');
   });
 
-  it('o sitemap gera apenas URLs absolutas, canônicas e com páginas existentes', () => {
-    const entries = sitemap();
+  it('o sitemap gera apenas URLs absolutas, canônicas e com páginas existentes', async () => {
+    const entries = await sitemap();
     expect(entries.length).toBeGreaterThan(45);
 
     const urls = entries.map((e) => e.url);
