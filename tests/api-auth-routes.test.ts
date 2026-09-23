@@ -67,7 +67,7 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
     expect(res.status).toBe(401);
   });
 
-  it('POST /api/auth/signup cria novo parceiro e retorna 201 com cookie', async () => {
+  it('POST /api/auth/signup cria visitante sem privilégios e retorna 201 com cookie', async () => {
     const req = createJsonRequest('/api/auth/signup', 'POST', {
       name: 'Roberto Diniz',
       email: 'roberto@dinizbar.com.br',
@@ -78,8 +78,8 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
     const res = await signupRoute(req);
     expect(res.status).toBe(201);
     const data = await res.json();
-    expect(data.user.role).toBe('partner');
-    expect(data.user.establishmentId).toBe('diniz-pub');
+    expect(data.user.role).toBe('visitor');
+    expect(data.user.establishmentId).toBeUndefined();
   });
 
   it('GET /api/auth/me retorna dados do usuário logado ou 401 para não autenticado', async () => {
