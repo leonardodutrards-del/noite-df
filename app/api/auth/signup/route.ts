@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       name,
       establishmentName,
       establishmentId,
-      role: 'partner',
+      role: 'visitor',
     });
 
     const response = NextResponse.json({ user }, { status: 201 });
