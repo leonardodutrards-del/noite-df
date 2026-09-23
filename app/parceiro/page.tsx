@@ -6,13 +6,25 @@ import { useRouter } from 'next/navigation';
 import type { CrowdStatus, Establishment, Promotion, WeeklyScheduleItem } from '@/modules/establishments/types';
 import type { AuthUser } from '@/modules/auth/types';
 
-const defaultMetrics = [
-  ['Visualizações', '14.280'],
-  ['Cliques no WhatsApp', '428'],
-  ['Rotas abertas', '1.120'],
-  ['Favoritos', '645'],
-  ['Conversão estimada', '7,4%'],
-];
+type PartnerAnalytics = {
+  periodDays: number;
+  views: number;
+  whatsappClicks: number;
+  mapClicks: number;
+  instagramClicks: number;
+  favorites: number;
+  conversionRate: number;
+};
+
+const EMPTY_ANALYTICS: PartnerAnalytics = {
+  periodDays: 30,
+  views: 0,
+  whatsappClicks: 0,
+  mapClicks: 0,
+  instagramClicks: 0,
+  favorites: 0,
+  conversionRate: 0,
+};
 
 export default function PartnerPage() {
   const router = useRouter();
@@ -22,6 +34,7 @@ export default function PartnerPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [analytics, setAnalytics] = useState<PartnerAnalytics>(EMPTY_ANALYTICS);
 
   // Form states
   const [crowdStatus, setCrowdStatus] = useState<CrowdStatus>('a confirmar');
@@ -60,6 +73,12 @@ export default function PartnerPage() {
             setDescription(est.description || '');
             setAddress(est.address || '');
             setSchedule(est.weeklySchedule || []);
+
+            const analyticsRes = await fetch('/api/parceiro/analytics?days=30');
+            if (analyticsRes.ok) {
+              const analyticsData = await analyticsRes.json();
+              if (analyticsData.analytics) setAnalytics(analyticsData.analytics);
+            }
           }
         }
       } catch {
@@ -141,6 +160,15 @@ export default function PartnerPage() {
     setSchedule(updated);
   };
 
+  const metrics = [
+    ['Visualizações (30 dias)', analytics.views.toLocaleString('pt-BR')],
+    ['Cliques no WhatsApp', analytics.whatsappClicks.toLocaleString('pt-BR')],
+    ['Rotas abertas', analytics.mapClicks.toLocaleString('pt-BR')],
+    ['Cliques no Instagram', analytics.instagramClicks.toLocaleString('pt-BR')],
+    ['Favoritos', analytics.favorites.toLocaleString('pt-BR')],
+    ['Conversão estimada', `${analytics.conversionRate.toLocaleString('pt-BR')}%`],
+  ];
+
   if (loading) {
     return (
       <main className="container" style={{ paddingTop: 60, textAlign: 'center' }}>
@@ -216,7 +244,7 @@ export default function PartnerPage() {
 
       {/* Indicadores */}
       <div className="metrics-grid">
-        {defaultMetrics.map(([label, value]) => (
+        {metrics.map(([label, value]) => (
           <article key={label}>
             <span>{label}</span>
             <strong>{value}</strong>
