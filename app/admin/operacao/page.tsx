@@ -36,7 +36,24 @@ export default function OperationPage() {
     setItems(payload.items ?? []);
   }
 
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/admin/operacao', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) {
+          if (!cancelled) setMessage(response.status === 401 || response.status === 403 ? 'Acesso restrito ao Master Admin.' : 'Falha ao carregar operação.');
+          return null;
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        if (!cancelled && payload) setItems(payload.items ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setMessage('Falha ao carregar operação.');
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { track } from '@/lib/analytics';
 
@@ -20,8 +20,6 @@ export function FavoriteButton({ establishmentId }: { establishmentId: string })
   const router = useRouter();
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => { setSaved(localIds().includes(establishmentId)); }, [establishmentId]);
 
   async function toggle() {
     setBusy(true);
