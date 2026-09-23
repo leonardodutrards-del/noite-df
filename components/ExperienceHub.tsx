@@ -23,8 +23,14 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
   const [duration, setDuration] = useState('1 noite');
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
 
-  const regions = useMemo(() => ['todos', ...Array.from(new Set(places.map((place) => place.region))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
-  const vibes = useMemo(() => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
+  const regions = useMemo(
+    () => ['todos', ...Array.from(new Set(places.map((place) => place.region))).sort((a, b) => a.localeCompare(b, 'pt-BR'))],
+    [places]
+  );
+  const vibes = useMemo(
+    () => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))],
+    [places]
+  );
   const filteredPlaces = useMemo(
     () => recommendPlaces(query, region, vibe, places).filter(
       (place) => !radarFilter || matchesRadar(place, radarFilter)
