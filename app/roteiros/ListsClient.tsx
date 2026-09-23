@@ -2,18 +2,20 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type SavedList = { id: string; name: string; created_at: string };
 type SavedItem = { list_id: string; establishment_id: string };
 
 export function ListsClient({ initialPlaceId }: { initialPlaceId: string }) {
+  const router = useRouter();
   const [lists, setLists] = useState<SavedList[]>([]);
   const [items, setItems] = useState<SavedItem[]>([]);
   const [name, setName] = useState('');
 
   async function load() {
     const response = await fetch('/api/user/lists');
-    if (response.status === 401) { window.location.href = '/login?redirect=/roteiros'; return; }
+    if (response.status === 401) { router.push('/login?redirect=/roteiros'); return; }
     if (!response.ok) return;
     const payload = await response.json();
     setLists(payload.lists ?? []);
@@ -25,7 +27,7 @@ export function ListsClient({ initialPlaceId }: { initialPlaceId: string }) {
     fetch('/api/user/lists')
       .then(async (response) => {
         if (response.status === 401) {
-          window.location.href = '/login?redirect=/roteiros';
+          router.push('/login?redirect=/roteiros');
           return null;
         }
         if (!response.ok) return null;
@@ -39,7 +41,7 @@ export function ListsClient({ initialPlaceId }: { initialPlaceId: string }) {
       })
       .catch(() => undefined);
     return () => { cancelled = true; };
-  }, []);
+  }, [router]);
 
   async function createList() {
     if (!name.trim()) return;
