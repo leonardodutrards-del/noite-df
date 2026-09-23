@@ -8,6 +8,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect');
+  const confirmationPending = searchParams.get('confirmacao') === 'pendente';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,6 +57,12 @@ function LoginForm() {
         <p style={{ marginBottom: 24, fontSize: 14 }}>
           Acesse a área autenticada para gerenciar seu estabelecimento ou administrar o portal.
         </p>
+
+        {confirmationPending && !error && (
+          <div className="notice" style={{ marginBottom: 20 }}>
+            Conta criada. Confirme seu e-mail antes de entrar, caso a confirmação esteja habilitada no Supabase.
+          </div>
+        )}
 
         {error && (
           <div className="notice" style={{ borderColor: 'rgba(255, 77, 109, 0.4)', background: 'rgba(255, 77, 109, 0.1)', color: '#ff9d9d', marginBottom: 20 }}>
