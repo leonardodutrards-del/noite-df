@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next';
-import { places } from '@/data/places';
+import { establishmentService } from '@/modules/establishments/service';
 import { getSitemapCuratedUrls } from '@/lib/curated-routes';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
   const now = new Date();
+  const places = await establishmentService.search({});
 
   // Static institutional pages
   const staticRoutes: MetadataRoute.Sitemap = [
