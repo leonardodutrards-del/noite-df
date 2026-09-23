@@ -6,11 +6,25 @@ const PASSWORD_SCHEME = 'scrypt-v1';
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString('hex');
   const digest = crypto.scryptSync(password, salt, 64).toString('hex');
-  return `${PASSWORD_SCHEME}${salt}${digest}`;
+  return [PASSWORD_SCHEME, salt, digest].join(':');
 }
 
 function verifyPassword(password: string, encodedHash: string): boolean {
-  const [scheme, salt, digestHex] = encodedHash.split('
+  const [scheme, salt, digestHex] = encodedHash.split(':');
+  if (scheme !== PASSWORD_SCHEME || !salt || !digestHex) return false;
+
+  const expected = Buffer.from(digestHex, 'hex');
+  const actual = crypto.scryptSync(password, salt, expected.length);
+  return expected.length === actual.length && crypto.timingSafeEqual(expected, actual);
+}
+
+function assertLegacyAuthAllowed(): void {
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_LEGACY_AUTH !== 'true') {
+    throw new Error('AUTH_NOT_CONFIGURED');
+  }
+}
+
+function generateSecureToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
