@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 const schema = readFileSync(resolve(process.cwd(), 'database/schema.sql'), 'utf8');
 const migration001 = readFileSync(resolve(process.cwd(), 'database/migrations/001_auth_and_partner_roles.sql'), 'utf8');
 const migration002 = readFileSync(resolve(process.cwd(), 'database/migrations/002_lgpd_consent.sql'), 'utf8');
+const migration003 = readFileSync(resolve(process.cwd(), 'database/migrations/003_align_domain_identifiers.sql'), 'utf8');
 const repository = readFileSync(
   resolve(process.cwd(), 'infrastructure/repositories/supabase-establishment-repository.ts'),
   'utf8'
@@ -35,6 +36,12 @@ describe('Contrato de IDs e schema de produção', () => {
     );
     expect(schema).toContain('for select using (auth.uid() = auth_user_id)');
     expect(schema).toContain('with check (auth.uid() = auth_user_id)');
+  });
+
+  it('protege a conversão de bancos legados com dados existentes', () => {
+    expect(migration003).toContain('Migration 003 requires empty profiles and establishments tables');
+    expect(migration003).toContain('ALTER COLUMN id TYPE text USING id::text');
+    expect(migration003).toContain('auth_user_id uuid UNIQUE REFERENCES auth.users(id)');
   });
 
   it('monta filtros PATCH do PostgREST com chave e operador separados', () => {
