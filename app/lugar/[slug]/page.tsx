@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { places } from '@/data/places';
+import { establishmentService } from '@/modules/establishments/service';
 import { events } from '@/data/events';
 import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 import { PlaceContact } from '@/components/PlaceContact';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import {
   getConfirmedCrowdStatus,
   getConfirmedSchedules,
@@ -24,14 +25,13 @@ export const revalidate = 300;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 export async function generateStaticParams() {
-  return places.map((place) => ({
-    slug: place.id,
-  }));
+  const places = await establishmentService.search({});
+  return places.map((place) => ({ slug: place.id }));
 }
 
 export async function generateMetadata({ params }: PlacePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const place = places.find((p) => p.id === slug);
+  const place = await establishmentService.getById(slug);
 
   if (!place) {
     return {
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
 
 export default async function PlacePage({ params }: PlacePageProps) {
   const { slug } = await params;
-  const place = places.find((p) => p.id === slug);
+  const place = await establishmentService.getById(slug);
 
   if (!place) {
     notFound();
@@ -198,6 +198,12 @@ export default async function PlacePage({ params }: PlacePageProps) {
           )}
 
           <PlaceContact place={place} />
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', margin: '14px 0 20px' }}>
+            <FavoriteButton establishmentId={place.id} />
+            <Link className="button ghost" href={`/roteiros?place=${encodeURIComponent(place.id)}`}>
+              Salvar em roteiro
+            </Link>
+          </div>
           {placeEvents.length === 0 && <p className="field-hint">Nenhum evento com data confirmada cadastrado neste perfil no momento. Consulte a programação, a entrada e o couvert diretamente com o local.</p>}
           {placeEvents.length > 0 && (
             <div style={{ margin: '24px 0', padding: '16px', background: 'var(--card-2)', borderRadius: '16px' }}>

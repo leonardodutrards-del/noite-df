@@ -1,12 +1,18 @@
 import { places } from '@/data/seeds/places';
+import type { Establishment } from '@/modules/establishments/types';
 
 const normalize = (value: string) =>
   value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-export function recommendPlaces(query: string, region: string, vibe: string) {
+export function recommendPlaces(
+  query: string,
+  region: string,
+  vibe: string,
+  source: Establishment[] = places
+) {
   const normalizedQuery = normalize(query);
 
-  return places.filter((place) => {
+  return source.filter((place) => {
     const haystack = normalize([
       place.name,
       place.region,

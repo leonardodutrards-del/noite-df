@@ -51,8 +51,8 @@ export class EstablishmentService {
     if (!establishment) return null;
 
     if (!actor) {
-      // Public access: only show if published
-      if (establishment.publicationStatus === 'suspended' || establishment.publicationStatus === 'expired') {
+      // Public access: expose only explicitly published records.
+      if (establishment.publicationStatus !== 'published') {
         return null;
       }
       return establishment;

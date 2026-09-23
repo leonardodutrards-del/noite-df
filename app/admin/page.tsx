@@ -293,6 +293,9 @@ export default function AdminPage() {
       <header className="topbar">
         <Link className="brand" href="/">Noite DF</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <Link href="/admin/operacao" className="button ghost" style={{ padding: '8px 14px', fontSize: 13 }}>
+            Operação & Growth
+          </Link>
           <Link href="/parceiro" className="button ghost" style={{ padding: '8px 14px', fontSize: 13 }}>
             Área do Parceiro
           </Link>

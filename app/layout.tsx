@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
@@ -15,13 +18,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     url: appUrl,
-    siteName: 'Noite DF'
+    siteName: 'Noite DF',
   },
-  robots: { index: true, follow: true }
+  robots: { index: true, follow: true },
+  verification: googleVerification ? { google: googleVerification } : undefined,
 };
 
 export const viewport: Viewport = { themeColor: '#0b0b12', colorScheme: 'dark' };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body>{children}</body></html>;
+  return (
+    <html lang="pt-BR">
+      <body>
+        {children}
+        {measurementId ? <GoogleAnalytics measurementId={measurementId} /> : null}
+      </body>
+    </html>
+  );
 }

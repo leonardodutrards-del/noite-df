@@ -4,7 +4,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 
 import { useMemo, useState } from 'react';
-import { places } from '@/data/places';
+import type { Establishment } from '@/modules/establishments/types';
 import { events } from '@/data/events';
 import { PlaceCard } from '@/components/PlaceCard';
 import { EventCard } from '@/components/EventCard';
@@ -14,7 +14,8 @@ import { track } from '@/lib/analytics';
 import { matchesRadar, radarOptions, type RadarFilter } from '@/lib/radar';
 
 
-export function ExperienceHub() {
+export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[] }) {
+  const places = initialPlaces;
   const [query, setQuery] = useState('');
   const [region, setRegion] = useState('todos');
   const [vibe, setVibe] = useState('todas');
@@ -22,9 +23,20 @@ export function ExperienceHub() {
   const [duration, setDuration] = useState('1 noite');
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
 
-  const regions = useMemo(() => ['todos', ...Array.from(new Set(places.map((place) => place.region))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
-  const vibes = useMemo(() => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))], []);
-  const filteredPlaces = useMemo(() => recommendPlaces(query, region, vibe).filter(place => !radarFilter || matchesRadar(place, radarFilter)), [query, region, vibe, radarFilter]);
+  const regions = useMemo(
+    () => ['todos', ...Array.from(new Set(places.map((place) => place.region))).sort((a, b) => a.localeCompare(b, 'pt-BR'))],
+    [places]
+  );
+  const vibes = useMemo(
+    () => ['todas', ...Array.from(new Set(places.flatMap((place) => place.vibe))).sort((a, b) => a.localeCompare(b, 'pt-BR'))],
+    [places]
+  );
+  const filteredPlaces = useMemo(
+    () => recommendPlaces(query, region, vibe, places).filter(
+      (place) => !radarFilter || matchesRadar(place, radarFilter)
+    ),
+    [query, region, vibe, radarFilter, places]
+  );
   const selectedRadar = radarOptions.find(option => option.id === radarFilter);
   const hasFilters = Boolean(query || region !== 'todos' || vibe !== 'todas' || radarFilter);
   const clearFilters = () => {
@@ -39,7 +51,7 @@ export function ExperienceHub() {
     return places
       .filter((place) => hasConfirmedRating(place) && typeof place.rating === 'number' && place.rating > 0)
       .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-  }, []);
+  }, [places]);
 
   // Agenda strictly requires confirmed, unexpired events
   const confirmedEvents = useMemo(() => {

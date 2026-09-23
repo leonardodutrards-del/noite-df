@@ -7,6 +7,7 @@ import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 import { getConfirmedCrowdStatus, getConfirmedSchedules, hasConfirmedRating, hasRealValue } from '@/lib/data-quality';
 import { track } from '@/lib/analytics';
 import { PlaceContact } from '@/components/PlaceContact';
+import { FavoriteButton } from '@/components/FavoriteButton';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
@@ -62,6 +63,12 @@ export function PlaceCard({ place }: { place: Place }) {
         </div>
       )}
       <PlaceContact place={place} compact />
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 12 }}>
+        <FavoriteButton establishmentId={place.id} />
+        <Link className="button ghost" href={`/roteiros?place=${encodeURIComponent(place.id)}`}>
+          Adicionar a roteiro
+        </Link>
+      </div>
       <div className="meta">
         {isRatingConfirmed && place.rating !== undefined ? (
           <span>⭐ {place.rating.toFixed(1)}</span>
