@@ -32,6 +32,12 @@ create table establishments (
   whatsapp text,
   instagram text,
   website text,
+  agenda_url text,
+  operating_hours jsonb,
+  menu jsonb,
+  admission_note text,
+  contact_source_url text,
+  contact_checked_at date,
   price_range text,
   vibe text[] not null default '{}',
   music text[] not null default '{}',
@@ -190,6 +196,7 @@ create table interactions (
 create index interactions_created_at_idx on interactions(created_at);
 create index events_starts_at_idx on events(starts_at);
 create index establishments_region_idx on establishments(region);
+create index establishments_updated_at_idx on establishments(updated_at);
 
 -- Assinaturas e faturamento (Mercado Pago)
 create table if not exists subscription_accounts (
