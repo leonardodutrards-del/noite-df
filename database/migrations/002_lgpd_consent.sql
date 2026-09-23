@@ -3,7 +3,7 @@
 
 create table lgpd_consents (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references profiles(id) on delete cascade,
+  user_id text not null references profiles(id) on delete cascade,
   email text not null,
   phone text,
   
