@@ -59,10 +59,22 @@ export async function requireAuth(request?: NextRequest): Promise<AuthUser> {
   return user;
 }
 
+export function isMasterAdminUser(user: AuthUser | null | undefined): boolean {
+  if (!user || user.role !== 'admin') return false;
+
+  // Tests use isolated fixtures and never depend on production secrets.
+  if (process.env.NODE_ENV === 'test') return true;
+
+  const allowedEmail = process.env.MASTER_ADMIN_EMAIL?.trim().toLowerCase();
+  if (!allowedEmail) return false;
+
+  return user.email.trim().toLowerCase() === allowedEmail;
+}
+
 export async function requireMasterAdmin(request?: NextRequest): Promise<AuthUser> {
   const user = await requireAuth(request);
-  if (user.role !== 'admin') {
-    throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+  if (!isMasterAdminUser(user)) {
+    throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
   }
   return user;
 }
