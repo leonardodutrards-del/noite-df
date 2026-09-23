@@ -9,8 +9,6 @@ export async function POST(request: NextRequest) {
     const email = typeof body.email === 'string' ? body.email.trim() : '';
     const password = typeof body.password === 'string' ? body.password : '';
     const name = typeof body.name === 'string' ? sanitizeTextInput(body.name) : '';
-    const establishmentName = typeof body.establishmentName === 'string' ? sanitizeTextInput(body.establishmentName) : undefined;
-    const establishmentId = typeof body.establishmentId === 'string' ? body.establishmentId.trim() : undefined;
 
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'E-mail inválido.' }, { status: 400 });
@@ -26,9 +24,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       name,
-      establishmentName,
-      establishmentId,
-      role: 'partner',
+      role: 'visitor',
     });
 
     const response = NextResponse.json({ user }, { status: 201 });

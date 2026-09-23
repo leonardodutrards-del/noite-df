@@ -7,14 +7,26 @@ import type { Establishment, PublicationStatus } from '@/modules/establishments/
 import type { SubscriptionAccount } from '@/modules/payments/types';
 import type { AuditLogEntry, AuthUser } from '@/modules/auth/types';
 
+type PartnerClaim = {
+  id: string;
+  establishmentId: string;
+  requesterId: string;
+  evidence: Record<string, unknown>;
+  status: 'pending' | 'approved' | 'rejected' | 'revoked';
+  reviewedBy?: string;
+  reviewedAt?: string;
+  createdAt: string;
+};
+
 export default function AdminPage() {
   const router = useRouter();
 
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [activeTab, setActiveTab] = useState<'establishments' | 'payments' | 'audit'>('establishments');
+  const [activeTab, setActiveTab] = useState<'establishments' | 'claims' | 'payments' | 'audit'>('establishments');
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [payments, setPayments] = useState<SubscriptionAccount[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
+  const [claims, setClaims] = useState<PartnerClaim[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
@@ -40,8 +52,9 @@ export default function AdminPage() {
         }
         setUser(authData.user);
 
-        const [estRes, payRes, audRes] = await Promise.all([
+        const [estRes, claimsRes, payRes, audRes] = await Promise.all([
           fetch('/api/admin/establishments'),
+          fetch('/api/admin/claims'),
           fetch('/api/admin/payments'),
           fetch('/api/admin/audit-log'),
         ]);
@@ -49,6 +62,10 @@ export default function AdminPage() {
         if (estRes.ok && isMounted) {
           const d = await estRes.json();
           setEstablishments(d.establishments || []);
+        }
+        if (claimsRes.ok && isMounted) {
+          const d = await claimsRes.json();
+          setClaims(d.claims || []);
         }
         if (payRes.ok && isMounted) {
           const d = await payRes.json();
@@ -74,14 +91,19 @@ export default function AdminPage() {
 
   const reloadData = async () => {
     try {
-      const [estRes, payRes, audRes] = await Promise.all([
+      const [estRes, claimsRes, payRes, audRes] = await Promise.all([
         fetch('/api/admin/establishments'),
+        fetch('/api/admin/claims'),
         fetch('/api/admin/payments'),
         fetch('/api/admin/audit-log'),
       ]);
       if (estRes.ok) {
         const d = await estRes.json();
         setEstablishments(d.establishments || []);
+      }
+      if (claimsRes.ok) {
+        const d = await claimsRes.json();
+        setClaims(d.claims || []);
       }
       if (payRes.ok) {
         const d = await payRes.json();
@@ -136,6 +158,42 @@ export default function AdminPage() {
       await reloadData();
     } catch (err) {
       setFeedback({ type: 'error', text: err instanceof Error ? err.message : 'Erro ao bloquear.' });
+    }
+  };
+
+  const handleClaimReview = async (
+    claimId: string,
+    decision: 'approved' | 'rejected'
+  ) => {
+    const reason =
+      prompt(
+        decision === 'approved'
+          ? 'Observação da aprovação (opcional):'
+          : 'Informe o motivo da rejeição:'
+      ) || undefined;
+
+    setFeedback(null);
+    try {
+      const res = await fetch(`/api/admin/claims/${claimId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision, reason }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro ao revisar solicitação.');
+      setFeedback({
+        type: 'success',
+        text:
+          decision === 'approved'
+            ? 'Solicitação aprovada e parceiro liberado.'
+            : 'Solicitação rejeitada.',
+      });
+      await reloadData();
+    } catch (err) {
+      setFeedback({
+        type: 'error',
+        text: err instanceof Error ? err.message : 'Erro ao revisar solicitação.',
+      });
     }
   };
 
@@ -199,6 +257,7 @@ export default function AdminPage() {
   const publishedCount = establishments.filter((e) => e.publicationStatus === 'published').length;
   const suspendedCount = establishments.filter((e) => e.publicationStatus === 'suspended').length;
   const activePaymentsCount = payments.filter((p) => p.status === 'active').length;
+  const pendingClaimsCount = claims.filter((claim) => claim.status === 'pending').length;
 
   return (
     <main className="container">
@@ -257,6 +316,10 @@ export default function AdminPage() {
           <strong style={{ color: '#ff4d6d' }}>{suspendedCount}</strong>
         </article>
         <article>
+          <span>Solicitações Pendentes</span>
+          <strong>{pendingClaimsCount}</strong>
+        </article>
+        <article>
           <span>Assinaturas Ativas</span>
           <strong>{activePaymentsCount}</strong>
         </article>
@@ -280,6 +343,19 @@ export default function AdminPage() {
           }}
         >
           🏢 Estabelecimentos ({establishments.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('claims')}
+          style={{
+            background: activeTab === 'claims' ? 'var(--accent)' : 'var(--card)',
+            color: activeTab === 'claims' ? '#111' : 'var(--text)',
+            padding: '10px 18px',
+            fontSize: 14,
+            fontWeight: 700,
+          }}
+        >
+          ✅ Solicitações ({pendingClaimsCount})
         </button>
         <button
           type="button"
@@ -426,7 +502,51 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 2: Pagamentos e Assinaturas */}
+      {/* Tab 2: Solicitações de parceria */}
+      {activeTab === 'claims' && (
+        <div style={{ display: 'grid', gap: 14 }}>
+          {claims.map((claim) => (
+            <div key={claim.id} className="panel" style={{ padding: '18px 24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem' }}>
+                    {String(claim.evidence.submittedName || claim.establishmentId)}
+                  </h3>
+                  <p style={{ margin: '6px 0', fontSize: 13, color: 'var(--muted)' }}>
+                    Solicitante: {claim.requesterId} • Status: <b>{claim.status}</b>
+                  </p>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)' }}>
+                    Região: {String(claim.evidence.region || '—')} • Endereço: {String(claim.evidence.address || '—')}
+                  </p>
+                </div>
+                {claim.status === 'pending' && (
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <button
+                      onClick={() => handleClaimReview(claim.id, 'approved')}
+                      style={{ background: 'rgba(74,222,128,.2)', color: '#4ade80' }}
+                    >
+                      Aprovar
+                    </button>
+                    <button
+                      onClick={() => handleClaimReview(claim.id, 'rejected')}
+                      style={{ background: 'rgba(255,77,109,.2)', color: '#ff9d9d' }}
+                    >
+                      Rejeitar
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          {claims.length === 0 && (
+            <div className="empty" style={{ textAlign: 'center', padding: 30 }}>
+              Nenhuma solicitação de parceria cadastrada.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab 3: Pagamentos e Assinaturas */}
       {activeTab === 'payments' && (
         <div style={{ display: 'grid', gap: 14 }}>
           {payments.map((sub) => (
@@ -501,7 +621,7 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 3: Auditoria e Últimos Acessos */}
+      {/* Tab 4: Auditoria e Últimos Acessos */}
       {activeTab === 'audit' && (
         <div className="panel" style={{ padding: 24 }}>
           <h2 style={{ fontSize: '1.3rem', marginTop: 0, marginBottom: 16 }}>

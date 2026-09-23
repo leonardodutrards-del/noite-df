@@ -124,7 +124,7 @@ async function upsertProfile(args: {
 }
 
 export async function supabasePasswordSignUp(input: SignUpInput) {
-  const role: UserRole = input.role ?? 'partner';
+  const role: UserRole = 'visitor';
   const payload = await authRequest('signup', {
     method: 'POST',
     body: JSON.stringify({
@@ -133,8 +133,8 @@ export async function supabasePasswordSignUp(input: SignUpInput) {
       data: {
         name: input.name,
         role,
-        establishment_id: input.establishmentId ?? null,
-        establishment_name: input.establishmentName ?? null,
+        establishment_id: null,
+        establishment_name: null,
       },
     }),
   });
@@ -144,7 +144,6 @@ export async function supabasePasswordSignUp(input: SignUpInput) {
     email: payload.user.email ?? input.email,
     name: input.name,
     role,
-    establishmentId: input.establishmentId,
   });
   return {
     user,
@@ -167,7 +166,7 @@ export async function supabasePasswordLogin(email: string, password: string) {
       authUserId: payload.user.id,
       email: payload.user.email ?? email,
       name: typeof metadata.name === 'string' ? metadata.name : email.split('@')[0],
-      role: (metadata.role as UserRole) ?? 'visitor',
+      role: 'visitor',
       establishmentId:
         typeof metadata.establishment_id === 'string' ? metadata.establishment_id : undefined,
     });
