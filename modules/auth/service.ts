@@ -388,6 +388,43 @@ class AuthService {
   }
 
   public async getAuditLogs(limit = 100): Promise<AuditLogEntry[]> {
+    if (process.env.NODE_ENV !== 'test' && this.isSupabaseConfigured()) {
+      try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '');
+        const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        if (supabaseUrl && serviceKey) {
+          const response = await fetch(
+            `${supabaseUrl}/rest/v1/audit_log?select=*&order=created_at.desc&limit=${Math.min(Math.max(limit, 1), 500)}`,
+            {
+              headers: {
+                apikey: serviceKey,
+                Authorization: `Bearer ${serviceKey}`,
+              },
+              cache: 'no-store',
+            }
+          );
+          if (response.ok) {
+            const rows = (await response.json()) as Array<Record<string, unknown>>;
+            return rows.map((row) => ({
+              id: String(row.id),
+              actorId: row.actor_id ? String(row.actor_id) : undefined,
+              actorEmail: row.actor_email ? String(row.actor_email) : undefined,
+              actorRole: row.actor_role as UserRole | undefined,
+              action: String(row.action),
+              entityType: String(row.entity_type),
+              entityId: row.entity_id ? String(row.entity_id) : undefined,
+              details: (row.details as Record<string, unknown>) ?? undefined,
+              beforeData: (row.before_data as Record<string, unknown>) ?? undefined,
+              afterData: (row.after_data as Record<string, unknown>) ?? undefined,
+              createdAt: String(row.created_at),
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('audit-log-read', error);
+      }
+    }
+
     return this.auditLogs.slice(0, limit);
   }
 
