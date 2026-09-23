@@ -38,7 +38,7 @@ export function FavoriteButton({ establishmentId }: { establishmentId: string })
     if (response.ok) {
       const ids = new Set(localIds());
       if (next) ids.add(establishmentId); else ids.delete(establishmentId);
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]));
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(ids)));
       setSaved(next);
       if (next) track('favorite', { establishmentId });
     }
