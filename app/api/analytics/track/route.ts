@@ -10,6 +10,8 @@ const allowed = new Set([
   'favorite',
   'share',
   'search',
+  'trial_start',
+  'subscription_checkout',
 ]);
 
 export async function POST(request: NextRequest) {

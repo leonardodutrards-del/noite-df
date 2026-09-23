@@ -6,13 +6,21 @@ export type AnalyticsEvent =
   | 'instagram_click'
   | 'favorite'
   | 'share'
-  | 'search';
+  | 'search'
+  | 'trial_start'
+  | 'subscription_checkout';
+
+type AnalyticsWindow = Window & {
+  gtag?: (...args: unknown[]) => void;
+};
 
 export function track(
   name: AnalyticsEvent,
   properties: Record<string, string | number | boolean> = {}
 ) {
   if (typeof window === 'undefined') return;
+
+  (window as AnalyticsWindow).gtag?.('event', name, properties);
 
   const establishmentId =
     typeof properties.establishmentId === 'string'

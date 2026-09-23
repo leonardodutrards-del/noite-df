@@ -6,6 +6,7 @@ import { events } from '@/data/events';
 import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 import { PlaceContact } from '@/components/PlaceContact';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import {
   getConfirmedCrowdStatus,
   getConfirmedSchedules,
@@ -197,6 +198,12 @@ export default async function PlacePage({ params }: PlacePageProps) {
           )}
 
           <PlaceContact place={place} />
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', margin: '14px 0 20px' }}>
+            <FavoriteButton establishmentId={place.id} />
+            <Link className="button ghost" href={`/roteiros?place=${encodeURIComponent(place.id)}`}>
+              Salvar em roteiro
+            </Link>
+          </div>
           {placeEvents.length === 0 && <p className="field-hint">Nenhum evento com data confirmada cadastrado neste perfil no momento. Consulte a programação, a entrada e o couvert diretamente com o local.</p>}
           {placeEvents.length > 0 && (
             <div style={{ margin: '24px 0', padding: '16px', background: 'var(--card-2)', borderRadius: '16px' }}>
