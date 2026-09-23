@@ -1,10 +1,13 @@
+'use client';
+
+import { track } from '@/lib/analytics';
 import type { Establishment } from '@/modules/establishments/types';
 
 export function PlaceContact({ place, compact = false }: { place: Establishment; compact?: boolean }) {
   const contact = place.businessContact;
   const digits = contact?.phone.replace(/\D/g, '');
   const validPhone = digits && /^\d{10,11}$/.test(digits);
-  const whatsapp = contact?.whatsapp?.replace(/\D/g, '');
+  const whatsapp = (contact?.whatsapp ?? place.whatsapp)?.replace(/\D/g, '');
   const validWhatsapp = whatsapp && /^\d{10,11}$/.test(whatsapp);
   const phoneLabel = validPhone ? `(${digits.slice(0, 2)}) ${digits.slice(2, -4)}-${digits.slice(-4)}` : '';
   const agendaUrl = place.agendaUrl ?? place.instagram;
@@ -12,7 +15,17 @@ export function PlaceContact({ place, compact = false }: { place: Establishment;
   return (
     <section className="place-contact" aria-label={`Contato de ${place.name}`}>
       {validPhone && <a className="button ghost" href={`tel:+55${digits}`}>Ligar {phoneLabel}</a>}
-      {validWhatsapp && <a className="button ghost" href={`https://wa.me/55${whatsapp}`} target="_blank" rel="noreferrer">Contato pelo WhatsApp ↗</a>}
+      {validWhatsapp && (
+        <a
+          className="button ghost"
+          href={`https://wa.me/55${whatsapp}`}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => track('whatsapp_click', { placeId: place.id, placeName: place.name })}
+        >
+          Contato pelo WhatsApp ↗
+        </a>
+      )}
       {!compact && <>
         {place.menu && <div className="contact-section">
           <h2>Cardápio e preços</h2>
