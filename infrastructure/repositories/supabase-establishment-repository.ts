@@ -12,6 +12,16 @@ type SupabaseRow = {
   instagram: string | null;
   whatsapp: string | null;
   price_range: string | null;
+  vibe: string[] | null;
+  music: string[] | null;
+  audience: string[] | null;
+  maps_query: string | null;
+  owner_managed: boolean | null;
+  crowd_status: string | null;
+  weekly_schedule: unknown[] | null;
+  current_promotion: Record<string, unknown> | null;
+  public_ratings: unknown[] | null;
+  public_rating_summary: Record<string, unknown> | null;
   publication_status: string;
   verified_at: string | null;
   created_at: string;
@@ -150,12 +160,7 @@ async function updateRow(
   return response.json();
 }
 
-function rowToEstablishment(row: SupabaseRow & Record<string, unknown>): Establishment {
-  const mapsQuery = (row.mapsQuery as string) || `${row.name} ${row.region} DF`;
-  const crowdStatus = (row.crowdStatus as string || 'a confirmar') as Establishment['crowdStatus'];
-  const publicRatings = (row.publicRatings && Array.isArray(row.publicRatings) ? row.publicRatings : []) as Establishment['publicRatings'];
-  const publicRatingSummary = row.publicRatingSummary || { sourceCount: 0, calculatedAt: new Date().toISOString() };
-  
+function rowToEstablishment(row: SupabaseRow): Establishment {
   return {
     id: row.id,
     name: row.name,
@@ -163,37 +168,61 @@ function rowToEstablishment(row: SupabaseRow & Record<string, unknown>): Establi
     type: row.type as Establishment['type'],
     description: row.description || '',
     address: row.address,
-    vibe: row.vibe && Array.isArray(row.vibe) ? row.vibe : [],
-    music: row.music && Array.isArray(row.music) ? row.music : [],
-    audience: row.audience && Array.isArray(row.audience) ? row.audience : [],
+    vibe: row.vibe ?? [],
+    music: row.music ?? [],
+    audience: row.audience ?? [],
     price: (row.price_range || '$$') as Establishment['price'],
     instagram: row.instagram || undefined,
     whatsapp: row.whatsapp || undefined,
-    mapsQuery,
-    verified: !!row.verified_at,
-    ownerManaged: (row.owner_managed as boolean) ?? false,
-    crowdStatus,
-    weeklySchedule: row.weeklySchedule && Array.isArray(row.weeklySchedule) ? row.weeklySchedule : [],
+    mapsQuery: row.maps_query || `${row.name} ${row.region} DF`,
+    verified: Boolean(row.verified_at),
+    ownerManaged: row.owner_managed ?? false,
+    crowdStatus: (row.crowd_status || 'a confirmar') as Establishment['crowdStatus'],
+    currentPromotion: (row.current_promotion || undefined) as Establishment['currentPromotion'],
+    weeklySchedule: (row.weekly_schedule ?? []) as Establishment['weeklySchedule'],
     lastUpdated: new Date(row.updated_at).toISOString().split('T')[0],
     publicationStatus: row.publication_status as Establishment['publicationStatus'],
-    publicRatings,
-    publicRatingSummary: publicRatingSummary as Establishment['publicRatingSummary'],
+    publicRatings: (row.public_ratings ?? []) as Establishment['publicRatings'],
+    publicRatingSummary: (row.public_rating_summary || {
+      sourceCount: 0,
+      calculatedAt: new Date().toISOString(),
+    }) as Establishment['publicRatingSummary'],
   };
 }
 
-function establishmentToRow(establishment: Establishment): Partial<SupabaseRow> {
+function establishmentPatchToRow(establishment: Partial<Establishment>): Record<string, unknown> {
+  const row: Record<string, unknown> = {};
+  if (establishment.name !== undefined) row.name = establishment.name;
+  if (establishment.type !== undefined) row.type = establishment.type;
+  if (establishment.description !== undefined) row.description = establishment.description;
+  if (establishment.region !== undefined) row.region = establishment.region;
+  if (establishment.address !== undefined) row.address = establishment.address;
+  if (establishment.instagram !== undefined) row.instagram = establishment.instagram;
+  if (establishment.whatsapp !== undefined) row.whatsapp = establishment.whatsapp;
+  if (establishment.price !== undefined) row.price_range = establishment.price;
+  if (establishment.vibe !== undefined) row.vibe = establishment.vibe;
+  if (establishment.music !== undefined) row.music = establishment.music;
+  if (establishment.audience !== undefined) row.audience = establishment.audience;
+  if (establishment.mapsQuery !== undefined) row.maps_query = establishment.mapsQuery;
+  if (establishment.ownerManaged !== undefined) row.owner_managed = establishment.ownerManaged;
+  if (establishment.crowdStatus !== undefined) row.crowd_status = establishment.crowdStatus;
+  if (establishment.weeklySchedule !== undefined) row.weekly_schedule = establishment.weeklySchedule;
+  if (establishment.currentPromotion !== undefined) row.current_promotion = establishment.currentPromotion;
+  if (establishment.publicRatings !== undefined) row.public_ratings = establishment.publicRatings;
+  if (establishment.publicRatingSummary !== undefined) {
+    row.public_rating_summary = establishment.publicRatingSummary;
+  }
+  if (establishment.publicationStatus !== undefined) {
+    row.publication_status = establishment.publicationStatus;
+  }
+  return row;
+}
+
+function establishmentToInsertRow(establishment: Establishment): Record<string, unknown> {
   return {
     id: establishment.id,
     slug: establishment.id,
-    name: establishment.name,
-    type: establishment.type,
-    description: establishment.description,
-    region: establishment.region,
-    address: establishment.address,
-    instagram: establishment.instagram,
-    whatsapp: establishment.whatsapp,
-    price_range: establishment.price,
-    publication_status: establishment.publicationStatus || 'published',
+    ...establishmentPatchToRow(establishment),
   };
 }
 
@@ -201,7 +230,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
   async listAll(): Promise<Establishment[]> {
     try {
       const rows = (await fetchFromTable('establishments')) as unknown[];
-      return rows.map((row) => rowToEstablishment(row as SupabaseRow & Record<string, unknown>));
+      return rows.map((row) => rowToEstablishment(row as SupabaseRow));
     } catch (error) {
       console.error('Error listing establishments:', error);
       return [];
@@ -213,7 +242,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
       const rows = (await fetchFromTable('establishments', {
         publication_status: 'eq.published',
       })) as unknown[];
-      return rows.map((row) => rowToEstablishment(row as SupabaseRow & Record<string, unknown>));
+      return rows.map((row) => rowToEstablishment(row as SupabaseRow));
     } catch (error) {
       console.error('Error listing published establishments:', error);
       return [];
@@ -224,7 +253,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
     try {
       const rows = (await fetchFromTable('establishments', { id: `eq.${id}` })) as unknown[];
       if (rows.length === 0) return null;
-      return rowToEstablishment(rows[0] as SupabaseRow & Record<string, unknown>);
+      return rowToEstablishment(rows[0] as SupabaseRow);
     } catch (error) {
       console.error('Error finding establishment:', error);
       return null;
@@ -237,14 +266,13 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
       if (!existing) return null;
 
       const updateData = {
-        ...establishmentToRow(existing),
-        ...establishmentToRow(updates as Establishment),
+        ...establishmentPatchToRow(updates),
         updated_at: new Date().toISOString(),
       };
 
       const rows = (await updateRow('establishments', { id }, updateData)) as unknown[];
       if (rows.length === 0) return null;
-      return rowToEstablishment(rows[0] as SupabaseRow & Record<string, unknown>);
+      return rowToEstablishment(rows[0] as SupabaseRow);
     } catch (error) {
       console.error('Error updating establishment:', error);
       return null;
@@ -253,7 +281,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
 
   async create(item: Establishment): Promise<Establishment> {
     try {
-      const row = establishmentToRow(item);
+      const row = establishmentToInsertRow(item);
       const result = (await insertRow('establishments', {
         ...row,
         created_at: new Date().toISOString(),
@@ -261,7 +289,7 @@ export class SupabaseEstablishmentRepository implements EstablishmentRepository 
       })) as unknown;
 
       if (Array.isArray(result) && result.length > 0) {
-        return rowToEstablishment(result[0] as SupabaseRow & Record<string, unknown>);
+        return rowToEstablishment(result[0] as SupabaseRow);
       }
 
       return item;
