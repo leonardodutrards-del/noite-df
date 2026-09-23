@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NextRequest } from 'next/server';
 import { authService } from '@/modules/auth/service';
+import { seedAuthTestUsers, TEST_USERS } from './auth-fixtures';
 import { establishmentRepository } from '@/infrastructure/repositories/in-memory-establishment-repository';
 import { paymentAdminService } from '@/modules/payments/service';
 import { POST as loginRoute } from '@/app/api/auth/login/route';
@@ -34,21 +35,21 @@ function createJsonRequest(url: string, method: string, body?: unknown, token?: 
 
 describe('API Route Handlers — Autenticação e Proteção no Servidor', () => {
   beforeEach(() => {
-    authService.resetToDefaults();
+    seedAuthTestUsers();
     establishmentRepository.reset();
     paymentAdminService.resetToDefaults();
   });
 
   it('POST /api/auth/login retorna 200 e define cookie de sessão para login válido', async () => {
     const req = createJsonRequest('/api/auth/login', 'POST', {
-      email: 'parceiro@fivebar.com.br',
-      password: 'Parceiro@123456',
+      email: TEST_USERS.five.email,
+      password: TEST_USERS.five.password,
     });
 
     const res = await loginRoute(req);
     expect(res.status).toBe(200);
     const data = await res.json();
-    expect(data.user.email).toBe('parceiro@fivebar.com.br');
+    expect(data.user.email).toBe(TEST_USERS.five.email);
 
     // Cookie verificado
     const cookie = res.cookies.get(SESSION_COOKIE_NAME);
@@ -58,7 +59,7 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
 
   it('POST /api/auth/login retorna 401 para credenciais incorretas', async () => {
     const req = createJsonRequest('/api/auth/login', 'POST', {
-      email: 'parceiro@fivebar.com.br',
+      email: TEST_USERS.five.email,
       password: 'SenhaErrada@000',
     });
 
@@ -88,16 +89,16 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
     expect(unauthRes.status).toBe(401);
 
     // Autenticado
-    const { token } = await authService.login({ email: 'parceiro@pinella.com.br', password: 'Parceiro@123456' });
+    const { token } = await authService.login({ email: TEST_USERS.pinella.email, password: TEST_USERS.pinella.password });
     const authReq = createJsonRequest('/api/auth/me', 'GET', undefined, token);
     const authRes = await meRoute(authReq);
     expect(authRes.status).toBe(200);
     const data = await authRes.json();
-    expect(data.user.email).toBe('parceiro@pinella.com.br');
+    expect(data.user.email).toBe(TEST_USERS.pinella.email);
   });
 
   it('POST /api/auth/logout invalida sessão e limpa cookie', async () => {
-    const { token } = await authService.login({ email: 'admin@noitedf.com.br', password: 'Admin@123456' });
+    const { token } = await authService.login({ email: TEST_USERS.admin.email, password: TEST_USERS.admin.password });
     const req = createJsonRequest('/api/auth/logout', 'POST', undefined, token);
     const res = await logoutRoute(req);
 
@@ -107,7 +108,7 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
   });
 
   it('GET e PATCH /api/parceiro/establishment protegem dados do estabelecimento associado', async () => {
-    const { token } = await authService.login({ email: 'parceiro@fivebar.com.br', password: 'Parceiro@123456' });
+    const { token } = await authService.login({ email: TEST_USERS.five.email, password: TEST_USERS.five.password });
 
     // Leitura autorizada
     const getReq = createJsonRequest('/api/parceiro/establishment', 'GET', undefined, token);
@@ -131,7 +132,7 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
   });
 
   it('PATCH /api/parceiro/establishment retorna 403 se parceiro tentar modificar outro estabelecimento', async () => {
-    const { token } = await authService.login({ email: 'parceiro@fivebar.com.br', password: 'Parceiro@123456' });
+    const { token } = await authService.login({ email: TEST_USERS.five.email, password: TEST_USERS.five.password });
 
     const patchReq = createJsonRequest(
       '/api/parceiro/establishment',
@@ -152,7 +153,7 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
   });
 
   it('PATCH /api/establishments/[id] bloqueia com 403 tentativa de edição cruzada', async () => {
-    const { token } = await authService.login({ email: 'parceiro@fivebar.com.br', password: 'Parceiro@123456' });
+    const { token } = await authService.login({ email: TEST_USERS.five.email, password: TEST_USERS.five.password });
 
     const patchReq = createJsonRequest(
       '/api/establishments/pinella',
@@ -165,8 +166,8 @@ describe('API Route Handlers — Autenticação e Proteção no Servidor', () =>
   });
 
   it('Rotas /api/admin/* retornam 403 para partner e 200 para admin', async () => {
-    const { token: partnerToken } = await authService.login({ email: 'parceiro@fivebar.com.br', password: 'Parceiro@123456' });
-    const { token: adminToken } = await authService.login({ email: 'admin@noitedf.com.br', password: 'Admin@123456' });
+    const { token: partnerToken } = await authService.login({ email: TEST_USERS.five.email, password: TEST_USERS.five.password });
+    const { token: adminToken } = await authService.login({ email: TEST_USERS.admin.email, password: TEST_USERS.admin.password });
 
     // 1. Listar estabelecimentos
     const partnerListReq = createJsonRequest('/api/admin/establishments', 'GET', undefined, partnerToken);

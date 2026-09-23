@@ -1,8 +1,27 @@
 import crypto from 'crypto';
 import type { AuthResult, AuthUser, AuditLogEntry, LoginInput, SignUpInput, SignUpVisitorInput, VisitorLoginInput, VerificationToken, UserRole, ConsentLGPD, VerificationResult } from './types';
 
+const PASSWORD_SCHEME = 'scrypt-v1';
+
 function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
+  const salt = crypto.randomBytes(16).toString('hex');
+  const digest = crypto.scryptSync(password, salt, 64).toString('hex');
+  return [PASSWORD_SCHEME, salt, digest].join(':');
+}
+
+function verifyPassword(password: string, encodedHash: string): boolean {
+  const [scheme, salt, digestHex] = encodedHash.split(':');
+  if (scheme !== PASSWORD_SCHEME || !salt || !digestHex) return false;
+
+  const expected = Buffer.from(digestHex, 'hex');
+  const actual = crypto.scryptSync(password, salt, expected.length);
+  return expected.length === actual.length && crypto.timingSafeEqual(expected, actual);
+}
+
+function assertLegacyAuthAllowed(): void {
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_LEGACY_AUTH !== 'true') {
+    throw new Error('AUTH_NOT_CONFIGURED');
+  }
 }
 
 function generateSecureToken(): string {
@@ -13,44 +32,6 @@ function generateSecureToken(): string {
 interface StoredUser extends AuthUser {
   passwordHash: string;
 }
-
-const DEFAULT_USERS: StoredUser[] = [
-  {
-    id: 'usr_admin_1',
-    email: 'admin@noitedf.com.br',
-    name: 'Administrador',
-    role: 'admin',
-    passwordHash: hashPassword('Admin@123456'),
-    totpEnabled: false, // TODO: Implementar geração de TOTP em produção
-    lastSignInAt: new Date(Date.now() - 3600000).toISOString(),
-    createdAt: '2026-08-01T00:00:00.000Z',
-    updatedAt: '2026-08-01T00:00:00.000Z',
-  },
-  {
-    id: 'usr_partner_five_1',
-    email: 'parceiro@fivebar.com.br',
-    name: 'Carlos — Five Sport Bar',
-    role: 'partner',
-    establishmentId: 'five-sport-bar',
-    establishmentName: 'Five Sport Bar',
-    passwordHash: hashPassword('Parceiro@123456'),
-    lastSignInAt: new Date(Date.now() - 7200000).toISOString(),
-    createdAt: '2026-08-02T10:00:00.000Z',
-    updatedAt: '2026-08-02T10:00:00.000Z',
-  },
-  {
-    id: 'usr_partner_pinella_1',
-    email: 'parceiro@pinella.com.br',
-    name: 'Marina — Pinella Bar',
-    role: 'partner',
-    establishmentId: 'pinella',
-    establishmentName: 'Pinella',
-    passwordHash: hashPassword('Parceiro@123456'),
-    lastSignInAt: new Date(Date.now() - 14400000).toISOString(),
-    createdAt: '2026-08-03T14:30:00.000Z',
-    updatedAt: '2026-08-03T14:30:00.000Z',
-  },
-];
 
 const DEFAULT_AUDIT_LOGS: AuditLogEntry[] = [
   {
@@ -81,13 +62,38 @@ class AuthService {
     this.users.clear();
     this.usersByEmail.clear();
     this.sessions.clear();
+    this.verificationTokens.clear();
     this.auditLogs = [...DEFAULT_AUDIT_LOGS];
+  }
 
-    for (const u of DEFAULT_USERS) {
-      const copy = { ...u };
-      this.users.set(copy.id, copy);
-      this.usersByEmail.set(copy.email.toLowerCase(), copy);
+  public seedTestUser(input: {
+    id: string;
+    email: string;
+    name: string;
+    role: UserRole;
+    password: string;
+    establishmentId?: string;
+    establishmentName?: string;
+  }): AuthUser {
+    if (process.env.NODE_ENV !== 'test') {
+      throw new Error('TEST_ONLY_OPERATION');
     }
+
+    const now = new Date().toISOString();
+    const storedUser: StoredUser = {
+      id: input.id,
+      email: input.email.toLowerCase(),
+      name: input.name,
+      role: input.role,
+      establishmentId: input.establishmentId,
+      establishmentName: input.establishmentName,
+      passwordHash: hashPassword(input.password),
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.users.set(storedUser.id, storedUser);
+    this.usersByEmail.set(storedUser.email, storedUser);
+    return this.sanitizeUser(storedUser);
   }
 
   private isSupabaseConfigured(): boolean {
@@ -104,6 +110,7 @@ class AuthService {
   }
 
   public async signUp(input: SignUpInput): Promise<AuthResult> {
+    assertLegacyAuthAllowed();
     const email = input.email.trim().toLowerCase();
     const name = input.name.trim();
     const password = input.password;
@@ -112,8 +119,8 @@ class AuthService {
     if (!email || !email.includes('@')) {
       throw new Error('E-mail inválido.');
     }
-    if (!password || password.length < 6) {
-      throw new Error('A senha deve conter no mínimo 6 caracteres.');
+    if (!password || password.length < 12) {
+      throw new Error('A senha deve conter no mínimo 12 caracteres.');
     }
     if (!name) {
       throw new Error('Nome é obrigatório.');
@@ -210,6 +217,7 @@ class AuthService {
   }
 
   public async login(credentials: LoginInput): Promise<AuthResult> {
+    assertLegacyAuthAllowed();
     const email = credentials.email.trim().toLowerCase();
     const password = credentials.password;
 
@@ -222,8 +230,7 @@ class AuthService {
       throw new Error('Credenciais inválidas. Verifique seu e-mail e senha.');
     }
 
-    const hash = hashPassword(password);
-    if (storedUser.passwordHash !== hash) {
+    if (!verifyPassword(password, storedUser.passwordHash)) {
       throw new Error('Credenciais inválidas. Verifique seu e-mail e senha.');
     }
 
@@ -366,6 +373,7 @@ class AuthService {
   }
 
   public async signUpVisitor(input: SignUpVisitorInput): Promise<AuthResult> {
+    assertLegacyAuthAllowed();
     const email = input.email.trim().toLowerCase();
     const phone = input.phone.trim();
     const name = input.name?.trim() || email.split('@')[0]; // Use email prefix as default name
@@ -551,6 +559,7 @@ class AuthService {
   }
 
   public async requestVerificationLink(email: string, type: 'login' | 'signup' = 'login'): Promise<VerificationToken> {
+    assertLegacyAuthAllowed();
     const normalizedEmail = email.trim().toLowerCase();
 
     if (type === 'login') {
@@ -575,8 +584,8 @@ class AuthService {
       createdAt: now,
     });
 
-    // TODO: Em produção, enviar token via email
-    console.log(`🔗 Token de verificação para ${normalizedEmail}: ${token}`);
+    // O envio por e-mail será implementado junto da autenticação persistente.
+    // Nunca registrar tokens de autenticação em logs.
 
     await this.logAudit({
       actorEmail: normalizedEmail,
@@ -597,6 +606,7 @@ class AuthService {
   }
 
   public async verifyToken(token: string): Promise<VerificationResult> {
+    assertLegacyAuthAllowed();
     const verification = this.verificationTokens.get(token);
 
     if (!verification) {

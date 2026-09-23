@@ -1,20 +1,21 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { authService } from '@/modules/auth/service';
+import { seedAuthTestUsers, TEST_USERS } from './auth-fixtures';
 
 describe('AuthService — Login, Signup, Logout e Sessão', () => {
   beforeEach(() => {
-    authService.resetToDefaults();
+    seedAuthTestUsers();
   });
 
   it('permite login com credenciais válidas e retorna dados do usuário sanitizados', async () => {
     const result = await authService.login({
-      email: 'parceiro@fivebar.com.br',
-      password: 'Parceiro@123456',
+      email: TEST_USERS.five.email,
+      password: TEST_USERS.five.password,
     });
 
     expect(result.token).toBeDefined();
     expect(result.token.length).toBeGreaterThan(20);
-    expect(result.user.email).toBe('parceiro@fivebar.com.br');
+    expect(result.user.email).toBe(TEST_USERS.five.email);
     expect(result.user.role).toBe('partner');
     expect(result.user.establishmentId).toBe('five-sport-bar');
     // Segredos como senha não devem ser expostos no objeto retornado
@@ -24,7 +25,7 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
   it('rejeita login com senha inválida', async () => {
     await expect(
       authService.login({
-        email: 'parceiro@fivebar.com.br',
+        email: TEST_USERS.five.email,
         password: 'SenhaIncorreta@999',
       })
     ).rejects.toThrow('Credenciais inválidas');
@@ -34,7 +35,7 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
     await expect(
       authService.login({
         email: 'naoexiste@bar.com.br',
-        password: 'Parceiro@123456',
+        password: TEST_USERS.five.password,
       })
     ).rejects.toThrow('Credenciais inválidas');
   });
@@ -43,8 +44,8 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
     const beforeLogin = new Date().toISOString();
 
     const result = await authService.login({
-      email: 'admin@noitedf.com.br',
-      password: 'Admin@123456',
+      email: TEST_USERS.admin.email,
+      password: TEST_USERS.admin.password,
     });
 
     expect(result.user.lastSignInAt).toBeDefined();
@@ -53,7 +54,7 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
     );
 
     const logs = await authService.getAuditLogs();
-    const loginLog = logs.find((l) => l.action === 'login' && l.actorEmail === 'admin@noitedf.com.br');
+    const loginLog = logs.find((l) => l.action === 'login' && l.actorEmail === TEST_USERS.admin.email);
     expect(loginLog).toBeDefined();
     expect(loginLog?.entityType).toBe('auth');
   });
@@ -86,7 +87,7 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
     await expect(
       authService.signUp({
         name: 'Carlos Duplicado',
-        email: 'parceiro@fivebar.com.br',
+        email: TEST_USERS.five.email,
         password: 'OutraSenha@123',
       })
     ).rejects.toThrow('Este e-mail já está cadastrado');
@@ -94,8 +95,8 @@ describe('AuthService — Login, Signup, Logout e Sessão', () => {
 
   it('valida sessão ativa e invalida no logout', async () => {
     const { token, user } = await authService.login({
-      email: 'parceiro@pinella.com.br',
-      password: 'Parceiro@123456',
+      email: TEST_USERS.pinella.email,
+      password: TEST_USERS.pinella.password,
     });
 
     const activeSessionUser = await authService.validateSession(token);

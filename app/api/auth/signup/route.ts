@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'E-mail inválido.' }, { status: 400 });
     }
-    if (!password || password.length < 6) {
-      return NextResponse.json({ error: 'A senha deve conter pelo menos 6 caracteres.' }, { status: 400 });
+    if (!password || password.length < 12) {
+      return NextResponse.json({ error: 'A senha deve conter pelo menos 12 caracteres.' }, { status: 400 });
     }
     if (!name) {
       return NextResponse.json({ error: 'Nome é obrigatório.' }, { status: 400 });
@@ -37,6 +37,12 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro ao realizar cadastro.';
+    if (message === 'AUTH_NOT_CONFIGURED') {
+      return NextResponse.json(
+        { error: 'Cadastro temporariamente indisponível.' },
+        { status: 503 }
+      );
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

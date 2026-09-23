@@ -2,23 +2,24 @@
 create extension if not exists pgcrypto;
 
 create type publication_status as enum ('draft', 'pending_review', 'published', 'expired', 'suspended');
-create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'partner', 'admin');
+create type user_role as enum ('visitor', 'partner', 'operator', 'admin');
 create type review_status as enum ('pending', 'published', 'rejected', 'removed');
 create type claim_status as enum ('pending', 'approved', 'rejected', 'revoked');
 
 create table profiles (
-  id uuid primary key default gen_random_uuid(),
+  id text primary key,
+  auth_user_id uuid unique references auth.users(id) on delete set null,
   name text not null,
   email text unique not null,
-  role text not null default 'partner',
-  establishment_id uuid,
+  role user_role not null default 'partner',
+  establishment_id text,
   last_sign_in_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create table establishments (
-  id uuid primary key default gen_random_uuid(),
+  id text primary key,
   slug text unique not null,
   name text not null,
   type text not null,
@@ -35,8 +36,8 @@ create table establishments (
   accessibility jsonb not null default '{}'::jsonb,
   publication_status publication_status not null default 'draft',
   verified_at timestamptz,
-  created_by uuid references profiles(id),
-  updated_by uuid references profiles(id),
+  created_by text references profiles(id),
+  updated_by text references profiles(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -44,7 +45,7 @@ create table establishments (
 alter table profiles add constraint fk_profiles_establishment foreign key (establishment_id) references establishments(id) on delete set null;
 
 create table establishment_tags (
-  establishment_id uuid references establishments(id) on delete cascade,
+  establishment_id text references establishments(id) on delete cascade,
   kind text not null check (kind in ('vibe', 'music', 'audience')),
   value text not null,
   primary key (establishment_id, kind, value)
@@ -52,7 +53,7 @@ create table establishment_tags (
 
 create table opening_hours (
   id uuid primary key default gen_random_uuid(),
-  establishment_id uuid not null references establishments(id) on delete cascade,
+  establishment_id text not null references establishments(id) on delete cascade,
   weekday smallint not null check (weekday between 0 and 6),
   opens_at time,
   closes_at time,
@@ -63,7 +64,7 @@ create table opening_hours (
 
 create table events (
   id uuid primary key default gen_random_uuid(),
-  establishment_id uuid references establishments(id) on delete set null,
+  establishment_id text references establishments(id) on delete set null,
   title text not null,
   category text not null,
   description text,
@@ -73,15 +74,15 @@ create table events (
   official_url text,
   publication_status publication_status not null default 'draft',
   verified_at timestamptz,
-  created_by uuid references profiles(id),
-  updated_by uuid references profiles(id),
+  created_by text references profiles(id),
+  updated_by text references profiles(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create table promotions (
   id uuid primary key default gen_random_uuid(),
-  establishment_id uuid not null references establishments(id) on delete cascade,
+  establishment_id text not null references establishments(id) on delete cascade,
   title text not null,
   description text not null,
   weekday smallint check (weekday between 0 and 6),
@@ -91,19 +92,19 @@ create table promotions (
   valid_until date not null,
   recurrence_rule text,
   publication_status publication_status not null default 'draft',
-  created_by uuid references profiles(id),
-  updated_by uuid references profiles(id),
+  created_by text references profiles(id),
+  updated_by text references profiles(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create table partner_claims (
   id uuid primary key default gen_random_uuid(),
-  establishment_id uuid not null references establishments(id) on delete cascade,
-  requester_id uuid not null references profiles(id),
+  establishment_id text not null references establishments(id) on delete cascade,
+  requester_id text not null references profiles(id),
   evidence jsonb not null default '{}'::jsonb,
   status claim_status not null default 'pending',
-  reviewed_by uuid references profiles(id),
+  reviewed_by text references profiles(id),
   reviewed_at timestamptz,
   created_at timestamptz not null default now()
 );
@@ -111,28 +112,28 @@ create table partner_claims (
 create table data_sources (
   id uuid primary key default gen_random_uuid(),
   entity_type text not null,
-  entity_id uuid not null,
+  entity_id text not null,
   source_kind text not null,
   label text not null,
   url text,
   captured_at timestamptz not null default now(),
   verified_at timestamptz,
-  verified_by uuid references profiles(id)
+  verified_by text references profiles(id)
 );
 
 create table moderation_reviews (
   id uuid primary key default gen_random_uuid(),
   entity_type text not null,
-  entity_id uuid not null,
+  entity_id text not null,
   action text not null,
   notes text,
-  reviewed_by uuid not null references profiles(id),
+  reviewed_by text not null references profiles(id),
   created_at timestamptz not null default now()
 );
 
 create table audit_log (
   id bigserial primary key,
-  actor_id uuid references profiles(id),
+  actor_id text references profiles(id),
   actor_email text,
   actor_role text,
   action text not null,
@@ -146,8 +147,8 @@ create table audit_log (
 
 create table reviews (
   id uuid primary key default gen_random_uuid(),
-  establishment_id uuid not null references establishments(id) on delete cascade,
-  author_id uuid references profiles(id),
+  establishment_id text not null references establishments(id) on delete cascade,
+  author_id text references profiles(id),
   overall numeric(2,1) not null check (overall between 1 and 5),
   food numeric(2,1) check (food between 1 and 5),
   drinks numeric(2,1) check (drinks between 1 and 5),
@@ -167,8 +168,8 @@ create table reviews (
 create table interactions (
   id bigserial primary key,
   anonymous_session_id text,
-  user_id uuid references profiles(id),
-  establishment_id uuid references establishments(id) on delete set null,
+  user_id text references profiles(id),
+  establishment_id text references establishments(id) on delete set null,
   event_id uuid references events(id) on delete set null,
   action text not null check (action in ('search', 'view', 'map_click', 'whatsapp_click', 'instagram_click', 'save', 'report', 'recommendation_accept')),
   metadata jsonb not null default '{}'::jsonb,
@@ -182,7 +183,7 @@ create index establishments_region_idx on establishments(region);
 -- Assinaturas e faturamento (Mercado Pago)
 create table if not exists subscription_accounts (
   id uuid primary key default gen_random_uuid(),
-  establishment_id uuid,
+  establishment_id text references establishments(id) on delete set null,
   plan_code text not null check (plan_code in ('pro','premium','enterprise')),
   provider text not null default 'mercado_pago',
   provider_subscription_id text unique,
@@ -221,3 +222,12 @@ create policy "public_read_published_establishments" on establishments for selec
 create policy "public_read_published_events" on events for select using (publication_status = 'published');
 create policy "public_read_published_promotions" on promotions for select using (publication_status = 'published');
 create policy "public_read_published_reviews" on reviews for select using (status = 'published');
+
+-- Perfis usam um ID textual estável do domínio. O UUID do Supabase Auth,
+-- quando existir, fica em auth_user_id e não substitui URLs/slugs do aplicativo.
+create policy "users_read_own_profile" on profiles
+  for select using (auth.uid() = auth_user_id);
+
+create policy "users_update_own_profile" on profiles
+  for update using (auth.uid() = auth_user_id)
+  with check (auth.uid() = auth_user_id);

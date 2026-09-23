@@ -20,6 +20,12 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Credenciais inválidas.';
+    if (message === 'AUTH_NOT_CONFIGURED') {
+      return NextResponse.json(
+        { error: 'Autenticação temporariamente indisponível.' },
+        { status: 503 }
+      );
+    }
     return NextResponse.json({ error: message }, { status: 401 });
   }
 }

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { authService } from '@/modules/auth/service';
+import { seedAuthTestUsers, TEST_USERS } from './auth-fixtures';
 import { establishmentService } from '@/modules/establishments/service';
 import { paymentAdminService } from '@/modules/payments/service';
 import { establishmentRepository } from '@/infrastructure/repositories/in-memory-establishment-repository';
@@ -11,17 +12,17 @@ describe('Autorização e Isolamento de Estabelecimentos', () => {
   let partnerPinella: AuthUser;
 
   beforeEach(async () => {
-    authService.resetToDefaults();
+    seedAuthTestUsers();
     establishmentRepository.reset();
     paymentAdminService.resetToDefaults();
 
-    const masterRes = await authService.login({ email: 'admin@noitedf.com.br', password: 'Admin@123456' });
+    const masterRes = await authService.login({ email: TEST_USERS.admin.email, password: TEST_USERS.admin.password });
     masterAdmin = masterRes.user;
 
-    const fiveRes = await authService.login({ email: 'parceiro@fivebar.com.br', password: 'Parceiro@123456' });
+    const fiveRes = await authService.login({ email: TEST_USERS.five.email, password: TEST_USERS.five.password });
     partnerFive = fiveRes.user;
 
-    const pinellaRes = await authService.login({ email: 'parceiro@pinella.com.br', password: 'Parceiro@123456' });
+    const pinellaRes = await authService.login({ email: TEST_USERS.pinella.email, password: TEST_USERS.pinella.password });
     partnerPinella = pinellaRes.user;
   });
 
@@ -141,7 +142,7 @@ describe('Autorização e Isolamento de Estabelecimentos', () => {
     const auditLogs = await authService.getAuditLogs();
     const refundLog = auditLogs.find((l) => l.action === 'refund_payment');
     expect(refundLog).toBeDefined();
-    expect(refundLog?.actorEmail).toBe('admin@noitedf.com.br');
+    expect(refundLog?.actorEmail).toBe(TEST_USERS.admin.email);
     expect(refundLog?.entityId).toBe(targetPayment.id);
   });
 });
