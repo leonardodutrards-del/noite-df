@@ -8,6 +8,7 @@ export interface SubscriptionAccount {
   planCode: PlanCode;
   provider: 'mercado_pago';
   providerSubscriptionId?: string;
+  providerPaymentId?: string;
   payerEmail: string;
   status: PaymentStatus;
   amountCents: number;
