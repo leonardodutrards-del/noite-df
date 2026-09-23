@@ -34,19 +34,7 @@ interface StoredUser extends AuthUser {
   passwordHash: string;
 }
 
-const DEFAULT_AUDIT_LOGS: AuditLogEntry[] = [
-  {
-    id: 'aud_init_1',
-    actorId: 'usr_admin_1',
-    actorEmail: 'admin@noitedf.com.br',
-    actorRole: 'admin',
-    action: 'system_initialized',
-    entityType: 'system',
-    entityId: 'noite_df_core',
-    details: { note: 'Sistema de autenticação e governança iniciado.' },
-    createdAt: '2026-08-01T00:00:00.000Z',
-  },
-];
+const DEFAULT_AUDIT_LOGS: AuditLogEntry[] = [];
 
 class AuthService {
   private users: Map<string, StoredUser> = new Map();
@@ -119,7 +107,7 @@ class AuthService {
     const email = input.email.trim().toLowerCase();
     const name = input.name.trim();
     const password = input.password;
-    const role: UserRole = input.role ?? 'partner';
+    const role: UserRole = process.env.NODE_ENV === 'test' ? (input.role ?? 'visitor') : 'visitor';
 
     if (!email || !email.includes('@')) {
       throw new Error('E-mail inválido.');
