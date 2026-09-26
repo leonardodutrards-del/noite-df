@@ -154,4 +154,8 @@ export const researchedEvents: EventItem[] = [
   event('brutos-volkstreme-2026-10-18', 'Piseiro Volkstreme', 'Galpão dos Brutos', 'Sobradinho', '18/10/2026 · A partir das 14h',
     'Evento futuro divulgado no perfil dos Brutos. Consulte localização, atrações e ingressos com a organização.',
     'https://www.instagram.com/piseirovolkstreme/p/DdTqiVgRwEs/', '2026-10-19T06:00:00-03:00', '2026-10-18T14:00:00-03:00'),
+  event('samambar-surra-modao-2026-10-09', 'Surra de Modão no SamamBar', 'SamamBar', 'Brasília', '09/10/2026 · 18h às 3h de 10/10',
+    'Apresentação de Surra de Modão no SamamBar. Local: QS 402, Conjunto L, 01, Brasília/DF. Consulte ingressos e condições de happy hour na página do organizador Erick Alves Produções.',
+    'https://www.sympla.com.br/evento/lgc/3570798',
+    '2026-10-10T03:00:00-03:00', '2026-10-09T18:00:00-03:00', '2026-09-26'),
 ];
