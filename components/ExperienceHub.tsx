@@ -273,6 +273,16 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
             <a className="tag" href="/lugares/planaltina">Planaltina</a>
             <a className="tag" href="/lugares/guara">Guará</a>
             <a className="tag" href="/lugares/lago-sul">Lago Sul</a>
+            <a className="tag" href="/lugares/park-way">Park Way</a>
+            <a className="tag" href="/lugares/sudoeste">Sudoeste</a>
+            <a className="tag" href="/lugares/sig">SIG</a>
+            <a className="tag" href="/lugares/saan">SAAN</a>
+            <a className="tag" href="/lugares/granja-do-torto">Granja do Torto</a>
+            <a className="tag" href="/lugares/setor-de-clubes-sul">Setor de Clubes Sul</a>
+            <a className="tag" href="/lugares/brasilinha">Brasilinha · Entorno</a>
+            <a className="tag" href="/lugares/cidade-ocidental">Cidade Ocidental · Entorno</a>
+            <a className="tag" href="/lugares/jardim-inga">Jardim Ingá · Entorno</a>
+            <a className="tag" href="/lugares/valparaiso">Valparaíso · Entorno</a>
           </div>
           <h3 style={{ marginTop: '20px', fontSize: '1rem' }}>Roteiros e vibes</h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
