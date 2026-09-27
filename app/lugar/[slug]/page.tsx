@@ -7,6 +7,7 @@ import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 import { PlaceContact } from '@/components/PlaceContact';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { PlaceViewTracker, TrackedPlaceLink } from '@/components/PlaceAnalytics';
 import {
   getConfirmedCrowdStatus,
   getConfirmedSchedules,
@@ -120,6 +121,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className="container">
+        <PlaceViewTracker placeId={place.id} />
         <header className="topbar">
           <Link className="brand" href="/">Noite DF</Link>
           <nav>
@@ -221,13 +223,13 @@ export default async function PlacePage({ params }: PlacePageProps) {
           )}
 
           <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginTop: '28px' }}>
-            <a className="button" href={mapsUrl} target="_blank" rel="noreferrer">
+            <TrackedPlaceLink className="button" href={mapsUrl} placeId={place.id} event="map_click">
               Abrir rota no Google Maps ↗
-            </a>
+            </TrackedPlaceLink>
             {instagramUrl && hasRealValue(instagramUrl) && (
-              <a className="button ghost" href={instagramUrl} target="_blank" rel="noreferrer">
+              <TrackedPlaceLink className="button ghost" href={instagramUrl} placeId={place.id} event="instagram_click">
                 Instagram Oficial ↗
-              </a>
+              </TrackedPlaceLink>
             )}
             <Link className="button ghost" href="/">
               Voltar ao Guia
