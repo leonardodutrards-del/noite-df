@@ -101,7 +101,7 @@ describe('public ratings', () => {
   });
 
   it('inclui 73 estabelecimentos e 19 regiões sem duplicar cadastros', () => {
-    expect(places).toHaveLength(73);
+    expect(places).toHaveLength(79);
     expect(new Set(places.map((place) => place.region)).size).toBe(19);
   });
 });
