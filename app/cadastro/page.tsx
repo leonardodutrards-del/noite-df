@@ -38,9 +38,11 @@ export default function CadastroPage() {
       }
 
       if (data.requiresEmailConfirmation) {
-        router.push('/login?confirmacao=pendente');
+        const redirect = new URLSearchParams(window.location.search).get('redirect');
+        router.push(`/login?confirmacao=pendente${redirect?.startsWith('/parceiro/onboarding') ? `&redirect=${encodeURIComponent(redirect)}` : ''}`);
       } else {
-        router.push('/parceiro/onboarding');
+        const redirect = new URLSearchParams(window.location.search).get('redirect');
+        router.push(redirect?.startsWith('/parceiro/onboarding') ? redirect : '/parceiro/onboarding');
       }
       router.refresh();
     } catch (err) {
