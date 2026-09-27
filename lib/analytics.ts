@@ -31,6 +31,7 @@ export function track(
 
   void fetch('/api/analytics/track', {
     method: 'POST',
+    keepalive: true,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       name,
