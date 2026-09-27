@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PlaceCard } from '@/components/PlaceCard';
+import { establishmentService } from '@/modules/establishments/service';
 import {
   REGION_SLUG_MAP,
   getPlacesByRegionSlug,
@@ -14,6 +15,7 @@ interface RegionPageProps {
 }
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return Object.keys(REGION_SLUG_MAP).map((region) => ({ region }));
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: RegionPageProps): Promise<Met
     };
   }
 
-  const places = getPlacesByRegionSlug(region);
+  const places = getPlacesByRegionSlug(region, await establishmentService.search({}));
   const isIndexable = places.length >= MIN_CONTENT_COUNT_FOR_SEO;
   const canonicalUrl = `${appUrl}/lugares/${region}`;
 
@@ -57,7 +59,7 @@ export default async function RegionLugaresPage({ params }: RegionPageProps) {
     notFound();
   }
 
-  const places = getPlacesByRegionSlug(region);
+  const places = getPlacesByRegionSlug(region, await establishmentService.search({}));
 
   return (
     <main className="container">
@@ -84,7 +86,7 @@ export default async function RegionLugaresPage({ params }: RegionPageProps) {
         <span className="badge">Guia Regional</span>
         <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', margin: '12px 0' }}>Lugares em {regionName}</h1>
         <p style={{ maxWidth: '700px', fontSize: '16px' }}>
-          Explore os {places.length} estabelecimentos cadastrados e verificados em {regionName}. Informações honestas e diretas ao ponto.
+          Explore os {places.length} estabelecimentos cadastrados em {regionName}. Informações com fontes públicas quando disponíveis.
         </p>
       </section>
 
