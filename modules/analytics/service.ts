@@ -2,6 +2,7 @@ import type { AuthUser } from '@/modules/auth/types';
 
 export type PartnerAnalytics = {
   periodDays: number;
+  available: boolean;
   views: number;
   whatsappClicks: number;
   mapClicks: number;
@@ -25,9 +26,10 @@ export async function getPartnerAnalytics(
     throw new Error('FORBIDDEN_ESTABLISHMENT_ACCESS_DENIED');
   }
 
-  const safeDays = Math.min(Math.max(Math.trunc(days), 1), 365);
+  const safeDays = Number.isFinite(days) ? Math.min(Math.max(Math.trunc(days), 1), 365) : 30;
   const empty: PartnerAnalytics = {
     periodDays: safeDays,
+    available: false,
     views: 0,
     whatsappClicks: 0,
     mapClicks: 0,
@@ -40,31 +42,32 @@ export async function getPartnerAnalytics(
   if (!cfg) return empty;
 
   const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000).toISOString();
-  const params = new URLSearchParams({
-    establishment_id: `eq.${establishmentId}`,
-    created_at: `gte.${since}`,
-    select: 'action',
-  });
-
-  const response = await fetch(`${cfg.url}/rest/v1/interactions?${params.toString()}`, {
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) throw new Error('ANALYTICS_QUERY_FAILED');
-  const rows = (await response.json()) as Array<{ action: string }>;
-
-  const metrics = { ...empty };
-  for (const row of rows) {
-    if (row.action === 'view') metrics.views += 1;
-    if (row.action === 'whatsapp_click') metrics.whatsappClicks += 1;
-    if (row.action === 'map_click') metrics.mapClicks += 1;
-    if (row.action === 'instagram_click') metrics.instagramClicks += 1;
-    if (row.action === 'save') metrics.favorites += 1;
+  async function count(action: string): Promise<number> {
+    const params = new URLSearchParams({
+      establishment_id: `eq.${establishmentId}`,
+      created_at: `gte.${since}`,
+      action: `eq.${action}`,
+      select: 'id',
+    });
+    const response = await fetch(`${cfg!.url}/rest/v1/interactions?${params.toString()}`, {
+      headers: {
+        apikey: cfg!.key,
+        Authorization: `Bearer ${cfg!.key}`,
+        Prefer: 'count=exact',
+        Range: '0-0',
+      },
+      cache: 'no-store',
+    });
+    if (!response.ok) throw new Error('ANALYTICS_QUERY_FAILED');
+    const total = response.headers.get('content-range')?.split('/')[1];
+    if (!total || total === '*' || !/^\d+$/.test(total)) throw new Error('ANALYTICS_COUNT_UNAVAILABLE');
+    return Number(total);
   }
+
+  const [views, whatsappClicks, mapClicks, instagramClicks, favorites] = await Promise.all(
+    ['view', 'whatsapp_click', 'map_click', 'instagram_click', 'save'].map(count)
+  );
+  const metrics = { ...empty, available: true, views, whatsappClicks, mapClicks, instagramClicks, favorites };
 
   const intentActions =
     metrics.whatsappClicks + metrics.mapClicks + metrics.instagramClicks + metrics.favorites;
