@@ -8,8 +8,14 @@ type Stage = 'uncontacted' | 'contacted' | 'replied' | 'trial' | 'partner' | 'pa
 type Item = {
   establishment: { id: string; name: string; region: string };
   completeness: { score: number; missing: string[] };
-  pipeline: { establishmentId: string; stage: Stage; contactChannel?: string; nextFollowUpAt?: string; trialEndsAt?: string };
+  pipeline: { establishmentId: string; stage: Stage; contactChannel?: string; nextFollowUpAt?: string; lastContactAt?: string; notes?: string; trialEndsAt?: string };
 };
+
+type ContactDraft = { contactChannel: string; notes: string; nextFollowUpAt: string };
+
+function followUpDate(value?: string): string {
+  return value ? new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value)) : '';
+}
 
 const labels: Record<Stage, string> = {
   uncontacted: 'Não contatado',
@@ -25,6 +31,20 @@ export default function OperationPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState('');
+  const [drafts, setDrafts] = useState<Record<string, ContactDraft>>({});
+  const [savingId, setSavingId] = useState('');
+
+  function draft(item: Item): ContactDraft {
+    return drafts[item.establishment.id] ?? {
+      contactChannel: item.pipeline.contactChannel ?? '',
+      notes: item.pipeline.notes ?? '',
+      nextFollowUpAt: followUpDate(item.pipeline.nextFollowUpAt),
+    };
+  }
+
+  function edit(item: Item, patch: Partial<ContactDraft>) {
+    setDrafts(current => ({ ...current, [item.establishment.id]: { ...draft(item), ...patch } }));
+  }
 
   async function load() {
     const response = await fetch('/api/admin/operacao', { cache: 'no-store' });
@@ -72,18 +92,38 @@ export default function OperationPage() {
     return { counts, average: items.length ? Math.round(completeness / items.length) : 0 };
   }, [items]);
 
-  async function changeStage(establishmentId: string, stage: Stage) {
+  async function save(item: Item, stage = item.pipeline.stage) {
     setMessage('');
-    const response = await fetch('/api/admin/operacao', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ establishmentId, stage, trialPlanCode: stage === 'trial' ? 'pro' : undefined }),
-    });
-    if (!response.ok) {
-      setMessage('Não foi possível atualizar o funil.');
+    const fields = draft(item);
+    if (stage === 'contacted' && !fields.contactChannel) {
+      setMessage('Escolha o canal antes de marcar um contato como enviado.');
       return;
     }
-    await load();
+    setSavingId(item.establishment.id);
+    try {
+      const response = await fetch('/api/admin/operacao', {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          establishmentId: item.establishment.id, stage,
+          ...fields,
+          nextFollowUpAt: fields.nextFollowUpAt || null,
+          markContacted: stage === 'contacted' && item.pipeline.stage !== 'contacted',
+          startTrial: stage === 'trial' && item.pipeline.stage !== 'trial',
+          trialPlanCode: stage === 'trial' ? 'pro' : undefined,
+        }),
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.error || 'Não foi possível atualizar o funil.');
+      }
+      await load();
+      setMessage('Acompanhamento salvo.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível atualizar o funil.');
+    } finally {
+      setSavingId('');
+    }
   }
 
   return (
@@ -94,7 +134,7 @@ export default function OperationPage() {
       </header>
       <section className="page-heading">
         <span className="badge">Operação & Growth</span>
-        <h1>CRM dos 73 estabelecimentos</h1>
+        <h1>CRM dos {items.length} estabelecimentos</h1>
         <p>Contato, resposta, teste gratuito, conversão e qualidade cadastral em uma única fila operacional.</p>
       </section>
       <div className="metrics-grid" style={{ marginBottom: 24 }}>
@@ -114,14 +154,30 @@ export default function OperationPage() {
                 <h3>{item.establishment.name}</h3>
                 <p>{item.establishment.region} · cadastro {item.completeness.score}% completo</p>
                 {item.completeness.missing.length ? <small style={{ color: 'var(--muted)' }}>Falta: {item.completeness.missing.join(', ')}</small> : null}
+                <p><Link href={`/lugar/${item.establishment.id}`}>Ver perfil público</Link></p>
               </div>
               <label>
                 Etapa
-                <select value={item.pipeline.stage} onChange={(e) => void changeStage(item.establishment.id, e.target.value as Stage)} style={{ display: 'block', marginTop: 6 }}>
+                <select value={item.pipeline.stage} disabled={savingId === item.establishment.id} onChange={(e) => void save(item, e.target.value as Stage)} style={{ display: 'block', marginTop: 6 }}>
                   {(Object.keys(labels) as Stage[]).map((stage) => <option key={stage} value={stage}>{labels[stage]}</option>)}
                 </select>
               </label>
             </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginTop: 14 }}>
+              <label>Canal de contato
+                <select value={draft(item).contactChannel} onChange={(e) => edit(item, { contactChannel: e.target.value })} style={{ display: 'block', width: '100%' }}>
+                  <option value="">Não informado</option><option value="email">E-mail</option><option value="whatsapp">WhatsApp</option><option value="telefone">Telefone</option><option value="outro">Outro</option>
+                </select>
+              </label>
+              <label>Próximo contato
+                <input type="date" value={draft(item).nextFollowUpAt} onChange={(e) => edit(item, { nextFollowUpAt: e.target.value })} style={{ display: 'block', width: '100%' }} />
+              </label>
+            </div>
+            <label style={{ display: 'block', marginTop: 12 }}>Notas internas
+              <textarea rows={2} maxLength={2000} value={draft(item).notes} onChange={(e) => edit(item, { notes: e.target.value })} placeholder="Registre a resposta ou o próximo passo; não inclua dados pessoais desnecessários." style={{ display: 'block', width: '100%' }} />
+            </label>
+            <button type="button" disabled={savingId === item.establishment.id} onClick={() => void save(item)} style={{ marginTop: 10 }}>Salvar acompanhamento</button>
+            {item.pipeline.lastContactAt && <small style={{ display: 'block', marginTop: 8 }}>Último contato registrado: {new Date(item.pipeline.lastContactAt).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</small>}
           </article>
         ))}
       </div>
