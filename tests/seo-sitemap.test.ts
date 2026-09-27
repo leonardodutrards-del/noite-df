@@ -11,8 +11,8 @@ import {
 } from '@/lib/curated-routes';
 
 describe('SEO, Slugs and Sitemap consistency', () => {
-  it('garante que todos os 73 estabelecimentos possuem IDs únicos e válidos para slugs', () => {
-    expect(places).toHaveLength(73);
+  it('garante que todos os estabelecimentos possuem IDs únicos e válidos para slugs', () => {
+    expect(places).toHaveLength(85);
     const slugs = places.map((p) => p.id);
     const uniqueSlugs = new Set(slugs);
     expect(uniqueSlugs.size).toBe(places.length);
@@ -78,5 +78,13 @@ describe('SEO, Slugs and Sitemap consistency', () => {
     for (const place of places) {
       expect(mappedRegions).toContain(place.region);
     }
+  });
+
+  it('usa o catálogo publicado ao separar regiões, inclusive Park Way', () => {
+    const additional = { ...places[0], id: 'novo-park-way', region: 'Park Way' };
+    const source = [...places, additional];
+    expect(getPlacesByRegionSlug('park-way', source).map((place) => place.id)).toContain('novo-park-way');
+    expect(getPlacesByRegionSlug('asa-norte', source).every((place) => place.region === 'Asa Norte')).toBe(true);
+    expect(getSitemapCuratedUrls(source)).toContain('/lugares/park-way');
   });
 });

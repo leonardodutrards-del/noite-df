@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Curated regional & thematic hubs with sufficient indexable content
-  const curatedPaths = getSitemapCuratedUrls();
+  const curatedPaths = getSitemapCuratedUrls(places);
   const curatedRoutes: MetadataRoute.Sitemap = curatedPaths.map((path) => ({
     url: `${base}${path}`,
     lastModified: now,
