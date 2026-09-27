@@ -235,9 +235,18 @@ export default async function PlacePage({ params }: PlacePageProps) {
           </div>
 
           <div style={{ marginTop: '28px', borderTop: '1px solid var(--border)', paddingTop: '14px' }}>
+            {!place.ownerManaged && (
+              <div className="notice" style={{ marginBottom: 14 }}>
+                <strong>Você representa este estabelecimento?</strong>
+                <p style={{ margin: '8px 0' }}>Solicite a gestão do perfil para atualizar os dados. O acesso depende de análise da equipe Noite DF.</p>
+                <Link href={`/parceiro/onboarding?estabelecimento=${encodeURIComponent(place.id)}`}>
+                  Solicitar gestão deste perfil →
+                </Link>
+              </div>
+            )}
             <small style={{ color: 'var(--muted)', fontSize: '12px', display: 'block' }}>
               {place.source?.label ? `Fonte cadastral: ${place.source.label}` : 'Curadoria editorial Noite DF'}
-              {place.lastUpdated ? ` · Última verificação em ${place.lastUpdated}` : ''}
+              {place.lastUpdated && place.source?.kind === 'official' ? ` · Fonte consultada em ${place.lastUpdated}` : ''}
             </small>
           </div>
         </section>
