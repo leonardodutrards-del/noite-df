@@ -93,6 +93,7 @@ export type Establishment = {
 };
 
 export interface CreateEstablishmentInput {
+  establishmentId?: string;
   name: string;
   type: Establishment['type'];
   description: string;
