@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PlaceCard } from '@/components/PlaceCard';
+import { establishmentService } from '@/modules/establishments/service';
 import {
   REGION_SLUG_MAP,
   getBarsByRegionSlug,
@@ -14,6 +15,7 @@ interface BaresPageProps {
 }
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return Object.keys(REGION_SLUG_MAP).map((region) => ({ region }));
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: BaresPageProps): Promise<Meta
     };
   }
 
-  const bars = getBarsByRegionSlug(region);
+  const bars = getBarsByRegionSlug(region, await establishmentService.search({}));
   const isIndexable = bars.length >= MIN_CONTENT_COUNT_FOR_SEO;
   const canonicalUrl = `${appUrl}/bares/${region}`;
 
@@ -57,7 +59,7 @@ export default async function BaresRegionPage({ params }: BaresPageProps) {
     notFound();
   }
 
-  const bars = getBarsByRegionSlug(region);
+  const bars = getBarsByRegionSlug(region, await establishmentService.search({}));
 
   return (
     <main className="container">
