@@ -15,6 +15,7 @@ export const REGION_SLUG_MAP: Record<string, string> = {
   'guara': 'Guará',
   'lago-sul': 'Lago Sul',
   'planaltina': 'Planaltina',
+  'park-way': 'Park Way',
   'sobradinho': 'Sobradinho',
   'sudoeste': 'Sudoeste',
   'taguatinga': 'Taguatinga',
@@ -34,25 +35,25 @@ export function getRegionFromSlug(slug: string): string | undefined {
   return REGION_SLUG_MAP[slug];
 }
 
-export function getPlacesByRegionSlug(slug: string): Establishment[] {
+export function getPlacesByRegionSlug(slug: string, source: Establishment[] = places): Establishment[] {
   const regionName = getRegionFromSlug(slug);
   if (!regionName) return [];
-  return places.filter((p) => normalizeString(p.region) === normalizeString(regionName));
+  return source.filter((p) => normalizeString(p.region) === normalizeString(regionName));
 }
 
-export function getBarsByRegionSlug(slug: string): Establishment[] {
-  const regionPlaces = getPlacesByRegionSlug(slug);
+export function getBarsByRegionSlug(slug: string, source: Establishment[] = places): Establishment[] {
+  const regionPlaces = getPlacesByRegionSlug(slug, source);
   return regionPlaces.filter((p) => {
     const t = p.type;
     return t === 'Bar' || t === 'Gastrobar' || t === 'Pub';
   });
 }
 
-export function getPlacesByIntent(intent: 'pagode' | 'sertanejo' | 'happy-hour' | 'date', locationSlug: string): Establishment[] {
+export function getPlacesByIntent(intent: 'pagode' | 'sertanejo' | 'happy-hour' | 'date', locationSlug: string, source: Establishment[] = places): Establishment[] {
   const isAllDF = locationSlug === 'brasilia' || locationSlug === 'df' || locationSlug === 'todos';
   const targetRegion = isAllDF ? null : getRegionFromSlug(locationSlug);
 
-  return places.filter((place) => {
+  return source.filter((place) => {
     if (targetRegion && normalizeString(place.region) !== normalizeString(targetRegion)) {
       return false;
     }
@@ -80,12 +81,12 @@ export function getPlacesByIntent(intent: 'pagode' | 'sertanejo' | 'happy-hour' 
 
 export const MIN_CONTENT_COUNT_FOR_SEO = 2;
 
-export function getSitemapCuratedUrls(): string[] {
+export function getSitemapCuratedUrls(source: Establishment[] = places): string[] {
   const urls: string[] = [];
 
   // 1. Lugares por região
   for (const slug of Object.keys(REGION_SLUG_MAP)) {
-    const count = getPlacesByRegionSlug(slug).length;
+    const count = getPlacesByRegionSlug(slug, source).length;
     if (count >= MIN_CONTENT_COUNT_FOR_SEO) {
       urls.push(`/lugares/${slug}`);
     }
@@ -93,7 +94,7 @@ export function getSitemapCuratedUrls(): string[] {
 
   // 2. Bares por região
   for (const slug of Object.keys(REGION_SLUG_MAP)) {
-    const count = getBarsByRegionSlug(slug).length;
+    const count = getBarsByRegionSlug(slug, source).length;
     if (count >= MIN_CONTENT_COUNT_FOR_SEO) {
       urls.push(`/bares/${slug}`);
     }
@@ -109,7 +110,7 @@ export function getSitemapCuratedUrls(): string[] {
   ];
 
   for (const item of intents) {
-    const count = getPlacesByIntent(item.intent, item.location).length;
+    const count = getPlacesByIntent(item.intent, item.location, source).length;
     if (count >= MIN_CONTENT_COUNT_FOR_SEO) {
       urls.push(item.path);
     }
