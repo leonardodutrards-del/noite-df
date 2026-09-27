@@ -35,10 +35,8 @@ export async function POST(request: NextRequest) {
           : null;
 
   const actionMap: Record<string, string> = {
-    page_view: 'view',
     place_view: 'view',
     favorite: 'save',
-    share: 'view',
   };
 
   try {
