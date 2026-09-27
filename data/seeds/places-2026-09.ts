@@ -3,12 +3,12 @@ import type { Establishment } from '@/modules/establishments/types';
 // Identity and address checked against the linked business sources.
 // Unknown prices, ratings, music and live occupancy are deliberately not inferred.
 const record = (id: string, name: string, region: string, address: string,
-  description: string, url: string, vibe: string[], type: Establishment['type'] = 'Restaurante'): Establishment => ({
+  description: string, url: string, vibe: string[], type: Establishment['type'] = 'Restaurante', checkedAt = '2026-09-16'): Establishment => ({
   id, name, region, address, description, type, vibe,
   music: [], audience: [], mapsQuery: `${name} ${address}`,
   verified: false, ownerManaged: false, crowdStatus: 'a confirmar',
-  weeklySchedule: [], lastUpdated: '2026-09-16', publicationStatus: 'published',
-  source: { kind: 'official', label: 'Informações publicadas pelo estabelecimento', url, verifiedAt: '2026-09-16' },
+  weeklySchedule: [], lastUpdated: checkedAt, publicationStatus: 'published',
+  source: { kind: 'official', label: 'Informações publicadas pelo estabelecimento', url, verifiedAt: checkedAt },
   publicRatings: [],
 });
 
@@ -81,4 +81,28 @@ export const additionalPlaces: Establishment[] = [
     'CLS 506, Bloco A, Loja 67, Infinu — Asa Sul, Brasília, DF',
     'Pizzaria com forno a lenha dentro do Infinu, na 506 Sul. É uma operação própria dentro do espaço cultural.',
     'https://www.alfredospizzaria.com.br/', ['pizza']),
+  record('jotaka-asa-sul', 'Jotaká Cozinha e Bar — Asa Sul', 'Asa Sul',
+    'SHCS CLS 215, Bloco C, Loja 37 — Asa Sul, Brasília, DF, 70295-530',
+    'Restaurante brasiliense com caldos, petiscos, carnes e frutos do mar. Consulte horários e reservas no site oficial.',
+    'https://jotakacozinhabar.com.br/', ['gastronomia', 'happy hour'], 'Gastrobar', '2026-09-27'),
+  record('jotaka-aguas-claras', 'Jotaká Cozinha e Bar — Águas Claras', 'Águas Claras',
+    'Avenida Parque Águas Claras — Águas Claras, DF',
+    'Unidade de Águas Claras do restaurante Jotaká. Consulte horários e reservas no site oficial.',
+    'https://jotakacozinhabar.com.br/', ['gastronomia', 'happy hour'], 'Gastrobar', '2026-09-27'),
+  record('jotaka-taguatinga', 'Jotaká Cozinha e Bar — Taguatinga', 'Taguatinga',
+    'Setor D Norte, QND 39 — Taguatinga, DF, 72120-320',
+    'Unidade de Taguatinga do restaurante Jotaká. Consulte horários e reservas no site oficial.',
+    'https://jotakacozinhabar.com.br/', ['gastronomia', 'happy hour'], 'Gastrobar', '2026-09-27'),
+  record('jotaka-ceilandia', 'Jotaká Cozinha e Bar — Ceilândia', 'Ceilândia',
+    'Setor O, QNO 2, Loja 01 — Ceilândia, DF, 72250-207',
+    'Unidade da Ceilândia do restaurante Jotaká. Consulte horários e reservas no site oficial.',
+    'https://jotakacozinhabar.com.br/', ['gastronomia', 'happy hour'], 'Gastrobar', '2026-09-27'),
+  record('same-same-pontao', 'Same Same — Pontão', 'Lago Sul',
+    'Pontão do Lago Sul — SHIS QI 10, Lote 1/30, Lago Sul, Brasília, DF',
+    'Restaurante de culinária do Sudeste Asiático com pratos da Tailândia, Vietnã e Coreia.',
+    'https://www.pontao.com.br/restaurantes/same-same/', ['gastronomia'], 'Restaurante', '2026-09-27'),
+  record('manzua-pontao', 'Manzuá — Pontão', 'Lago Sul',
+    'Pontão do Lago Sul — SHIS QI 10, Lote 1/30, Lago Sul, Brasília, DF',
+    'Restaurante de cozinha brasileira e frutos do mar no Pontão do Lago Sul.',
+    'https://www.pontao.com.br/restaurantes/manzua/', ['gastronomia'], 'Restaurante', '2026-09-27'),
 ];
