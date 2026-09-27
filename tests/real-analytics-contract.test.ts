@@ -16,8 +16,8 @@ describe('Fase 6 — analytics reais', () => {
   });
 
   it('agrega métricas reais do período no servidor', () => {
-    expect(partnerAnalytics).toContain("row.action === 'view'");
-    expect(partnerAnalytics).toContain("row.action === 'whatsapp_click'");
+    expect(partnerAnalytics).toContain("'view', 'whatsapp_click', 'map_click', 'instagram_click', 'save'");
+    expect(partnerAnalytics).toContain("Prefer: 'count=exact'");
     expect(partnerAnalytics).toContain('conversionRate');
     expect(partnerAnalytics).toContain('created_at');
   });

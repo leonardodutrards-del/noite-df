@@ -27,7 +27,6 @@ export function PlaceCard({ place }: { place: Place }) {
           <Link
             href={`/lugar/${place.id}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
-            onClick={() => track('place_view', { placeId: place.id, placeName: place.name })}
           >
             {place.name}
           </Link>
@@ -79,7 +78,6 @@ export function PlaceCard({ place }: { place: Place }) {
           <Link
             href={`/lugar/${place.id}`}
             style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}
-            onClick={() => track('place_view', { placeId: place.id, placeName: place.name })}
           >
             Ver detalhes
           </Link>

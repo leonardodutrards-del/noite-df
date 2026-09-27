@@ -8,6 +8,7 @@ import type { AuthUser } from '@/modules/auth/types';
 
 type PartnerAnalytics = {
   periodDays: number;
+  available: boolean;
   views: number;
   whatsappClicks: number;
   mapClicks: number;
@@ -18,6 +19,7 @@ type PartnerAnalytics = {
 
 const EMPTY_ANALYTICS: PartnerAnalytics = {
   periodDays: 30,
+  available: false,
   views: 0,
   whatsappClicks: 0,
   mapClicks: 0,
@@ -168,7 +170,7 @@ export default function PartnerPage() {
     ['Rotas abertas', analytics.mapClicks.toLocaleString('pt-BR')],
     ['Cliques no Instagram', analytics.instagramClicks.toLocaleString('pt-BR')],
     ['Favoritos', analytics.favorites.toLocaleString('pt-BR')],
-    ['Conversão estimada', `${analytics.conversionRate.toLocaleString('pt-BR')}%`],
+    ['Ações por 100 visualizações', `${analytics.conversionRate.toLocaleString('pt-BR')}`],
   ];
 
   if (loading) {
@@ -245,14 +247,17 @@ export default function PartnerPage() {
       )}
 
       {/* Indicadores */}
-      <div className="metrics-grid">
-        {metrics.map(([label, value]) => (
-          <article key={label}>
-            <span>{label}</span>
-            <strong>{value}</strong>
-          </article>
-        ))}
-      </div>
+      {analytics.available ? <>
+        <div className="metrics-grid">
+          {metrics.map(([label, value]) => (
+            <article key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+            </article>
+          ))}
+        </div>
+        <p className="field-hint">Últimos {analytics.periodDays} dias. Ações são cliques e favoritos; não representam reservas, clientes únicos ou vendas.</p>
+      </> : <p className="notice" role="status">As métricas deste perfil estão indisponíveis no momento. Tente atualizar a página mais tarde.</p>}
 
       <form onSubmit={handleSave} style={{ marginTop: 36, display: 'grid', gap: 24 }}>
         {/* Lotação e Destaque */}
