@@ -10,7 +10,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = process.env.NODE_ENV === 'production'
+      ? 'https://www.noitedf.com.br'
+      : request.nextUrl.origin;
     await supabaseSendPasswordReset(email, `${appUrl}/redefinir-senha`);
     return NextResponse.json({
       success: true,
