@@ -20,6 +20,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('password-reset-request', error);
+    if (error instanceof Error && error.message === 'AUTH_EMAIL_RATE_LIMIT') {
+      return NextResponse.json({ message: 'Muitas solicitações em pouco tempo. Aguarde antes de pedir outro link.' }, { status: 429 });
+    }
     return NextResponse.json({
       success: true,
       message: 'Se o e-mail estiver cadastrado, enviaremos instruções para redefinir a senha.',
