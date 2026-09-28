@@ -33,10 +33,10 @@ export default function RecuperarSenhaPage() {
       <section className="panel" style={{ marginTop: 32, padding: 32 }}>
         <h1>Recuperar senha</h1>
         <p>Enviaremos um link para você definir uma nova senha.</p>
-        <form onSubmit={submit}>
-          <label htmlFor="recovery-email">E-mail da conta</label>
-          <input id="recovery-email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
-          <button type="submit" disabled={loading}>{loading ? 'Enviando...' : 'Enviar link'}</button>
+        <form onSubmit={submit} style={{ display: 'grid', gap: 12 }}>
+          <label htmlFor="recovery-email" style={{ fontWeight: 700 }}>E-mail da conta</label>
+          <input style={{ width: '100%' }} id="recovery-email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
+          <button type="submit" disabled={loading} style={{ marginTop: 8 }}>{loading ? 'Enviando...' : 'Enviar link'}</button>
         </form>
         {message ? <p role="status">{message}</p> : null}
         <Link href="/login">Voltar ao login</Link>
