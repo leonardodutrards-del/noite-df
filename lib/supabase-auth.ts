@@ -218,9 +218,9 @@ export async function supabaseLogout(accessToken: string): Promise<void> {
 }
 
 export async function supabaseSendPasswordReset(email: string, redirectTo: string): Promise<void> {
-  await authRequest('recover', {
+  await authRequest(`recover?redirect_to=${encodeURIComponent(redirectTo)}`, {
     method: 'POST',
-    body: JSON.stringify({ email, redirect_to: redirectTo }),
+    body: JSON.stringify({ email }),
   });
 }
 
