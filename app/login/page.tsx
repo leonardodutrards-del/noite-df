@@ -99,6 +99,9 @@ function LoginForm() {
             {loading ? 'Entrando...' : 'Entrar na Conta'}
           </button>
         </form>
+        <p style={{ marginTop: 16, textAlign: 'right', fontSize: 14 }}>
+          <Link href="/recuperar-senha" style={{ color: 'var(--accent)', fontWeight: 700 }}>Esqueceu a senha?</Link>
+        </p>
 
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14 }}>
           <p style={{ margin: 0, textAlign: 'center' }}>
