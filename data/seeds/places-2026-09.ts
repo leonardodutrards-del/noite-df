@@ -129,4 +129,8 @@ export const additionalPlaces: Establishment[] = [
     'Avenida Independência, Quadra 23, Lote 6 — Setor Tradicional, Planaltina, Brasília, DF',
     'Pizzaria no Setor Tradicional de Planaltina. Confirme cardápio e atendimento pelo perfil do estabelecimento.',
     'https://www.instagram.com/moemapizzaria/', ['pizza'], 'Restaurante', '2026-09-27'),
+  record('samambar', 'SamamBar', 'Samambaia',
+    'QS 402, Conjunto L, 01 — Samambaia, Brasília, DF',
+    'Bar e espaço de eventos em Samambaia. Consulte a programação, ingressos e condições diretamente com o organizador de cada evento.',
+    'https://www.sympla.com.br/evento/lgc/3570798', ['música ao vivo', 'sertanejo'], 'Bar'),
 ];
