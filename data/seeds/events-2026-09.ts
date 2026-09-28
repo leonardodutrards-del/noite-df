@@ -12,6 +12,10 @@ const event = (id: string, title: string, place: string, region: string, dateLab
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
+  event('mada-surra-modao-2026-09-28', 'Surra de Modão — segunda no Madá', 'Boteco da Madá', 'Taguatinga', '28/09/2026 · Happy hour 16h às 21h · Surra de Modão 22h',
+    'Programação de segunda divulgada pelo Boteco da Madá: happy hour das 16h às 21h, Leandro Lucca às 19h30 e Surra de Modão às 22h. Av. Hélio Prates, Taguatinga. Consulte condições e confirme eventuais mudanças com a casa.',
+    'https://www.instagram.com/botecodamadabsb/p/DdkIimcFP8P/',
+    '2026-09-29T04:00:00-03:00', '2026-09-28T16:00:00-03:00', '2026-09-28'),
   event('ticiana-alysson-2026-09-18', 'Alysson Takaki — Love songs', 'Ticiana Werner Wine Bar', 'Asa Sul', '18/09/2026 · 19h30 às 23h',
     'Música ao vivo na varanda. Local: CLS 201, Bloco C, lojas 05–11, Asa Sul. Consulte condições com o restaurante.',
     'https://www.ticianawerner.com.br/musica.php', '2026-09-18T23:00:00-03:00', '2026-09-18T19:30:00-03:00', '2026-09-18'),
