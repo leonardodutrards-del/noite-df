@@ -81,4 +81,8 @@ export const additionalPlaces: Establishment[] = [
     'CLS 506, Bloco A, Loja 67, Infinu — Asa Sul, Brasília, DF',
     'Pizzaria com forno a lenha dentro do Infinu, na 506 Sul. É uma operação própria dentro do espaço cultural.',
     'https://www.alfredospizzaria.com.br/', ['pizza']),
+  record('samambar', 'SamamBar', 'Samambaia',
+    'QS 402, Conjunto L, 01 — Samambaia, Brasília, DF',
+    'Bar e espaço de eventos em Samambaia. Consulte a programação, ingressos e condições diretamente com o organizador de cada evento.',
+    'https://www.sympla.com.br/evento/lgc/3570798', ['música ao vivo', 'sertanejo'], 'Bar'),
 ];
