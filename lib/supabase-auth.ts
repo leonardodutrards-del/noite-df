@@ -51,6 +51,7 @@ async function authRequest(path: string, init: RequestInit): Promise<AuthPayload
   });
   const data = (await response.json().catch(() => ({}))) as AuthPayload;
   if (!response.ok) {
+    if (response.status === 429) throw new Error('AUTH_EMAIL_RATE_LIMIT');
     throw new Error(data.error_description || data.msg || 'Falha na autenticação.');
   }
   return data;
