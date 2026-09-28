@@ -58,12 +58,12 @@ export default function RedefinirSenhaPage() {
         {done ? (
           <p>Senha definida. <Link href="/login?redirect=/admin">Entrar na conta</Link></p>
         ) : accessToken ? (
-          <form onSubmit={submit}>
-            <label htmlFor="new-password">Nova senha</label>
-            <input id="new-password" type="password" autoComplete="new-password" minLength={12} required value={password} onChange={(event) => setPassword(event.target.value)} />
-            <label htmlFor="confirm-password">Confirmar nova senha</label>
-            <input id="confirm-password" type="password" autoComplete="new-password" minLength={12} required value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
-            <button type="submit" disabled={loading}>{loading ? 'Salvando...' : 'Definir senha'}</button>
+          <form onSubmit={submit} style={{ display: 'grid', gap: 12 }}>
+            <label htmlFor="new-password" style={{ fontWeight: 700 }}>Nova senha</label>
+            <input style={{ width: '100%' }} id="new-password" type="password" autoComplete="new-password" minLength={12} required value={password} onChange={(event) => setPassword(event.target.value)} />
+            <label htmlFor="confirm-password" style={{ fontWeight: 700 }}>Confirmar nova senha</label>
+            <input style={{ width: '100%' }} id="confirm-password" type="password" autoComplete="new-password" minLength={12} required value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
+            <button type="submit" disabled={loading} style={{ marginTop: 8 }}>{loading ? 'Salvando...' : 'Definir senha'}</button>
           </form>
         ) : (
           <p>Este link é inválido ou expirou. <Link href="/recuperar-senha">Solicitar outro link</Link></p>
