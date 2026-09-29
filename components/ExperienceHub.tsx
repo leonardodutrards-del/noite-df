@@ -19,6 +19,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
   const [query, setQuery] = useState('');
   const [region, setRegion] = useState('todos');
   const [vibe, setVibe] = useState('todas');
+  const [priceFilter, setPriceFilter] = useState('todas');
   const [budget, setBudget] = useState('Até R$ 120');
   const [duration, setDuration] = useState('1 noite');
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
@@ -32,17 +33,18 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
     [places]
   );
   const filteredPlaces = useMemo(
-    () => recommendPlaces(query, region, vibe, places).filter(
+    () => recommendPlaces(query, region, vibe, places, priceFilter).filter(
       (place) => !radarFilter || matchesRadar(place, radarFilter)
     ),
-    [query, region, vibe, radarFilter, places]
+    [query, region, vibe, priceFilter, radarFilter, places]
   );
   const selectedRadar = radarOptions.find(option => option.id === radarFilter);
-  const hasFilters = Boolean(query || region !== 'todos' || vibe !== 'todas' || radarFilter);
+  const hasFilters = Boolean(query || region !== 'todos' || vibe !== 'todas' || radarFilter || priceFilter !== 'todas');
   const clearFilters = () => {
     setQuery('');
     setRegion('todos');
     setVibe('todas');
+    setPriceFilter('todas');
     setRadarFilter(null);
   };
 
@@ -120,6 +122,19 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
             >
               {vibes.map((i) => <option key={i} value={i}>{i === 'todas' ? 'Todos os estilos' : i}</option>)}
             </select>
+            <select
+              id="faixa-preco"
+              name="faixa-preco"
+              aria-label="Faixa de preço"
+              value={priceFilter}
+              onChange={(e) => setPriceFilter(e.target.value)}
+            >
+              <option value="todas">Todas as faixas de preço</option>
+              <option value="$">$</option>
+              <option value="$">$</option>
+              <option value="$$">$$</option>
+              <option value="$$">$$</option>
+            </select>
           </div>
           <div className="hero-actions">
             <a className="button" href="#lugares">Explorar agora</a>
@@ -151,7 +166,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
           <p className="recommendation">
             Sugestão: {vibe === 'todas' ? 'comece pelo Radar da Cidade' : `priorize ${vibe}`} em {region === 'todos' ? 'todo o DF' : region}, com orçamento {budget.toLowerCase()} durante {duration}.
           </p>
-          <small>Orçamento e duração são referências para seu planejamento; não filtram os resultados nem representam preços confirmados.</small>
+          <small>Orçamento e duração são referências para seu planejamento; use a faixa de preço acima para filtrar locais com classificação disponível. Os símbolos não representam um valor fixo em reais.</small>
         </aside>
       </section>
 
