@@ -12,6 +12,10 @@ const event = (id: string, title: string, place: string, region: string, dateLab
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
+  event('godofredo-oktoberfest-2026-10-17', 'Oktoberfest 2026 — Godofredo', 'Bar Godofredo', 'Asa Norte', '17/10/2026 · 15h à meia-noite',
+    'Edição com DJs da casa e nove horas de open bar anunciadas pelo organizador. Comidas cobradas à parte; confira ingressos, condições e regras na fonte oficial.',
+    'https://shotgun.live/pt-br/events/oktoberfest-2026-godofredo',
+    '2026-10-18T00:00:00-03:00', '2026-10-17T15:00:00-03:00', '2026-09-29'),
   event('birosca-fairy-lost-in-lust-2026-10-02', 'Fairy — Listening Party: Lost in Lust', 'Birosca do Conic', 'Asa Sul', '02/10/2026 · 22h às 6h de 03/10',
     'Festa de audição do álbum Lost in Lust, com pop mundial e alternativo. A programação de DJs será divulgada pela organização. Evento para maiores de 18 anos; confira ingressos e condições na fonte.',
     'https://shotgun.live/events/02-10-fairy-listening-party-lost-in-lust',
