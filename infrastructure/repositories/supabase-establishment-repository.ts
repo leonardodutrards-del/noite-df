@@ -179,7 +179,7 @@ function rowToEstablishment(row: SupabaseRow): Establishment {
     vibe: row.vibe ?? [],
     music: row.music ?? [],
     audience: row.audience ?? [],
-    price: (row.price_range || '$$') as Establishment['price'],
+    price: (row.price_range || undefined) as Establishment['price'],
     instagram: row.instagram || undefined,
     whatsapp: row.whatsapp || undefined,
     businessContact:
