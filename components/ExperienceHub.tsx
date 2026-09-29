@@ -202,7 +202,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
           <div>
             <span className="eyebrow">Guia inteligente</span>
             <h2>Lugares para você</h2>
-            <p role="status" aria-live="polite">{filteredPlaces.length} opções encontradas · fonte e última atualização em cada perfil.</p>
+            <p role="status" aria-live="polite">{filteredPlaces.length} {filteredPlaces.length === 1 ? 'opção encontrada' : 'opções encontradas'} · fonte e última atualização em cada perfil.</p>
             {hasFilters && <button className="button ghost" type="button" onClick={clearFilters}>Limpar todos os filtros</button>}
             {selectedRadar && <p className="radar-selection">{selectedRadar.label}: {selectedRadar.description} <button type="button" onClick={() => setRadarFilter(null)}>Limpar filtro</button></p>}
           </div>
