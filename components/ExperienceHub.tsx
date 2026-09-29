@@ -131,9 +131,9 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
             >
               <option value="todas">Todas as faixas de preço</option>
               <option value="$">$</option>
-              <option value="$">$</option>
               <option value="$$">$$</option>
-              <option value="$$">$$</option>
+              <option value="$$$">$$$</option>
+              <option value="$$$$">$$$$</option>
             </select>
           </div>
           <div className="hero-actions">
