@@ -133,4 +133,8 @@ export const additionalPlaces: Establishment[] = [
     'QS 402, Conjunto L, 01 — Samambaia, Brasília, DF',
     'Bar e espaço de eventos em Samambaia. Consulte a programação, ingressos e condições diretamente com o organizador de cada evento.',
     'https://www.sympla.com.br/evento/lgc/3570798', ['música ao vivo', 'sertanejo'], 'Bar'),
+  record('birosca-do-conic', 'Birosca do Conic', 'Asa Sul',
+    'SDS Bloco E, Loja 3 — Conic, Brasília, DF, 70300-970',
+    'Casa de festas no Conic com programação de DJs e eventos independentes. Consulte a agenda e as condições de cada edição na página oficial.',
+    'https://linktr.ee/biroscadoconic', ['festas', 'dançar'], 'Boate', '2026-09-29'),
 ];
