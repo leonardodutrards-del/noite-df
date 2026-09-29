@@ -86,7 +86,7 @@ export default async function RegionLugaresPage({ params }: RegionPageProps) {
         <span className="badge">Guia Regional</span>
         <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', margin: '12px 0' }}>Lugares em {regionName}</h1>
         <p style={{ maxWidth: '700px', fontSize: '16px' }}>
-          Explore os {places.length} estabelecimentos cadastrados em {regionName}. Informações com fontes públicas quando disponíveis.
+          Explore {places.length} {places.length === 1 ? 'estabelecimento cadastrado' : 'estabelecimentos cadastrados'} em {regionName}. Informações com fontes públicas quando disponíveis.
         </p>
       </section>
 
