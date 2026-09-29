@@ -14,9 +14,10 @@ export default function RedefinirSenhaPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.hash.slice(1));
     const token = params.get('access_token');
-    setAccessToken(token ?? '');
+    const timer = window.setTimeout(() => setAccessToken(token ?? ''), 0);
     // The recovery token must not remain in the address bar or browser history.
     if (window.location.hash) window.history.replaceState(null, '', window.location.pathname);
+    return () => window.clearTimeout(timer);
   }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {

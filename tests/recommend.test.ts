@@ -13,6 +13,12 @@ describe('recommendPlaces', () => {
     expect(result.some((place) => place.vibe.includes('família'))).toBe(true);
   });
 
+  it('filtra faixa de preço sem atribuir valor a locais sem classificação', () => {
+    const result = recommendPlaces('', 'todos', 'todas', undefined, '$');
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every((place) => place.price === '$')).toBe(true);
+  });
+
   it('busca em nome, descrição e atributos', () => {
     const result = recommendPlaces('tres tambores', 'todos', 'todas');
     expect(result.some((place) => place.id === 'granja-do-torto-eventos')).toBe(true);

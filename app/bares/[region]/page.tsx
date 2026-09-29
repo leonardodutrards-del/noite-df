@@ -86,7 +86,7 @@ export default async function BaresRegionPage({ params }: BaresPageProps) {
         <span className="badge">Guia Temático</span>
         <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', margin: '12px 0' }}>Bares em {regionName}</h1>
         <p style={{ maxWidth: '700px', fontSize: '16px' }}>
-          Conheça {bars.length} bares, pubs e gastrobares em {regionName}. Endereços, vibes e links oficiais verificados.
+          Conheça {bars.length} {bars.length === 1 ? 'bar, pub ou gastrobar' : 'bares, pubs e gastrobares'} em {regionName}. Endereços, vibes e links oficiais verificados.
         </p>
       </section>
 

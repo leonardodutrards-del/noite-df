@@ -12,6 +12,22 @@ const event = (id: string, title: string, place: string, region: string, dateLab
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
+  event('godofredo-oktoberfest-2026-10-17', 'Oktoberfest 2026 — Godofredo', 'Bar Godofredo', 'Asa Norte', '17/10/2026 · 15h à meia-noite',
+    'Edição com DJs da casa e nove horas de open bar anunciadas pelo organizador. Comidas cobradas à parte; confira ingressos, condições e regras na fonte oficial.',
+    'https://shotgun.live/pt-br/events/oktoberfest-2026-godofredo',
+    '2026-10-18T00:00:00-03:00', '2026-10-17T15:00:00-03:00', '2026-09-29'),
+  event('birosca-fairy-lost-in-lust-2026-10-02', 'Fairy — Listening Party: Lost in Lust', 'Birosca do Conic', 'Asa Sul', '02/10/2026 · 22h às 6h de 03/10',
+    'Festa de audição do álbum Lost in Lust, com pop mundial e alternativo. A programação de DJs será divulgada pela organização. Evento para maiores de 18 anos; confira ingressos e condições na fonte.',
+    'https://shotgun.live/events/02-10-fairy-listening-party-lost-in-lust',
+    '2026-10-03T06:00:00-03:00', '2026-10-02T22:00:00-03:00', '2026-09-29'),
+  event('birosca-treta-equilibrivm-2026-10-03', 'Treta Equilibrivm', 'Birosca do Conic', 'Asa Sul', '03/10/2026 · 22h às 6h de 04/10',
+    'Edição da festa Treta com performances drag e pista pop e funk. Evento para maiores de 18 anos; confira ingressos e condições na fonte.',
+    'https://shotgun.live/events/03-10-treta-equilibrivm',
+    '2026-10-04T06:00:00-03:00', '2026-10-03T22:00:00-03:00', '2026-09-29'),
+  event('birosca-baile-funky-2026-10-09', 'Baile Funky', 'Birosca do Conic', 'Asa Sul', '09/10/2026 · 22h às 6h de 10/10',
+    'Festa com ritmada, mandelão, bruxaria, funkhall e dancehall; atrações a anunciar. Evento para maiores de 18 anos; confira ingressos e condições na fonte.',
+    'https://shotgun.live/events/09-10-baile-funky',
+    '2026-10-10T06:00:00-03:00', '2026-10-09T22:00:00-03:00', '2026-09-29'),
   event('mada-surra-modao-2026-09-28', 'Surra de Modão — segunda no Madá', 'Boteco da Madá', 'Taguatinga', '28/09/2026 · Happy hour 16h às 21h · Surra de Modão 22h',
     'Programação de segunda divulgada pelo Boteco da Madá: happy hour das 16h às 21h, Leandro Lucca às 19h30 e Surra de Modão às 22h. Av. Hélio Prates, Taguatinga. Consulte condições e confirme eventuais mudanças com a casa.',
     'https://www.instagram.com/botecodamadabsb/p/DdkIimcFP8P/',

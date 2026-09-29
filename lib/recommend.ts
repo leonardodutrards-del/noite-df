@@ -8,7 +8,8 @@ export function recommendPlaces(
   query: string,
   region: string,
   vibe: string,
-  source: Establishment[] = places
+  source: Establishment[] = places,
+  price: string = 'todas'
 ) {
   const normalizedQuery = normalize(query);
 
@@ -27,6 +28,7 @@ export function recommendPlaces(
     const matchesRegion = region === 'todos' || place.region === region;
     const matchesVibe = vibe === 'todas' || place.vibe.some((item) => normalize(item).includes(normalize(vibe)));
 
-    return matchesQuery && matchesRegion && matchesVibe;
+    const matchesPrice = price === 'todas' || place.price === price;
+    return matchesQuery && matchesRegion && matchesVibe && matchesPrice;
   });
 }
