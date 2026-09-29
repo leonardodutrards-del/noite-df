@@ -137,4 +137,8 @@ export const additionalPlaces: Establishment[] = [
     'SDS Bloco E, Loja 3 — Conic, Brasília, DF, 70300-970',
     'Casa de festas no Conic com programação de DJs e eventos independentes. Consulte a agenda e as condições de cada edição na página oficial.',
     'https://linktr.ee/biroscadoconic', ['festas', 'dançar'], 'Boate', '2026-09-29'),
+  record('bar-godofredo', 'Bar Godofredo', 'Asa Norte',
+    'CLN 408, Bloco B, Loja 12 — Asa Norte, Brasília, DF, 70856-520',
+    'Bar de chope e gastronomia na 408 Norte, com eventos divulgados pelo próprio estabelecimento. Consulte cada edição para condições de entrada.',
+    'https://shotgun.live/pt-br/events/oktoberfest-2026-godofredo', ['chope', 'gastronomia', 'eventos'], 'Bar', '2026-09-29'),
 ];
