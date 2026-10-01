@@ -44,6 +44,12 @@ export async function POST(request: NextRequest) {
         { status: 409 }
       );
     }
+    if (message === 'CLAIM_INVALID_ESTABLISHMENT' || message === 'CLAIM_ALREADY_MANAGED') {
+      return NextResponse.json(
+        { error: message === 'CLAIM_ALREADY_MANAGED' ? 'Este estabelecimento já é gerenciado.' : 'Confira o estabelecimento selecionado e tente novamente.' },
+        { status: 409 }
+      );
+    }
     console.error('claim-establishment', error);
     return NextResponse.json({ error: 'Não foi possível enviar a solicitação.' }, { status: 500 });
   }

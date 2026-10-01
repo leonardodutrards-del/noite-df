@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { CreateEstablishmentInput } from '@/modules/establishments/types';
+import Link from 'next/link';
+import type { CreateEstablishmentInput, Establishment } from '@/modules/establishments/types';
 
 const ESTABLISHMENT_TYPES = [
   'Bar',
@@ -32,6 +33,9 @@ export default function BecomePartnerPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
+  const [selectedPlace, setSelectedPlace] = useState<Establishment | null>(null);
+  const [loadingPlace, setLoadingPlace] = useState(false);
+  const [returnPath, setReturnPath] = useState('/parceiro/onboarding');
   const [step, setStep] = useState<'info' | 'confirm' | 'success'>(
     'info'
   );
@@ -47,6 +51,40 @@ export default function BecomePartnerPage() {
     instagram: '',
     website: '',
   });
+
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('estabelecimento');
+    if (!id) return;
+    let active = true;
+    queueMicrotask(() => {
+      if (active) {
+        setLoadingPlace(true);
+        setReturnPath(window.location.pathname + window.location.search);
+      }
+    });
+    fetch(`/api/establishments/${encodeURIComponent(id)}`)
+      .then(async response => {
+        if (!response.ok) throw new Error('Não foi possível localizar o perfil selecionado.');
+        return response.json() as Promise<{ establishment: Establishment }>;
+      })
+      .then(({ establishment }) => {
+        if (!active) return;
+        if (establishment.ownerManaged) throw new Error('Este perfil já é gerenciado pelo estabelecimento.');
+        setSelectedPlace(establishment);
+        setFormData({
+          establishmentId: establishment.id,
+          name: establishment.name,
+          type: establishment.type,
+          region: establishment.region,
+          address: establishment.address,
+          description: establishment.description,
+          phone: '', whatsapp: '', instagram: '', website: '',
+        });
+      })
+      .catch(err => { if (active) setError(err instanceof Error ? err.message : 'Falha ao carregar perfil.'); })
+      .finally(() => { if (active) setLoadingPlace(false); });
+    return () => { active = false; };
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -64,6 +102,7 @@ export default function BecomePartnerPage() {
     e.preventDefault();
 
     if (step === 'info') {
+      if (loadingPlace || (new URLSearchParams(window.location.search).has('estabelecimento') && !selectedPlace)) return;
       // Validar campos obrigatórios
       if (!formData.name || !formData.region || !formData.address) {
         setError('Nome, região e endereço são obrigatórios.');
@@ -78,37 +117,29 @@ export default function BecomePartnerPage() {
       setError(undefined);
 
       try {
-        const token = localStorage.getItem('auth_token');
-        if (!token) {
-          throw new Error('Autenticação necessária.');
-        }
-
         const response = await fetch('/api/parceiro/claim-establishment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         });
 
         if (!response.ok) {
+          if (response.status === 401) throw new Error('Autenticação necessária.');
           const errorData = await response.json() as { error?: string };
           throw new Error(errorData.error || 'Erro ao criar estabelecimento');
         }
 
-        const data = await response.json() as { token?: string };
-
-        if (data.token) {
-          localStorage.setItem('auth_token', data.token);
-        }
+        await response.json();
 
         setStep('success');
-        setTimeout(() => {
-          router.push('/parceiro');
-        }, 2000);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao criar estabelecimento');
+        if (err instanceof Error && err.message === 'Autenticação necessária.') {
+          router.push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`);
+          return;
+        }
+        setError(err instanceof Error ? err.message : 'Erro ao enviar solicitação');
       } finally {
         setIsLoading(false);
       }
@@ -123,8 +154,13 @@ export default function BecomePartnerPage() {
             Seja um Parceiro Noite DF
           </h1>
           <p className="text-gray-600 mb-8">
-            Gerencie seu estabelecimento e aumente sua visibilidade
+            Solicite a gestão do estabelecimento. A equipe analisará o pedido antes de liberar o acesso.
           </p>
+
+          {loadingPlace && <p role="status">Carregando perfil selecionado...</p>}
+          {selectedPlace && <p className="text-gray-600 mb-4">Perfil selecionado: <strong>{selectedPlace.name}</strong> · {selectedPlace.region}</p>}
+          {error && step === 'info' && <p role="alert" className="text-red-800 mb-4">{error}</p>}
+          {step === 'info' && <p className="text-sm mb-4">Ainda não tem conta? <Link href={`/cadastro?redirect=${encodeURIComponent(returnPath)}`}>Crie sua conta para enviar a solicitação.</Link></p>}
 
           {step === 'info' && (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -140,7 +176,7 @@ export default function BecomePartnerPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    disabled={isLoading}
+                    disabled={isLoading || Boolean(selectedPlace) || loadingPlace}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="Ex: Meu Bar Legal"
                   />
@@ -155,7 +191,7 @@ export default function BecomePartnerPage() {
                     name="type"
                     value={formData.type}
                     onChange={handleChange}
-                    disabled={isLoading}
+                    disabled={isLoading || Boolean(selectedPlace) || loadingPlace}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
                     {ESTABLISHMENT_TYPES.map(type => (
@@ -176,7 +212,7 @@ export default function BecomePartnerPage() {
                     value={formData.region}
                     onChange={handleChange}
                     required
-                    disabled={isLoading}
+                    disabled={isLoading || Boolean(selectedPlace) || loadingPlace}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
                     <option value="">Selecione uma região</option>
@@ -199,7 +235,7 @@ export default function BecomePartnerPage() {
                     value={formData.address}
                     onChange={handleChange}
                     required
-                    disabled={isLoading}
+                    disabled={isLoading || Boolean(selectedPlace) || loadingPlace}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="Rua, nº, complemento"
                   />
@@ -294,7 +330,7 @@ export default function BecomePartnerPage() {
 
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || loadingPlace || (returnPath.includes('?estabelecimento=') && !selectedPlace)}
                 className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
               >
                 Prosseguir para Revisão
@@ -364,7 +400,7 @@ export default function BecomePartnerPage() {
                   disabled={isLoading}
                   className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
                 >
-                  {isLoading ? 'Processando...' : 'Confirmar e Começar'}
+                  {isLoading ? 'Processando...' : 'Enviar solicitação para análise'}
                 </button>
               </div>
             </form>
@@ -373,13 +409,13 @@ export default function BecomePartnerPage() {
           {step === 'success' && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
               <h2 className="text-2xl font-semibold text-green-900 mb-2">
-                ✓ Bem-vindo ao Noite DF!
+                ✓ Solicitação recebida
               </h2>
               <p className="text-green-800 mb-4">
-                Seu estabelecimento foi cadastrado com sucesso. Você será redirecionado para o dashboard.
+                Seu pedido está em análise. O acesso de parceiro será liberado somente após aprovação da equipe Noite DF.
               </p>
               <p className="text-sm text-gray-600">
-                Redirecionando em 2 segundos...
+                <Link href="/">Voltar ao guia</Link>
               </p>
             </div>
           )}
