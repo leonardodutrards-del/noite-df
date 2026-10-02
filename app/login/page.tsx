@@ -35,7 +35,7 @@ function LoginForm() {
       const role = data.user?.role;
       if (redirectPath) {
         router.push(redirectPath);
-      } else if (role === 'admin') {
+      } else if (role === 'admin' || role === 'master_admin') {
         router.push('/admin');
       } else {
         router.push('/parceiro');
