@@ -1,10 +1,22 @@
 import { EventItem } from '@/data/events';
 import { hasRealValue } from '@/lib/data-quality';
 
+function splitEventDateLabel(label: string) {
+  const [date, ...timeParts] = label.split(' · ');
+  return { date, time: timeParts.join(' · ') };
+}
+
 export function EventCard({ event }: { event: EventItem }) {
+  const dateParts = hasRealValue(event.dateLabel) ? splitEventDateLabel(event.dateLabel) : null;
+
   return (
     <article className="card event">
-      {hasRealValue(event.dateLabel) && <div className="event-date">{event.dateLabel}</div>}
+      {dateParts && (
+        <div className="event-date">
+          <span className="event-date-day">{dateParts.date}</span>
+          {dateParts.time ? <span className="event-date-time">{dateParts.time}</span> : null}
+        </div>
+      )}
       <div>
         <h3>{event.title}</h3>
         {hasRealValue(event.description) && <p>{event.description}</p>}
