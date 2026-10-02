@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/service';
-import { getTokenFromRequest, SESSION_COOKIE_NAME } from '@/modules/auth/session';
+import {
+  getTokenFromRequest,
+  REFRESH_COOKIE_NAME,
+  SESSION_COOKIE_NAME,
+} from '@/modules/auth/session';
 
 export async function POST(request: NextRequest) {
   const token = getTokenFromRequest(request);
@@ -10,6 +14,12 @@ export async function POST(request: NextRequest) {
 
   const response = NextResponse.json({ success: true });
   response.cookies.set(SESSION_COOKIE_NAME, '', {
+    path: '/',
+    maxAge: 0,
+    httpOnly: true,
+    sameSite: 'lax',
+  });
+  response.cookies.set(REFRESH_COOKIE_NAME, '', {
     path: '/',
     maxAge: 0,
     httpOnly: true,
