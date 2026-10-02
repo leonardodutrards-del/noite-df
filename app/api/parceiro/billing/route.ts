@@ -26,7 +26,7 @@ async function resolveEstablishment(request: NextRequest) {
   if (user.role !== 'partner' && user.role !== 'admin') throw new Error('FORBIDDEN_PARTNER_REQUIRED');
   const requestedId = request.nextUrl.searchParams.get('establishmentId');
   const establishmentId =
-    user.role === 'admin' ? requestedId || user.establishmentId : user.establishmentId;
+    (user.role === 'admin' || user.role === 'master_admin') ? requestedId || user.establishmentId : user.establishmentId;
   if (!establishmentId) throw new Error('ESTABLISHMENT_REQUIRED');
   return { user, establishmentId };
 }
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const { user, establishmentId } = await resolveEstablishment(request);
     const [subscription, entitlements] = await Promise.all([
       latestSubscription(establishmentId),
-      user.role === 'admin'
+      (user.role === 'admin' || user.role === 'master_admin')
         ? Promise.resolve(adminEntitlements(establishmentId))
         : getEstablishmentEntitlements(establishmentId),
     ]);
