@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { CrowdStatus, Establishment, Promotion, WeeklyScheduleItem } from '@/modules/establishments/types';
 import type { AuthUser } from '@/modules/auth/types';
+import { PartnerBillingCard } from '@/components/PartnerBillingCard';
 
 type PartnerAnalytics = {
   periodDays: number;
@@ -13,7 +14,14 @@ type PartnerAnalytics = {
   mapClicks: number;
   instagramClicks: number;
   favorites: number;
-  conversionRate: number;
+  conversionRate: number | null;
+};
+
+type PartnerEntitlements = {
+  planCode: 'free' | 'pro' | 'premium' | 'enterprise';
+  source: 'free' | 'trial' | 'subscription' | 'admin';
+  capabilities: string[];
+  activeUntil?: string;
 };
 
 const EMPTY_ANALYTICS: PartnerAnalytics = {
@@ -23,7 +31,7 @@ const EMPTY_ANALYTICS: PartnerAnalytics = {
   mapClicks: 0,
   instagramClicks: 0,
   favorites: 0,
-  conversionRate: 0,
+  conversionRate: null,
 };
 
 export default function PartnerPage() {
@@ -36,6 +44,7 @@ export default function PartnerPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [analytics, setAnalytics] = useState<PartnerAnalytics>(EMPTY_ANALYTICS);
+  const [entitlements, setEntitlements] = useState<PartnerEntitlements | null>(null);
 
   // Form states
   const [crowdStatus, setCrowdStatus] = useState<CrowdStatus>('a confirmar');
@@ -47,6 +56,7 @@ export default function PartnerPage() {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [schedule, setSchedule] = useState<WeeklyScheduleItem[]>([]);
+  const [menuUrl, setMenuUrl] = useState('');
 
   useEffect(() => {
     async function loadData() {
@@ -75,6 +85,13 @@ export default function PartnerPage() {
             setDescription(est.description || '');
             setAddress(est.address || '');
             setSchedule(est.weeklySchedule || []);
+            setMenuUrl(est.menu?.url || '');
+
+            const entitlementRes = await fetch('/api/parceiro/entitlements');
+            if (entitlementRes.ok) {
+              const entitlementData = await entitlementRes.json();
+              if (entitlementData.entitlements) setEntitlements(entitlementData.entitlements);
+            }
 
             const analyticsRes = await fetch('/api/parceiro/analytics?days=30');
             if (analyticsRes.ok) {
@@ -126,6 +143,7 @@ export default function PartnerPage() {
         instagram,
         description,
         address,
+        ...(canManageMenu ? { menuUrl } : {}),
       };
 
       const res = await fetch('/api/parceiro/establishment', {
@@ -168,8 +186,22 @@ export default function PartnerPage() {
     ['Rotas abertas', analytics.mapClicks.toLocaleString('pt-BR')],
     ['Cliques no Instagram', analytics.instagramClicks.toLocaleString('pt-BR')],
     ['Favoritos', analytics.favorites.toLocaleString('pt-BR')],
-    ['Conversão estimada', `${analytics.conversionRate.toLocaleString('pt-BR')}%`],
+    ['Conversão estimada', analytics.conversionRate === null ? 'Premium' : `${analytics.conversionRate.toLocaleString('pt-BR')}%`],
   ];
+
+  const canEditProfile = Boolean(isMasterAdmin || entitlements?.capabilities.includes('edit_profile'));
+  const canManageAgenda = Boolean(isMasterAdmin || entitlements?.capabilities.includes('manage_agenda'));
+  const canManagePromotions = Boolean(isMasterAdmin || entitlements?.capabilities.includes('manage_promotions'));
+  const canViewAnalytics = Boolean(isMasterAdmin || entitlements?.capabilities.includes('analytics_basic'));
+  const canManageMenu = Boolean(isMasterAdmin || entitlements?.capabilities.includes('manage_menu'));
+  const planName =
+    entitlements?.planCode === 'enterprise'
+      ? 'Enterprise'
+      : entitlements?.planCode === 'premium'
+        ? 'Premium'
+        : entitlements?.planCode === 'pro'
+          ? 'Pro'
+          : 'Gratuito';
 
   if (loading) {
     return (
@@ -230,6 +262,27 @@ export default function PartnerPage() {
         </div>
       </section>
 
+      <section className="panel" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div>
+            <span className="badge">Plano {planName}</span>
+            <h2 style={{ marginBottom: 6 }}>Recursos liberados para esta conta</h2>
+            <p style={{ margin: 0, color: 'var(--muted)' }}>
+              {entitlements?.source === 'trial'
+                ? 'Teste gratuito ativo. Seus dados continuam salvos mesmo se você não assinar depois.'
+                : entitlements?.source === 'subscription'
+                  ? 'Assinatura ativa confirmada pelo Mercado Pago.'
+                  : entitlements?.source === 'admin'
+                    ? 'Acesso administrativo completo.'
+                    : 'Modo gratuito: visualização do painel. Assine para editar e acompanhar métricas.'}
+            </p>
+          </div>
+          <Link className="button ghost" href="/planos">Ver todos os planos</Link>
+        </div>
+      </section>
+
+      <PartnerBillingCard />
+
       {message && (
         <div
           className="notice"
@@ -245,7 +298,13 @@ export default function PartnerPage() {
       )}
 
       {/* Indicadores */}
-      <div className="metrics-grid">
+      {!canViewAnalytics ? (
+        <section className="notice" style={{ marginTop: 24 }}>
+          <b>Métricas bloqueadas no plano Gratuito.</b> O plano Pro libera visualizações, cliques no WhatsApp, rotas, Instagram e favoritos.
+          <div style={{ marginTop: 12 }}><Link className="button" href="/planos">Liberar métricas</Link></div>
+        </section>
+      ) : null}
+      <div className="metrics-grid" style={{ opacity: canViewAnalytics ? 1 : 0.45 }}>
         {metrics.map(([label, value]) => (
           <article key={label}>
             <span>{label}</span>
@@ -265,6 +324,7 @@ export default function PartnerPage() {
             <select
               value={crowdStatus}
               onChange={(e) => setCrowdStatus(e.target.value as CrowdStatus)}
+              disabled={!canManagePromotions}
               style={{ width: '100%', fontSize: 16, fontWeight: 700 }}
             >
               <option value="tranquilo">🟢 Tranquilo (mesas disponíveis)</option>
@@ -284,18 +344,21 @@ export default function PartnerPage() {
                 type="text"
                 placeholder="Ex: Chopp em dobro até 20h"
                 value={promoTitle}
+                disabled={!canManagePromotions}
                 onChange={(e) => setPromoTitle(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Validade (Ex: Válido até 21h)"
                 value={promoValidUntil}
+                disabled={!canManagePromotions}
                 onChange={(e) => setPromoValidUntil(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Detalhes ou condições"
                 value={promoDescription}
+                disabled={!canManagePromotions}
                 onChange={(e) => setPromoDescription(e.target.value)}
               />
             </div>
@@ -314,6 +377,7 @@ export default function PartnerPage() {
             <button
               type="button"
               onClick={handleAddScheduleItem}
+              disabled={!canManageAgenda}
               style={{ background: 'var(--card-2)', fontSize: 13, padding: '8px 14px', border: '1px solid var(--border)' }}
             >
               + Adicionar Dia
@@ -339,29 +403,34 @@ export default function PartnerPage() {
                   type="text"
                   placeholder="Dia (Ex: Sexta)"
                   value={item.day}
+                  disabled={!canManageAgenda}
                   onChange={(e) => handleScheduleChange(idx, 'day', e.target.value)}
                 />
                 <input
                   type="text"
                   placeholder="Atração / Título"
                   value={item.title}
+                  disabled={!canManageAgenda}
                   onChange={(e) => handleScheduleChange(idx, 'title', e.target.value)}
                 />
                 <input
                   type="text"
                   placeholder="Horário"
                   value={item.time}
+                  disabled={!canManageAgenda}
                   onChange={(e) => handleScheduleChange(idx, 'time', e.target.value)}
                 />
                 <input
                   type="text"
                   placeholder="Detalhes"
                   value={item.details}
+                  disabled={!canManageAgenda}
                   onChange={(e) => handleScheduleChange(idx, 'details', e.target.value)}
                 />
                 <button
                   type="button"
                   onClick={() => handleRemoveScheduleItem(idx)}
+                  disabled={!canManageAgenda}
                   style={{ background: 'rgba(255, 77, 109, 0.2)', color: '#ff9d9d', padding: '10px 12px' }}
                 >
                   ✕
@@ -386,6 +455,7 @@ export default function PartnerPage() {
                 type="text"
                 placeholder="(61) 99999-9999"
                 value={whatsapp}
+                disabled={!canEditProfile}
                 onChange={(e) => setWhatsapp(e.target.value)}
                 style={{ width: '100%' }}
               />
@@ -396,6 +466,7 @@ export default function PartnerPage() {
                 type="text"
                 placeholder="https://instagram.com/seu.perfil"
                 value={instagram}
+                disabled={!canEditProfile}
                 onChange={(e) => setInstagram(e.target.value)}
                 style={{ width: '100%' }}
               />
@@ -408,6 +479,7 @@ export default function PartnerPage() {
               type="text"
               placeholder="Ex: CLN 408 Bloco C — Asa Norte"
               value={address}
+              disabled={!canEditProfile}
               onChange={(e) => setAddress(e.target.value)}
               style={{ width: '100%' }}
             />
@@ -418,15 +490,23 @@ export default function PartnerPage() {
             <textarea
               placeholder="Descreva a vibe, diferenciais, cardápio..."
               value={description}
+              disabled={!canEditProfile}
               onChange={(e) => setDescription(e.target.value)}
               style={{ width: '100%', minHeight: 80 }}
             />
           </div>
         </div>
 
+        <div className="panel">
+          <h2 style={{ fontSize: '1.4rem', marginTop: 0 }}>🍽️ Cardápio</h2>
+          <p style={{ fontSize: 13 }}>O plano Premium libera o cadastro de um link oficial de cardápio para aparecer no perfil.</p>
+          <input type="url" placeholder="https://seusite.com/cardapio" value={menuUrl} disabled={!canManageMenu} onChange={(e) => setMenuUrl(e.target.value)} style={{ width: '100%' }} />
+          {!canManageMenu ? <small style={{ color: 'var(--muted)' }}>Disponível a partir do Premium.</small> : null}
+        </div>
+
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || (!canEditProfile && !canManageAgenda && !canManagePromotions && !canManageMenu)}
           style={{ padding: 18, fontSize: 16, fontWeight: 800 }}
         >
           {saving ? 'Salvando alterações...' : '💾 Salvar Alterações do Estabelecimento'}
