@@ -4,6 +4,7 @@ import { authService } from './service';
 import type { AuthUser } from './types';
 
 export const SESSION_COOKIE_NAME = 'noite_df_session';
+export const REFRESH_COOKIE_NAME = 'noite_df_refresh';
 
 export const SESSION_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -11,6 +12,14 @@ export const SESSION_COOKIE_OPTIONS = {
   sameSite: 'lax' as const,
   path: '/',
   maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+};
+
+export const REFRESH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  path: '/',
+  maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
 };
 
 export async function getTokenFromCookies(): Promise<string | null> {
