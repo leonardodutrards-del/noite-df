@@ -1,6 +1,25 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const SESSION_COOKIE_NAME = 'noite_df_session';
+const REFRESH_COOKIE_NAME = 'noite_df_refresh';
+
+const SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  path: '/',
+  maxAge: 7 * 24 * 60 * 60,
+};
+
+const REFRESH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  path: '/',
+  maxAge: 30 * 24 * 60 * 60,
+};
+
 function applySecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
@@ -36,9 +55,74 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
-export function middleware(request: NextRequest) {
+function needsRefresh(accessToken?: string): boolean {
+  if (!accessToken) return true;
+
+  const parts = accessToken.split('.');
+  if (parts.length !== 3) return false;
+
+  try {
+    const normalized = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
+    const payload = JSON.parse(atob(padded)) as { exp?: number };
+    if (typeof payload.exp !== 'number') return false;
+    return payload.exp * 1000 <= Date.now() + 60_000;
+  } catch {
+    return false;
+  }
+}
+
+async function refreshSupabaseSession(request: NextRequest): Promise<NextResponse | null> {
+  const accessToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  const refreshToken = request.cookies.get(REFRESH_COOKIE_NAME)?.value;
+
+  if (!refreshToken || !needsRefresh(accessToken)) return null;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '');
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return null;
+
+  const refreshResponse = await fetch(`${url}/auth/v1/token?grant_type=refresh_token`, {
+    method: 'POST',
+    headers: {
+      apikey: anonKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ refresh_token: refreshToken }),
+    cache: 'no-store',
+  });
+
+  if (!refreshResponse.ok) return null;
+
+  const payload = (await refreshResponse.json().catch(() => ({}))) as {
+    access_token?: string;
+    refresh_token?: string;
+  };
+  if (!payload.access_token) return null;
+
+  const nextRefreshToken = payload.refresh_token || refreshToken;
+
+  request.cookies.set(SESSION_COOKIE_NAME, payload.access_token);
+  request.cookies.set(REFRESH_COOKIE_NAME, nextRefreshToken);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('cookie', request.cookies.toString());
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  response.cookies.set(SESSION_COOKIE_NAME, payload.access_token, SESSION_COOKIE_OPTIONS);
+  response.cookies.set(REFRESH_COOKIE_NAME, nextRefreshToken, REFRESH_COOKIE_OPTIONS);
+
+  return response;
+}
+
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const sessionCookie = request.cookies.get('noite_df_session');
+  const refreshedResponse = await refreshSupabaseSession(request).catch(() => null);
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
 
   // Partner area remains discoverable but requires authentication.
   if (path === '/parceiro' || path.startsWith('/parceiro/')) {
@@ -59,9 +143,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // /admin is intentionally NOT redirected here. Its server layout returns 404
-  // unless the authenticated user is the configured Master Admin.
-  return applySecurityHeaders(NextResponse.next());
+  // Authorization for /admin still happens server-side in its layout.
+  // This middleware only keeps a valid Supabase session available to that check.
+  return applySecurityHeaders(refreshedResponse ?? NextResponse.next());
 }
 
 export const config = {
