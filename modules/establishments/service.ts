@@ -40,7 +40,7 @@ export class EstablishmentService {
   }
 
   async listAllForAdmin(actor: AuthUser): Promise<Establishment[]> {
-    if (actor.role !== 'admin') {
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     return this.repository.listAll();
@@ -58,7 +58,7 @@ export class EstablishmentService {
       return establishment;
     }
 
-    if (actor.role === 'admin') {
+    if ((actor.role === 'admin' || actor.role === 'master_admin')) {
       return establishment;
     }
 
@@ -73,7 +73,7 @@ export class EstablishmentService {
   }
 
   async update(id: string, updates: Partial<Establishment>, actor: AuthUser): Promise<Establishment> {
-    if (actor.role !== 'admin') {
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
       if (actor.role !== 'partner' || actor.establishmentId !== id) {
         throw new Error('FORBIDDEN_ESTABLISHMENT_ACCESS_DENIED');
       }
@@ -86,7 +86,7 @@ export class EstablishmentService {
 
     // Only admin can change publicationStatus or verified
     const sanitizedUpdates = { ...updates };
-    if (actor.role !== 'admin') {
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
       delete sanitizedUpdates.publicationStatus;
       delete sanitizedUpdates.verified;
       delete sanitizedUpdates.id;
@@ -125,7 +125,7 @@ export class EstablishmentService {
   }
 
   async blockEstablishment(id: string, actor: AuthUser, reason?: string): Promise<Establishment> {
-    if (actor.role !== 'admin') {
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
 
@@ -151,7 +151,7 @@ export class EstablishmentService {
   }
 
   async unblockEstablishment(id: string, actor: AuthUser): Promise<Establishment> {
-    if (actor.role !== 'admin') {
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
 
