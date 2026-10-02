@@ -4,6 +4,7 @@ import { getPlan, isPaidPlan } from '@/lib/plans';
 import { syncSubscriptionResource } from '@/lib/mercado-pago';
 import { requireAuth } from '@/modules/auth/session';
 import { getEstablishmentEntitlements } from '@/modules/payments/entitlements';
+import { insertRow } from '@/lib/supabase-rest';
 
 export async function POST(request: NextRequest) {
   if (SHOWCASE_MODE || !PAYMENTS_ENABLED) {
@@ -98,6 +99,18 @@ export async function POST(request: NextRequest) {
     if (typeof data.init_point !== 'string' || !data.init_point) {
       return NextResponse.json({ error: 'Mercado Pago não retornou o endereço de pagamento.' }, { status: 502 });
     }
+
+    await insertRow('interactions', {
+      user_id: user.id,
+      establishment_id: establishmentId,
+      action: 'subscription_checkout',
+      metadata: {
+        planId: plan.id,
+        provider: 'mercado_pago',
+        providerSubscriptionId: data.id,
+        source: 'partner_checkout',
+      },
+    }).catch((error) => console.error('checkout-analytics', error));
 
     return NextResponse.json({
       id: data.id,
