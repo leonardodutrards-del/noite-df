@@ -171,10 +171,10 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
   const now = new Date().toISOString();
   const amountCents = Math.round((resource.auto_recurring?.transaction_amount ?? 0) * 100);
   const lookup = await supabase(
-    `subscription_accounts?provider_subscription_id=eq.${encodeURIComponent(resource.id)}&select=id`
+    `subscription_accounts?provider_subscription_id=eq.${encodeURIComponent(resource.id)}&select=id,current_period_end`
   );
   if (!lookup.ok) throw new Error('SUBSCRIPTION_LOOKUP_FAILED');
-  const existing = (await lookup.json()) as Array<{ id: string }>;
+  const existing = (await lookup.json()) as Array<{ id: string; current_period_end: string | null }>;
 
   if (existing.length > 0) {
     const updated = await supabase(
@@ -187,7 +187,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
           payer_email: resource.payer_email ?? '',
           status: mapSubscriptionStatus(resource.status),
           amount_cents: amountCents,
-          current_period_end: resource.next_payment_date ?? null,
+          current_period_end: resource.next_payment_date ?? existing[0].current_period_end ?? null,
           updated_at: now,
         }),
       }
