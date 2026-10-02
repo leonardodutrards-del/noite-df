@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
 
     let establishmentId = user.establishmentId;
-    if (user.role === 'admin') {
+    if ((user.role === 'admin' || user.role === 'master_admin')) {
       const queryId = request.nextUrl.searchParams.get('id');
       if (queryId) establishmentId = queryId;
     }
@@ -72,7 +72,7 @@ export async function PATCH(request: NextRequest) {
       if (!targetEstablishmentId) {
         return NextResponse.json({ error: 'Nenhum estabelecimento associado a esta conta.' }, { status: 400 });
       }
-    } else if (user.role === 'admin') {
+    } else if ((user.role === 'admin' || user.role === 'master_admin')) {
       targetEstablishmentId = body.establishmentId || request.nextUrl.searchParams.get('id') || user.establishmentId;
       if (!targetEstablishmentId) {
         return NextResponse.json({ error: 'ID do estabelecimento é obrigatório para admin.' }, { status: 400 });
@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const entitlements =
-      user.role === 'admin'
+      (user.role === 'admin' || user.role === 'master_admin')
         ? adminEntitlements(targetEstablishmentId)
         : await getEstablishmentEntitlements(targetEstablishmentId);
 
