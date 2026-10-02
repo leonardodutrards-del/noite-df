@@ -18,8 +18,9 @@ describe('Fase 8 — Master Admin e hardening geral', () => {
     expect(session).toContain("user.email.trim().toLowerCase() === allowedEmail");
   });
 
-  it('oculta /admin de usuários não autorizados com 404 server-side', () => {
+  it('oculta /admin de usuários não autorizados e redireciona sessão expirada', () => {
     expect(adminLayout).toContain('requireMasterAdmin');
+    expect(adminLayout).toContain("redirect('/login?redirect=/admin')");
     expect(adminLayout).toContain('notFound()');
   });
 
@@ -32,6 +33,13 @@ describe('Fase 8 — Master Admin e hardening geral', () => {
   it('protege login contra força bruta', () => {
     expect(login).toContain('checkAuthRateLimit');
     expect(login).toContain('status: 429');
+  });
+
+  it('renova sessão Supabase antes de proteger o Master Admin', () => {
+    expect(login).toContain('REFRESH_COOKIE_NAME');
+    expect(middleware).toContain("REFRESH_COOKIE_NAME = 'noite_df_refresh'");
+    expect(middleware).toContain('grant_type=refresh_token');
+    expect(middleware).toContain('refresh_token: refreshToken');
   });
 
   it('aplica headers de segurança globais', () => {

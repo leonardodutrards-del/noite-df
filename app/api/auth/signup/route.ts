@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/service';
-import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from '@/modules/auth/session';
+import {
+  REFRESH_COOKIE_NAME,
+  REFRESH_COOKIE_OPTIONS,
+  SESSION_COOKIE_NAME,
+  SESSION_COOKIE_OPTIONS,
+} from '@/modules/auth/session';
 import { sanitizeTextInput } from '@/lib/security';
 
 export async function POST(request: NextRequest) {
@@ -20,7 +25,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nome é obrigatório.' }, { status: 400 });
     }
 
-    const { user, token, requiresEmailConfirmation } = await authService.signUp({
+    const { user, token, refreshToken, requiresEmailConfirmation } = await authService.signUp({
       email,
       password,
       name,
@@ -34,6 +39,9 @@ export async function POST(request: NextRequest) {
 
     if (token) {
       response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+    }
+    if (refreshToken) {
+      response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, REFRESH_COOKIE_OPTIONS);
     }
 
     return response;

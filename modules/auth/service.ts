@@ -104,6 +104,7 @@ class AuthService {
       return {
         user: result.user,
         token: result.token,
+        refreshToken: result.refreshToken,
         requiresEmailConfirmation: result.requiresEmailConfirmation,
       };
     }
@@ -219,7 +220,7 @@ class AuthService {
         credentials.email.trim().toLowerCase(),
         credentials.password
       );
-      return { user: result.user, token: result.token };
+      return { user: result.user, token: result.token, refreshToken: result.refreshToken };
     }
     assertLegacyAuthAllowed();
     const email = credentials.email.trim().toLowerCase();
