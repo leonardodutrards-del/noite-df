@@ -247,7 +247,7 @@ export default function PartnerPage() {
         <div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12 }}>
             <span className="badge">
-              {user?.role === 'admin' ? '🛡️ Administrador Master' : '🏢 Dono do Estabelecimento'}
+              {(user?.role === 'admin' || user?.role === 'master_admin') ? '🛡️ Administrador Master' : '🏢 Dono do Estabelecimento'}
             </span>
             {establishment && (
               <span className="tag" style={{ background: establishment.publicationStatus === 'published' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 176, 32, 0.15)', color: establishment.publicationStatus === 'published' ? '#4ade80' : 'var(--accent)' }}>

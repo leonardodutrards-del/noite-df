@@ -60,7 +60,13 @@ export async function requireAuth(request?: NextRequest): Promise<AuthUser> {
 }
 
 export function isMasterAdminUser(user: AuthUser | null | undefined): boolean {
-  if (!user || user.role !== 'admin') return false;
+  if (!user) return false;
+
+  // Explicit database role is the primary authorization path.
+  if (user.role === 'master_admin') return true;
+
+  // Backward compatibility for the legacy admin + allowlist model.
+  if (user.role !== 'admin') return false;
 
   // Tests use isolated fixtures and never depend on production secrets.
   if (process.env.NODE_ENV === 'test') return true;
@@ -85,7 +91,7 @@ export async function requireEstablishmentAccess(
 ): Promise<AuthUser> {
   const user = await requireAuth(request);
 
-  if (user.role === 'admin') {
+  if (user.role === 'admin' || user.role === 'master_admin') {
     return user;
   }
 

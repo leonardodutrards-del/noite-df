@@ -41,7 +41,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Acesso negado a outro estabelecimento.' }, { status: 403 });
     }
 
-    if (user.role !== 'admin' && user.role !== 'partner') {
+    if (user.role !== 'admin' && user.role !== 'master_admin' && user.role !== 'partner') {
       return NextResponse.json({ error: 'Perfil sem autorização de edição.' }, { status: 403 });
     }
 
@@ -75,7 +75,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     // Only admin can change publicationStatus directly on this endpoint
-    if (user.role === 'admin' && body.publicationStatus) {
+    if ((user.role === 'admin' || user.role === 'master_admin') && body.publicationStatus) {
       updates.publicationStatus = body.publicationStatus;
     }
 

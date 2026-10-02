@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const user = await requireAuth(request);
-    if (user.role !== 'partner' && user.role !== 'admin') {
+    if (user.role !== 'partner' && user.role !== 'admin' && user.role !== 'master_admin') {
       return NextResponse.json(
         { error: 'Conclua o vínculo do estabelecimento antes de iniciar o teste.', code: 'PARTNER_REQUIRED' },
         { status: 403 }
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const requestedEstablishmentId =
       typeof body.establishmentId === 'string' ? body.establishmentId : undefined;
     const establishmentId =
-      user.role === 'admin' ? requestedEstablishmentId || user.establishmentId : user.establishmentId;
+      (user.role === 'admin' || user.role === 'master_admin') ? requestedEstablishmentId || user.establishmentId : user.establishmentId;
 
     if (!plan || !isPaidPlan(plan.id) || !establishmentId) {
       return NextResponse.json({ error: 'Plano ou estabelecimento inválido.' }, { status: 400 });
