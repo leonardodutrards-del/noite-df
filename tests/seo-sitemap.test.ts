@@ -12,7 +12,7 @@ import {
 
 describe('SEO, Slugs and Sitemap consistency', () => {
   it('garante que todos os estabelecimentos possuem IDs únicos e válidos para slugs', () => {
-    expect(places).toHaveLength(90);
+    expect(places).toHaveLength(91);
     const slugs = places.map((p) => p.id);
     const uniqueSlugs = new Set(slugs);
     expect(uniqueSlugs.size).toBe(places.length);
