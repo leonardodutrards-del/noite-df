@@ -4,6 +4,7 @@ import { getPlan, isPaidPlan } from '@/lib/plans';
 import { requireAuth } from '@/modules/auth/session';
 import { authService } from '@/modules/auth/service';
 import { startTrialForEstablishment } from '@/modules/payments/entitlements';
+import { insertRow } from '@/lib/supabase-rest';
 
 export async function POST(request: NextRequest) {
   if (!TRIAL_ENABLED) {
@@ -46,6 +47,13 @@ export async function POST(request: NextRequest) {
       entityId: establishmentId,
       details: { planCode: plan.id, trialDays: TRIAL_DAYS },
     });
+
+    await insertRow('interactions', {
+      user_id: user.id,
+      establishment_id: establishmentId,
+      action: 'trial_start',
+      metadata: { planId: plan.id, trialDays: TRIAL_DAYS, source: 'partner_trial' },
+    }).catch((error) => console.error('trial-analytics', error));
 
     return NextResponse.json({ entitlements, trialDays: TRIAL_DAYS }, { status: 201 });
   } catch (error) {
