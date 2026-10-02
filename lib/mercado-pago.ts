@@ -130,6 +130,24 @@ function mapSubscriptionStatus(status?: string) {
   return 'pending';
 }
 
+async function syncPipelineStage(establishmentId: string, status: string): Promise<void> {
+  if (status !== 'active') return;
+  const now = new Date().toISOString();
+  const response = await supabase(
+    `partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}`,
+    {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        stage: 'partner',
+        next_follow_up_at: null,
+        updated_at: now,
+      }),
+    }
+  );
+  if (!response.ok) throw new Error('PIPELINE_SUBSCRIPTION_SYNC_FAILED');
+}
+
 export async function webhookEventAlreadyProcessed(providerEventId: string): Promise<boolean> {
   const cfg = supabaseConfig();
   if (!cfg) return false;
@@ -193,6 +211,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
       }
     );
     if (!updated.ok) throw new Error('SUBSCRIPTION_UPDATE_FAILED');
+    await syncPipelineStage(reference.establishmentId, mapSubscriptionStatus(resource.status));
     return;
   }
 
@@ -212,6 +231,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
     }),
   });
   if (!created.ok) throw new Error('SUBSCRIPTION_CREATE_FAILED');
+  await syncPipelineStage(reference.establishmentId, mapSubscriptionStatus(resource.status));
 }
 
 export async function syncPaymentResource(resource: PaymentResource): Promise<void> {
