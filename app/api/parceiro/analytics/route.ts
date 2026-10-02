@@ -12,14 +12,14 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
     const requestedId = request.nextUrl.searchParams.get('establishmentId');
     const establishmentId =
-      user.role === 'admin' ? requestedId || user.establishmentId : user.establishmentId;
+      (user.role === 'admin' || user.role === 'master_admin') ? requestedId || user.establishmentId : user.establishmentId;
 
     if (!establishmentId) {
       return NextResponse.json({ error: 'Estabelecimento não associado.' }, { status: 400 });
     }
 
     const entitlements =
-      user.role === 'admin'
+      (user.role === 'admin' || user.role === 'master_admin')
         ? adminEntitlements(establishmentId)
         : await getEstablishmentEntitlements(establishmentId);
 
