@@ -21,7 +21,7 @@ export async function getPartnerAnalytics(
   establishmentId: string,
   days = 30
 ): Promise<PartnerAnalytics> {
-  if (actor.role !== 'admin' && actor.establishmentId !== establishmentId) {
+  if (actor.role !== 'admin' && actor.role !== 'master_admin' && actor.establishmentId !== establishmentId) {
     throw new Error('FORBIDDEN_ESTABLISHMENT_ACCESS_DENIED');
   }
 
