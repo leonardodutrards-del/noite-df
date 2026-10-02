@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/service';
-import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from '@/modules/auth/session';
+import {
+  REFRESH_COOKIE_NAME,
+  REFRESH_COOKIE_OPTIONS,
+  SESSION_COOKIE_NAME,
+  SESSION_COOKIE_OPTIONS,
+} from '@/modules/auth/session';
 import { checkAuthRateLimit, requestIp } from '@/lib/security-rate-limit';
 
 export async function POST(request: NextRequest) {
@@ -26,10 +31,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { user, token } = await authService.login({ email, password });
+    const { user, token, refreshToken } = await authService.login({ email, password });
 
     const response = NextResponse.json({ user });
     response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+    if (refreshToken) {
+      response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, REFRESH_COOKIE_OPTIONS);
+    }
 
     return response;
   } catch (error) {
