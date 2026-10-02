@@ -23,7 +23,7 @@ type SubscriptionRow = {
 
 async function resolveEstablishment(request: NextRequest) {
   const user = await requireAuth(request);
-  if (user.role !== 'partner' && user.role !== 'admin') throw new Error('FORBIDDEN_PARTNER_REQUIRED');
+  if (user.role !== 'partner' && user.role !== 'admin' && user.role !== 'master_admin') throw new Error('FORBIDDEN_PARTNER_REQUIRED');
   const requestedId = request.nextUrl.searchParams.get('establishmentId');
   const establishmentId =
     (user.role === 'admin' || user.role === 'master_admin') ? requestedId || user.establishmentId : user.establishmentId;
