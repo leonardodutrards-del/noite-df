@@ -68,18 +68,21 @@ export async function updatePipeline(input: {
   nextFollowUpAt?: string | null;
   trialPlanCode?: 'pro' | 'premium' | 'enterprise';
   subscriptionConsent?: boolean;
+  markContacted?: boolean;
+  startTrial?: boolean;
 }): Promise<PipelineRecord> {
   const now = new Date().toISOString();
   const patch: Record<string, unknown> = {
     stage: input.stage,
-    contact_channel: input.contactChannel ?? null,
-    notes: input.notes ?? null,
-    next_follow_up_at: input.nextFollowUpAt ?? null,
     updated_at: now,
   };
 
-  if (input.stage === 'contacted' || input.stage === 'replied') patch.last_contact_at = now;
-  if (input.stage === 'trial') {
+  if (input.contactChannel !== undefined) patch.contact_channel = input.contactChannel || null;
+  if (input.notes !== undefined) patch.notes = input.notes || null;
+  if (input.nextFollowUpAt !== undefined) patch.next_follow_up_at = input.nextFollowUpAt;
+
+  if (input.stage === 'contacted' && input.markContacted) patch.last_contact_at = now;
+  if (input.stage === 'trial' && input.startTrial) {
     patch.trial_started_at = now;
     patch.trial_ends_at = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
     patch.trial_plan_code = input.trialPlanCode ?? 'pro';
@@ -87,11 +90,11 @@ export async function updatePipeline(input: {
   if (input.subscriptionConsent) patch.subscription_consent_at = now;
 
   const response = await supabaseAdminRequest(
-    `partner_pipeline?establishment_id=eq.${encodeURIComponent(input.establishmentId)}`,
+    'partner_pipeline?on_conflict=establishment_id',
     {
-      method: 'PATCH',
-      headers: { Prefer: 'return=representation' },
-      body: JSON.stringify(patch),
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify({ establishment_id: input.establishmentId, ...patch }),
     }
   );
   if (!response.ok) throw new Error('PIPELINE_UPDATE_FAILED');

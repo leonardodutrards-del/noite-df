@@ -42,20 +42,28 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Estabelecimento ou etapa inválida.' }, { status: 400 });
     }
 
+    const contactChannel = typeof body.contactChannel === 'string' ? body.contactChannel : undefined;
+    if (contactChannel !== undefined && !['', 'email', 'whatsapp', 'telefone', 'outro'].includes(contactChannel)) {
+      return NextResponse.json({ error: 'Canal de contato inválido.' }, { status: 400 });
+    }
+    const followUp = body.nextFollowUpAt;
+    if (followUp !== undefined && followUp !== null && (typeof followUp !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(followUp) || Number.isNaN(Date.parse(`${followUp}T12:00:00-03:00`)))) {
+      return NextResponse.json({ error: 'Data do próximo contato inválida.' }, { status: 400 });
+    }
+
     const pipeline = await updatePipeline({
       establishmentId,
       stage,
-      contactChannel: typeof body.contactChannel === 'string' ? body.contactChannel : undefined,
+      contactChannel,
       notes: typeof body.notes === 'string' ? body.notes.slice(0, 2000) : undefined,
-      nextFollowUpAt:
-        typeof body.nextFollowUpAt === 'string' || body.nextFollowUpAt === null
-          ? body.nextFollowUpAt
-          : undefined,
+      nextFollowUpAt: typeof followUp === 'string' ? new Date(`${followUp}T12:00:00-03:00`).toISOString() : followUp === null ? null : undefined,
       trialPlanCode:
         body.trialPlanCode === 'pro' || body.trialPlanCode === 'premium' || body.trialPlanCode === 'enterprise'
           ? body.trialPlanCode
           : undefined,
       subscriptionConsent: body.subscriptionConsent === true,
+      markContacted: body.markContacted === true,
+      startTrial: body.startTrial === true,
     });
     return NextResponse.json({ pipeline });
   } catch (error) {
