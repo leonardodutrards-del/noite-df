@@ -12,6 +12,10 @@ const event = (id: string, title: string, place: string, region: string, dateLab
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
+  event('chopp-brasilia-bier-sobradinho-2026-10-02', 'Chopp Brasília Bier — sertanejo e chopp a R$ 4', 'Chopp Brasília Bier Sobradinho', 'Sobradinho', '02/10/2026 · 19h às 3h de 03/10',
+    'Noite com música sertaneja, chopp a R$ 4 e diversas porções. Programação informada pela casa para esta sexta; confirme eventuais alterações no perfil oficial.',
+    'https://www.instagram.com/choppbrasiliabiersobradinho/',
+    '2026-10-03T03:00:00-03:00', '2026-10-02T19:00:00-03:00', '2026-10-02'),
   event('vibrae-sobradinho-2026-10-02', 'Vibraê', 'Antigo Horus', 'Sobradinho', '02/10/2026 · 18h às 23h45',
     'Pagode e funk em Sobradinho com Surra de Pagode, Rodrigo Ouvidizer, Maurício Nossa Turma, Dani Lemos, O Pagode do Mandela e DJ Jotinha. Confira ingressos e condições na fonte oficial.',
     'https://www.sympla.com.br/evento/vibrae/3594134',
