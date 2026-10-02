@@ -151,7 +151,7 @@ export class PartnershipService {
   }
 
   async listClaims(actor: AuthUser): Promise<PartnerClaim[]> {
-    if (actor.role !== 'admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
 
     if (!config()) {
       return Array.from(memoryClaims.values()).sort((a, b) =>
@@ -171,7 +171,7 @@ export class PartnershipService {
     actor: AuthUser,
     reason?: string
   ): Promise<PartnerClaim> {
-    if (actor.role !== 'admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     const now = new Date().toISOString();
 
     if (!config()) {
