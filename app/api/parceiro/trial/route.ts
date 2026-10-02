@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const user = await requireAuth(request);
-    if (user.role !== 'partner' && user.role !== 'admin') {
+    if (user.role !== 'partner' && user.role !== 'admin' && user.role !== 'master_admin') {
       return NextResponse.json(
         { error: 'Conclua o vínculo do estabelecimento antes de iniciar o teste.', code: 'PARTNER_REQUIRED' },
         { status: 403 }
