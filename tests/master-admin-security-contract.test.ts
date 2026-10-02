@@ -11,7 +11,8 @@ const middleware = readFileSync(resolve(process.cwd(), 'middleware.ts'), 'utf8')
 const adminPage = readFileSync(resolve(process.cwd(), 'app/admin/page.tsx'), 'utf8');
 
 describe('Fase 8 — Master Admin e hardening geral', () => {
-  it('exige papel admin e e-mail secreto para Master Admin', () => {
+  it('aceita papel master_admin e mantém compatibilidade com admin + e-mail secreto', () => {
+    expect(session).toContain("user.role === 'master_admin'");
     expect(session).toContain('MASTER_ADMIN_EMAIL');
     expect(session).toContain("user.role !== 'admin'");
     expect(session).toContain("user.email.trim().toLowerCase() === allowedEmail");
