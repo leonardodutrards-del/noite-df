@@ -12,6 +12,11 @@ export default function WeekendPage() {
   const window = getWeekendWindow();
   const weekendEvents = getWeekendEvents(events);
   const recommendations = getWeekendRecommendations(places, weekendEvents);
+  const days = [
+    { key: window.start, title: 'Sexta-feira · 02/10' },
+    { key: new Date(new Date(`${window.start}T12:00:00Z`).getTime() + 86400000).toISOString().slice(0, 10), title: 'Sábado · 03/10' },
+    { key: window.end, title: 'Domingo · 04/10' },
+  ];
 
   return (
     <main className="container">
@@ -27,7 +32,26 @@ export default function WeekendPage() {
       <section aria-labelledby="weekend-events">
         <div className="section-title"><div><h2 id="weekend-events">Programação confirmada</h2><p>{weekendEvents.length} eventos nesta seleção.</p></div></div>
         {weekendEvents.length ? (
-          <div className="grid">{weekendEvents.map(event => <EventCard key={event.id} event={event} />)}</div>
+          <div style={{ display: 'grid', gap: 36 }}>
+            {days.map((day) => {
+              const dayEvents = weekendEvents.filter((event) => event.startsAt?.slice(0, 10) === day.key);
+              return (
+                <section key={day.key} aria-labelledby={`weekend-${day.key}`}>
+                  <div className="section-title">
+                    <div>
+                      <h3 id={`weekend-${day.key}`}>{day.title}</h3>
+                      <p>{dayEvents.length} {dayEvents.length === 1 ? 'evento confirmado' : 'eventos confirmados'}.</p>
+                    </div>
+                  </div>
+                  {dayEvents.length ? (
+                    <div className="grid">{dayEvents.map(event => <EventCard key={event.id} event={event} />)}</div>
+                  ) : (
+                    <div className="empty"><p>Aguardando novas confirmações oficiais para este dia.</p></div>
+                  )}
+                </section>
+              );
+            })}
+          </div>
         ) : (
           <div className="empty"><h3>Sem evento confirmado para este fim de semana</h3><p>Novas datas entram após conferência da publicação oficial. Confira também os canais dos locais abaixo.</p></div>
         )}
