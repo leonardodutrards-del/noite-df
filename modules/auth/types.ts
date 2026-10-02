@@ -1,4 +1,4 @@
-export type UserRole = 'visitor' | 'partner' | 'operator' | 'admin';
+export type UserRole = 'visitor' | 'partner' | 'operator' | 'admin' | 'master_admin';
 
 export interface ConsentLGPD {
   id?: string;
