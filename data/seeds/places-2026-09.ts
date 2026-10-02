@@ -13,6 +13,10 @@ const record = (id: string, name: string, region: string, address: string,
 });
 
 export const additionalPlaces: Establishment[] = [
+  record('antigo-horus-sobradinho', 'Antigo Horus', 'Sobradinho',
+    'AR 17, Quadra 8, Conjunto A, Lote 17 — Sobradinho, Brasília, DF',
+    'Espaço de eventos em Sobradinho identificado como local do Vibraê de 02/10/2026. A programação varia por evento; confirme condições com o organizador.',
+    'https://www.sympla.com.br/evento/vibrae/3594134', ['eventos', 'pagode', 'funk'], 'Casa de show', '2026-10-02'),
   record('quintal-tia-sandra', 'Quintal da Tia Sandra', 'SIG',
     'SIG Quadra 6, Rua L, Lote 1515 — Brasília, DF',
     'Gastrobar com almoço e música ao vivo. Confira a programação da semana no site oficial.',
