@@ -12,6 +12,10 @@ const event = (id: string, title: string, place: string, region: string, dateLab
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
 
 export const researchedEvents: EventItem[] = [
+  event('eita-lounge-desmantelo-piseiro-2026-10-02', 'Desmantelo no Piseiro', 'Eita Lounge Bar', 'Sobradinho', '02/10/2026 · A partir das 21h',
+    'Sexta de piseiro com Yuri Vieira, Kaio Vieira e Yuri Aladin. Mulher free até 23h. A divulgação também informa desconto na entrada para quem estiver com uniforme da comitiva e promoção vinculada a combo de Smirnoff. Horário de encerramento não informado.',
+    'https://www.instagram.com/eitaloungebar/',
+    '2026-10-03T06:00:00-03:00', '2026-10-02T21:00:00-03:00', '2026-10-02'),
   event('chopp-brasilia-bier-sobradinho-2026-10-02', 'Chopp Brasília Bier — sertanejo e chopp a R$ 4', 'Chopp Brasília Bier Sobradinho', 'Sobradinho', '02/10/2026 · 19h às 3h de 03/10',
     'Noite com música sertaneja, chopp a R$ 4 e diversas porções. Programação informada pela casa para esta sexta; confirme eventuais alterações no perfil oficial.',
     'https://www.instagram.com/choppbrasiliabiersobradinho/',
