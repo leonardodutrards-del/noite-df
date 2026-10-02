@@ -75,7 +75,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     // Only admin can change publicationStatus directly on this endpoint
-    if (user.role === 'admin' && body.publicationStatus) {
+    if ((user.role === 'admin' || user.role === 'master_admin') && body.publicationStatus) {
       updates.publicationStatus = body.publicationStatus;
     }
 
