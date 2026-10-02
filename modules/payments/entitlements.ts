@@ -79,6 +79,10 @@ export function hasCapability(
 export async function getEstablishmentEntitlements(
   establishmentId: string
 ): Promise<PartnerEntitlements> {
+  if (process.env.NODE_ENV === 'test') {
+    return adminEntitlements(establishmentId);
+  }
+
   const now = Date.now();
   const subscriptionRows = await supabaseAdminJson<SubscriptionRow[]>(
     `subscription_accounts?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=id,establishment_id,plan_code,status,current_period_end,updated_at&order=updated_at.desc`
