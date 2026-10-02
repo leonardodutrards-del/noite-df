@@ -64,7 +64,7 @@ export default function AdminPage() {
         const authData = await authRes.json();
         if (!isMounted) return;
 
-        if (authData.user.role !== 'admin') {
+        if (!authData.isMasterAdmin) {
           setUser(authData.user);
           setLoading(false);
           return;
@@ -253,7 +253,7 @@ export default function AdminPage() {
     );
   }
 
-  if (user && user.role !== 'admin') {
+  if (user && user.role !== 'admin' && user.role !== 'master_admin') {
     return (
       <main className="container" style={{ paddingTop: 60 }}>
         <header className="topbar">
@@ -264,7 +264,7 @@ export default function AdminPage() {
           <span className="badge" style={{ borderColor: '#ff4d6d', color: '#ff4d6d' }}>Acesso Restrito</span>
           <h1 style={{ fontSize: '2rem', margin: '16px 0' }}>Acesso não autorizado ao Painel Master</h1>
           <p style={{ maxWidth: 500, margin: '0 auto 24px' }}>
-            Sua conta atual possui o papel de <b>{user.role}</b>. O painel administrativo é reservado exclusivamente para o papel <b>admin</b>.
+            Sua conta atual possui o papel de <b>{user.role}</b>. O painel administrativo é reservado exclusivamente ao perfil de Master Admin.
           </p>
           <Link href="/parceiro" className="button">
             Ir para a Área do Meu Estabelecimento
