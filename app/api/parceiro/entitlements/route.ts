@@ -10,9 +10,9 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
     const requestedId = request.nextUrl.searchParams.get('establishmentId');
     const establishmentId =
-      user.role === 'admin' ? requestedId || user.establishmentId : user.establishmentId;
+      (user.role === 'admin' || user.role === 'master_admin') ? requestedId || user.establishmentId : user.establishmentId;
 
-    if (user.role !== 'partner' && user.role !== 'admin') {
+    if (user.role !== 'partner' && user.role !== 'admin' && user.role !== 'master_admin') {
       return NextResponse.json(
         { error: 'Vincule um estabelecimento antes de contratar um plano.', code: 'PARTNER_REQUIRED' },
         { status: 403 }
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     const entitlements =
-      user.role === 'admin'
+      (user.role === 'admin' || user.role === 'master_admin')
         ? adminEntitlements(establishmentId)
         : await getEstablishmentEntitlements(establishmentId);
 
