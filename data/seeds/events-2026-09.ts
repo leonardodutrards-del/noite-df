@@ -226,4 +226,8 @@ export const researchedEvents: EventItem[] = [
     'Apresentação de Surra de Modão no SamamBar. Local: QS 402, Conjunto L, 01, Samambaia/DF. Consulte ingressos e condições na página do organizador Erick Alves Produções.',
     'https://www.sympla.com.br/evento/lgc/3570798',
     '2026-10-10T03:00:00-03:00', '2026-10-09T18:00:00-03:00', '2026-09-26'),
+  event('contexto-surra-modao-2026-10-14', 'Surra de Modão + Cardápio em Dobro', 'Contexto Bar', 'Setor de Clubes Sul', '14/10/2026 · 18h às 2h de 15/10',
+    'Sertanejo com Marlon, Melão e Júnior Ferreira. Promoção de combos, petiscos e drinks das 18h às 21h; evento para maiores de 18 anos. Consulte couvert, ingressos e condições na fonte oficial.',
+    'https://www.sympla.com.br/evento/lgc/3594928',
+    '2026-10-15T02:00:00-03:00', '2026-10-14T18:00:00-03:00', '2026-10-03'),
 ];
