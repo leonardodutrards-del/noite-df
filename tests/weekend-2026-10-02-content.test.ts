@@ -12,6 +12,9 @@ describe('Agenda do fim de semana 02–04/10/2026', () => {
     expect(events).toContain('oscarito-sextanejada-2026-10-02');
     expect(events).toContain('contexto-deu-mo-love-sanchez-2026-10-02');
     expect(events).toContain('rancho-sabado-automotivo-2026-10-03');
+    expect(events).toContain('infinu-jovem-dionisio-2026-10-03');
+    expect(events).toContain('infinu-liga-tripa-2026-10-03');
+    expect(events).toContain("03/10/2026 · 20h às 2h de 04/10");
   });
 
   it('organiza a página por sexta, sábado e domingo', () => {
