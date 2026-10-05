@@ -12,6 +12,9 @@ describe('Integridade das contas no Master Admin', () => {
     expect(moduleSource).toContain('authWithoutProfile');
     expect(moduleSource).toContain('profilesWithoutAuth');
     expect(moduleSource).toContain('duplicateEmailGroups');
+    expect(moduleSource).toContain('PAGE_SIZE = 1000');
+    expect(moduleSource).toContain("headers: { Range:");
+    expect(moduleSource).toContain('!profile.auth_user_id || !authIds.has(profile.auth_user_id)');
   });
 
   it('expõe a verificação apenas ao Master Admin', () => {
@@ -25,5 +28,8 @@ describe('Integridade das contas no Master Admin', () => {
     expect(pageSource).toContain('Profile sem Auth');
     expect(pageSource).toContain('E-mails duplicados');
     expect(pageSource).toContain('60000');
+    expect(pageSource).toContain('accountIntegrityError');
+    expect(pageSource).toContain('Indisponível');
+    expect(pageSource).toContain('A última leitura foi descartada');
   });
 });
