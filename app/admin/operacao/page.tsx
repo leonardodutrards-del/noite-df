@@ -112,7 +112,7 @@ export default function OperationPage() {
         <select value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)}>
           <option value="Sobradinho">Sobradinho</option>
           <option value="todas">Todas as regiões</option>
-          {[...new Set(items.map((item) => item.establishment.region))].filter((region) => region !== 'Sobradinho').sort().map((region) => (
+          {Array.from(new Set(items.map((item) => item.establishment.region))).filter((region) => region !== 'Sobradinho').sort().map((region) => (
             <option key={region} value={region}>{region}</option>
           ))}
         </select>
