@@ -1,30 +1,11 @@
 import { places } from '@/data/places';
 import type { Establishment } from '@/modules/establishments/types';
 import { normalizeString } from '@/lib/data-quality';
+import { REGION_CATALOG, getRegionMetaBySlug } from '@/lib/regions';
 
-export const REGION_SLUG_MAP: Record<string, string> = {
-  'setor-de-clubes-sul': 'Setor de Clubes Sul',
-  'sig': 'SIG',
-  'saan': 'SAAN',
-  'samambaia': 'Samambaia',
-  'asa-norte': 'Asa Norte',
-  'asa-sul': 'Asa Sul',
-  'aguas-claras': 'Águas Claras',
-  'ceilandia': 'Ceilândia',
-  'gama': 'Gama',
-  'granja-do-torto': 'Granja do Torto',
-  'guara': 'Guará',
-  'lago-sul': 'Lago Sul',
-  'planaltina': 'Planaltina',
-  'park-way': 'Park Way',
-  'sobradinho': 'Sobradinho',
-  'sudoeste': 'Sudoeste',
-  'taguatinga': 'Taguatinga',
-  'brasilinha': 'Brasilinha · Entorno',
-  'cidade-ocidental': 'Cidade Ocidental · Entorno',
-  'jardim-inga': 'Jardim Ingá · Entorno',
-  'valparaiso': 'Valparaíso · Entorno',
-};
+export const REGION_SLUG_MAP: Record<string, string> = Object.fromEntries(
+  REGION_CATALOG.map((region) => [region.slug, region.name])
+);
 
 export function slugify(text: string): string {
   return normalizeString(text)
@@ -33,7 +14,7 @@ export function slugify(text: string): string {
 }
 
 export function getRegionFromSlug(slug: string): string | undefined {
-  return REGION_SLUG_MAP[slug];
+  return getRegionMetaBySlug(slug)?.name;
 }
 
 export function getPlacesByRegionSlug(slug: string, source: Establishment[] = places): Establishment[] {

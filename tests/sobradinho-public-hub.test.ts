@@ -23,7 +23,8 @@ describe('Hub público de Sobradinho', () => {
   });
 
   it('entra na navegação regional e no sitemap', () => {
-    expect(home).toContain('href="/sobradinho">Sobradinho');
+    expect(home).toContain("item.slug === 'sobradinho' ? '/sobradinho'");
+    expect(home).toContain('regionOptions.map');
     expect(sitemap).toContain('/sobradinho');
   });
 });
