@@ -46,7 +46,7 @@ describe('Persistência crítica de contas', () => {
 
   it('permite recuperar confirmação de e-mail sem recriar a conta', () => {
     expect(auth).toContain('supabaseResendSignupConfirmation');
-    expect(resendRoute).toContain("type: 'signup'");
+    expect(auth).toContain("type: 'signup'");
     expect(resendRoute).toContain('checkAuthRateLimit');
     expect(loginPage).toContain('Reenviar confirmação de e-mail');
     expect(loginPage).toContain('/api/auth/resend-confirmation');
