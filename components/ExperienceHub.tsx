@@ -285,7 +285,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
             <a className="tag" href="/lugares/asa-norte">Asa Norte</a>
             <a className="tag" href="/lugares/asa-sul">Asa Sul</a>
             <a className="tag" href="/lugares/aguas-claras">Águas Claras</a>
-            <a className="tag" href="/lugares/sobradinho">Sobradinho</a>
+            <a className="tag" href="/sobradinho">Sobradinho</a>
             <a className="tag" href="/lugares/samambaia">Samambaia</a>
             <a className="tag" href="/lugares/taguatinga">Taguatinga</a>
             <a className="tag" href="/lugares/ceilandia">Ceilândia</a>
