@@ -266,6 +266,10 @@ create table if not exists partner_pipeline (
   trial_ends_at timestamptz,
   trial_plan_code text check (trial_plan_code is null or trial_plan_code in ('pro','premium','enterprise')),
   subscription_consent_at timestamptz,
+  visit_status text not null default 'not_visited'
+    check (visit_status in ('not_visited','visited','owner_contacted','interested','follow_up','trial','signed','lost')),
+  visited_at timestamptz,
+  visit_notes text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -276,6 +280,25 @@ on conflict (establishment_id) do nothing;
 
 create index if not exists partner_pipeline_stage_idx on partner_pipeline(stage);
 create index if not exists partner_pipeline_follow_up_idx on partner_pipeline(next_follow_up_at);
+create index if not exists partner_pipeline_visit_status_idx on partner_pipeline(visit_status);
+
+create or replace function public.ensure_partner_pipeline_row()
+returns trigger
+language plpgsql
+set search_path = public
+as $
+begin
+  insert into public.partner_pipeline (establishment_id)
+  values (new.id)
+  on conflict (establishment_id) do nothing;
+  return new;
+end;
+$;
+
+drop trigger if exists establishments_partner_pipeline_after_insert on public.establishments;
+create trigger establishments_partner_pipeline_after_insert
+after insert on public.establishments
+for each row execute function public.ensure_partner_pipeline_row();
 
 create table if not exists user_preferences (
   profile_id text primary key references profiles(id) on delete cascade,
