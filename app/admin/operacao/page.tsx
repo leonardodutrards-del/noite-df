@@ -24,6 +24,7 @@ const labels: Record<Stage, string> = {
 export default function OperationPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [query, setQuery] = useState('');
+  const [regionFilter, setRegionFilter] = useState('Sobradinho');
   const [message, setMessage] = useState('');
 
   async function load() {
@@ -57,10 +58,12 @@ export default function OperationPage() {
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    return normalized
-      ? items.filter((item) => `${item.establishment.name} ${item.establishment.region}`.toLowerCase().includes(normalized))
-      : items;
-  }, [items, query]);
+    return items.filter((item) => {
+      const matchesQuery = !normalized || `${item.establishment.name} ${item.establishment.region}`.toLowerCase().includes(normalized);
+      const matchesRegion = regionFilter === 'todas' || item.establishment.region === regionFilter;
+      return matchesQuery && matchesRegion;
+    });
+  }, [items, query, regionFilter]);
 
   const summary = useMemo(() => {
     const counts = Object.fromEntries(Object.keys(labels).map((key) => [key, 0])) as Record<Stage, number>;
@@ -94,7 +97,7 @@ export default function OperationPage() {
       </header>
       <section className="page-heading">
         <span className="badge">Operação & Growth</span>
-        <h1>CRM dos 73 estabelecimentos</h1>
+        <h1>CRM dos {items.length} estabelecimentos</h1>
         <p>Contato, resposta, teste gratuito, conversão e qualidade cadastral em uma única fila operacional.</p>
       </section>
       <div className="metrics-grid" style={{ marginBottom: 24 }}>
@@ -104,7 +107,16 @@ export default function OperationPage() {
         <article><span>Em trial</span><strong>{summary.counts.trial}</strong></article>
         <article><span>Parceiros</span><strong>{summary.counts.partner}</strong></article>
       </div>
-      <input aria-label="Buscar estabelecimento" placeholder="Buscar por nome ou região" value={query} onChange={(e) => setQuery(e.target.value)} style={{ width: '100%', marginBottom: 18 }} />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: 12, marginBottom: 18 }}>
+        <input aria-label="Buscar estabelecimento" placeholder="Buscar por nome ou região" value={query} onChange={(e) => setQuery(e.target.value)} style={{ width: '100%' }} />
+        <select value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)}>
+          <option value="Sobradinho">Sobradinho</option>
+          <option value="todas">Todas as regiões</option>
+          {[...new Set(items.map((item) => item.establishment.region))].filter((region) => region !== 'Sobradinho').sort().map((region) => (
+            <option key={region} value={region}>{region}</option>
+          ))}
+        </select>
+      </div>
       {message ? <div className="notice">{message}</div> : null}
       <div style={{ display: 'grid', gap: 12 }}>
         {filtered.map((item) => (
