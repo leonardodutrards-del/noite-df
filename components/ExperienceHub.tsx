@@ -140,6 +140,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
           <a href="#agenda">Agenda</a>
           <a href="/hoje">Hoje</a>
           <a href="/agenda-semanal">Agenda semanal</a>
+          <a href="/agenda-mensal">Agenda mensal</a>
           <a href="/fim-de-semana">Fim de semana</a>
           <a href="/planos">Para estabelecimentos</a>
           <a href="/login" style={{ color: 'var(--accent)', fontWeight: 700 }}>Área do Parceiro</a>
@@ -377,6 +378,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
             <h2>Próximos eventos confirmados</h2>
             <p><a href="/fim-de-semana">Ver indicações do fim de semana →</a></p>
             <p><a href="/agenda-semanal">Ver agenda semanal para compartilhar →</a></p>
+            <p><a href="/agenda-mensal">Ver agenda mensal por data →</a></p>
             <p><a href="/hoje">Ver eventos de hoje →</a></p>
             <p>Apenas eventos verificados e confirmados com fontes oficiais.</p>
           </div>
