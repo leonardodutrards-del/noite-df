@@ -85,13 +85,39 @@ function profileToUser(profile: ProfileRow): AuthUser {
   };
 }
 
-async function getProfileByAuthId(authUserId: string): Promise<ProfileRow | null> {
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function getProfileByAuthIdOnce(authUserId: string): Promise<ProfileRow | null> {
   const response = await profileRequest(
     `profiles?auth_user_id=eq.${encodeURIComponent(authUserId)}&select=*`
   );
-  if (!response.ok) throw new Error('Falha ao carregar perfil.');
+  if (!response.ok) throw new Error(`PROFILE_READ_FAILED_${response.status}`);
   const rows = (await response.json()) as ProfileRow[];
   return rows[0] ?? null;
+}
+
+async function getProfileByAuthId(authUserId: string): Promise<ProfileRow | null> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const profile = await getProfileByAuthIdOnce(authUserId);
+      if (profile) return profile;
+    } catch (error) {
+      lastError = error;
+    }
+
+    if (attempt < 3) {
+      await delay(150 * (attempt + 1));
+    }
+  }
+
+  if (lastError) {
+    console.error('profile-read-after-retries', lastError);
+  }
+  return null;
 }
 
 async function upsertProfile(args: {
@@ -140,12 +166,22 @@ export async function supabasePasswordSignUp(input: SignUpInput) {
     }),
   });
   if (!payload.user?.id) throw new Error('Cadastro criado, mas usuário não foi retornado.');
-  const user = await upsertProfile({
-    authUserId: payload.user.id,
-    email: payload.user.email ?? input.email,
-    name: input.name,
-    role,
-  });
+
+  const authUserId = payload.user.id;
+  const email = (payload.user.email ?? input.email).trim().toLowerCase();
+  const profile = await getProfileByAuthId(authUserId);
+
+  const user = profile
+    ? profileToUser(profile)
+    : {
+        id: `usr_${authUserId}`,
+        email,
+        name: input.name,
+        role,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
   return {
     user,
     token: payload.access_token ?? '',
