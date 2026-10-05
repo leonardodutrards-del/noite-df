@@ -13,6 +13,8 @@ const figueiredoInstagram = 'https://www.instagram.com/figueiredocozinhaebar/';
 export const contactUpdates: Record<string, Partial<Establishment>> = {
   'quintal-tia-sandra': { businessContact: contact('61996426143', 'https://quintaldatiasandra.com.br/', '61996426143'), agendaUrl: 'https://quintaldatiasandra.com.br/programacao/', operatingHours: { text: 'Terça a domingo: almoço a partir das 11h. Confirme o encerramento e horários especiais com o local.', sourceUrl: 'https://www.quintaldatiasandra.com.br/', checkedAt: '2026-09-17' }, admissionNote: 'Em noites com apresentações ao vivo, há couvert artístico a partir de R$ 10,00, segundo o cardápio. Confirme o valor da data com a casa.' },
   'na-banca-sobradinho': { businessContact: contact('61994426002', 'https://acuolina.com/pt/na-banca') },
+  'palorama-sobradinho-i': { businessContact: contact('61981093037', 'https://palorama.com.br/'), instagram: 'https://www.instagram.com/palorama.oficial/', operatingHours: hours('Terça a domingo: 18h às 23h. Confirme horários especiais diretamente com a unidade.', 'https://palorama.com.br/') },
+  'palorama-sobradinho-ii': { businessContact: contact('61998368980', 'https://palorama.com.br/'), instagram: 'https://www.instagram.com/palorama.oficial/', operatingHours: hours('Terça a domingo: 18h às 23h. Confirme horários especiais diretamente com a unidade.', 'https://palorama.com.br/') },
   'savassi-valparaiso': { businessContact: contact('6136294244', 'https://savassicarnedesol.com.br/') },
   'savassi-guara': { businessContact: contact('6133822534', 'https://savassicarnedesol.com.br/', '6133822534') },
   'sauz-guara': { businessContact: contact('6135267126', 'https://www.sauz.com.br/', '6135267126') },
