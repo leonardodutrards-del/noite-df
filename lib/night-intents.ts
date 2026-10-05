@@ -19,7 +19,7 @@ export const intentOptions: Array<{ id: NightIntent; label: string; description:
   { id: 'evento-hoje', label: '📅 Evento hoje', description: 'Estabelecimentos com evento oficial ainda válido hoje.' },
 ];
 
-const normalize = (value: string) =>
+export const normalizeIntentText = (value: string) =>
   value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 export function matchesNightIntent(
@@ -33,9 +33,9 @@ export function matchesNightIntent(
     ...place.vibe,
     ...place.music,
     ...place.audience,
-  ].map(normalize);
+  ].map(normalizeIntentText);
   const includes = (...terms: string[]) =>
-    terms.some((term) => tags.some((tag) => tag.includes(normalize(term))));
+    terms.some((term) => tags.some((tag) => tag.includes(normalizeIntentText(term))));
 
   switch (intent) {
     case 'comer':
@@ -59,6 +59,6 @@ export function matchesNightIntent(
     case 'barato':
       return place.price === '$' || includes('baixo custo', 'barato', 'popular');
     case 'evento-hoje':
-      return todayEventPlaces.has(normalize(place.name));
+      return todayEventPlaces.has(normalizeIntentText(place.name));
   }
 }
