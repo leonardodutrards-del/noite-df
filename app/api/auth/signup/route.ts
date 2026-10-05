@@ -7,6 +7,7 @@ import {
   SESSION_COOKIE_OPTIONS,
 } from '@/modules/auth/session';
 import { sanitizeTextInput } from '@/lib/security';
+import { checkAuthRateLimit, requestIp } from '@/lib/security-rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +24,19 @@ export async function POST(request: NextRequest) {
     }
     if (!name) {
       return NextResponse.json({ error: 'Nome é obrigatório.' }, { status: 400 });
+    }
+
+    const allowed = await checkAuthRateLimit({
+      ip: requestIp(request.headers),
+      email,
+      limit: 5,
+      windowSeconds: 15 * 60,
+    });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas de cadastro. Aguarde alguns minutos e tente novamente.' },
+        { status: 429 }
+      );
     }
 
     const { user, token, refreshToken, requiresEmailConfirmation } = await authService.signUp({
@@ -51,6 +65,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Cadastro temporariamente indisponível.' },
         { status: 503 }
+      );
+    }
+    if (message === 'AUTH_EMAIL_RATE_LIMIT') {
+      return NextResponse.json(
+        { error: 'O serviço de e-mail limitou novas tentativas. Aguarde alguns minutos antes de tentar novamente.' },
+        { status: 429 }
+      );
+    }
+    if (/already registered|already exists|já está cadastrado/i.test(message)) {
+      return NextResponse.json(
+        { error: 'Esta conta já existe. Entre com seu e-mail e senha ou use a recuperação de senha.' },
+        { status: 409 }
       );
     }
     return NextResponse.json({ error: message }, { status: 400 });
