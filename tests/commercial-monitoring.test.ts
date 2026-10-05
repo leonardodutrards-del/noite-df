@@ -8,6 +8,7 @@ const subscriptionRoute = readFileSync(resolve(process.cwd(), 'app/api/payments/
 const healthModule = readFileSync(resolve(process.cwd(), 'modules/admin/commercial-health.ts'), 'utf8');
 const healthRoute = readFileSync(resolve(process.cwd(), 'app/api/admin/commercial-health/route.ts'), 'utf8');
 const operationPage = readFileSync(resolve(process.cwd(), 'app/admin/operacao/page.tsx'), 'utf8');
+const paymentReturnPage = readFileSync(resolve(process.cwd(), 'app/pagamento/retorno/page.tsx'), 'utf8');
 
 describe('Acompanhamento comercial e primeira assinatura', () => {
   it('não reinicia trial ao salvar observações do CRM', () => {
@@ -42,5 +43,13 @@ describe('Acompanhamento comercial e primeira assinatura', () => {
     expect(operationPage).toContain('Retornos vencidos');
     expect(operationPage).toContain('Primeira assinatura');
     expect(operationPage).toContain('Mostrar só retornos');
+  });
+
+  it('confirma a assinatura no retorno do Mercado Pago sem incentivar cobrança duplicada', () => {
+    expect(paymentReturnPage).toContain('/api/parceiro/billing');
+    expect(paymentReturnPage).toContain('5000');
+    expect(paymentReturnPage).toContain('Assinatura confirmada');
+    expect(paymentReturnPage).toContain('Você não precisa pagar novamente');
+    expect(paymentReturnPage).toContain('Verificar agora');
   });
 });
