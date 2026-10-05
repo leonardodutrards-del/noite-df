@@ -21,7 +21,7 @@ export default function TodayAgendaPage() {
   return (
     <main className="container">
       <header className="topbar"><Link className="brand" href="/">Noite DF</Link>
-        <nav><Link href="/">Início</Link><Link href="/agenda-semanal">Agenda semanal</Link><Link href="/#lugares">Lugares</Link></nav>
+        <nav><Link href="/">Início</Link><Link href="/agenda-semanal">Agenda semanal</Link><Link href="/agenda-mensal">Agenda mensal</Link><Link href="/#lugares">Lugares</Link></nav>
       </header>
       <section className="page-heading">
         <span className="eyebrow">Para compartilhar</span>
@@ -34,7 +34,7 @@ export default function TodayAgendaPage() {
         {today.length ? <div className="grid">{today.map((event) => <EventCard key={event.id} event={event} />)}</div> :
           <div className="empty"><h3>Sem eventos confirmados para hoje</h3><p>Confira a agenda semanal para programar sua próxima saída.</p></div>}
       </section>
-      <p style={{ margin: '32px 0' }}><Link href="/agenda-semanal">Ver agenda semanal →</Link></p>
+      <p style={{ margin: '32px 0' }}><Link href="/agenda-semanal">Ver agenda semanal →</Link> · <Link href="/agenda-mensal">Ver agenda mensal →</Link></p>
     </main>
   );
 }
