@@ -87,15 +87,15 @@ export async function updatePipeline(input: {
   if (input.subscriptionConsent) patch.subscription_consent_at = now;
 
   const response = await supabaseAdminRequest(
-    `partner_pipeline?establishment_id=eq.${encodeURIComponent(input.establishmentId)}`,
+    'partner_pipeline?on_conflict=establishment_id',
     {
-      method: 'PATCH',
-      headers: { Prefer: 'return=representation' },
-      body: JSON.stringify(patch),
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify({ establishment_id: input.establishmentId, ...patch }),
     }
   );
   if (!response.ok) throw new Error('PIPELINE_UPDATE_FAILED');
   const rows = (await response.json()) as PipelineRow[];
-  if (!rows[0]) throw new Error('PIPELINE_RECORD_NOT_FOUND');
+  if (!rows[0]) throw new Error('PIPELINE_UPSERT_FAILED');
   return mapRow(rows[0]);
 }

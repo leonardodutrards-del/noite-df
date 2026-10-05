@@ -130,6 +130,24 @@ function mapSubscriptionStatus(status?: string) {
   return 'pending';
 }
 
+async function syncCommercialPipeline(establishmentId: string, subscriptionStatus: string, now: string) {
+  if (subscriptionStatus !== 'active' && subscriptionStatus !== 'cancelled') return;
+
+  const response = await supabase('partner_pipeline?on_conflict=establishment_id', {
+    method: 'POST',
+    headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify({
+      establishment_id: establishmentId,
+      stage: subscriptionStatus === 'active' ? 'partner' : 'paused',
+      contact_channel: 'mercado_pago',
+      subscription_consent_at: subscriptionStatus === 'active' ? now : null,
+      next_follow_up_at: null,
+      updated_at: now,
+    }),
+  });
+  if (!response.ok) throw new Error('SUBSCRIPTION_PIPELINE_SYNC_FAILED');
+}
+
 export async function webhookEventAlreadyProcessed(providerEventId: string): Promise<boolean> {
   const cfg = supabaseConfig();
   if (!cfg) return false;
@@ -170,6 +188,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
 
   const now = new Date().toISOString();
   const amountCents = Math.round((resource.auto_recurring?.transaction_amount ?? 0) * 100);
+  const subscriptionStatus = mapSubscriptionStatus(resource.status);
   const lookup = await supabase(
     `subscription_accounts?provider_subscription_id=eq.${encodeURIComponent(resource.id)}&select=id,current_period_end`
   );
@@ -185,7 +204,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
           establishment_id: reference.establishmentId,
           plan_code: reference.planCode,
           payer_email: resource.payer_email ?? '',
-          status: mapSubscriptionStatus(resource.status),
+          status: subscriptionStatus,
           amount_cents: amountCents,
           current_period_end: resource.next_payment_date ?? existing[0].current_period_end ?? null,
           updated_at: now,
@@ -193,6 +212,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
       }
     );
     if (!updated.ok) throw new Error('SUBSCRIPTION_UPDATE_FAILED');
+    await syncCommercialPipeline(reference.establishmentId, subscriptionStatus, now);
     return;
   }
 
@@ -204,7 +224,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
       provider: 'mercado_pago',
       provider_subscription_id: resource.id,
       payer_email: resource.payer_email ?? '',
-      status: mapSubscriptionStatus(resource.status),
+      status: subscriptionStatus,
       amount_cents: amountCents,
       current_period_end: resource.next_payment_date ?? null,
       created_at: now,
@@ -212,6 +232,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
     }),
   });
   if (!created.ok) throw new Error('SUBSCRIPTION_CREATE_FAILED');
+  await syncCommercialPipeline(reference.establishmentId, subscriptionStatus, now);
 }
 
 export async function syncPaymentResource(resource: PaymentResource): Promise<void> {
