@@ -105,10 +105,10 @@ export async function updatePipeline(input: {
   }
 
   if (input.stage === 'contacted' || input.stage === 'replied') patch.last_contact_at = now;
-  if (input.stage === 'trial') {
+  if (input.stage === 'trial' && input.trialPlanCode) {
     patch.trial_started_at = now;
     patch.trial_ends_at = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-    patch.trial_plan_code = input.trialPlanCode ?? 'pro';
+    patch.trial_plan_code = input.trialPlanCode;
   }
   if (input.subscriptionConsent) patch.subscription_consent_at = now;
 
