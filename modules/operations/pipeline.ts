@@ -9,6 +9,16 @@ export type PipelineStage =
   | 'paused'
   | 'lost';
 
+export type VisitStatus =
+  | 'not_visited'
+  | 'visited'
+  | 'owner_contacted'
+  | 'interested'
+  | 'follow_up'
+  | 'trial'
+  | 'signed'
+  | 'lost';
+
 export type PipelineRecord = {
   establishmentId: string;
   stage: PipelineStage;
@@ -20,6 +30,9 @@ export type PipelineRecord = {
   trialEndsAt?: string;
   trialPlanCode?: 'pro' | 'premium' | 'enterprise';
   subscriptionConsentAt?: string;
+  visitStatus: VisitStatus;
+  visitedAt?: string;
+  visitNotes?: string;
   updatedAt: string;
 };
 
@@ -34,6 +47,9 @@ type PipelineRow = {
   trial_ends_at: string | null;
   trial_plan_code: PipelineRecord['trialPlanCode'] | null;
   subscription_consent_at: string | null;
+  visit_status: VisitStatus;
+  visited_at: string | null;
+  visit_notes: string | null;
   updated_at: string;
 };
 
@@ -49,6 +65,9 @@ function mapRow(row: PipelineRow): PipelineRecord {
     trialEndsAt: row.trial_ends_at ?? undefined,
     trialPlanCode: row.trial_plan_code ?? undefined,
     subscriptionConsentAt: row.subscription_consent_at ?? undefined,
+    visitStatus: row.visit_status ?? 'not_visited',
+    visitedAt: row.visited_at ?? undefined,
+    visitNotes: row.visit_notes ?? undefined,
     updatedAt: row.updated_at,
   };
 }
@@ -68,15 +87,22 @@ export async function updatePipeline(input: {
   nextFollowUpAt?: string | null;
   trialPlanCode?: 'pro' | 'premium' | 'enterprise';
   subscriptionConsent?: boolean;
+  visitStatus?: VisitStatus;
+  visitNotes?: string;
 }): Promise<PipelineRecord> {
   const now = new Date().toISOString();
   const patch: Record<string, unknown> = {
     stage: input.stage,
-    contact_channel: input.contactChannel ?? null,
-    notes: input.notes ?? null,
-    next_follow_up_at: input.nextFollowUpAt ?? null,
     updated_at: now,
   };
+  if (input.contactChannel !== undefined) patch.contact_channel = input.contactChannel;
+  if (input.notes !== undefined) patch.notes = input.notes;
+  if (input.nextFollowUpAt !== undefined) patch.next_follow_up_at = input.nextFollowUpAt;
+  if (input.visitNotes !== undefined) patch.visit_notes = input.visitNotes;
+  if (input.visitStatus !== undefined) {
+    patch.visit_status = input.visitStatus;
+    if (input.visitStatus !== 'not_visited') patch.visited_at = now;
+  }
 
   if (input.stage === 'contacted' || input.stage === 'replied') patch.last_contact_at = now;
   if (input.stage === 'trial') {

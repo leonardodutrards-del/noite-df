@@ -154,6 +154,7 @@ export async function startTrialForEstablishment(args: {
   const payload = {
     establishment_id: args.establishmentId,
     stage: 'trial',
+    visit_status: 'trial',
     trial_started_at: startedAt.toISOString(),
     trial_ends_at: endsAt.toISOString(),
     trial_plan_code: args.planCode,
