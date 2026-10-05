@@ -9,7 +9,10 @@ export default function PlansPage() {
     <main className="container">
       <header className="topbar">
         <Link className="brand" href="/">Noite DF</Link>
-        <Link href="/parceiro">Painel parceiro</Link>
+        <nav>
+          <Link href="/parceiros/sobradinho">Apresentação Sobradinho</Link>
+          <Link href="/parceiro">Painel parceiro</Link>
+        </nav>
       </header>
 
       <section className="page-heading">
