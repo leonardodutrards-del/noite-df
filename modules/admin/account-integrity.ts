@@ -1,4 +1,4 @@
-import { getSupabaseAdminConfig, supabaseAdminJson } from '@/lib/supabase-admin';
+import { getSupabaseAdminConfig, supabaseAdminRequest } from '@/lib/supabase-admin';
 
 type AdminUsersResponse = {
   users?: Array<{ id: string; email?: string | null; created_at?: string | null }>;
@@ -47,7 +47,7 @@ async function fetchAllAuthUsers(config: { url: string; key: string }) {
     const payload = (await response.json()) as AdminUsersResponse;
     const batch = payload.users ?? [];
     users.push(...batch);
-    if (batch.length < PAGE_SIZE) break;
+    if (batch.length === 0) break;
   }
 
   return users;
@@ -55,14 +55,35 @@ async function fetchAllAuthUsers(config: { url: string; key: string }) {
 
 async function fetchAllProfiles() {
   const profiles: ProfileRow[] = [];
+  let from = 0;
 
-  for (let from = 0; ; from += PAGE_SIZE) {
-    const batch = await supabaseAdminJson<ProfileRow[]>(
-      'profiles?select=id,auth_user_id,email,role,created_at&order=created_at.desc',
-      { headers: { Range: `${from}-${from + PAGE_SIZE - 1}` } }
+  for (;;) {
+    const response = await supabaseAdminRequest(
+      'profiles?select=id,auth_user_id,email,role,created_at&order=created_at.desc,id.asc',
+      {
+        headers: {
+          Range: `${from}-${from + PAGE_SIZE - 1}`,
+          Prefer: 'count=exact',
+        },
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(`SUPABASE_ADMIN_REQUEST_FAILED_${response.status}`);
+    }
+
+    const batch = (await response.json()) as ProfileRow[];
     profiles.push(...batch);
-    if (batch.length < PAGE_SIZE) break;
+
+    if (batch.length === 0) break;
+
+    const contentRange = response.headers.get('content-range');
+    const match = contentRange?.match(/(\d+)-(\d+)\/(\d+|\*)/);
+    const lastReturned = match ? Number(match[2]) : from + batch.length - 1;
+    const total = match && match[3] !== '*' ? Number(match[3]) : null;
+
+    from = lastReturned + 1;
+    if (total !== null && from >= total) break;
   }
 
   return profiles;
