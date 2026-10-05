@@ -19,6 +19,10 @@ describe('Fase 9 — visão geral real do Master Admin', () => {
     expect(overview).toContain("countRows('subscription_accounts'");
     expect(overview).toContain('monthlyRecurringRevenueCents');
     expect(overview).toContain('interactions30d');
+    expect(overview).toContain('interactions24h');
+    expect(overview).toContain('views24h');
+    expect(overview).toContain('checkoutStarts30d');
+    expect(overview).toContain('trialStarts30d');
   });
 
   it('exibe métricas reais no painel Master', () => {
@@ -26,6 +30,9 @@ describe('Fase 9 — visão geral real do Master Admin', () => {
     expect(adminPage).toContain('overview?.users');
     expect(adminPage).toContain('overview?.monthlyRecurringRevenueCents');
     expect(adminPage).toContain('overview?.views30d');
+    expect(adminPage).toContain('overview?.views24h');
+    expect(adminPage).toContain('overview?.checkoutStarts30d');
+    expect(adminPage).toContain('15000');
   });
 
   it('lê auditoria persistida no Supabase em produção', () => {
