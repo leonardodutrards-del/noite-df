@@ -11,6 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Smoke test payment route in production
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl --silent --show-error --output /tmp/payment-response.txt --write-out '%{http_code}' \
+            --request POST 'https://www.noitedf.com.br/api/payments/subscriptions' \
+            --header 'content-type: application/json' \
+            --data '{"planId":"pro"}')"
+          cat /tmp/payment-response.txt
+          echo
+          echo "HTTP_STATUS=$status"
+          test "$status" = "401"
       - name: Configurar pnpm
         uses: pnpm/action-setup@v4
         with:
