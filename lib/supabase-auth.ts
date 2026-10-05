@@ -271,3 +271,13 @@ export async function supabaseSendMagicLink(email: string, redirectTo: string): 
     }),
   });
 }
+
+export async function supabaseResendSignupConfirmation(email: string): Promise<void> {
+  await authRequest('resend', {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'signup',
+      email: email.trim().toLowerCase(),
+    }),
+  });
+}
