@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { CreateEstablishmentInput } from '@/modules/establishments/types';
@@ -34,9 +35,7 @@ export default function BecomePartnerPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
-  const [step, setStep] = useState<'info' | 'confirm' | 'success'>(
-    'info'
-  );
+  const [step, setStep] = useState<'info' | 'confirm' | 'success'>('info');
 
   const [formData, setFormData] = useState<CreateEstablishmentInput>({
     name: '',
@@ -51,12 +50,11 @@ export default function BecomePartnerPage() {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setError(undefined);
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -66,11 +64,11 @@ export default function BecomePartnerPage() {
     e.preventDefault();
 
     if (step === 'info') {
-      // Validar campos obrigatórios
-      if (!formData.name || !formData.region || !formData.address) {
-        setError('Nome, região e endereço são obrigatórios.');
+      if (!formData.name.trim() || !formData.region || !formData.address.trim()) {
+        setError('Preencha nome do estabelecimento, região e endereço para continuar.');
         return;
       }
+      setError(undefined);
       setStep('confirm');
       return;
     }
@@ -94,12 +92,11 @@ export default function BecomePartnerPage() {
         }
 
         if (!response.ok) {
-          const errorData = await response.json() as { error?: string };
+          const errorData = (await response.json()) as { error?: string };
           throw new Error(errorData.error || 'Erro ao criar estabelecimento');
         }
 
         await response.json();
-
         setStep('success');
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao criar estabelecimento');
@@ -110,275 +107,228 @@ export default function BecomePartnerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold mb-2 text-gray-900">
-            Seja um Parceiro Noite DF
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Gerencie seu estabelecimento e aumente sua visibilidade
+    <main className="container partner-onboarding-page">
+      <header className="topbar sales-topbar">
+        <Link className="brand" href="/">Noite DF</Link>
+        <nav>
+          <Link href="/parceiros/sobradinho">Conhecer proposta</Link>
+          <Link href="/planos">Ver planos</Link>
+          <Link href="/login?redirect=/parceiro">Já tenho conta</Link>
+        </nav>
+      </header>
+
+      <section className="partner-onboarding-shell">
+        <div className="partner-onboarding-heading">
+          <span className="badge">Área do parceiro</span>
+          <h1>Seja um Parceiro Noite DF</h1>
+          <p>
+            Cadastre os dados do estabelecimento para solicitar o vínculo e começar a gerenciar
+            sua presença, agenda e promoções na plataforma.
           </p>
 
+          <div className="partner-stepper" aria-label="Etapas do cadastro">
+            <span className={step === 'info' ? 'active' : 'done'}>1 · Dados</span>
+            <span className={step === 'confirm' ? 'active' : step === 'success' ? 'done' : ''}>2 · Revisão</span>
+            <span className={step === 'success' ? 'active' : ''}>3 · Solicitação</span>
+          </div>
+        </div>
+
+        <div className="panel partner-onboarding-card">
           {step === 'info' && (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-1">
-                    Nome do Estabelecimento *
-                  </label>
+            <form onSubmit={handleSubmit} className="partner-onboarding-form" noValidate>
+              <div className="partner-form-grid">
+                <label className="partner-field">
+                  <span>Nome do estabelecimento *</span>
                   <input
                     type="text"
-                    id="name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="Ex: Meu Bar Legal"
+                    autoComplete="organization"
                   />
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="type" className="block text-sm font-medium mb-1">
-                    Tipo *
-                  </label>
+                <label className="partner-field">
+                  <span>Tipo *</span>
                   <select
-                    id="type"
                     name="type"
                     value={formData.type}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
-                    {ESTABLISHMENT_TYPES.map(type => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
+                    {ESTABLISHMENT_TYPES.map((type) => (
+                      <option key={type} value={type}>{type}</option>
                     ))}
                   </select>
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="region" className="block text-sm font-medium mb-1">
-                    Região *
-                  </label>
+                <label className="partner-field">
+                  <span>Região *</span>
                   <select
-                    id="region"
                     name="region"
                     value={formData.region}
                     onChange={handleChange}
-                    required
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
                     <option value="">Selecione uma região</option>
-                    {REGIONS.map(region => (
-                      <option key={region} value={region}>
-                        {region}
-                      </option>
+                    {REGIONS.map((region) => (
+                      <option key={region} value={region}>{region}</option>
                     ))}
                   </select>
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium mb-1">
-                    Endereço *
-                  </label>
+                <label className="partner-field">
+                  <span>Endereço *</span>
                   <input
                     type="text"
-                    id="address"
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    required
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    placeholder="Rua, nº, complemento"
+                    placeholder="Quadra, conjunto, lote, loja..."
+                    autoComplete="street-address"
                   />
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-1">
-                    Telefone
-                  </label>
+                <label className="partner-field">
+                  <span>Telefone</span>
                   <input
                     type="tel"
-                    id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="(61) 3333-3333"
+                    autoComplete="tel"
                   />
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="whatsapp" className="block text-sm font-medium mb-1">
-                    WhatsApp
-                  </label>
+                <label className="partner-field">
+                  <span>WhatsApp</span>
                   <input
                     type="tel"
-                    id="whatsapp"
                     name="whatsapp"
                     value={formData.whatsapp}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="(61) 99999-9999"
                   />
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="instagram" className="block text-sm font-medium mb-1">
-                    Instagram
-                  </label>
+                <label className="partner-field">
+                  <span>Instagram</span>
                   <input
                     type="text"
-                    id="instagram"
                     name="instagram"
                     value={formData.instagram}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="@seu_estabelecimento"
                   />
-                </div>
+                </label>
 
-                <div>
-                  <label htmlFor="website" className="block text-sm font-medium mb-1">
-                    Website
-                  </label>
+                <label className="partner-field">
+                  <span>Website</span>
                   <input
                     type="url"
-                    id="website"
                     name="website"
                     value={formData.website}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder="https://..."
+                    autoComplete="url"
                   />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium mb-1">
-                  Descrição
                 </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder="Conte um pouco sobre seu estabelecimento..."
-                />
+
+                <label className="partner-field partner-field-full">
+                  <span>Descrição</span>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    disabled={isLoading}
+                    rows={5}
+                    placeholder="Conte um pouco sobre o estabelecimento, público, música e proposta da casa..."
+                  />
+                </label>
               </div>
 
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded p-3">
-                  <p className="text-sm text-red-800">{error}</p>
-                </div>
-              )}
+              {error ? <div className="notice danger partner-form-error">{error}</div> : null}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
-              >
-                Prosseguir para Revisão
-              </button>
+              <div className="partner-form-footer">
+                <small>
+                  * Campos obrigatórios. Você poderá revisar tudo antes de enviar a solicitação.
+                </small>
+                <button type="submit" disabled={isLoading}>
+                  Prosseguir para revisão
+                </button>
+              </div>
             </form>
           )}
 
           {step === 'confirm' && (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h2 className="font-semibold text-blue-900 mb-4">
-                  Confirme os dados do seu estabelecimento
-                </h2>
-
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Nome:</span>
-                    <strong>{formData.name}</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tipo:</span>
-                    <strong>{formData.type}</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Região:</span>
-                    <strong>{formData.region}</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Endereço:</span>
-                    <strong>{formData.address}</strong>
-                  </div>
-                  {formData.whatsapp && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">WhatsApp:</span>
-                      <strong>{formData.whatsapp}</strong>
-                    </div>
-                  )}
-                  {formData.instagram && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Instagram:</span>
-                      <strong>{formData.instagram}</strong>
-                    </div>
-                  )}
-                </div>
+            <form onSubmit={handleSubmit} className="partner-onboarding-form">
+              <div className="partner-review-header">
+                <span className="badge">Revisão</span>
+                <h2>Confira os dados antes de enviar</h2>
+                <p>Se algo estiver incorreto, volte e edite. Nenhuma cobrança acontece nesta etapa.</p>
               </div>
 
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded p-3">
-                  <p className="text-sm text-red-800">{error}</p>
-                </div>
-              )}
+              <div className="partner-review-grid">
+                <div><span>Nome</span><strong>{formData.name}</strong></div>
+                <div><span>Tipo</span><strong>{formData.type}</strong></div>
+                <div><span>Região</span><strong>{formData.region}</strong></div>
+                <div><span>Endereço</span><strong>{formData.address}</strong></div>
+                {formData.whatsapp ? <div><span>WhatsApp</span><strong>{formData.whatsapp}</strong></div> : null}
+                {formData.instagram ? <div><span>Instagram</span><strong>{formData.instagram}</strong></div> : null}
+                {formData.website ? <div><span>Website</span><strong>{formData.website}</strong></div> : null}
+                {formData.description ? (
+                  <div className="partner-review-full">
+                    <span>Descrição</span>
+                    <strong>{formData.description}</strong>
+                  </div>
+                ) : null}
+              </div>
 
-              <div className="flex gap-3">
+              {error ? <div className="notice danger partner-form-error">{error}</div> : null}
+
+              <div className="partner-confirm-actions">
                 <button
                   type="button"
+                  className="button ghost"
                   onClick={() => {
                     setStep('info');
                     setError(undefined);
                   }}
                   disabled={isLoading}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:bg-gray-100 font-medium"
                 >
-                  ← Voltar e Editar
+                  ← Voltar e editar
                 </button>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
-                >
-                  {isLoading ? 'Processando...' : 'Confirmar e Começar'}
+                <button type="submit" className="button" disabled={isLoading}>
+                  {isLoading ? 'Enviando…' : 'Confirmar solicitação'}
                 </button>
               </div>
             </form>
           )}
 
           {step === 'success' && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-              <h2 className="text-2xl font-semibold text-green-900 mb-2">
-                ✓ Bem-vindo ao Noite DF!
-              </h2>
-              <p className="text-green-800 mb-4">
-                Sua solicitação foi enviada. O Master Admin pode aprovar o vínculo na hora e liberar o painel do estabelecimento.
+            <div className="partner-success">
+              <span className="badge">Solicitação enviada</span>
+              <h2>Cadastro recebido ✓</h2>
+              <p>
+                O Master Admin pode aprovar o vínculo com o estabelecimento. Depois da aprovação,
+                o painel do parceiro fica disponível para escolher o plano e gerenciar a página.
               </p>
-              <p className="text-sm text-gray-600">
-                Depois da aprovação, abra o Painel do Parceiro para escolher o plano e concluir a assinatura.
-              </p>
+              <div className="partner-confirm-actions">
+                <Link className="button" href="/parceiro">Abrir painel do parceiro</Link>
+                <Link className="button ghost" href="/planos">Conhecer os planos</Link>
+              </div>
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
