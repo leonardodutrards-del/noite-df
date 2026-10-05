@@ -4,7 +4,8 @@ import { getPlan, isPaidPlan } from '@/lib/plans';
 import { syncSubscriptionResource } from '@/lib/mercado-pago';
 import { requireAuth } from '@/modules/auth/session';
 import { getEstablishmentEntitlements } from '@/modules/payments/entitlements';
-import { supabaseAdminRequest } from '@/lib/supabase-admin';
+import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
+import { updatePipeline } from '@/modules/operations/pipeline';
 
 export async function POST(request: NextRequest) {
   if (SHOWCASE_MODE || !PAYMENTS_ENABLED) {
@@ -98,6 +99,30 @@ export async function POST(request: NextRequest) {
 
     if (typeof data.init_point !== 'string' || !data.init_point) {
       return NextResponse.json({ error: 'Mercado Pago não retornou o endereço de pagamento.' }, { status: 502 });
+    }
+
+    try {
+      const currentPipeline = await supabaseAdminJson<Array<{ stage: string; visit_status: string | null }>>(
+        `partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=stage,visit_status&limit=1`
+      );
+      const currentStage = currentPipeline[0]?.stage;
+      const currentVisitStatus = currentPipeline[0]?.visit_status;
+      const alreadyFurtherAlong =
+        currentStage === 'trial' ||
+        currentStage === 'partner' ||
+        currentVisitStatus === 'trial' ||
+        currentVisitStatus === 'signed';
+
+      if (!alreadyFurtherAlong) {
+        await updatePipeline({
+          establishmentId,
+          stage: 'replied',
+          visitStatus: 'interested',
+          contactChannel: 'mercado_pago_checkout',
+        });
+      }
+    } catch (pipelineError) {
+      console.error('subscription-checkout-pipeline', pipelineError);
     }
 
     try {
