@@ -162,24 +162,29 @@ export default function AdminPage() {
 
   useEffect(() => {
     let cancelled = false;
-    const refreshAccountIntegrity = () => {
-      fetch('/api/admin/account-integrity', { cache: 'no-store' })
-        .then(async (response) => {
-          if (!response.ok) throw new Error('ACCOUNT_INTEGRITY_REFRESH_FAILED');
-          return response.json();
-        })
-        .then((payload) => {
-          if (!cancelled && payload?.integrity) {
-            setAccountIntegrity(payload.integrity);
-            setAccountIntegrityError(false);
-          }
-        })
-        .catch(() => {
-          if (!cancelled) {
-            setAccountIntegrity(null);
-            setAccountIntegrityError(true);
-          }
-        });
+    let inFlight = false;
+
+    const refreshAccountIntegrity = async () => {
+      if (inFlight) return;
+      inFlight = true;
+
+      try {
+        const response = await fetch('/api/admin/account-integrity', { cache: 'no-store' });
+        if (!response.ok) throw new Error('ACCOUNT_INTEGRITY_REFRESH_FAILED');
+
+        const payload = await response.json();
+        if (!cancelled && payload?.integrity) {
+          setAccountIntegrity(payload.integrity);
+          setAccountIntegrityError(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setAccountIntegrity(null);
+          setAccountIntegrityError(true);
+        }
+      } finally {
+        inFlight = false;
+      }
     };
 
     const timer = window.setInterval(refreshAccountIntegrity, 60000);
