@@ -52,12 +52,17 @@ export default function PaymentReturn() {
   useEffect(() => {
     if (state === 'active') return;
 
-    void refreshBilling();
+    const initialCheck = window.setTimeout(() => {
+      void refreshBilling();
+    }, 0);
     const timer = window.setInterval(() => {
       void refreshBilling();
     }, 5000);
 
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearTimeout(initialCheck);
+      window.clearInterval(timer);
+    };
   }, [refreshBilling, state]);
 
   const title =
