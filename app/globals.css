@@ -161,4 +161,129 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .chip-grid button:focus-visible, .radar-selection button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .radar-selection { margin: 12px 0 0; color: var(--muted); }
 .radar-selection button { margin-left: 8px; border: 0; background: none; color: var(--accent); font-weight: 700; text-decoration: underline; cursor: pointer; }
+
 #lugares { scroll-margin-top: 20px; }
+
+/* Partner onboarding uses the native Noite DF design system. */
+.partner-onboarding-page { padding-bottom: 64px; }
+.partner-onboarding-shell { max-width: 920px; margin: 28px auto 0; }
+.partner-onboarding-heading { max-width: 760px; margin-bottom: 22px; }
+.partner-onboarding-heading h1 {
+  font-size: clamp(2.6rem, 7vw, 5.6rem);
+  line-height: .95;
+  margin: 18px 0 14px;
+}
+.partner-onboarding-heading p { max-width: 680px; font-size: 17px; }
+.partner-stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.partner-stepper span {
+  padding: 8px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.partner-stepper span.active {
+  color: #111;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.partner-stepper span.done {
+  color: var(--text);
+  border-color: rgba(255,176,32,.4);
+  background: rgba(255,176,32,.1);
+}
+.partner-onboarding-card {
+  padding: clamp(20px, 4vw, 32px);
+  border-radius: 24px;
+}
+.partner-onboarding-form { display: grid; gap: 22px; }
+.partner-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.partner-field { display: grid; gap: 8px; min-width: 0; }
+.partner-field > span {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+}
+.partner-field input,
+.partner-field select,
+.partner-field textarea {
+  width: 100%;
+  min-width: 0;
+  background: rgba(11,11,18,.85);
+  border-color: rgba(255,255,255,.14);
+}
+.partner-field textarea { min-height: 132px; }
+.partner-field-full { grid-column: 1 / -1; }
+.partner-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.partner-form-footer small { color: var(--muted); max-width: 520px; line-height: 1.5; }
+.partner-form-footer button { min-width: 220px; min-height: 48px; }
+.partner-form-error { margin: 0; border-color: rgba(255,77,109,.35); }
+.partner-review-header h2,
+.partner-success h2 { margin-bottom: 8px; }
+.partner-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.partner-review-grid > div {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  min-width: 0;
+}
+.partner-review-grid span { color: var(--muted); font-size: 12px; }
+.partner-review-grid strong { overflow-wrap: anywhere; }
+.partner-review-full { grid-column: 1 / -1; }
+.partner-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.partner-confirm-actions .button { min-width: 180px; }
+.partner-success { text-align: center; padding: 14px 4px 4px; }
+.partner-success p { max-width: 620px; margin-left: auto; margin-right: auto; }
+.partner-success .partner-confirm-actions { justify-content: center; margin-top: 20px; }
+
+@media(max-width:700px) {
+  .partner-onboarding-page { padding-left: 16px; padding-right: 16px; }
+  .partner-onboarding-shell { margin-top: 18px; }
+  .partner-onboarding-heading h1 {
+    font-size: clamp(2.35rem, 12vw, 3.8rem);
+    letter-spacing: -1.4px;
+  }
+  .partner-onboarding-heading p { font-size: 15px; }
+  .partner-form-grid,
+  .partner-review-grid { grid-template-columns: 1fr; }
+  .partner-field-full,
+  .partner-review-full { grid-column: auto; }
+  .partner-form-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .partner-form-footer button,
+  .partner-confirm-actions .button { width: 100%; min-width: 0; }
+  .partner-confirm-actions { flex-direction: column-reverse; }
+}
+
