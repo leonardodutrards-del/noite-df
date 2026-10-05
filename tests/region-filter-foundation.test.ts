@@ -5,7 +5,7 @@ import {
   getRegionMetaByName,
   getRegionOptionsWithCounts,
 } from '@/lib/regions';
-import { matchesNightIntent } from '@/lib/night-intents';
+import { intentOptions, matchesNightIntent } from '@/lib/night-intents';
 import { REGION_SLUG_MAP } from '@/lib/curated-routes';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -49,7 +49,7 @@ describe('Base de regiões e filtros', () => {
     expect(hub).toContain('Tipo de lugar');
     expect(hub).toContain('Todos os estilos musicais');
     expect(hub).toContain('O que você quer hoje?');
-    expect(hub).toContain('Evento hoje');
+    expect(intentOptions.some((option) => option.label.includes('Evento hoje'))).toBe(true);
     expect(css).toContain('.filter-panel');
     expect(css).toContain('.intent-grid');
   });
