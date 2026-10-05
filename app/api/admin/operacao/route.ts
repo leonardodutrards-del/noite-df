@@ -89,9 +89,7 @@ export async function PATCH(request: NextRequest) {
       trialPlanCode:
         body.trialPlanCode === 'pro' || body.trialPlanCode === 'premium' || body.trialPlanCode === 'enterprise'
           ? body.trialPlanCode
-          : visitStatus === 'trial'
-            ? 'pro'
-            : undefined,
+          : undefined,
       subscriptionConsent: body.subscriptionConsent === true,
     });
     return NextResponse.json({ pipeline });
