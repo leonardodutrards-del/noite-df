@@ -63,6 +63,7 @@ export default function AdminPage() {
   const [claims, setClaims] = useState<PartnerClaim[]>([]);
   const [overview, setOverview] = useState<MasterOverview | null>(null);
   const [accountIntegrity, setAccountIntegrity] = useState<AccountIntegrity | null>(null);
+  const [accountIntegrityError, setAccountIntegrityError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
@@ -117,9 +118,15 @@ export default function AdminPage() {
           const d = await audRes.json();
           setAuditLogs(d.auditLogs || []);
         }
-        if (accountIntegrityRes.ok && isMounted) {
-          const d = await accountIntegrityRes.json();
-          setAccountIntegrity(d.integrity || null);
+        if (isMounted) {
+          if (accountIntegrityRes.ok) {
+            const d = await accountIntegrityRes.json();
+            setAccountIntegrity(d.integrity || null);
+            setAccountIntegrityError(false);
+          } else {
+            setAccountIntegrity(null);
+            setAccountIntegrityError(true);
+          }
         }
       } catch {
         if (isMounted) router.push('/login?redirect=/admin');
@@ -157,11 +164,22 @@ export default function AdminPage() {
     let cancelled = false;
     const refreshAccountIntegrity = () => {
       fetch('/api/admin/account-integrity', { cache: 'no-store' })
-        .then(async (response) => response.ok ? response.json() : null)
-        .then((payload) => {
-          if (!cancelled && payload?.integrity) setAccountIntegrity(payload.integrity);
+        .then(async (response) => {
+          if (!response.ok) throw new Error('ACCOUNT_INTEGRITY_REFRESH_FAILED');
+          return response.json();
         })
-        .catch(() => undefined);
+        .then((payload) => {
+          if (!cancelled && payload?.integrity) {
+            setAccountIntegrity(payload.integrity);
+            setAccountIntegrityError(false);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setAccountIntegrity(null);
+            setAccountIntegrityError(true);
+          }
+        });
     };
 
     const timer = window.setInterval(refreshAccountIntegrity, 60000);
@@ -383,21 +401,41 @@ export default function AdminPage() {
           <div>
             <span className="badge">Integridade das contas</span>
             <h2 style={{ margin: '10px 0 6px' }}>
-              {accountIntegrity?.healthy ? 'Contas sincronizadas ✓' : 'Verificação de contas'}
+              {accountIntegrityError
+                ? 'Verificação indisponível'
+                : accountIntegrity?.healthy
+                ? 'Contas sincronizadas ✓'
+                : 'Verificação de contas'}
             </h2>
             <p style={{ margin: 0, color: 'var(--muted)' }}>
               Confere Supabase Auth x profiles e alerta sobre contas órfãs ou duplicadas.
             </p>
           </div>
           <span className="tag" style={{
-            color: accountIntegrity?.healthy ? '#4ade80' : 'var(--accent)',
-            borderColor: accountIntegrity?.healthy ? 'rgba(74,222,128,.35)' : 'var(--border)'
+            color: accountIntegrityError
+              ? '#ff9d9d'
+              : accountIntegrity?.healthy
+              ? '#4ade80'
+              : 'var(--accent)',
+            borderColor: accountIntegrityError
+              ? 'rgba(255,77,109,.35)'
+              : accountIntegrity?.healthy
+              ? 'rgba(74,222,128,.35)'
+              : 'var(--border)'
           }}>
-            {accountIntegrity ? (accountIntegrity.healthy ? 'Saudável' : 'Requer atenção') : 'Verificando…'}
+            {accountIntegrityError
+              ? 'Indisponível'
+              : accountIntegrity
+              ? (accountIntegrity.healthy ? 'Saudável' : 'Requer atenção')
+              : 'Verificando…'}
           </span>
         </div>
 
-        {accountIntegrity ? (
+        {accountIntegrityError ? (
+          <p className="notice" style={{ marginTop: 16, marginBottom: 0 }}>
+            Não foi possível atualizar a integridade das contas. A última leitura foi descartada para evitar um falso estado saudável.
+          </p>
+        ) : accountIntegrity ? (
           <div className="metrics-grid" style={{ marginTop: 16 }}>
             <article><span>Auth</span><strong>{accountIntegrity.authUsers}</strong></article>
             <article><span>Profiles</span><strong>{accountIntegrity.profiles}</strong></article>
