@@ -7,7 +7,7 @@ export default function PlansPage() {
   const plans = Object.values(PLAN_CATALOG);
   return (
     <main className="container">
-      <header className="topbar">
+      <header className="topbar sales-topbar">
         <Link className="brand" href="/">Noite DF</Link>
         <nav>
           <Link href="/parceiros/sobradinho">Apresentação Sobradinho</Link>
