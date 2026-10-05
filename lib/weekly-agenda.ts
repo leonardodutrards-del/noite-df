@@ -10,8 +10,9 @@ export function getWeeklyAgendaWindow(now = new Date()) {
   const value = (type: string) => parts.find((part) => part.type === type)?.value ?? '';
   const localNoon = new Date(`${value('year')}-${value('month')}-${value('day')}T12:00:00Z`);
   const weekday = localNoon.getUTCDay();
-  // On Sunday show the coming week; on all other days show the current week.
-  localNoon.setUTCDate(localNoon.getUTCDate() + (weekday === 0 ? 1 : 1 - weekday));
+  // Always keep the current Monday-Sunday window, including the remaining hours of Sunday.
+  const offsetToMonday = weekday === 0 ? -6 : 1 - weekday;
+  localNoon.setUTCDate(localNoon.getUTCDate() + offsetToMonday);
   const monday = localNoon.toISOString().slice(0, 10);
   localNoon.setUTCDate(localNoon.getUTCDate() + 7);
   const nextMonday = localNoon.toISOString().slice(0, 10);
