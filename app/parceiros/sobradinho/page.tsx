@@ -27,7 +27,7 @@ export default function SobradinhoPartnersPage() {
 
   return (
     <main className="container">
-      <header className="topbar">
+      <header className="topbar sales-topbar">
         <Link className="brand" href="/">Noite DF</Link>
         <nav>
           <Link href="/planos">Planos</Link>
