@@ -114,7 +114,38 @@ export default function OperationPage() {
   }
 
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    fetch('/api/admin/operacao', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) {
+          if (!cancelled) {
+            setMessage(response.status === 401 || response.status === 403 ? 'Acesso restrito ao Master Admin.' : 'Falha ao carregar operação.');
+          }
+          return null;
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        if (cancelled || !payload) return;
+        const nextItems = (payload.items ?? []) as Item[];
+        setItems(nextItems);
+        setDrafts((current) => {
+          const next = { ...current };
+          for (const item of nextItems) {
+            if (!next[item.establishment.id]) {
+              next[item.establishment.id] = {
+                notes: item.pipeline.visitNotes ?? '',
+                followUp: toLocalInput(item.pipeline.nextFollowUpAt),
+              };
+            }
+          }
+          return next;
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setMessage('Falha ao carregar operação.');
+      });
+    return () => { cancelled = true; };
   }, []);
 
   const regionItems = useMemo(
@@ -122,12 +153,10 @@ export default function OperationPage() {
     [items, regionFilter]
   );
 
-  useEffect(() => {
-    if (!regionItems.length) return;
-    if (!activationEstablishmentId || !regionItems.some((item) => item.establishment.id === activationEstablishmentId)) {
-      setActivationEstablishmentId(regionItems[0].establishment.id);
-    }
-  }, [activationEstablishmentId, regionItems]);
+  const effectiveActivationEstablishmentId =
+    regionItems.some((item) => item.establishment.id === activationEstablishmentId)
+      ? activationEstablishmentId
+      : regionItems[0]?.establishment.id ?? '';
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -219,7 +248,7 @@ export default function OperationPage() {
   }
 
   async function activatePartner() {
-    if (!activationEmail.trim() || !activationEstablishmentId) {
+    if (!activationEmail.trim() || !effectiveActivationEstablishmentId) {
       setMessage('Selecione o estabelecimento e informe o e-mail usado pelo dono no cadastro.');
       return;
     }
@@ -232,7 +261,7 @@ export default function OperationPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           email: activationEmail.trim(),
-          establishmentId: activationEstablishmentId,
+          establishmentId: effectiveActivationEstablishmentId,
         }),
       });
       const payload = await response.json().catch(() => ({}));
@@ -279,7 +308,7 @@ export default function OperationPage() {
           <label>
             Estabelecimento
             <select
-              value={activationEstablishmentId}
+              value={effectiveActivationEstablishmentId}
               onChange={(e) => setActivationEstablishmentId(e.target.value)}
               style={{ width: '100%', display: 'block', marginTop: 6 }}
             >
