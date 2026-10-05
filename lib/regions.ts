@@ -59,7 +59,20 @@ export function getRegionOptionsWithCounts(
     counts.set(place.region, (counts.get(place.region) ?? 0) + 1);
   }
 
-  return REGION_CATALOG
+  const knownNames = new Set(REGION_CATALOG.map((region) => region.name));
+  const known = REGION_CATALOG
     .map((region) => ({ ...region, count: counts.get(region.name) ?? 0 }))
     .filter((region) => region.count > 0);
+
+  const fallback = Array.from(counts.entries())
+    .filter(([name]) => !knownNames.has(name))
+    .map(([name, count]) => ({
+      slug: normalizeRegionName(name).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
+      name,
+      scope: normalizeRegionName(name).includes('entorno') ? ('entorno' as const) : ('df' as const),
+      count,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+
+  return [...known, ...fallback];
 }
