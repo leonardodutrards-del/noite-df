@@ -24,6 +24,8 @@ const REGIONS = [
   'Ceilândia',
   'Samambaia',
   'Santa Maria',
+  'Sobradinho',
+  'Planaltina',
   'Brasília',
   'Outro',
 ];
@@ -78,35 +80,27 @@ export default function BecomePartnerPage() {
       setError(undefined);
 
       try {
-        const token = localStorage.getItem('auth_token');
-        if (!token) {
-          throw new Error('Autenticação necessária.');
-        }
-
         const response = await fetch('/api/parceiro/claim-establishment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         });
+
+        if (response.status === 401) {
+          router.push('/login?redirect=/parceiro/onboarding');
+          return;
+        }
 
         if (!response.ok) {
           const errorData = await response.json() as { error?: string };
           throw new Error(errorData.error || 'Erro ao criar estabelecimento');
         }
 
-        const data = await response.json() as { token?: string };
-
-        if (data.token) {
-          localStorage.setItem('auth_token', data.token);
-        }
+        await response.json();
 
         setStep('success');
-        setTimeout(() => {
-          router.push('/parceiro');
-        }, 2000);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao criar estabelecimento');
       } finally {
@@ -376,10 +370,10 @@ export default function BecomePartnerPage() {
                 ✓ Bem-vindo ao Noite DF!
               </h2>
               <p className="text-green-800 mb-4">
-                Seu estabelecimento foi cadastrado com sucesso. Você será redirecionado para o dashboard.
+                Sua solicitação foi enviada. O Master Admin pode aprovar o vínculo na hora e liberar o painel do estabelecimento.
               </p>
               <p className="text-sm text-gray-600">
-                Redirecionando em 2 segundos...
+                Depois da aprovação, abra o Painel do Parceiro para escolher o plano e concluir a assinatura.
               </p>
             </div>
           )}
