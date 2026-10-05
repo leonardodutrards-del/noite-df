@@ -122,6 +122,13 @@ export default function OperationPage() {
     [items, regionFilter]
   );
 
+  useEffect(() => {
+    if (!regionItems.length) return;
+    if (!activationEstablishmentId || !regionItems.some((item) => item.establishment.id === activationEstablishmentId)) {
+      setActivationEstablishmentId(regionItems[0].establishment.id);
+    }
+  }, [activationEstablishmentId, regionItems]);
+
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return regionItems.filter((item) => {
@@ -189,8 +196,26 @@ export default function OperationPage() {
   }
 
   async function saveVisitDetails(item: Item) {
-    const status = item.pipeline.visitStatus ?? 'not_visited';
-    await updateVisit(item, status);
+    const draft = drafts[item.establishment.id] ?? { notes: '', followUp: '' };
+    setMessage('');
+    const response = await fetch('/api/admin/operacao', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        establishmentId: item.establishment.id,
+        stage: item.pipeline.stage,
+        visitStatus: item.pipeline.visitStatus ?? 'not_visited',
+        visitNotes: draft.notes,
+        nextFollowUpAt: draft.followUp ? new Date(draft.followUp).toISOString() : null,
+      }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      setMessage(payload.error || 'Não foi possível salvar os detalhes da visita.');
+      return;
+    }
+    setMessage(`${item.establishment.name}: observações salvas.`);
+    await load();
   }
 
   async function activatePartner() {
