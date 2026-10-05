@@ -41,6 +41,17 @@ type PartnerClaim = {
   createdAt: string;
 };
 
+type AccountIntegrity = {
+  generatedAt: string;
+  authUsers: number;
+  profiles: number;
+  linkedProfiles: number;
+  authWithoutProfile: number;
+  profilesWithoutAuth: number;
+  duplicateEmailGroups: number;
+  healthy: boolean;
+};
+
 export default function AdminPage() {
   const router = useRouter();
 
@@ -51,6 +62,7 @@ export default function AdminPage() {
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   const [claims, setClaims] = useState<PartnerClaim[]>([]);
   const [overview, setOverview] = useState<MasterOverview | null>(null);
+  const [accountIntegrity, setAccountIntegrity] = useState<AccountIntegrity | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
@@ -76,12 +88,13 @@ export default function AdminPage() {
         }
         setUser(authData.user);
 
-        const [overviewRes, estRes, claimsRes, payRes, audRes] = await Promise.all([
+        const [overviewRes, estRes, claimsRes, payRes, audRes, accountIntegrityRes] = await Promise.all([
           fetch('/api/admin/overview'),
           fetch('/api/admin/establishments'),
           fetch('/api/admin/claims'),
           fetch('/api/admin/payments'),
           fetch('/api/admin/audit-log'),
+          fetch('/api/admin/account-integrity'),
         ]);
 
         if (overviewRes.ok && isMounted) {
@@ -103,6 +116,10 @@ export default function AdminPage() {
         if (audRes.ok && isMounted) {
           const d = await audRes.json();
           setAuditLogs(d.auditLogs || []);
+        }
+        if (accountIntegrityRes.ok && isMounted) {
+          const d = await accountIntegrityRes.json();
+          setAccountIntegrity(d.integrity || null);
         }
       } catch {
         if (isMounted) router.push('/login?redirect=/admin');
@@ -130,6 +147,24 @@ export default function AdminPage() {
     };
 
     const timer = window.setInterval(refreshOverview, 15000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const refreshAccountIntegrity = () => {
+      fetch('/api/admin/account-integrity', { cache: 'no-store' })
+        .then(async (response) => response.ok ? response.json() : null)
+        .then((payload) => {
+          if (!cancelled && payload?.integrity) setAccountIntegrity(payload.integrity);
+        })
+        .catch(() => undefined);
+    };
+
+    const timer = window.setInterval(refreshAccountIntegrity, 60000);
     return () => {
       cancelled = true;
       window.clearInterval(timer);
@@ -341,6 +376,37 @@ export default function AdminPage() {
           Acesso irrestrito a todos os estabelecimentos, pagamentos, suspensões/bloqueios, reembolsos e trilha de auditoria.
         </p>
         <small style={{ color: 'var(--muted)' }}>Métricas operacionais atualizadas automaticamente a cada 15 segundos.</small>
+      </section>
+
+      <section className="panel" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div>
+            <span className="badge">Integridade das contas</span>
+            <h2 style={{ margin: '10px 0 6px' }}>
+              {accountIntegrity?.healthy ? 'Contas sincronizadas ✓' : 'Verificação de contas'}
+            </h2>
+            <p style={{ margin: 0, color: 'var(--muted)' }}>
+              Confere Supabase Auth x profiles e alerta sobre contas órfãs ou duplicadas.
+            </p>
+          </div>
+          <span className="tag" style={{
+            color: accountIntegrity?.healthy ? '#4ade80' : 'var(--accent)',
+            borderColor: accountIntegrity?.healthy ? 'rgba(74,222,128,.35)' : 'var(--border)'
+          }}>
+            {accountIntegrity ? (accountIntegrity.healthy ? 'Saudável' : 'Requer atenção') : 'Verificando…'}
+          </span>
+        </div>
+
+        {accountIntegrity ? (
+          <div className="metrics-grid" style={{ marginTop: 16 }}>
+            <article><span>Auth</span><strong>{accountIntegrity.authUsers}</strong></article>
+            <article><span>Profiles</span><strong>{accountIntegrity.profiles}</strong></article>
+            <article><span>Vinculados</span><strong>{accountIntegrity.linkedProfiles}</strong></article>
+            <article><span>Auth sem profile</span><strong>{accountIntegrity.authWithoutProfile}</strong></article>
+            <article><span>Profile sem Auth</span><strong>{accountIntegrity.profilesWithoutAuth}</strong></article>
+            <article><span>E-mails duplicados</span><strong>{accountIntegrity.duplicateEmailGroups}</strong></article>
+          </div>
+        ) : null}
       </section>
 
       {feedback && (
