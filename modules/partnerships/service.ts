@@ -67,7 +67,10 @@ export class PartnershipService {
       throw new Error('FORBIDDEN_VISITOR_REQUIRED');
     }
 
-    const establishmentId = slugify(input.name);
+    const establishmentId = input.establishmentId?.trim() || slugify(input.name);
+    if (input.establishmentId && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(establishmentId)) {
+      throw new Error('CLAIM_INVALID_ESTABLISHMENT');
+    }
     const now = new Date().toISOString();
     const evidence = {
       submittedName: input.name,
@@ -96,10 +99,19 @@ export class PartnershipService {
     }
 
     const existing = await rest(
-      `establishments?id=eq.${encodeURIComponent(establishmentId)}&select=id`
+      `establishments?id=eq.${encodeURIComponent(establishmentId)}&select=id,name,region,address,owner_managed`
     );
     if (!existing.ok) throw new Error('CLAIM_ESTABLISHMENT_LOOKUP_FAILED');
-    const existingRows = (await existing.json()) as Array<{ id: string }>;
+    const existingRows = (await existing.json()) as Array<{ id: string; name: string; region: string; address: string; owner_managed: boolean }>;
+
+    if (input.establishmentId && existingRows.length === 0) throw new Error('CLAIM_INVALID_ESTABLISHMENT');
+    if (existingRows[0]?.owner_managed) throw new Error('CLAIM_ALREADY_MANAGED');
+    if (input.establishmentId && existingRows.length > 0) {
+      const place = existingRows[0];
+      if (place.name !== input.name || place.region !== input.region || place.address !== input.address) {
+        throw new Error('CLAIM_INVALID_ESTABLISHMENT');
+      }
+    }
 
     if (existingRows.length === 0) {
       const created = await rest('establishments', {
