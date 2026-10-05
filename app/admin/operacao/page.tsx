@@ -38,6 +38,51 @@ type Item = {
 
 type Draft = { notes: string; followUp: string };
 
+type CommercialHealth = {
+  generatedAt: string;
+  readiness: {
+    paymentsEnabled: boolean;
+    showcaseDisabled: boolean;
+    mercadoPagoConfigured: boolean;
+    webhookSecretConfigured: boolean;
+    productionUrlConfigured: boolean;
+    environmentReady: boolean;
+  };
+  firstPayment: {
+    state: 'ready' | 'checkout_started' | 'webhook_received' | 'active';
+    checkoutEvents: number;
+    webhookEvents: number;
+    subscriptionAccounts: number;
+    activeSubscriptions: number;
+    latestCheckoutAt?: string;
+    latestWebhookAt?: string;
+    latestSubscriptionAt?: string;
+  };
+  sobradinho: {
+    establishments: number;
+    visited: number;
+    interested: number;
+    followUps: number;
+    dueFollowUps: number;
+    trials: number;
+    signed: number;
+    conversionPercent: number;
+  };
+  dueFollowUps: Array<{
+    establishmentId: string;
+    establishmentName: string;
+    nextFollowUpAt: string;
+    visitNotes?: string;
+  }>;
+  recentActivity: Array<{
+    establishmentId: string;
+    establishmentName: string;
+    visitStatus: string;
+    stage: string;
+    updatedAt: string;
+  }>;
+};
+
 const stageLabels: Record<Stage, string> = {
   uncontacted: 'Não contatado',
   contacted: 'Contato enviado',
@@ -76,6 +121,20 @@ function toLocalInput(value?: string) {
   return local.toISOString().slice(0, 16);
 }
 
+function formatDateTime(value?: string) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleString('pt-BR');
+}
+
+const paymentStateLabels: Record<CommercialHealth['firstPayment']['state'], string> = {
+  ready: 'Pronto para o primeiro checkout',
+  checkout_started: 'Checkout iniciado',
+  webhook_received: 'Webhook recebido',
+  active: 'Primeira assinatura ativa',
+};
+
 export default function OperationPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [query, setQuery] = useState('');
@@ -85,6 +144,8 @@ export default function OperationPage() {
   const [activationEmail, setActivationEmail] = useState('');
   const [activationEstablishmentId, setActivationEstablishmentId] = useState('');
   const [activationBusy, setActivationBusy] = useState(false);
+  const [health, setHealth] = useState<CommercialHealth | null>(null);
+  const [followUpOnly, setFollowUpOnly] = useState(false);
 
   async function load() {
     const response = await fetch('/api/admin/operacao', { cache: 'no-store' });
@@ -148,6 +209,25 @@ export default function OperationPage() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    const refresh = () => {
+      fetch('/api/admin/commercial-health', { cache: 'no-store' })
+        .then(async (response) => response.ok ? response.json() : null)
+        .then((payload) => {
+          if (!cancelled && payload?.health) setHealth(payload.health);
+        })
+        .catch(() => undefined);
+    };
+
+    refresh();
+    const timer = window.setInterval(refresh, 15000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
   const regionItems = useMemo(
     () => regionFilter === 'todas' ? items : items.filter((item) => item.establishment.region === regionFilter),
     [items, regionFilter]
@@ -158,15 +238,21 @@ export default function OperationPage() {
       ? activationEstablishmentId
       : regionItems[0]?.establishment.id ?? '';
 
+  const dueFollowUpIds = useMemo(
+    () => new Set(health?.dueFollowUps.map((item) => item.establishmentId) ?? []),
+    [health]
+  );
+
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return regionItems.filter((item) => {
+      if (followUpOnly && !dueFollowUpIds.has(item.establishment.id)) return false;
       if (!normalized) return true;
       return `${item.establishment.name} ${item.establishment.region} ${item.establishment.address ?? ''}`
         .toLowerCase()
         .includes(normalized);
     });
-  }, [regionItems, query]);
+  }, [dueFollowUpIds, followUpOnly, regionItems, query]);
 
   const summary = useMemo(() => {
     const counts = Object.fromEntries(Object.keys(stageLabels).map((key) => [key, 0])) as Record<Stage, number>;
@@ -296,6 +382,75 @@ export default function OperationPage() {
         <span className="badge">Operação comercial</span>
         <h1>CRM de campo · {regionFilter === 'todas' ? 'Todas as regiões' : regionFilter}</h1>
         <p>Visita, conversa com o dono, interesse, retorno, teste e assinatura em uma única tela.</p>
+      </section>
+
+      <section className="panel" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div>
+            <span className="badge">Primeira assinatura</span>
+            <h2 style={{ marginBottom: 6 }}>{health ? paymentStateLabels[health.firstPayment.state] : 'Verificando pagamentos…'}</h2>
+            <p style={{ color: 'var(--muted)', marginTop: 0 }}>
+              Semáforo técnico atualizado automaticamente a cada 15 segundos.
+            </p>
+          </div>
+          {health ? (
+            <span className="tag" style={{ fontWeight: 800 }}>
+              Ambiente {health.readiness.environmentReady ? 'pronto' : 'requer atenção'}
+            </span>
+          ) : null}
+        </div>
+
+        {health ? (
+          <>
+            <div className="metrics-grid" style={{ marginTop: 16, marginBottom: 16 }}>
+              <article><span>Pagamentos habilitados</span><strong>{health.readiness.paymentsEnabled && health.readiness.showcaseDisabled ? '✓' : '—'}</strong></article>
+              <article><span>Mercado Pago</span><strong>{health.readiness.mercadoPagoConfigured ? '✓' : '—'}</strong></article>
+              <article><span>Webhook</span><strong>{health.readiness.webhookSecretConfigured ? '✓' : '—'}</strong></article>
+              <article><span>Checkout</span><strong>{health.firstPayment.checkoutEvents}</strong></article>
+              <article><span>Webhooks recebidos</span><strong>{health.firstPayment.webhookEvents}</strong></article>
+              <article><span>Assinaturas ativas</span><strong>{health.firstPayment.activeSubscriptions}</strong></article>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+              <div className="card">
+                <strong>Sobradinho</strong>
+                <p style={{ marginBottom: 4 }}>
+                  {health.sobradinho.visited}/{health.sobradinho.establishments} visitados · {health.sobradinho.signed} assinou(aram)
+                </p>
+                <small style={{ color: 'var(--muted)' }}>Conversão visita → assinatura: {health.sobradinho.conversionPercent}%</small>
+              </div>
+              <div className="card">
+                <strong>Retornos vencidos</strong>
+                <p style={{ marginBottom: 4 }}>{health.sobradinho.dueFollowUps}</p>
+                <button type="button" className="button ghost" onClick={() => setFollowUpOnly((value) => !value)}>
+                  {followUpOnly ? 'Mostrar todos' : 'Mostrar só retornos'}
+                </button>
+              </div>
+              <div className="card">
+                <strong>Última movimentação financeira</strong>
+                <p style={{ marginBottom: 4 }}>
+                  Checkout: {formatDateTime(health.firstPayment.latestCheckoutAt)}
+                </p>
+                <small style={{ color: 'var(--muted)' }}>
+                  Webhook: {formatDateTime(health.firstPayment.latestWebhookAt)}
+                </small>
+              </div>
+            </div>
+
+            {health.dueFollowUps.length ? (
+              <div style={{ marginTop: 16 }}>
+                <strong>Retornos que já precisam de ação</strong>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                  {health.dueFollowUps.slice(0, 6).map((followUp) => (
+                    <span className="tag" key={followUp.establishmentId}>
+                      {followUp.establishmentName} · {formatDateTime(followUp.nextFollowUpAt)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </>
+        ) : null}
       </section>
 
       <section className="panel" style={{ marginBottom: 24 }}>

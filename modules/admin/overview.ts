@@ -8,11 +8,16 @@ export type MasterOverview = {
   activeSubscriptions: number;
   monthlyRecurringRevenueCents: number;
   interactions30d: number;
+  interactions24h: number;
   views30d: number;
+  views24h: number;
   whatsappClicks30d: number;
+  whatsappClicks24h: number;
   mapClicks30d: number;
   instagramClicks30d: number;
   favorites30d: number;
+  checkoutStarts30d: number;
+  trialStarts30d: number;
   auditEvents: number;
 };
 
@@ -69,16 +74,22 @@ export async function getMasterOverview(): Promise<MasterOverview> {
       activeSubscriptions: 0,
       monthlyRecurringRevenueCents: 0,
       interactions30d: 0,
+      interactions24h: 0,
       views30d: 0,
+      views24h: 0,
       whatsappClicks30d: 0,
+      whatsappClicks24h: 0,
       mapClicks30d: 0,
       instagramClicks30d: 0,
       favorites30d: 0,
+      checkoutStarts30d: 0,
+      trialStarts30d: 0,
       auditEvents: 0,
     };
   }
 
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const since24h = Date.now() - 24 * 60 * 60 * 1000;
 
   const [
     users,
@@ -100,7 +111,7 @@ export async function getMasterOverview(): Promise<MasterOverview> {
     countRows('audit_log'),
     request('subscription_accounts?status=eq.active&select=amount_cents'),
     request(
-      `interactions?created_at=gte.${encodeURIComponent(since)}&select=action`
+      `interactions?created_at=gte.${encodeURIComponent(since)}&select=action,created_at`
     ),
   ]);
 
@@ -108,20 +119,35 @@ export async function getMasterOverview(): Promise<MasterOverview> {
   if (!interactionsResponse.ok) throw new Error('MASTER_OVERVIEW_INTERACTIONS_FAILED');
 
   const subscriptions = (await subscriptionResponse.json()) as Array<{ amount_cents?: number }>;
-  const interactions = (await interactionsResponse.json()) as Array<{ action: string }>;
+  const interactions = (await interactionsResponse.json()) as Array<{ action: string; created_at: string }>;
 
+  let interactions24h = 0;
   let views30d = 0;
+  let views24h = 0;
   let whatsappClicks30d = 0;
+  let whatsappClicks24h = 0;
   let mapClicks30d = 0;
   let instagramClicks30d = 0;
   let favorites30d = 0;
+  let checkoutStarts30d = 0;
+  let trialStarts30d = 0;
 
   for (const row of interactions) {
-    if (row.action === 'view') views30d += 1;
-    if (row.action === 'whatsapp_click') whatsappClicks30d += 1;
+    const is24h = Date.parse(row.created_at) >= since24h;
+    if (is24h) interactions24h += 1;
+    if (row.action === 'view') {
+      views30d += 1;
+      if (is24h) views24h += 1;
+    }
+    if (row.action === 'whatsapp_click') {
+      whatsappClicks30d += 1;
+      if (is24h) whatsappClicks24h += 1;
+    }
     if (row.action === 'map_click') mapClicks30d += 1;
     if (row.action === 'instagram_click') instagramClicks30d += 1;
     if (row.action === 'save') favorites30d += 1;
+    if (row.action === 'subscription_checkout') checkoutStarts30d += 1;
+    if (row.action === 'trial_start') trialStarts30d += 1;
   }
 
   return {
@@ -137,11 +163,16 @@ export async function getMasterOverview(): Promise<MasterOverview> {
       0
     ),
     interactions30d: interactions.length,
+    interactions24h,
     views30d,
+    views24h,
     whatsappClicks30d,
+    whatsappClicks24h,
     mapClicks30d,
     instagramClicks30d,
     favorites30d,
+    checkoutStarts30d,
+    trialStarts30d,
     auditEvents,
   };
 }

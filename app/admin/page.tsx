@@ -17,11 +17,16 @@ type MasterOverview = {
   activeSubscriptions: number;
   monthlyRecurringRevenueCents: number;
   interactions30d: number;
+  interactions24h: number;
   views30d: number;
+  views24h: number;
   whatsappClicks30d: number;
+  whatsappClicks24h: number;
   mapClicks30d: number;
   instagramClicks30d: number;
   favorites30d: number;
+  checkoutStarts30d: number;
+  trialStarts30d: number;
   auditEvents: number;
 };
 
@@ -112,6 +117,24 @@ export default function AdminPage() {
       isMounted = false;
     };
   }, [router]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const refreshOverview = () => {
+      fetch('/api/admin/overview', { cache: 'no-store' })
+        .then(async (response) => response.ok ? response.json() : null)
+        .then((payload) => {
+          if (!cancelled && payload?.overview) setOverview(payload.overview);
+        })
+        .catch(() => undefined);
+    };
+
+    const timer = window.setInterval(refreshOverview, 15000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   const reloadData = async () => {
     try {
@@ -317,6 +340,7 @@ export default function AdminPage() {
         <p>
           Acesso irrestrito a todos os estabelecimentos, pagamentos, suspensões/bloqueios, reembolsos e trilha de auditoria.
         </p>
+        <small style={{ color: 'var(--muted)' }}>Métricas operacionais atualizadas automaticamente a cada 15 segundos.</small>
       </section>
 
       {feedback && (
@@ -373,6 +397,18 @@ export default function AdminPage() {
           </strong>
         </article>
         <article>
+          <span>Interações · 24h</span>
+          <strong>{overview?.interactions24h ?? 0}</strong>
+        </article>
+        <article>
+          <span>Visualizações · 24h</span>
+          <strong>{overview?.views24h ?? 0}</strong>
+        </article>
+        <article>
+          <span>WhatsApp · 24h</span>
+          <strong>{overview?.whatsappClicks24h ?? 0}</strong>
+        </article>
+        <article>
           <span>Interações · 30 dias</span>
           <strong>{overview?.interactions30d ?? 0}</strong>
         </article>
@@ -383,6 +419,14 @@ export default function AdminPage() {
         <article>
           <span>WhatsApp · 30 dias</span>
           <strong>{overview?.whatsappClicks30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Checkouts · 30 dias</span>
+          <strong>{overview?.checkoutStarts30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Trials · 30 dias</span>
+          <strong>{overview?.trialStarts30d ?? 0}</strong>
         </article>
         <article>
           <span>Rotas · 30 dias</span>
