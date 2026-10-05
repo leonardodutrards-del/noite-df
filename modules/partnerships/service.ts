@@ -265,6 +265,152 @@ export class PartnershipService {
     const reviewedRows = (await reviewed.json()) as Record<string, unknown>[];
     return rowToClaim(reviewedRows[0]);
   }
+
+  async activatePartnerByEmail(
+    actor: AuthUser,
+    input: { email: string; establishmentId: string }
+  ): Promise<{
+    userId: string;
+    email: string;
+    establishmentId: string;
+    establishmentName: string;
+    alreadyLinked: boolean;
+  }> {
+    if (actor.role !== 'master_admin') throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
+
+    const email = input.email.trim().toLowerCase();
+    const establishmentId = input.establishmentId.trim();
+    if (!email || !email.includes('@') || !establishmentId) {
+      throw new Error('PARTNER_ACTIVATION_INVALID_INPUT');
+    }
+
+    const establishmentResponse = await rest(
+      `establishments?id=eq.${encodeURIComponent(establishmentId)}&select=id,name&limit=1`
+    );
+    if (!establishmentResponse.ok) throw new Error('PARTNER_ACTIVATION_ESTABLISHMENT_LOOKUP_FAILED');
+    const establishments = (await establishmentResponse.json()) as Array<{ id: string; name: string }>;
+    if (!establishments[0]) throw new Error('PARTNER_ACTIVATION_ESTABLISHMENT_NOT_FOUND');
+
+    const profileResponse = await rest(
+      `profiles?email=eq.${encodeURIComponent(email)}&select=id,email,role,establishment_id&limit=1`
+    );
+    if (!profileResponse.ok) throw new Error('PARTNER_ACTIVATION_PROFILE_LOOKUP_FAILED');
+    const profiles = (await profileResponse.json()) as Array<{
+      id: string;
+      email: string;
+      role: string;
+      establishment_id: string | null;
+    }>;
+    const profile = profiles[0];
+    if (!profile) throw new Error('PARTNER_ACTIVATION_PROFILE_NOT_FOUND');
+
+    if (profile.role === 'partner' && profile.establishment_id === establishmentId) {
+      return {
+        userId: profile.id,
+        email: profile.email,
+        establishmentId,
+        establishmentName: establishments[0].name,
+        alreadyLinked: true,
+      };
+    }
+
+    if (profile.role !== 'visitor') {
+      if (profile.role === 'partner' && profile.establishment_id && profile.establishment_id !== establishmentId) {
+        throw new Error('PARTNER_ACTIVATION_ALREADY_LINKED');
+      }
+      throw new Error('PARTNER_ACTIVATION_ROLE_NOT_ALLOWED');
+    }
+
+    const now = new Date().toISOString();
+    const profileUpdate = await rest(`profiles?id=eq.${encodeURIComponent(profile.id)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        role: 'partner',
+        establishment_id: establishmentId,
+        updated_at: now,
+      }),
+    });
+    if (!profileUpdate.ok) throw new Error('PARTNER_ACTIVATION_PROFILE_UPDATE_FAILED');
+
+    const establishmentUpdate = await rest(
+      `establishments?id=eq.${encodeURIComponent(establishmentId)}`,
+      {
+        method: 'PATCH',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ owner_managed: true, updated_at: now }),
+      }
+    );
+    if (!establishmentUpdate.ok) throw new Error('PARTNER_ACTIVATION_ESTABLISHMENT_UPDATE_FAILED');
+
+    const pendingClaims = await rest(
+      `partner_claims?requester_id=eq.${encodeURIComponent(profile.id)}&establishment_id=eq.${encodeURIComponent(establishmentId)}&status=eq.pending&select=id`
+    );
+    if (pendingClaims.ok) {
+      const claimRows = (await pendingClaims.json()) as Array<{ id: string }>;
+      for (const claim of claimRows) {
+        await rest(`partner_claims?id=eq.${encodeURIComponent(claim.id)}`, {
+          method: 'PATCH',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({
+            status: 'approved',
+            reviewed_by: actor.id,
+            reviewed_at: now,
+          }),
+        });
+      }
+    }
+
+    const pipelineLookup = await rest(
+      `partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=stage,visit_status&limit=1`
+    );
+    let stage = 'replied';
+    let visitStatus = 'owner_contacted';
+    if (pipelineLookup.ok) {
+      const pipelineRows = (await pipelineLookup.json()) as Array<{ stage: string; visit_status?: string }>;
+      if (pipelineRows[0]?.stage === 'trial' || pipelineRows[0]?.stage === 'partner') {
+        stage = pipelineRows[0].stage;
+        visitStatus = pipelineRows[0].visit_status || (stage === 'partner' ? 'signed' : 'trial');
+      }
+    }
+
+    const pipelineUpdate = await rest('partner_pipeline?on_conflict=establishment_id', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({
+        establishment_id: establishmentId,
+        stage,
+        visit_status: visitStatus,
+        contact_channel: 'presencial',
+        last_contact_at: now,
+        visited_at: now,
+        updated_at: now,
+      }),
+    });
+    if (!pipelineUpdate.ok) throw new Error('PARTNER_ACTIVATION_PIPELINE_UPDATE_FAILED');
+
+    await authService.logAudit({
+      actorId: actor.id,
+      actorEmail: actor.email,
+      actorRole: actor.role,
+      action: 'partner_manual_activation',
+      entityType: 'establishment',
+      entityId: establishmentId,
+      details: {
+        userId: profile.id,
+        email,
+        establishmentName: establishments[0].name,
+      },
+    });
+
+    return {
+      userId: profile.id,
+      email,
+      establishmentId,
+      establishmentName: establishments[0].name,
+      alreadyLinked: false,
+    };
+  }
 }
 
 export const partnershipService = new PartnershipService();
