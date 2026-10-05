@@ -50,22 +50,15 @@ export default function PaymentReturn() {
   }, []);
 
   useEffect(() => {
-    void refreshBilling();
+    if (state === 'active') return;
 
+    void refreshBilling();
     const timer = window.setInterval(() => {
       void refreshBilling();
     }, 5000);
 
     return () => window.clearInterval(timer);
-  }, [refreshBilling]);
-
-  useEffect(() => {
-    if (state !== 'active') return;
-    const timer = window.setTimeout(() => {
-      window.clearInterval(timer);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [state]);
+  }, [refreshBilling, state]);
 
   const title =
     state === 'active'
