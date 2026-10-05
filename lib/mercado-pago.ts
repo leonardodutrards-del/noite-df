@@ -140,10 +140,13 @@ async function syncCommercialPipeline(establishmentId: string, subscriptionStatu
       establishment_id: establishmentId,
       stage: subscriptionStatus === 'active' ? 'partner' : 'paused',
       contact_channel: 'mercado_pago',
-      subscription_consent_at: subscriptionStatus === 'active' ? now : null,
       next_follow_up_at: null,
       ...(subscriptionStatus === 'active'
-        ? { visit_status: 'signed', visited_at: now }
+        ? {
+            subscription_consent_at: now,
+            visit_status: 'signed',
+            visited_at: now,
+          }
         : {}),
       updated_at: now,
     }),
