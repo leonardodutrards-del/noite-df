@@ -13,7 +13,35 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
+
+  const handleResendConfirmation = async () => {
+    setError(null);
+    setConfirmationMessage(null);
+
+    if (!email || !email.includes('@')) {
+      setError('Informe o e-mail da conta para reenviar a confirmação.');
+      return;
+    }
+
+    setResending(true);
+    try {
+      const res = await fetch('/api/auth/resend-confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Não foi possível reenviar a confirmação.');
+      setConfirmationMessage(data.message || 'Novo e-mail de confirmação solicitado.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível reenviar a confirmação.');
+    } finally {
+      setResending(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +88,20 @@ function LoginForm() {
 
         {confirmationPending && !error && (
           <div className="notice" style={{ marginBottom: 20 }}>
-            Conta criada. Confirme seu e-mail antes de entrar, caso a confirmação esteja habilitada no Supabase.
+            <strong>Conta criada.</strong>
+            <p style={{ marginBottom: 8 }}>
+              Confirme seu e-mail antes de entrar. Se o link aparecer como expirado ou já utilizado,
+              sua conta pode já ter sido confirmada automaticamente pelo servidor de e-mail.
+            </p>
+            <p style={{ marginBottom: 0 }}>
+              Tente entrar normalmente. Se ainda não conseguir, informe o e-mail abaixo e solicite uma nova confirmação.
+            </p>
+          </div>
+        )}
+
+        {confirmationMessage && (
+          <div className="notice" style={{ marginBottom: 20 }}>
+            {confirmationMessage}
           </div>
         )}
 
@@ -95,9 +136,21 @@ function LoginForm() {
             />
           </div>
 
-          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 8, padding: 16 }}>
+          <button type="submit" disabled={loading || resending} style={{ width: '100%', marginTop: 8, padding: 16 }}>
             {loading ? 'Entrando...' : 'Entrar na Conta'}
           </button>
+
+          {confirmationPending ? (
+            <button
+              type="button"
+              className="button ghost"
+              disabled={loading || resending}
+              onClick={() => void handleResendConfirmation()}
+              style={{ width: '100%' }}
+            >
+              {resending ? 'Reenviando...' : 'Reenviar confirmação de e-mail'}
+            </button>
+          ) : null}
         </form>
         <p style={{ marginTop: 16, textAlign: 'right', fontSize: 14 }}>
           <Link href="/recuperar-senha" style={{ color: 'var(--accent)', fontWeight: 700 }}>Esqueceu a senha?</Link>
