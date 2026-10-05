@@ -13,6 +13,8 @@ import { hasConfirmedRating, isConfirmedEvent } from '@/lib/data-quality';
 import { track } from '@/lib/analytics';
 import { matchesRadar, radarOptions, type RadarFilter } from '@/lib/radar';
 import { getTodayEvents } from '@/lib/today-agenda';
+import { getWeeklyAgenda } from '@/lib/weekly-agenda';
+import { getMonthlyAgenda } from '@/lib/monthly-agenda';
 import {
   getRegionOptionsWithCounts,
   type RegionScope,
@@ -118,8 +120,14 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
       .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
   }, [places]);
 
-  const confirmedEvents = useMemo(() => {
-    return events.filter((event) => isConfirmedEvent(event));
+  const agendaEvents = useMemo(() => {
+    const now = new Date();
+    const weekly = getWeeklyAgenda(events, now);
+    if (weekly.length > 0) return weekly;
+
+    return getMonthlyAgenda(events, now)
+      .filter((event) => isConfirmedEvent(event))
+      .slice(0, 9);
   }, []);
 
   const handleQueryChange = (val: string) => {
@@ -375,17 +383,17 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
         <div className="section-title">
           <div>
             <span className="eyebrow">Agenda inteligente</span>
-            <h2>Próximos eventos confirmados</h2>
+            <h2>Eventos mais próximos</h2>
             <p><a href="/fim-de-semana">Ver indicações do fim de semana →</a></p>
             <p><a href="/agenda-semanal">Ver agenda semanal para compartilhar →</a></p>
             <p><a href="/agenda-mensal">Ver agenda mensal por data →</a></p>
             <p><a href="/hoje">Ver eventos de hoje →</a></p>
-            <p>Apenas eventos verificados e confirmados com fontes oficiais.</p>
+            <p>A semana atual aparece primeiro. Quando ela estiver vazia, mostramos os próximos eventos confirmados do mês.</p>
           </div>
         </div>
-        {confirmedEvents.length > 0 ? (
+        {agendaEvents.length > 0 ? (
           <div className="grid">
-            {confirmedEvents.map((event) => <EventCard key={event.id} event={event} />)}
+            {agendaEvents.map((event) => <EventCard key={event.id} event={event} />)}
           </div>
         ) : (
           <div className="empty">
