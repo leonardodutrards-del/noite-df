@@ -65,6 +65,7 @@ export default async function SobradinhoHubPage() {
           <div className="hero-actions">
             <a className="button" href="#lugares">Explorar Sobradinho</a>
             <Link className="button ghost" href="/agenda-semanal">Agenda semanal</Link>
+            <Link className="button ghost" href="/agenda-mensal">Agenda mensal</Link>
             <Link className="button ghost" href="/fim-de-semana">Fim de semana</Link>
           </div>
         </div>
@@ -160,6 +161,7 @@ export default async function SobradinhoHubPage() {
             <Link className="tag" href="/lugares/sobradinho">Todos os lugares</Link>
             <Link className="tag" href="/fim-de-semana">Fim de semana</Link>
             <Link className="tag" href="/agenda-semanal">Agenda semanal</Link>
+            <Link className="tag" href="/agenda-mensal">Agenda mensal</Link>
           </div>
         </div>
 
