@@ -61,7 +61,7 @@ function LoginForm() {
       }
 
       const role = data.user?.role;
-      if (redirectPath) {
+      if (redirectPath?.startsWith('/') && !redirectPath.startsWith('//')) {
         router.push(redirectPath);
       } else if (role === 'admin' || role === 'master_admin') {
         router.push('/admin');
@@ -159,7 +159,14 @@ function LoginForm() {
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14 }}>
           <p style={{ margin: 0, textAlign: 'center' }}>
             Ainda não tem conta?{' '}
-            <Link href="/cadastro" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
+            <Link
+              href={
+                redirectPath?.startsWith('/parceiro/onboarding') && !redirectPath.startsWith('//')
+                  ? `/cadastro?redirect=${encodeURIComponent(redirectPath)}`
+                  : '/cadastro'
+              }
+              style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}
+            >
               Criar conta
             </Link>
           </p>
@@ -168,7 +175,14 @@ function LoginForm() {
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14, textAlign: 'center' }}>
           <p style={{ margin: 0 }}>
             É dono de estabelecimento e ainda não tem conta?{' '}
-            <Link href="/cadastro" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
+            <Link
+              href={
+                redirectPath?.startsWith('/parceiro/onboarding') && !redirectPath.startsWith('//')
+                  ? `/cadastro?redirect=${encodeURIComponent(redirectPath)}`
+                  : '/cadastro'
+              }
+              style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}
+            >
               Cadastre seu perfil
             </Link>
           </p>
