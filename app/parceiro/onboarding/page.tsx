@@ -55,12 +55,18 @@ export default function BecomePartnerPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const establishmentId = params.get('estabelecimento');
-    setReturnPath(window.location.pathname + window.location.search);
-
-    if (!establishmentId) return;
-
     let active = true;
-    setLoadingPlace(true);
+    queueMicrotask(() => {
+      if (!active) return;
+      setReturnPath(window.location.pathname + window.location.search);
+      if (establishmentId) setLoadingPlace(true);
+    });
+
+    if (!establishmentId) {
+      return () => {
+        active = false;
+      };
+    }
     fetch(`/api/establishments/${encodeURIComponent(establishmentId)}`, { cache: 'no-store' })
       .then(async (response) => {
         if (!response.ok) {
