@@ -20,7 +20,7 @@ describe('Prontidão comercial de Sobradinho', () => {
     expect(onboarding).toContain("'Sobradinho'");
     expect(onboarding).not.toContain("localStorage.getItem('auth_token')");
     expect(onboarding).not.toContain('Authorization:');
-    expect(onboarding).toContain('/login?redirect=/parceiro/onboarding');
+    expect(onboarding).toContain('encodeURIComponent(returnPath)');
   });
 
   it('mantém todo estabelecimento novo dentro do CRM', () => {
