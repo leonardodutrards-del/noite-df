@@ -37,10 +37,18 @@ export default function CadastroPage() {
         throw new Error(data.error || 'Erro ao realizar cadastro.');
       }
 
+      const redirect = new URLSearchParams(window.location.search).get('redirect');
+      const safeRedirect =
+        redirect?.startsWith('/parceiro/onboarding') && !redirect.startsWith('//')
+          ? redirect
+          : '/parceiro/onboarding';
+
       if (data.requiresEmailConfirmation) {
-        router.push('/login?confirmacao=pendente');
+        router.push(
+          `/login?confirmacao=pendente&redirect=${encodeURIComponent(safeRedirect)}`
+        );
       } else {
-        router.push('/parceiro/onboarding');
+        router.push(safeRedirect);
       }
       router.refresh();
     } catch (err) {
@@ -131,7 +139,15 @@ export default function CadastroPage() {
           <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14, textAlign: 'center' }}>
             <p style={{ margin: 0 }}>
               Já possui conta cadastrada?{' '}
-              <Link href="/login" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
+              <Link
+                href={
+                  typeof window !== 'undefined' &&
+                  new URLSearchParams(window.location.search).get('redirect')?.startsWith('/parceiro/onboarding')
+                    ? `/login?redirect=${encodeURIComponent(new URLSearchParams(window.location.search).get('redirect') || '/parceiro/onboarding')}`
+                    : '/login'
+                }
+                style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}
+              >
                 Fazer login
               </Link>
             </p>
