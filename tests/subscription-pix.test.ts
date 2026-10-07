@@ -31,6 +31,11 @@ describe('Assinatura mensal com Pix', () => {
     expect(mercadoPago).toContain('typeof data.init_point');
   });
 
+  it('atualiza o plano Pix existente sem conflito de unicidade', () => {
+    expect(mercadoPago).toContain('on_conflict=provider,establishment_id,plan_code,payment_method');
+    expect(mercadoPago).toContain('resolution=merge-duplicates,return=minimal');
+  });
+
   it('mapeia a assinatura pelo preapproval_plan_id recebido no webhook', () => {
     expect(mercadoPago).toContain('preapproval_plan_id?: string');
     expect(mercadoPago).toContain('resolveSubscriptionReference');
