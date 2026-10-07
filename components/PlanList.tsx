@@ -29,7 +29,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
       const response = await fetch('/api/parceiro/trial', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ planId, paymentMethod }),
+        body: JSON.stringify({ planId }),
       });
       const payload = await response.json().catch(() => ({}));
 
@@ -67,7 +67,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
       const response = await fetch('/api/payments/subscriptions', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ planId, paymentMethod }),
       });
       const payload = await response.json().catch(() => ({}));
 
