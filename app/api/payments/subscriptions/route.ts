@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PAYMENTS_ENABLED, SHOWCASE_MODE } from '@/lib/env';
 import { getPlan, isPaidPlan } from '@/lib/plans';
-import { createMercadoPagoPixSubscription, getOrCreateMercadoPagoPixPlan, syncSubscriptionResource } from '@/lib/mercado-pago';
+import { createMercadoPagoPixCheckout, syncSubscriptionResource } from '@/lib/mercado-pago';
 import { requireAuth } from '@/modules/auth/session';
 import { getEstablishmentEntitlements } from '@/modules/payments/entitlements';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
@@ -54,31 +54,12 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
 
     if (paymentMethod === 'pix') {
-      const pixPlan = await getOrCreateMercadoPagoPixPlan({
+      const pixCheckout = await createMercadoPagoPixCheckout({
         establishmentId,
         planCode: plan.id,
         planName: plan.name,
         priceCents: plan.priceCents,
         backUrl: `${baseUrl}/pagamento/retorno`,
-      });
-      const externalReference = `noite-df:${establishmentId}:${plan.id}:${Date.now()}`;
-      const pixSubscription = await createMercadoPagoPixSubscription({
-        preapprovalPlanId: pixPlan.id,
-        externalReference,
-        payerEmail: user.email,
-        backUrl: `${baseUrl}/pagamento/retorno`,
-        notificationUrl: `${baseUrl}/api/payments/webhook`,
-      });
-
-      await syncSubscriptionResource({
-        id: pixSubscription.id,
-        status: pixSubscription.status,
-        external_reference: pixSubscription.external_reference ?? externalReference,
-        payer_email: pixSubscription.payer_email ?? user.email,
-        next_payment_date: pixSubscription.next_payment_date,
-        auto_recurring: pixSubscription.auto_recurring ?? {
-          transaction_amount: plan.priceCents / 100,
-        },
       });
 
       try {
@@ -117,7 +98,8 @@ export async function POST(request: NextRequest) {
               planId: plan.id,
               provider: 'mercado_pago',
               paymentMethod: 'pix',
-              providerSubscriptionId: pixSubscription.id,
+              providerPlanId: pixCheckout.id,
+              externalReference: pixCheckout.externalReference,
             },
           }),
         });
@@ -127,8 +109,8 @@ export async function POST(request: NextRequest) {
       }
 
       return NextResponse.json({
-        id: pixSubscription.id,
-        initPoint: pixSubscription.init_point,
+        id: pixCheckout.id,
+        initPoint: pixCheckout.initPoint,
         planId: plan.id,
         establishmentId,
         paymentMethod: 'pix',
