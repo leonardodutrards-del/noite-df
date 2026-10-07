@@ -493,11 +493,11 @@ export default function AdminPage() {
           <strong>{overview?.pendingClaims ?? pendingClaimsCount}</strong>
         </article>
         <article>
-          <span>Assinaturas Ativas</span>
+          <span>Planos Pagos Ativos</span>
           <strong>{overview?.activeSubscriptions ?? activePaymentsCount}</strong>
         </article>
         <article>
-          <span>MRR Real</span>
+          <span>MRR Recorrente</span>
           <strong>
             {((overview?.monthlyRecurringRevenueCents ?? 0) / 100).toLocaleString('pt-BR', {
               style: 'currency',

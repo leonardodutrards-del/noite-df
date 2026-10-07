@@ -1,3 +1,4 @@
+import { mercadoPagoGet, syncPaymentResource } from '@/lib/mercado-pago';
 export type MasterOverview = {
   generatedAt: string;
   users: number;
@@ -61,6 +62,31 @@ async function countRows(table: string, filter = ''): Promise<number> {
   return parseCount(response);
 }
 
+async function reconcilePendingPixPayments(): Promise<void> {
+  const response = await request(
+    'subscription_accounts?provider=eq.mercado_pago_pix&status=eq.pending&provider_payment_id=not.is.null&select=provider_payment_id&order=updated_at.desc&limit=20'
+  );
+  if (!response.ok) return;
+
+  const rows = (await response.json()) as Array<{ provider_payment_id: string | null }>;
+  for (const row of rows) {
+    if (!row.provider_payment_id) continue;
+    try {
+      const payment = await mercadoPagoGet<{
+        id: string | number;
+        status?: string;
+        external_reference?: string;
+        payer?: { email?: string };
+        transaction_amount?: number;
+        date_approved?: string;
+      }>(`/v1/payments/${encodeURIComponent(row.provider_payment_id)}`);
+      await syncPaymentResource(payment);
+    } catch (error) {
+      console.error('master-overview-pix-reconcile', row.provider_payment_id, error);
+    }
+  }
+}
+
 export async function getMasterOverview(): Promise<MasterOverview> {
   const cfg = config();
   if (!cfg) {
@@ -88,6 +114,8 @@ export async function getMasterOverview(): Promise<MasterOverview> {
     };
   }
 
+  await reconcilePendingPixPayments();
+
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const since24h = Date.now() - 24 * 60 * 60 * 1000;
 
@@ -109,7 +137,7 @@ export async function getMasterOverview(): Promise<MasterOverview> {
     countRows('partner_claims', 'status=eq.pending'),
     countRows('subscription_accounts', 'status=eq.active'),
     countRows('audit_log'),
-    request('subscription_accounts?status=eq.active&select=amount_cents'),
+    request('subscription_accounts?status=eq.active&provider=eq.mercado_pago&select=amount_cents'),
     request(
       `interactions?created_at=gte.${encodeURIComponent(since)}&select=action,created_at`
     ),
