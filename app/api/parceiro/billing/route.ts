@@ -6,13 +6,15 @@ import {
   adminEntitlements,
   getEstablishmentEntitlements,
 } from '@/modules/payments/entitlements';
-import { syncSubscriptionResource } from '@/lib/mercado-pago';
+import { mercadoPagoGet, syncPaymentResource, syncSubscriptionResource } from '@/lib/mercado-pago';
 
 type SubscriptionRow = {
   id: string;
   establishment_id: string | null;
   plan_code: string;
+  provider: string;
   provider_subscription_id: string | null;
+  provider_payment_id: string | null;
   payer_email: string;
   status: string;
   amount_cents: number;
@@ -33,20 +35,48 @@ async function resolveEstablishment(request: NextRequest) {
 
 async function latestSubscription(establishmentId: string) {
   const rows = await supabaseAdminJson<SubscriptionRow[]>(
-    `subscription_accounts?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=id,establishment_id,plan_code,provider_subscription_id,payer_email,status,amount_cents,current_period_end,created_at,updated_at&order=updated_at.desc&limit=1`
+    `subscription_accounts?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=id,establishment_id,plan_code,provider,provider_subscription_id,provider_payment_id,payer_email,status,amount_cents,current_period_end,created_at,updated_at&order=updated_at.desc&limit=1`
   );
   return rows[0] ?? null;
+}
+
+async function reconcilePendingPix(subscription: SubscriptionRow | null) {
+  if (
+    !subscription ||
+    subscription.provider !== 'mercado_pago_pix' ||
+    subscription.status !== 'pending' ||
+    !subscription.provider_payment_id
+  ) {
+    return;
+  }
+
+  const payment = await mercadoPagoGet<{
+    id: string | number;
+    status?: string;
+    external_reference?: string;
+    payer?: { email?: string };
+    transaction_amount?: number;
+    date_approved?: string;
+  }>(`/v1/payments/${encodeURIComponent(subscription.provider_payment_id)}`);
+
+  await syncPaymentResource(payment);
 }
 
 export async function GET(request: NextRequest) {
   try {
     const { user, establishmentId } = await resolveEstablishment(request);
-    const [subscription, entitlements] = await Promise.all([
-      latestSubscription(establishmentId),
+    let subscription = await latestSubscription(establishmentId);
+    try {
+      await reconcilePendingPix(subscription);
+      subscription = await latestSubscription(establishmentId);
+    } catch (reconcileError) {
+      console.error('billing-pix-reconcile', reconcileError);
+    }
+
+    const entitlements =
       (user.role === 'admin' || user.role === 'master_admin')
-        ? Promise.resolve(adminEntitlements(establishmentId))
-        : getEstablishmentEntitlements(establishmentId),
-    ]);
+        ? adminEntitlements(establishmentId)
+        : await getEstablishmentEntitlements(establishmentId);
 
     return NextResponse.json({
       entitlements,
@@ -59,9 +89,12 @@ export async function GET(request: NextRequest) {
             amountCents: subscription.amount_cents,
             currentPeriodEnd: subscription.current_period_end,
             startedAt: subscription.created_at,
-            recurring: true,
-            provider: 'mercado_pago',
+            recurring: subscription.provider !== 'mercado_pago_pix',
+            provider: subscription.provider,
+            paymentType:
+              subscription.provider === 'mercado_pago_pix' ? 'pix_30_days' : 'subscription',
             canCancel:
+              subscription.provider !== 'mercado_pago_pix' &&
               Boolean(subscription.provider_subscription_id) &&
               ['active', 'pending'].includes(subscription.status),
           }
