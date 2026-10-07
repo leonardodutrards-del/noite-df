@@ -141,10 +141,10 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
                     disabled={!paymentsEnabled || showcaseMode || Boolean(loadingPlan)}
                     onClick={() => void handleSubscribe(plan.id, 'pix')}
                   >
-                    {paymentLoading ? 'Abrindo checkout…' : 'Assinar com Pix'}
+                    {paymentLoading ? 'Abrindo checkout…' : 'Pagar 30 dias com Pix'}
                   </button>
                   <small style={{ color: 'var(--muted)' }}>
-                    O pagamento só é iniciado após login e vínculo confirmado. No Pix, o QR Code e o código Copia e Cola são exibidos pelo Mercado Pago, e a assinatura permanece mensal.
+                    O pagamento só é iniciado após login e vínculo confirmado. No Pix, o Mercado Pago exibe QR Code e Copia e Cola; após a aprovação, o plano fica ativo por 30 dias. A renovação via Pix é manual.
                   </small>
                 </>
               )}
