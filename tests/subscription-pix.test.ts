@@ -7,15 +7,16 @@ const subscriptionRoute = readFileSync(resolve(process.cwd(), 'app/api/payments/
 const mercadoPago = readFileSync(resolve(process.cwd(), 'lib/mercado-pago.ts'), 'utf8');
 const plans = readFileSync(resolve(process.cwd(), 'lib/plans.ts'), 'utf8');
 
-describe('Assinatura mensal com Pix', () => {
-  it('oferece Pix sem remover o checkout atual', () => {
-    expect(planList).toContain('Assinar com Pix');
+describe('Pagamento Pix de 30 dias', () => {
+  it('oferece Pix sem remover a assinatura recorrente no cartão', () => {
+    expect(planList).toContain('Pagar 30 dias com Pix');
     expect(planList).toContain("handleSubscribe(plan.id, 'pix')");
     expect(planList).toContain('QR Code');
     expect(planList).toContain('Copia e Cola');
+    expect(planList).toContain('renovação via Pix é manual');
   });
 
-  it('usa os mesmos preços fixos do catálogo publicado', () => {
+  it('usa exatamente os preços publicados dos planos', () => {
     expect(plans).toContain('priceCents: 5990');
     expect(plans).toContain('priceCents: 9990');
     expect(plans).toContain('priceCents: 15000');
@@ -23,30 +24,29 @@ describe('Assinatura mensal com Pix', () => {
     expect(mercadoPago).toContain('transaction_amount: args.priceCents / 100');
   });
 
-  it('usa o checkout padrão de assinatura do Mercado Pago, que oferece Pix', () => {
-    expect(subscriptionRoute).toContain('createMercadoPagoPixCheckout');
-    expect(mercadoPago).toContain("https://api.mercadopago.com/preapproval_plan");
-    expect(mercadoPago).not.toContain("payment_types: [{ id: 'bank_transfer' }]");
-    expect(mercadoPago).not.toContain("payment_methods: [{ id: 'pix' }]");
-    expect(mercadoPago).toContain('typeof data.init_point');
+  it('cria pagamento Pix real e retorna QR/ticket do Mercado Pago', () => {
+    expect(mercadoPago).toContain("https://api.mercadopago.com/v1/payments");
+    expect(mercadoPago).toContain("payment_method_id: 'pix'");
+    expect(mercadoPago).toContain("'X-Idempotency-Key'");
+    expect(mercadoPago).toContain('qr_code_base64');
+    expect(mercadoPago).toContain('qr_code');
+    expect(mercadoPago).toContain('ticket_url');
+    expect(subscriptionRoute).toContain('createMercadoPagoPixPayment');
   });
 
-  it('atualiza o plano Pix existente sem conflito de unicidade', () => {
-    expect(mercadoPago).toContain('on_conflict=provider,establishment_id,plan_code,payment_method');
-    expect(mercadoPago).toContain('resolution=merge-duplicates,return=minimal');
+  it('ativa o plano por 30 dias quando o webhook aprova o Pix', () => {
+    expect(mercadoPago).toContain("parts[3] === 'pix'");
+    expect(mercadoPago).toContain("resource.status === 'approved'");
+    expect(mercadoPago).toContain('30 * 24 * 60 * 60 * 1000');
+    expect(mercadoPago).toContain("provider: 'mercado_pago_pix'");
+    expect(mercadoPago).toContain("status: approved ? 'active' : 'pending'");
+    expect(mercadoPago).toContain("await syncCommercialPipeline(reference.establishmentId, 'active'");
   });
 
-  it('mapeia a assinatura pelo preapproval_plan_id recebido no webhook', () => {
-    expect(mercadoPago).toContain('preapproval_plan_id?: string');
-    expect(mercadoPago).toContain('resolveSubscriptionReference');
-    expect(mercadoPago).toContain('provider_plan_id=eq.');
-    expect(mercadoPago).toContain('payment_provider_plans');
-  });
-
-  it('preserva trial e registra analytics no servidor', () => {
+  it('preserva trial e registra o início do Pix no servidor', () => {
     expect(subscriptionRoute).toContain("currentStage === 'trial'");
     expect(subscriptionRoute).toContain("currentVisitStatus === 'signed'");
-    expect(subscriptionRoute).toContain('subscription-pix-checkout-tracking');
-    expect(subscriptionRoute).toContain('providerPlanId: pixCheckout.id');
+    expect(subscriptionRoute).toContain('providerPaymentId: pixPayment.id');
+    expect(subscriptionRoute).toContain('accessDays: 30');
   });
 });
