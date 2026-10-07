@@ -19,6 +19,7 @@ type BillingState = {
     startedAt: string;
     recurring: boolean;
     provider: string;
+    paymentType?: 'pix_30_days' | 'subscription';
     canCancel: boolean;
   };
 };
@@ -81,16 +82,22 @@ export function PartnerBillingCard() {
   return (
     <section className="panel" style={{ marginTop: 24 }}>
       <span className="badge">Cobrança</span>
-      <h2 style={{ marginBottom: 8 }}>Assinatura e cobrança automática</h2>
+      <h2 style={{ marginBottom: 8 }}>
+        {billing?.paymentType === 'pix_30_days' ? 'Pagamento via Pix' : 'Assinatura e cobrança automática'}
+      </h2>
 
       {billing ? (
         <>
           <p>
-            <b>{billing.planName}</b> · {money(billing.amountCents)}/mês · Mercado Pago
+            <b>{billing.planName}</b> · {money(billing.amountCents)}
+            {billing.recurring ? '/mês' : ' por 30 dias'} · Mercado Pago
           </p>
           <p style={{ color: 'var(--muted)' }}>
-            A cobrança é recorrente. O meio de pagamento é escolhido e autorizado no checkout do Mercado Pago.
-            Você pode cancelar quando quiser para impedir novas cobranças.
+            {billing.paymentType === 'pix_30_days'
+              ? billing.status === 'active'
+                ? 'Pix aprovado. O plano está ativo e os recursos pagos já foram liberados.'
+                : 'Pix aguardando confirmação. O painel consulta o Mercado Pago e ativa o plano automaticamente assim que o pagamento for aprovado.'
+              : 'A cobrança é recorrente. O meio de pagamento é escolhido e autorizado no checkout do Mercado Pago. Você pode cancelar quando quiser para impedir novas cobranças.'}
           </p>
           <div className="metrics-grid" style={{ marginTop: 16 }}>
             <article><span>Status</span><strong>{billing.status}</strong></article>
@@ -99,7 +106,7 @@ export function PartnerBillingCard() {
               <strong>{new Date(billing.startedAt).toLocaleDateString('pt-BR')}</strong>
             </article>
             <article>
-              <span>Próxima renovação / acesso até</span>
+              <span>{billing.recurring ? 'Próxima renovação / acesso até' : 'Acesso liberado até'}</span>
               <strong>{billing.currentPeriodEnd ? new Date(billing.currentPeriodEnd).toLocaleDateString('pt-BR') : 'A confirmar'}</strong>
             </article>
           </div>
