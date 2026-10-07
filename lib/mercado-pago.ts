@@ -82,6 +82,85 @@ export async function mercadoPagoGet<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+export async function getOrCreateMercadoPagoPixPlan(args: {
+  establishmentId: string;
+  planCode: 'pro' | 'premium' | 'enterprise';
+  planName: string;
+  priceCents: number;
+  backUrl: string;
+}): Promise<{ id: string; initPoint: string }> {
+  const lookup = await supabase(
+    `payment_provider_plans?provider=eq.mercado_pago&establishment_id=eq.${encodeURIComponent(args.establishmentId)}&plan_code=eq.${encodeURIComponent(args.planCode)}&payment_method=eq.pix&select=provider_plan_id,amount_cents,checkout_url&limit=1`
+  );
+  if (!lookup.ok) throw new Error('PIX_PLAN_LOOKUP_FAILED');
+  const rows = (await lookup.json()) as Array<{
+    provider_plan_id: string;
+    amount_cents: number;
+    checkout_url: string | null;
+  }>;
+  if (
+    rows[0]?.provider_plan_id &&
+    rows[0].amount_cents === args.priceCents &&
+    rows[0].checkout_url
+  ) {
+    return { id: rows[0].provider_plan_id, initPoint: rows[0].checkout_url };
+  }
+
+  const externalReference = `noite-df:${args.establishmentId}:${args.planCode}:pix`;
+  const response = await fetch('https://api.mercadopago.com/preapproval_plan', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken()}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      reason: `Noite DF ${args.planName}`,
+      external_reference: externalReference,
+      auto_recurring: {
+        frequency: 1,
+        frequency_type: 'months',
+        transaction_amount: args.priceCents / 100,
+        currency_id: 'BRL',
+      },
+      payment_methods_allowed: {
+        payment_methods: [{ id: 'pix' }],
+      },
+      back_url: args.backUrl,
+      status: 'active',
+    }),
+    cache: 'no-store',
+  });
+
+  const data = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+  if (
+    !response.ok ||
+    typeof data.id !== 'string' ||
+    typeof data.init_point !== 'string' ||
+    !data.init_point
+  ) {
+    console.error('mercado-pago-create-pix-plan', data);
+    throw new Error('MERCADO_PAGO_PIX_PLAN_CREATE_FAILED');
+  }
+
+  const persisted = await supabase('payment_provider_plans?on_conflict=provider,establishment_id,plan_code,payment_method', {
+    method: 'POST',
+    headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify({
+      provider: 'mercado_pago',
+      establishment_id: args.establishmentId,
+      plan_code: args.planCode,
+      payment_method: 'pix',
+      provider_plan_id: data.id,
+      amount_cents: args.priceCents,
+      checkout_url: data.init_point,
+      updated_at: new Date().toISOString(),
+    }),
+  });
+  if (!persisted.ok) throw new Error('PIX_PLAN_PERSIST_FAILED');
+
+  return { id: data.id, initPoint: data.init_point };
+}
+
 export async function mercadoPagoRefund(paymentId: string, idempotencyKey: string) {
   const response = await fetch(
     `https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}/refund`,
