@@ -125,8 +125,8 @@ export async function getOrCreateMercadoPagoPixPlan(args: {
       payment_methods_allowed: {
         payment_methods: [{ id: 'pix' }],
       },
-      back_url: args.backUrl,
-      status: 'active',
+      back_url: args.backUrl
+,
     }),
     cache: 'no-store',
   });
