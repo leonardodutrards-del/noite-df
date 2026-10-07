@@ -34,7 +34,13 @@ export const PLAN_CATALOG: Record<PlanCode, PlanDefinition> = {
     priceCents: 5990,
     billingInterval: 'monthly',
     description: 'Operação do perfil, agenda, promoções e métricas essenciais.',
-    features: ['Tudo do Gratuito', 'Editar informações do perfil', 'Agenda e programação', 'Promoções e lotação', 'Métricas básicas'],
+    features: [
+      'Editar nome, descrição, contato e endereço do perfil',
+      'Publicar agenda e programação semanal',
+      'Criar promoções e atualizar lotação em tempo real',
+      'Ver visualizações, WhatsApp, rotas, Instagram e favoritos',
+      'Ideal para operar o perfil e medir interesse básico',
+    ],
   },
   premium: {
     id: 'premium',
@@ -42,7 +48,14 @@ export const PLAN_CATALOG: Record<PlanCode, PlanDefinition> = {
     priceCents: 9990,
     billingInterval: 'monthly',
     description: 'Tudo do Pro com analytics detalhado, conversões e gestão de cardápio.',
-    features: ['Tudo do Pro', 'Analytics detalhado', 'Taxa de conversão', 'Análise de períodos maiores', 'Cardápio com link oficial'],
+    features: [
+      'Tudo do Pro',
+      'Analytics detalhado e taxa de conversão',
+      'Comparação de desempenho em períodos maiores',
+      'Leitura mais completa do comportamento dos visitantes',
+      'Adicionar link oficial de cardápio ao perfil',
+      'Ideal para otimizar divulgação e conversão',
+    ],
   },
   enterprise: {
     id: 'enterprise',
@@ -50,7 +63,13 @@ export const PLAN_CATALOG: Record<PlanCode, PlanDefinition> = {
     priceCents: 15000,
     billingInterval: 'monthly',
     description: 'Tudo do Premium com atendimento e configuração prioritários.',
-    features: ['Tudo do Premium', 'Atendimento prioritário', 'Configuração assistida'],
+    features: [
+      'Tudo do Premium',
+      'Atendimento prioritário',
+      'Configuração assistida do perfil e recursos',
+      'Acompanhamento mais próximo da operação',
+      'Ideal para operações que querem suporte dedicado',
+    ],
   },
 };
 
