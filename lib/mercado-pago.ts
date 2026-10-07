@@ -127,9 +127,11 @@ export async function createMercadoPagoPixCheckout(args: {
     );
   }
 
-  const persisted = await supabase('payment_provider_plans', {
-    method: 'POST',
-    headers: { Prefer: 'return=minimal' },
+  const persisted = await supabase(
+    'payment_provider_plans?on_conflict=provider,establishment_id,plan_code,payment_method',
+    {
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
     body: JSON.stringify({
       provider: 'mercado_pago',
       establishment_id: args.establishmentId,
@@ -138,10 +140,14 @@ export async function createMercadoPagoPixCheckout(args: {
       provider_plan_id: data.id,
       amount_cents: args.priceCents,
       checkout_url: data.init_point,
-      updated_at: new Date().toISOString(),
-    }),
-  });
-  if (!persisted.ok) throw new Error('PIX_PLAN_PERSIST_FAILED');
+        updated_at: new Date().toISOString(),
+      }),
+    }
+  );
+  if (!persisted.ok) {
+    console.error('pix-plan-persist', { status: persisted.status });
+    throw new Error('PIX_PLAN_PERSIST_FAILED');
+  }
 
   return { id: data.id, initPoint: data.init_point };
 }
