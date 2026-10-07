@@ -23,13 +23,19 @@ describe('Assinatura mensal com Pix', () => {
     expect(mercadoPago).toContain('transaction_amount: args.priceCents / 100');
   });
 
-  it('cria um checkout Pix novo por tentativa sem criar assinatura pendente antes do checkout', () => {
+  it('usa o checkout padrão de assinatura do Mercado Pago, que oferece Pix', () => {
     expect(subscriptionRoute).toContain('createMercadoPagoPixCheckout');
-    expect(subscriptionRoute).not.toContain('createMercadoPagoPixSubscription');
-    expect(mercadoPago).toContain("payment_types: [{ id: 'bank_transfer' }]");
-    expect(mercadoPago).toContain("payment_methods: [{ id: 'pix' }]");
-    expect(mercadoPago).toContain('external_reference: externalReference');
-    expect(mercadoPago).toContain('init_point');
+    expect(mercadoPago).toContain("https://api.mercadopago.com/preapproval_plan");
+    expect(mercadoPago).not.toContain("payment_types: [{ id: 'bank_transfer' }]");
+    expect(mercadoPago).not.toContain("payment_methods: [{ id: 'pix' }]");
+    expect(mercadoPago).toContain('typeof data.init_point');
+  });
+
+  it('mapeia a assinatura pelo preapproval_plan_id recebido no webhook', () => {
+    expect(mercadoPago).toContain('preapproval_plan_id?: string');
+    expect(mercadoPago).toContain('resolveSubscriptionReference');
+    expect(mercadoPago).toContain('provider_plan_id=eq.');
+    expect(mercadoPago).toContain('payment_provider_plans');
   });
 
   it('preserva trial e registra analytics no servidor', () => {

@@ -99,7 +99,6 @@ export async function POST(request: NextRequest) {
               provider: 'mercado_pago',
               paymentMethod: 'pix',
               providerPlanId: pixCheckout.id,
-              externalReference: pixCheckout.externalReference,
             },
           }),
         });
