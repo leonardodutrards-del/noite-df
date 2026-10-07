@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PAYMENTS_ENABLED, SHOWCASE_MODE } from '@/lib/env';
 import { getPlan, isPaidPlan } from '@/lib/plans';
-import { getOrCreateMercadoPagoPixPlan, syncSubscriptionResource } from '@/lib/mercado-pago';
+import { createMercadoPagoPixSubscription, getOrCreateMercadoPagoPixPlan, syncSubscriptionResource } from '@/lib/mercado-pago';
 import { requireAuth } from '@/modules/auth/session';
 import { getEstablishmentEntitlements } from '@/modules/payments/entitlements';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
@@ -61,21 +61,73 @@ export async function POST(request: NextRequest) {
         priceCents: plan.priceCents,
         backUrl: `${baseUrl}/pagamento/retorno`,
       });
+      const externalReference = `noite-df:${establishmentId}:${plan.id}:${Date.now()}`;
+      const pixSubscription = await createMercadoPagoPixSubscription({
+        preapprovalPlanId: pixPlan.id,
+        externalReference,
+        payerEmail: user.email,
+        backUrl: `${baseUrl}/pagamento/retorno`,
+      });
+
+      await syncSubscriptionResource({
+        id: pixSubscription.id,
+        status: pixSubscription.status,
+        external_reference: pixSubscription.external_reference ?? externalReference,
+        payer_email: pixSubscription.payer_email ?? user.email,
+        next_payment_date: pixSubscription.next_payment_date,
+        auto_recurring: pixSubscription.auto_recurring ?? {
+          transaction_amount: plan.priceCents / 100,
+        },
+      });
 
       try {
-        await updatePipeline({
-          establishmentId,
-          stage: 'replied',
-          visitStatus: 'interested',
-          contactChannel: 'mercado_pago_pix_checkout',
-        });
+        const currentPipeline = await supabaseAdminJson<Array<{ stage: string; visit_status: string | null }>>(
+          `partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=stage,visit_status&limit=1`
+        );
+        const currentStage = currentPipeline[0]?.stage;
+        const currentVisitStatus = currentPipeline[0]?.visit_status;
+        const alreadyFurtherAlong =
+          currentStage === 'trial' ||
+          currentStage === 'partner' ||
+          currentVisitStatus === 'trial' ||
+          currentVisitStatus === 'signed';
+
+        if (!alreadyFurtherAlong) {
+          await updatePipeline({
+            establishmentId,
+            stage: 'replied',
+            visitStatus: 'interested',
+            contactChannel: 'mercado_pago_pix_checkout',
+          });
+        }
       } catch (pipelineError) {
         console.error('subscription-pix-checkout-pipeline', pipelineError);
       }
 
+      try {
+        const tracking = await supabaseAdminRequest('interactions', {
+          method: 'POST',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({
+            user_id: user.id,
+            establishment_id: establishmentId,
+            action: 'subscription_checkout',
+            metadata: {
+              planId: plan.id,
+              provider: 'mercado_pago',
+              paymentMethod: 'pix',
+              providerSubscriptionId: pixSubscription.id,
+            },
+          }),
+        });
+        if (!tracking.ok) console.error('subscription-pix-checkout-tracking', tracking.status);
+      } catch (trackingError) {
+        console.error('subscription-pix-checkout-tracking', trackingError);
+      }
+
       return NextResponse.json({
-        id: pixPlan.id,
-        initPoint: pixPlan.initPoint,
+        id: pixSubscription.id,
+        initPoint: pixSubscription.init_point,
         planId: plan.id,
         establishmentId,
         paymentMethod: 'pix',
