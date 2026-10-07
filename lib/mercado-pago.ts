@@ -156,6 +156,7 @@ export async function createMercadoPagoPixSubscription(args: {
   externalReference: string;
   payerEmail: string;
   backUrl: string;
+  notificationUrl: string;
 }): Promise<SubscriptionResource & { init_point: string }> {
   const response = await fetch('https://api.mercadopago.com/preapproval', {
     method: 'POST',
@@ -168,6 +169,7 @@ export async function createMercadoPagoPixSubscription(args: {
       external_reference: args.externalReference,
       payer_email: args.payerEmail,
       back_url: args.backUrl,
+      notification_url: args.notificationUrl,
       status: 'pending',
     }),
     cache: 'no-store',
