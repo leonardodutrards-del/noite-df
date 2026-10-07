@@ -24,6 +24,13 @@ type PaymentResource = {
   payer?: { email?: string };
   transaction_amount?: number;
   date_approved?: string;
+  point_of_interaction?: {
+    transaction_data?: {
+      qr_code?: string;
+      qr_code_base64?: string;
+      ticket_url?: string;
+    };
+  };
 };
 
 function accessToken(): string {
@@ -83,73 +90,69 @@ export async function mercadoPagoGet<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export async function createMercadoPagoPixCheckout(args: {
+export async function createMercadoPagoPixPayment(args: {
   establishmentId: string;
   planCode: 'pro' | 'premium' | 'enterprise';
   planName: string;
   priceCents: number;
-  backUrl: string;
-}): Promise<{ id: string; initPoint: string }> {
-  const response = await fetch('https://api.mercadopago.com/preapproval_plan', {
+  payerEmail: string;
+  notificationUrl: string;
+}): Promise<{
+  id: string;
+  status?: string;
+  externalReference: string;
+  ticketUrl: string;
+  qrCode?: string;
+  qrCodeBase64?: string;
+}> {
+  const externalReference = `noite-df:${args.establishmentId}:${args.planCode}:pix:${Date.now()}`;
+  const idempotencyKey = crypto.randomUUID();
+  const response = await fetch('https://api.mercadopago.com/v1/payments', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken()}`,
       'Content-Type': 'application/json',
+      'X-Idempotency-Key': idempotencyKey,
     },
     body: JSON.stringify({
-      reason: `Noite DF ${args.planName}`,
-      auto_recurring: {
-        frequency: 1,
-        frequency_type: 'months',
-        transaction_amount: args.priceCents / 100,
-        currency_id: 'BRL',
-      },
-      back_url: args.backUrl,
+      transaction_amount: args.priceCents / 100,
+      description: `Noite DF ${args.planName} - 30 dias`,
+      payment_method_id: 'pix',
+      payer: { email: args.payerEmail },
+      external_reference: externalReference,
+      notification_url: args.notificationUrl,
     }),
     cache: 'no-store',
   });
 
-  const data = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+  const data = (await response.json().catch(() => ({}))) as PaymentResource & {
+    message?: string;
+  };
+  const transactionData = data.point_of_interaction?.transaction_data;
   if (
     !response.ok ||
-    typeof data.id !== 'string' ||
-    typeof data.init_point !== 'string' ||
-    !data.init_point
+    (typeof data.id !== 'string' && typeof data.id !== 'number') ||
+    !transactionData?.ticket_url
   ) {
-    console.error('mercado-pago-create-pix-checkout', {
+    console.error('mercado-pago-create-pix-payment', {
       status: response.status,
-      data,
+      message: data.message,
     });
     throw new Error(
       typeof data.message === 'string'
-        ? `MERCADO_PAGO_PIX_CHECKOUT_CREATE_FAILED:${data.message}`
-        : `MERCADO_PAGO_PIX_CHECKOUT_CREATE_FAILED:${response.status}`
+        ? `MERCADO_PAGO_PIX_PAYMENT_CREATE_FAILED:${data.message}`
+        : `MERCADO_PAGO_PIX_PAYMENT_CREATE_FAILED:${response.status}`
     );
   }
 
-  const persisted = await supabase(
-    'payment_provider_plans?on_conflict=provider,establishment_id,plan_code,payment_method',
-    {
-      method: 'POST',
-      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-    body: JSON.stringify({
-      provider: 'mercado_pago',
-      establishment_id: args.establishmentId,
-      plan_code: args.planCode,
-      payment_method: 'pix',
-      provider_plan_id: data.id,
-      amount_cents: args.priceCents,
-      checkout_url: data.init_point,
-        updated_at: new Date().toISOString(),
-      }),
-    }
-  );
-  if (!persisted.ok) {
-    console.error('pix-plan-persist', { status: persisted.status });
-    throw new Error('PIX_PLAN_PERSIST_FAILED');
-  }
-
-  return { id: data.id, initPoint: data.init_point };
+  return {
+    id: String(data.id),
+    status: data.status,
+    externalReference,
+    ticketUrl: transactionData.ticket_url,
+    qrCode: transactionData.qr_code,
+    qrCodeBase64: transactionData.qr_code_base64,
+  };
 }
 
 export async function mercadoPagoRefund(paymentId: string, idempotencyKey: string) {
@@ -335,6 +338,48 @@ export async function syncPaymentResource(resource: PaymentResource): Promise<vo
   const reference = parseReference(resource.external_reference);
   if (!reference) return;
 
+  const parts = resource.external_reference?.split(':') ?? [];
+  const isOneOffPix = parts[3] === 'pix';
+  const amountCents =
+    typeof resource.transaction_amount === 'number'
+      ? Math.round(resource.transaction_amount * 100)
+      : 0;
+
+  if (isOneOffPix) {
+    const now = new Date();
+    const approved = resource.status === 'approved';
+    const approvedAt = resource.date_approved ? new Date(resource.date_approved) : now;
+    const currentPeriodEnd = approved
+      ? new Date(approvedAt.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      : null;
+    const providerSubscriptionId = `pix:${String(resource.id)}`;
+
+    const response = await supabase(
+      'subscription_accounts?on_conflict=provider_subscription_id',
+      {
+        method: 'POST',
+        headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify({
+          establishment_id: reference.establishmentId,
+          plan_code: reference.planCode,
+          provider: 'mercado_pago_pix',
+          provider_subscription_id: providerSubscriptionId,
+          provider_payment_id: String(resource.id),
+          payer_email: resource.payer?.email ?? '',
+          status: approved ? 'active' : 'pending',
+          amount_cents: amountCents,
+          current_period_end: currentPeriodEnd,
+          updated_at: now.toISOString(),
+        }),
+      }
+    );
+    if (!response.ok) throw new Error('PIX_ACCESS_UPSERT_FAILED');
+    if (approved) {
+      await syncCommercialPipeline(reference.establishmentId, 'active', now.toISOString());
+    }
+    return;
+  }
+
   const response = await supabase(
     `subscription_accounts?establishment_id=eq.${encodeURIComponent(reference.establishmentId)}&plan_code=eq.${encodeURIComponent(reference.planCode)}&order=updated_at.desc&limit=1&select=id`
   );
@@ -349,10 +394,7 @@ export async function syncPaymentResource(resource: PaymentResource): Promise<vo
       body: JSON.stringify({
         provider_payment_id: String(resource.id),
         payer_email: resource.payer?.email ?? undefined,
-        amount_cents:
-          typeof resource.transaction_amount === 'number'
-            ? Math.round(resource.transaction_amount * 100)
-            : undefined,
+        amount_cents: amountCents || undefined,
         updated_at: new Date().toISOString(),
       }),
     }
