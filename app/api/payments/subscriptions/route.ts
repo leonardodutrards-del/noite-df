@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
         externalReference,
         payerEmail: user.email,
         backUrl: `${baseUrl}/pagamento/retorno`,
+        notificationUrl: `${baseUrl}/api/payments/webhook`,
       });
 
       await syncSubscriptionResource({
