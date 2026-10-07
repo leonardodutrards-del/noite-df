@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PAYMENTS_ENABLED, SHOWCASE_MODE } from '@/lib/env';
 import { getPlan, isPaidPlan } from '@/lib/plans';
-import { syncSubscriptionResource } from '@/lib/mercado-pago';
+import { getOrCreateMercadoPagoPixPlan, syncSubscriptionResource } from '@/lib/mercado-pago';
 import { requireAuth } from '@/modules/auth/session';
 import { getEstablishmentEntitlements } from '@/modules/payments/entitlements';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
     const planId = typeof body.planId === 'string' ? body.planId : undefined;
     const plan = getPlan(planId);
+    const paymentMethod = body.paymentMethod === 'pix' ? 'pix' : 'mercado_pago';
     const requestedEstablishmentId =
       typeof body.establishmentId === 'string' ? body.establishmentId : undefined;
     const establishmentId =
@@ -51,6 +52,36 @@ export async function POST(request: NextRequest) {
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+
+    if (paymentMethod === 'pix') {
+      const pixPlan = await getOrCreateMercadoPagoPixPlan({
+        establishmentId,
+        planCode: plan.id,
+        planName: plan.name,
+        priceCents: plan.priceCents,
+        backUrl: `${baseUrl}/pagamento/retorno`,
+      });
+
+      try {
+        await updatePipeline({
+          establishmentId,
+          stage: 'replied',
+          visitStatus: 'interested',
+          contactChannel: 'mercado_pago_pix_checkout',
+        });
+      } catch (pipelineError) {
+        console.error('subscription-pix-checkout-pipeline', pipelineError);
+      }
+
+      return NextResponse.json({
+        id: pixPlan.id,
+        initPoint: pixPlan.initPoint,
+        planId: plan.id,
+        establishmentId,
+        paymentMethod: 'pix',
+      });
+    }
+
     const externalReference = `noite-df:${establishmentId}:${plan.id}:${Date.now()}`;
     const response = await fetch('https://api.mercadopago.com/preapproval', {
       method: 'POST',
