@@ -82,25 +82,14 @@ export async function mercadoPagoGet<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export async function getOrCreateMercadoPagoPixPlan(args: {
+export async function createMercadoPagoPixCheckout(args: {
   establishmentId: string;
   planCode: 'pro' | 'premium' | 'enterprise';
   planName: string;
   priceCents: number;
   backUrl: string;
-}): Promise<{ id: string }> {
-  const lookup = await supabase(
-    `payment_provider_plans?provider=eq.mercado_pago&establishment_id=eq.${encodeURIComponent(args.establishmentId)}&plan_code=eq.${encodeURIComponent(args.planCode)}&payment_method=eq.pix&select=provider_plan_id,amount_cents&limit=1`
-  );
-  if (!lookup.ok) throw new Error('PIX_PLAN_LOOKUP_FAILED');
-  const rows = (await lookup.json()) as Array<{
-    provider_plan_id: string;
-    amount_cents: number;
-  }>;
-  if (rows[0]?.provider_plan_id && rows[0].amount_cents === args.priceCents) {
-    return { id: rows[0].provider_plan_id };
-  }
-
+}): Promise<{ id: string; initPoint: string; externalReference: string }> {
+  const externalReference = `noite-df:${args.establishmentId}:${args.planCode}:${Date.now()}`;
   const response = await fetch('https://api.mercadopago.com/preapproval_plan', {
     method: 'POST',
     headers: {
@@ -109,6 +98,7 @@ export async function getOrCreateMercadoPagoPixPlan(args: {
     },
     body: JSON.stringify({
       reason: `Noite DF ${args.planName}`,
+      external_reference: externalReference,
       auto_recurring: {
         frequency: 1,
         frequency_type: 'months',
@@ -116,6 +106,7 @@ export async function getOrCreateMercadoPagoPixPlan(args: {
         currency_id: 'BRL',
       },
       payment_methods_allowed: {
+        payment_types: [{ id: 'bank_transfer' }],
         payment_methods: [{ id: 'pix' }],
       },
       back_url: args.backUrl,
@@ -124,66 +115,21 @@ export async function getOrCreateMercadoPagoPixPlan(args: {
   });
 
   const data = (await response.json().catch(() => ({}))) as Record<string, unknown>;
-  if (!response.ok || typeof data.id !== 'string') {
-    console.error('mercado-pago-create-pix-plan', data);
-    throw new Error('MERCADO_PAGO_PIX_PLAN_CREATE_FAILED');
+  if (
+    !response.ok ||
+    typeof data.id !== 'string' ||
+    typeof data.init_point !== 'string' ||
+    !data.init_point
+  ) {
+    console.error('mercado-pago-create-pix-checkout', data);
+    throw new Error('MERCADO_PAGO_PIX_CHECKOUT_CREATE_FAILED');
   }
 
-  const persisted = await supabase(
-    'payment_provider_plans?on_conflict=provider,establishment_id,plan_code,payment_method',
-    {
-      method: 'POST',
-      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-      body: JSON.stringify({
-        provider: 'mercado_pago',
-        establishment_id: args.establishmentId,
-        plan_code: args.planCode,
-        payment_method: 'pix',
-        provider_plan_id: data.id,
-        amount_cents: args.priceCents,
-        checkout_url: null,
-        updated_at: new Date().toISOString(),
-      }),
-    }
-  );
-  if (!persisted.ok) throw new Error('PIX_PLAN_PERSIST_FAILED');
-
-  return { id: data.id };
-}
-
-export async function createMercadoPagoPixSubscription(args: {
-  preapprovalPlanId: string;
-  externalReference: string;
-  payerEmail: string;
-  backUrl: string;
-  notificationUrl: string;
-}): Promise<SubscriptionResource & { init_point: string }> {
-  const response = await fetch('https://api.mercadopago.com/preapproval', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken()}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      preapproval_plan_id: args.preapprovalPlanId,
-      external_reference: args.externalReference,
-      payer_email: args.payerEmail,
-      back_url: args.backUrl,
-      notification_url: args.notificationUrl,
-      status: 'pending',
-    }),
-    cache: 'no-store',
-  });
-
-  const data = (await response.json().catch(() => ({}))) as SubscriptionResource & {
-    init_point?: string;
+  return {
+    id: data.id,
+    initPoint: data.init_point,
+    externalReference,
   };
-  if (!response.ok || typeof data.id !== 'string' || typeof data.init_point !== 'string' || !data.init_point) {
-    console.error('mercado-pago-create-pix-subscription', data);
-    throw new Error('MERCADO_PAGO_PIX_SUBSCRIPTION_CREATE_FAILED');
-  }
-
-  return data as SubscriptionResource & { init_point: string };
 }
 
 export async function mercadoPagoRefund(paymentId: string, idempotencyKey: string) {
