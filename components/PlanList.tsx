@@ -55,7 +55,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
     }
   }
 
-  async function handleSubscribe(planId: string) {
+  async function handleSubscribe(planId: string, paymentMethod: 'mercado_pago' | 'pix' = 'mercado_pago') {
     setError(null);
     if (!paymentsEnabled || showcaseMode) {
       setError('Pagamentos indisponíveis no momento.');
@@ -67,7 +67,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
       const response = await fetch('/api/payments/subscriptions', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ planId, paymentMethod }),
       });
       const payload = await response.json().catch(() => ({}));
 
@@ -84,7 +84,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
         return;
       }
 
-      track('subscription_checkout', { planId });
+      track('subscription_checkout', { planId, paymentMethod });
       window.location.assign(payload.initPoint);
     } catch {
       setError('Não foi possível iniciar a assinatura. Tente novamente mais tarde.');
@@ -135,8 +135,16 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
                   >
                     {paymentLoading ? 'Abrindo Mercado Pago…' : `Assinar ${plan.name}`}
                   </button>
+                  <button
+                    className="button ghost"
+                    type="button"
+                    disabled={!paymentsEnabled || showcaseMode || Boolean(loadingPlan)}
+                    onClick={() => void handleSubscribe(plan.id, 'pix')}
+                  >
+                    {paymentLoading ? 'Abrindo checkout…' : 'Assinar com Pix'}
+                  </button>
                   <small style={{ color: 'var(--muted)' }}>
-                    O pagamento só é iniciado após login e vínculo confirmado com o estabelecimento.
+                    O pagamento só é iniciado após login e vínculo confirmado. No Pix, o QR Code e o código Copia e Cola são exibidos pelo Mercado Pago, e a assinatura permanece mensal.
                   </small>
                 </>
               )}
