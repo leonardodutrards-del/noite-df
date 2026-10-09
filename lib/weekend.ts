@@ -42,9 +42,9 @@ export function getWeekendEvents(items: EventItem[], now = new Date()) {
   return eventsInWindow(items, start, end);
 }
 
-export function getNextConfirmedWeekend(items: EventItem[], now = new Date(), maxWeeks = 6) {
+export function getNextConfirmedWeekend(items: EventItem[], now = new Date(), maxWeeks = 6, skipCurrent = false) {
   const base = getWeekendWindow(now);
-  for (let offset = 0; offset < maxWeeks; offset += 1) {
+  for (let offset = skipCurrent ? 1 : 0; offset < maxWeeks; offset += 1) {
     const friday = new Date(`${base.start}T12:00:00Z`);
     friday.setUTCDate(friday.getUTCDate() + offset * 7);
     const sunday = new Date(friday);
