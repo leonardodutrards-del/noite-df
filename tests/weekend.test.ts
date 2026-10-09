@@ -26,7 +26,7 @@ describe('Indicações do fim de semana', () => {
   it('avança para o próximo fim de semana com programação confirmada quando a janela atual está vazia', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-10-09T12:00:00-03:00'));
-    const selection = getNextConfirmedWeekend(researchedEvents, new Date());
+    const selection = getNextConfirmedWeekend(researchedEvents, new Date(), 6, true);
     expect(selection.start).toBe('2026-10-16');
     expect(selection.end).toBe('2026-10-18');
     expect(selection.shifted).toBe(true);
