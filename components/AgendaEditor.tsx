@@ -5,7 +5,7 @@ import type { EditorialEvent } from '@/modules/events/editorial';
 import type { PublicationStatus } from '@/modules/shared/types';
 
 type Place = { id: string; name: string; publicationStatus?: PublicationStatus };
-const empty = { establishment_id: '', title: '', category: 'Música ao vivo', description: '', starts_at: '', ends_at: '', official_url: '', price_description: '', publication_status: 'draft' as PublicationStatus };
+const empty = { establishment_id: '', title: '', category: 'Música ao vivo', description: '', starts_at: '', ends_at: '', official_url: '', price_description: '', publication_status: 'draft' as PublicationStatus, image_url: '', image_alt: '', image_credit: '', image_source: '', image_authorized: false };
 const localTime = (iso: string) => new Date(Date.parse(iso) - 3 * 3600000).toISOString().slice(0, 16);
 const labels: Record<string, string> = { draft: 'Rascunho', pending_review: 'Em revisão', published: 'Publicado', suspended: 'Suspenso', expired: 'Encerrado' };
 
@@ -27,7 +27,8 @@ export function AgendaEditor({ places, initialEvents, initialNow }: { places: Pl
   }
   function edit(event: EditorialEvent) {
     setEditing(event);
-    setForm({ ...event, starts_at: localTime(event.starts_at), ends_at: localTime(event.ends_at), price_description: event.price_description || '' });
+    setForm({ ...empty, ...event, starts_at: localTime(event.starts_at), ends_at: localTime(event.ends_at), price_description: event.price_description || '',
+      image_url: event.artwork?.url || '', image_alt: event.artwork?.alt || '', image_credit: event.artwork?.credit || '', image_source: event.artwork?.sourceUrl || '', image_authorized: event.artwork?.authorized === true });
     setConfirmed(false);
     setMessage('Confira a fonte antes de publicar alterações.');
     document.getElementById('agenda-form')?.scrollIntoView({ behavior: 'smooth' });
@@ -37,6 +38,7 @@ export function AgendaEditor({ places, initialEvents, initialNow }: { places: Pl
     try {
       const res = await fetch('/api/admin/events', { method: editing ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, starts_at: `${form.starts_at}:00-03:00`, ends_at: `${form.ends_at}:00-03:00`, sourceConfirmed: confirmed,
+          artwork: form.image_url ? { url: form.image_url, alt: form.image_alt, credit: form.image_credit, sourceUrl: form.image_source, authorized: form.image_authorized } : null,
           ...(editing ? { id: editing.id, expectedUpdatedAt: editing.updated_at } : {}) }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Não foi possível salvar.');
@@ -61,6 +63,16 @@ export function AgendaEditor({ places, initialEvents, initialNow }: { places: Pl
       <label>Descrição e endereço confirmado<textarea required maxLength={4000} rows={4} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></label>
       <label>Link da publicação oficial<input required type="url" value={form.official_url} onChange={e => setForm({ ...form, official_url: e.target.value })} placeholder="https://" /></label>
       <label>Entrada, couvert e condições<textarea maxLength={1500} rows={2} value={form.price_description} onChange={e => setForm({ ...form, price_description: e.target.value })} /></label>
+      <fieldset style={{ display: 'grid', gap: 12 }}><legend>Flyer ou foto do evento · opcional</legend>
+        <p className="field-hint">Use o endereço direto de uma imagem estável. Links de posts do Instagram não são arquivos de imagem. O flyer aparece nas agendas e no perfil do local; texto, horário e endereço continuam legíveis fora da arte.</p>
+        <label>Link HTTPS da imagem<input type="url" maxLength={2000} value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} placeholder="https://…/flyer.jpg" /></label>
+        {form.image_url && <>
+          <label>Descrição acessível<input required maxLength={300} value={form.image_alt} onChange={e => setForm({ ...form, image_alt: e.target.value })} /></label>
+          <label>Crédito da imagem<input required maxLength={200} value={form.image_credit} onChange={e => setForm({ ...form, image_credit: e.target.value })} placeholder="Nome do estabelecimento ou organizador" /></label>
+          <label>Fonte da imagem<input required type="url" maxLength={2000} value={form.image_source} onChange={e => setForm({ ...form, image_source: e.target.value })} /></label>
+          <label><input style={{ width: 'auto' }} type="checkbox" required={form.publication_status === 'published'} checked={form.image_authorized} onChange={e => setForm({ ...form, image_authorized: e.target.checked })} /> Tenho autorização do responsável para usar esta imagem.</label>
+        </>}
+      </fieldset>
       <label>Status<select value={form.publication_status} onChange={e => setForm({ ...form, publication_status: e.target.value as PublicationStatus })}>{Object.entries(labels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
       {form.publication_status === 'published' && <label><input style={{ width: 'auto' }} type="checkbox" required checked={confirmed} onChange={e => setConfirmed(e.target.checked)} /> Conferi a fonte oficial, data, horário e local desta programação.</label>}
       <div style={{ display: 'flex', gap: 12 }}><button disabled={busy} type="submit">{busy ? 'Salvando…' : 'Salvar evento'}</button>{editing && <button type="button" disabled={busy} onClick={() => { setEditing(null); setForm(empty); setConfirmed(false); }}>Cancelar edição</button>}</div>

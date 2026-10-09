@@ -3,12 +3,14 @@ import type { Establishment } from '@/modules/establishments/types';
 import type { PublicationStatus } from '@/modules/shared/types';
 import { isPlaceholder } from '@/lib/data-quality';
 import { sanitizeTextInput } from '@/lib/security';
+import { validateEventArtwork, type EventArtwork } from './artwork';
 
 export type EditorialEvent = {
   id: string; establishment_id: string; title: string; category: string;
   description: string; starts_at: string; ends_at: string;
   price_description: string | null; official_url: string;
   publication_status: PublicationStatus; verified_at: string | null; updated_at: string;
+  artwork?: EventArtwork | null;
 };
 
 export function validateEditorialEvent(body: Record<string, unknown>, now = new Date()) {
@@ -39,7 +41,9 @@ export function validateEditorialEvent(body: Record<string, unknown>, now = new 
   if (!['draft', 'pending_review', 'published', 'suspended', 'expired'].includes(publication_status)) throw new Error('INVALID_EVENT');
   if (publication_status === 'published' && (Date.parse(ends_at) <= now.getTime() || body.sourceConfirmed !== true)) throw new Error('INVALID_EVENT');
   const price_description = typeof body.price_description === 'string' ? sanitizeTextInput(body.price_description).slice(0, 1500) : null;
+  const artwork = validateEventArtwork(body.artwork, publication_status === 'published');
   return { establishment_id, title, category, description, official_url, starts_at, ends_at, publication_status, price_description,
+    artwork,
     verified_at: publication_status === 'published' ? now.toISOString() : null };
 }
 
@@ -52,6 +56,7 @@ export function editorialEventToPublic(row: EditorialEvent, place: Establishment
   return { id: row.id, title: row.title, place: place.name, region: place.region,
     dateLabel: `${format(row.starts_at).replace(', ', ' · ')} até ${format(row.ends_at)}`,
     category: row.category, description: row.description, admissionNote: row.price_description || undefined,
+    artwork: row.artwork || undefined,
     startsAt: new Date(Date.parse(row.starts_at) - 3 * 3600000).toISOString().replace('Z', '-03:00'),
     endsAt: row.ends_at, expiresAt: row.ends_at, sourceStatus: 'manual', publicationStatus: 'published',
     source: { kind: 'official', label: 'Canal oficial do organizador', url: row.official_url, verifiedAt: row.verified_at.slice(0, 10) } };

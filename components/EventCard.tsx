@@ -1,5 +1,6 @@
 import { EventItem } from '@/data/events';
 import { hasRealValue } from '@/lib/data-quality';
+import { EventArtwork } from './EventArtwork';
 
 function splitEventDateLabel(label: string) {
   const [date, ...timeParts] = label.split(' · ');
@@ -19,6 +20,7 @@ export function EventCard({ event }: { event: EventItem }) {
       )}
       <div>
         <h3>{event.title}</h3>
+        {event.artwork && <EventArtwork artwork={event.artwork} />}
         {hasRealValue(event.description) && <p>{event.description}</p>}
         <p className="field-hint">{event.admissionNote ?? 'Entrada e couvert: valores não informados. Confirme com a organização.'}</p>
         <div className="tags">
