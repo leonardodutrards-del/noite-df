@@ -1,9 +1,11 @@
 import { ExperienceHub } from '@/components/ExperienceHub';
 import { establishmentService } from '@/modules/establishments/service';
 
-export const revalidate = 60;
+import { getPublicAgenda } from '@/modules/events/public-agenda';
+
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const places = await establishmentService.search({});
-  return <ExperienceHub initialPlaces={places} />;
+  const [places, events] = await Promise.all([establishmentService.search({}), getPublicAgenda()]);
+  return <ExperienceHub initialPlaces={places} initialEvents={events} />;
 }

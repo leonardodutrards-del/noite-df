@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { events } from '@/data/events';
-import { todayEvents20260927 } from '@/data/seeds/today-events-2026-09-27';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { EventCard } from '@/components/EventCard';
 import { dateInBrasilia, getTodayEvents } from '@/lib/today-agenda';
 
@@ -14,9 +13,10 @@ export const metadata: Metadata = {
   openGraph: { title: 'Eventos de hoje | Noite DF', description: 'Confira a programação confirmada para hoje em Brasília.', url: '/hoje' },
 };
 
-export default function TodayAgendaPage() {
+export default async function TodayAgendaPage() {
+  const events = await getPublicAgenda();
   const now = new Date();
-  const today = getTodayEvents([...events, ...todayEvents20260927], now);
+  const today = getTodayEvents(events, now);
   const [year, month, day] = dateInBrasilia(now).split('-');
   return (
     <main className="container">

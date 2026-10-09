@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { events } from '@/data/events';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { EventCard } from '@/components/EventCard';
 import {
   getMonthlyAgenda,
@@ -22,7 +22,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MonthlyAgendaPage() {
+export default async function MonthlyAgendaPage() {
+  const events = await getPublicAgenda();
   const now = new Date();
   const window = getMonthlyAgendaWindow(now);
   const monthly = getMonthlyAgenda(events, now);
@@ -67,7 +68,7 @@ export default function MonthlyAgendaPage() {
         <div className="section-title">
           <div>
             <h2 id="monthly-events">Próximos eventos de {window.label}</h2>
-            <p>{monthly.length} {monthly.length === 1 ? 'evento confirmado' : 'eventos confirmados'} ainda por acontecer neste mês.</p>
+            <p>{monthly.length} {monthly.length === 1 ? 'evento confirmado' : 'eventos confirmados'} ainda válidos neste mês.</p>
           </div>
         </div>
 

@@ -555,6 +555,8 @@ export default function AdminPage() {
         </article>
       </div>
 
+      <p><Link className="button" href="/admin/agenda">Gerenciar agenda e eventos →</Link></p>
+
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 10, borderBottom: '1px solid var(--border)', paddingBottom: 12, marginBottom: 24 }}>
         <button

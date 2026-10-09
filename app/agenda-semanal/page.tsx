@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { events } from '@/data/events';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { EventCard } from '@/components/EventCard';
 import { groupMonthlyAgendaByDate } from '@/lib/monthly-agenda';
 import { getWeeklyAgenda, getWeeklyAgendaWindow } from '@/lib/weekly-agenda';
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   openGraph: { title: 'Agenda semanal | Noite DF', description: 'Confira eventos desta semana em Brasília e Entorno, com fontes dos organizadores.', url: '/agenda-semanal' },
 };
 
-export default function WeeklyAgendaPage() {
+export default async function WeeklyAgendaPage() {
+  const events = await getPublicAgenda();
   const now = new Date();
   const window = getWeeklyAgendaWindow(now);
   const upcoming = getWeeklyAgenda(events, now);
