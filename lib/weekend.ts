@@ -25,10 +25,10 @@ export function getWeekendWindow(now = new Date()) {
   return { start: dateKey(friday), end: dateKey(sunday), label: `${dateLabel(friday)} a ${dateLabel(sunday)}` };
 }
 
-export function getWeekendEvents(items: EventItem[], now = new Date()) {
-  const { start, end } = getWeekendWindow(now);
-  const eventDay = (event: EventItem) => event.startsAt?.slice(0, 10) ??
-    event.dateLabel.match(/^(\d{2})\/(\d{2})\/(\d{4})/)?.slice(1).reverse().join('-');
+const eventDay = (event: EventItem) => event.startsAt?.slice(0, 10) ??
+  event.dateLabel.match(/^(\d{2})\/(\d{2})\/(\d{4})/)?.slice(1).reverse().join('-');
+
+function eventsInWindow(items: EventItem[], start: string, end: string) {
   return items.filter(event => {
     if (!isConfirmedEvent(event) || event.source?.kind !== 'official' || !event.source.url) return false;
     const day = eventDay(event);
@@ -37,8 +37,36 @@ export function getWeekendEvents(items: EventItem[], now = new Date()) {
     (a.startsAt ?? '').localeCompare(b.startsAt ?? ''));
 }
 
-export function getWeekendDays(now = new Date()) {
-  const { start } = getWeekendWindow(now);
+export function getWeekendEvents(items: EventItem[], now = new Date()) {
+  const { start, end } = getWeekendWindow(now);
+  return eventsInWindow(items, start, end);
+}
+
+export function getNextConfirmedWeekend(items: EventItem[], now = new Date(), maxWeeks = 6) {
+  const base = getWeekendWindow(now);
+  for (let offset = 0; offset < maxWeeks; offset += 1) {
+    const friday = new Date(`${base.start}T12:00:00Z`);
+    friday.setUTCDate(friday.getUTCDate() + offset * 7);
+    const sunday = new Date(friday);
+    sunday.setUTCDate(friday.getUTCDate() + 2);
+    const start = dateKey(friday);
+    const end = dateKey(sunday);
+    const events = eventsInWindow(items, start, end);
+    if (events.length > 0 || offset === maxWeeks - 1) {
+      return {
+        start,
+        end,
+        label: `${dateLabel(friday)} a ${dateLabel(sunday)}`,
+        events,
+        shifted: offset > 0,
+      };
+    }
+  }
+  return { ...base, events: [] as EventItem[], shifted: false };
+}
+
+export function getWeekendDays(now = new Date(), startOverride?: string) {
+  const start = startOverride ?? getWeekendWindow(now).start;
   return ['Sexta-feira', 'Sábado', 'Domingo'].map((name, offset) => {
     const day = new Date(`${start}T12:00:00Z`);
     day.setUTCDate(day.getUTCDate() + offset);
