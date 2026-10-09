@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { getWeekendDays } from '@/lib/weekend';
 
 const events = readFileSync(resolve(process.cwd(), 'data/seeds/events-2026-09.ts'), 'utf8');
-const weekend = readFileSync(resolve(process.cwd(), 'app/fim-de-semana/page.tsx'), 'utf8');
+
 
 describe('Agenda do fim de semana 02–04/10/2026', () => {
   it('inclui novas agendas confirmadas', () => {
@@ -18,8 +19,8 @@ describe('Agenda do fim de semana 02–04/10/2026', () => {
   });
 
   it('organiza a página por sexta, sábado e domingo', () => {
-    expect(weekend).toContain('Sexta-feira · 02/10');
-    expect(weekend).toContain('Sábado · 03/10');
-    expect(weekend).toContain('Domingo · 04/10');
+    expect(getWeekendDays(new Date('2026-10-02T12:00:00Z')).map(day => day.title)).toEqual([
+      'Sexta-feira · 02/10', 'Sábado · 03/10', 'Domingo · 04/10',
+    ]);
   });
 });

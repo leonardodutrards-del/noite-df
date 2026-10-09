@@ -45,7 +45,7 @@ export default function MonthlyAgendaPage() {
         <span className="eyebrow">Calendário do mês</span>
         <h1>Agenda mensal de eventos</h1>
         <p>
-          {window.label} · eventos futuros confirmados em Brasília e Entorno, organizados pela data mais próxima.
+          {window.label} · eventos confirmados ainda válidos em Brasília e Entorno, organizados pela data mais próxima.
         </p>
         <p>
           Quando um evento entra na semana atual, ele passa automaticamente a aparecer também na Agenda Semanal.

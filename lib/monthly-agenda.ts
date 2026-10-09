@@ -51,7 +51,7 @@ export function getMonthlyAgenda(items: EventItem[], now = new Date()) {
       !Number.isFinite(begins) ||
       !Number.isFinite(cutoff) ||
       cutoff <= now.getTime() ||
-      begins < Math.max(start.getTime(), now.getTime()) ||
+      begins < start.getTime() ||
       begins >= end.getTime()
     ) {
       return false;

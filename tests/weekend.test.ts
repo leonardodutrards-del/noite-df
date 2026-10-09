@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { researchedEvents } from '@/data/seeds/events-2026-09';
-import { getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
+import { getWeekendDays, getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
 import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
 import { places } from '@/data/places';
 
@@ -32,4 +32,13 @@ describe('Indicações do fim de semana', () => {
     expect(recommendations.every(place => events.some(event => event.place === place.name))).toBe(true);
     expect(getWeekendRecommendations(places, [])).toEqual([]);
   });
+});
+
+it('updates day headings across weekends and year boundaries', () => {
+  expect(getWeekendDays(new Date('2026-10-09T12:00:00Z')).map(day => day.title)).toEqual([
+    'Sexta-feira · 09/10', 'Sábado · 10/10', 'Domingo · 11/10',
+  ]);
+  expect(getWeekendDays(new Date('2027-01-01T12:00:00Z')).map(day => day.key)).toEqual([
+    '2027-01-01', '2027-01-02', '2027-01-03',
+  ]);
 });

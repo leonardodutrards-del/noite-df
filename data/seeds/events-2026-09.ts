@@ -262,4 +262,17 @@ export const researchedEvents: EventItem[] = [
     'Retorno da Eskenta Fest ao Contexto com Samon Pessoa, Caio Hot, John Saucer, Sidharta, Artur Campos, Dendê, LIPE, Youssef e DJ Léo.',
     'https://www.sympla.com.br/evento/eskenta-fest-10-10-no-contexto/3553803',
     '2026-10-11T05:00:00-03:00', '2026-10-10T21:00:00-03:00', '2026-10-05'),
+  { ...event('oscarito-sextanejada-2026-10-09', 'Sextanejada no Oscarito', 'Oscarito Brasília', 'SIG', '09/10/2026 · 19h às 2h de 10/10',
+    'Sertanejo com Surra de Modão às 20h30, Trio Sertanejada às 23h e DJ MJay. Local: SIG, Quadra 1, Lote 985, Brasília/DF. Evento para maiores de 18 anos; consulte as condições na fonte oficial.',
+    'https://www.sympla.com.br/evento/sextanejada-no-oscarito/3606314',
+    '2026-10-10T02:00:00-03:00', '2026-10-09T19:00:00-03:00', '2026-10-09'), admissionNote: 'Taxa antecipada de R$ 20 para entrada até 21h. Após esse horário, a organização informa complemento na bilheteria conforme o ingresso vigente. Valores sujeitos a alteração e lotação.' },
+  { ...event('oscarito-corona-day-2026-10-10', 'Corona Day no Osca', 'Oscarito Brasília', 'SIG', '10/10/2026 · 9h às 16h',
+    'Funcional às 9h, futevôlei às 10h, beach tennis às 11h, feira colaborativa, DJ e samba ao vivo. Local: SIG, Quadra 1, Lote 985, Brasília/DF. Evento para maiores de 18 anos; consulte ingressos e condições na fonte oficial.',
+    'https://www.sympla.com.br/evento/corona-day-no-osca/3606346',
+    '2026-10-10T16:00:00-03:00', '2026-10-10T09:00:00-03:00', '2026-10-09'), admissionNote: 'Taxa de conveniência antecipada de R$ 25, sujeita a alteração e lotação. Consulte as condições do organizador.' },
+  event('quintal-feriadou-2026-10-12', 'Feriadou no Quintal — 12 de Outubro', 'Quintal da Tia Sandra', 'SIG', '12/10/2026 · 12h às 21h',
+    'Feriado com samba, pagode e sertanejo, organizado pela Line Agência. Local: SIG Quadra 6, Rua L, Brasília/DF. Consulte atrações, ingressos e condições na página oficial do organizador.',
+    'https://www.sympla.com.br/evento/lgc/3590615',
+    '2026-10-12T21:00:00-03:00', '2026-10-12T12:00:00-03:00', '2026-10-09'),
+
 ];
