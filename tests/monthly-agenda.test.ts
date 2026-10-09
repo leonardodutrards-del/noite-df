@@ -55,3 +55,9 @@ describe('monthly agenda', () => {
     expect(groups[1].date).toBe('2026-10-10');
   });
 });
+
+it('keeps an ongoing monthly event and expires it at closing time', () => {
+  const event = makeEvent('ongoing', '2026-10-06T18:00:00-03:00', '2026-10-07T01:00:00-03:00');
+  expect(getMonthlyAgenda([event], new Date('2026-10-07T00:30:00-03:00'))).toEqual([event]);
+  expect(getMonthlyAgenda([event], new Date('2026-10-07T01:00:00-03:00'))).toEqual([]);
+});

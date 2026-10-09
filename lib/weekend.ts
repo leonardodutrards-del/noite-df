@@ -36,3 +36,13 @@ export function getWeekendEvents(items: EventItem[], now = new Date()) {
   }).sort((a, b) => (eventDay(a) ?? '').localeCompare(eventDay(b) ?? '') ||
     (a.startsAt ?? '').localeCompare(b.startsAt ?? ''));
 }
+
+export function getWeekendDays(now = new Date()) {
+  const { start } = getWeekendWindow(now);
+  return ['Sexta-feira', 'Sábado', 'Domingo'].map((name, offset) => {
+    const day = new Date(`${start}T12:00:00Z`);
+    day.setUTCDate(day.getUTCDate() + offset);
+    const key = dateKey(day);
+    return { key, title: `${name} · ${key.slice(8, 10)}/${key.slice(5, 7)}` };
+  });
+}

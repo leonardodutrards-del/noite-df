@@ -3,7 +3,7 @@ import { events } from '@/data/events';
 import { places } from '@/data/places';
 import { EventCard } from '@/components/EventCard';
 import { PlaceCard } from '@/components/PlaceCard';
-import { getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
+import { getWeekendDays, getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
 import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
 
 export const dynamic = 'force-dynamic';
@@ -12,11 +12,7 @@ export default function WeekendPage() {
   const window = getWeekendWindow();
   const weekendEvents = getWeekendEvents(events);
   const recommendations = getWeekendRecommendations(places, weekendEvents);
-  const days = [
-    { key: window.start, title: 'Sexta-feira · 02/10' },
-    { key: new Date(new Date(`${window.start}T12:00:00Z`).getTime() + 86400000).toISOString().slice(0, 10), title: 'Sábado · 03/10' },
-    { key: window.end, title: 'Domingo · 04/10' },
-  ];
+  const days = getWeekendDays();
 
   return (
     <main className="container">

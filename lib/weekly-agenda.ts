@@ -35,7 +35,7 @@ export function getWeeklyAgenda(items: EventItem[], now = new Date()) {
       !item.source || item.source.kind !== 'official' || !item.source.url ||
       !/^https:\/\//.test(item.source.url) ||
       !Number.isFinite(begins) || !Number.isFinite(cutoff) || cutoff <= now.getTime() ||
-      begins < Math.max(start.getTime(), now.getTime()) || begins >= end.getTime()) return false;
+      begins < start.getTime() || begins >= end.getTime()) return false;
     const key = `${item.place.toLowerCase()}|${begins}|${item.title.toLowerCase()}`;
     if (seen.has(key)) return false;
     seen.add(key);

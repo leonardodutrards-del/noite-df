@@ -37,3 +37,8 @@ describe('weekly agenda', () => {
     expect(getWeeklyAgenda([sample], new Date('2026-10-07T04:01:00Z'))).toEqual([]);
   });
 });
+
+it('keeps an ongoing weekly event until its exact expiry', () => {
+  expect(getWeeklyAgenda([sample], new Date('2026-10-07T00:30:00-03:00'))).toEqual([sample]);
+  expect(getWeeklyAgenda([sample], new Date('2026-10-07T01:00:00-03:00'))).toEqual([]);
+});

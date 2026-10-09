@@ -26,3 +26,17 @@
 
 ## Gate de produção
 Executar testes, lint e build. Publicar somente com CI e Vercel verdes.
+
+## Revisão operacional — 09/10/2026
+A fase 12 possui cobrança recorrente e Pix avulso por 30 dias implementados. O usuário confirmou o recebimento do pagamento teste e a assinatura exibida no painel. Isso não comprova, por si só, renovação, cancelamento ou todas as permissões em produção.
+
+### Critérios para fechar a fase 12
+- [ ] Validar em sessão autenticada o vínculo do parceiro, plano, prazo e recursos liberados após pagamento.
+- [ ] Confirmar cancelamento recorrente e expiração do Pix sem cobrança automática.
+- [ ] Completar o contato oficial de privacidade/atendimento e a revisão dos termos operacionais. A página aceita NEXT_PUBLIC_SUPPORT_EMAIL; só configurar com um endereço oficial verificado.
+- [ ] Validar operação de um parceiro real e leitura dos indicadores de conversão.
+
+### Próximo avanço proposto — agenda operada pelo painel
+As agendas públicas hoje, semanal, mensal e fim de semana leem `data/events`, enquanto a agenda do parceiro persiste `weeklySchedule` no cadastro do estabelecimento. São caminhos distintos: editar o painel não alimenta automaticamente o calendário de eventos datados.
+
+Conectar eventos datados ao banco, com autoria, data/hora, término, fonte oficial, revisão e status de publicação. Oferecer edição no painel e moderação no Master Admin; atualizar/invalidate as páginas após aprovação. Alterações editoriais passam a dispensar deploy. Mudanças de código continuam com testes, lint, build e Vercel verdes. Esse avanço ainda não está implementado nem constitui uma fase 13 já acordada.
