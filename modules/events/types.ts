@@ -1,4 +1,5 @@
 import type { DataSource, PublicationStatus } from '@/modules/shared/types';
+import type { EventArtwork } from './artwork';
 
 export type EventItem = {
   id: string;
@@ -14,6 +15,7 @@ export type EventItem = {
   // Editorial visibility cutoff; not a claim about the event's closing time.
   expiresAt?: string;
   admissionNote?: string;
+  artwork?: EventArtwork;
   publicationStatus?: PublicationStatus;
   source?: DataSource;
 };

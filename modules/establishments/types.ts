@@ -1,4 +1,5 @@
 import type { PublicationStatus, DataSource } from '@/modules/shared/types';
+import type { EventArtwork } from '@/modules/events/artwork';
 
 export type { PublicationStatus, DataSource };
 
@@ -76,6 +77,7 @@ export type Establishment = {
   menu?: {
     url: string;
     checkedAt: string;
+    images?: EventArtwork[];
     examples?: { name: string; price: number; from?: boolean; note?: string }[];
   };
   admissionNote?: string;

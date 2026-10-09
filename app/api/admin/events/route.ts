@@ -11,7 +11,7 @@ function errorResponse(error: unknown) {
   const messages: Record<number, string> = {
     401: 'Entre na sua conta.', 403: 'Acesso restrito ao Master Admin.', 404: 'Evento não encontrado.',
     409: 'O evento mudou em outra sessão. Recarregue antes de salvar.',
-    400: 'Confira título, local, descrição, fonte HTTPS e datas. Para publicar, confirme a fonte e informe um encerramento futuro.',
+    400: 'Confira os dados e as datas. Para publicar, confirme a fonte oficial e o uso da imagem. O flyer precisa de link HTTPS, descrição, crédito e fonte.',
     503: 'Não foi possível acessar a agenda. Tente novamente.',
   };
   return NextResponse.json({ error: messages[status] }, { status });

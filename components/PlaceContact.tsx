@@ -2,6 +2,8 @@
 
 import { track } from '@/lib/analytics';
 import type { Establishment } from '@/modules/establishments/types';
+import { EventArtwork } from './EventArtwork';
+import { validateEventArtwork } from '@/modules/events/artwork';
 
 export function PlaceContact({ place, compact = false }: { place: Establishment; compact?: boolean }) {
   const contact = place.businessContact;
@@ -29,6 +31,12 @@ export function PlaceContact({ place, compact = false }: { place: Establishment;
       {!compact && <>
         {place.menu && <div className="contact-section">
           <h2>Cardápio e preços</h2>
+          {place.menu.images?.flatMap((image, index) => {
+            try {
+              const checked = validateEventArtwork(image, true);
+              return checked ? [<EventArtwork key={`${index}:${checked.url}`} artwork={checked} />] : [];
+            } catch { return []; }
+          })}
           {place.menu.examples?.map(item => <p key={item.name}>
             {item.name}: <strong>{item.from ? 'a partir de ' : ''}{item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>{item.note ? ` · ${item.note}` : ''}
           </p>)}

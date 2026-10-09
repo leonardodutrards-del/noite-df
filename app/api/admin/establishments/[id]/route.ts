@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireMasterAdmin } from '@/modules/auth/session';
 import { establishmentService } from '@/modules/establishments/service';
 import { sanitizeTextInput } from '@/lib/security';
+import { validateMenu } from '@/modules/establishments/menu';
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -37,6 +38,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const body = await request.json().catch(() => ({}));
 
     const updates: Record<string, unknown> = {};
+    if (body.menu !== undefined) updates.menu = validateMenu(body.menu);
 
     if (body.name && typeof body.name === 'string') {
       updates.name = sanitizeTextInput(body.name);
@@ -76,6 +78,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ establishment: updated });
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Erro ao atualizar estabelecimento.';
+    if (msg === 'INVALID_MENU') return NextResponse.json({ error: 'Confira o link HTTPS, a data e as imagens do cardápio, com descrição, crédito, fonte e autorização.' }, { status: 400 });
     if (msg === 'UNAUTHORIZED') {
       return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
     }
