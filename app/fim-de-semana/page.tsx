@@ -3,17 +3,17 @@ import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { places } from '@/data/places';
 import { EventCard } from '@/components/EventCard';
 import { PlaceCard } from '@/components/PlaceCard';
-import { getWeekendDays, getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
+import { getNextConfirmedWeekend, getWeekendDays } from '@/lib/weekend';
 import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
 
 export const dynamic = 'force-dynamic';
 
 export default async function WeekendPage() {
   const events = await getPublicAgenda();
-  const window = getWeekendWindow();
-  const weekendEvents = getWeekendEvents(events);
+  const selection = getNextConfirmedWeekend(events);
+  const weekendEvents = selection.events;
   const recommendations = getWeekendRecommendations(places, weekendEvents);
-  const days = getWeekendDays();
+  const days = getWeekendDays(new Date(), selection.start);
 
   return (
     <main className="container">
@@ -24,7 +24,8 @@ export default async function WeekendPage() {
       <section className="page-heading">
         <span className="eyebrow">Indicações do fim de semana</span>
         <h1>Seu próximo fim de semana no DF</h1>
-        <p>{window.label} · Eventos com data e fonte oficial. Consulte ingressos, horário e condições no canal do organizador.</p>
+        <p>{selection.label} · Eventos com data e fonte oficial. Consulte ingressos, horário e condições no canal do organizador.</p>
+        {selection.shifted ? <p>Como a janela mais próxima está sem programação confirmada, mostramos o próximo fim de semana com evento oficial já validado.</p> : null}
       </section>
       <section aria-labelledby="weekend-events">
         <div className="section-title"><div><h2 id="weekend-events">Programação confirmada</h2><p>{weekendEvents.length} eventos nesta seleção.</p></div></div>
