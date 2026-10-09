@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { events } from '@/data/events';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { places } from '@/data/places';
 import { EventCard } from '@/components/EventCard';
 import { PlaceCard } from '@/components/PlaceCard';
@@ -8,7 +8,8 @@ import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
 
 export const dynamic = 'force-dynamic';
 
-export default function WeekendPage() {
+export default async function WeekendPage() {
+  const events = await getPublicAgenda();
   const window = getWeekendWindow();
   const weekendEvents = getWeekendEvents(events);
   const recommendations = getWeekendRecommendations(places, weekendEvents);

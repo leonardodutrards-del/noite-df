@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { establishmentService } from '@/modules/establishments/service';
-import { events } from '@/data/events';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { RatingBreakdown } from '@/components/RatingBreakdown';
 import { PublicRatingsSummary } from '@/components/PublicRatingsSummary';
 import { PlaceContact } from '@/components/PlaceContact';
@@ -80,6 +80,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
   const confirmedSchedule = getConfirmedSchedules(place.weeklySchedule);
   const isRatingConfirmed = hasConfirmedRating(place);
 
+  const events = await getPublicAgenda();
   const placeEvents = events.filter(
     (e) => isConfirmedEvent(e) && (e.place.toLowerCase().includes(place.name.toLowerCase()) || place.name.toLowerCase().includes(e.place.toLowerCase()))
   );

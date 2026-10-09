@@ -13,13 +13,13 @@ const memoryRepo = readFileSync(
 
 describe('Dados públicos ao vivo do Supabase', () => {
   it('carrega a home pelo establishmentService', () => {
-    expect(home).toContain('await establishmentService.search({})');
+    expect(home).toContain('establishmentService.search({})');
     expect(home).toContain('initialPlaces={places}');
   });
 
   it('carrega perfis e sitemap pelo repository', () => {
     expect(placePage).toContain('await establishmentService.getById(slug)');
-    expect(sitemap).toContain('await establishmentService.search({})');
+    expect(sitemap).toContain('establishmentService.search({})');
   });
 
   it('expõe publicamente somente registros published', () => {

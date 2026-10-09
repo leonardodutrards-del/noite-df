@@ -5,7 +5,7 @@
 
 import { useMemo, useState } from 'react';
 import type { Establishment } from '@/modules/establishments/types';
-import { events } from '@/data/events';
+import type { EventItem } from '@/modules/events/types';
 import { PlaceCard } from '@/components/PlaceCard';
 import { EventCard } from '@/components/EventCard';
 import { recommendPlaces } from '@/lib/recommend';
@@ -26,8 +26,9 @@ import {
   type NightIntent,
 } from '@/lib/night-intents';
 
-export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[] }) {
+export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces: Establishment[]; initialEvents: EventItem[] }) {
   const places = initialPlaces;
+  const events = initialEvents;
   const [query, setQuery] = useState('');
   const [region, setRegion] = useState('todos');
   const [vibe, setVibe] = useState('todas');
@@ -76,7 +77,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
 
   const todayEventPlaces = useMemo(
     () => new Set(getTodayEvents(events).map((event) => normalizeIntentText(event.place))),
-    []
+    [events]
   );
 
   const filteredPlaces = useMemo(
@@ -128,7 +129,7 @@ export function ExperienceHub({ initialPlaces }: { initialPlaces: Establishment[
     return getMonthlyAgenda(events, now)
       .filter((event) => isConfirmedEvent(event))
       .slice(0, 9);
-  }, []);
+  }, [events]);
 
   const handleQueryChange = (val: string) => {
     setQuery(val);

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PlaceCard } from '@/components/PlaceCard';
 import { EventCard } from '@/components/EventCard';
-import { events } from '@/data/events';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { getTodayEvents } from '@/lib/today-agenda';
 import { getWeeklyAgenda } from '@/lib/weekly-agenda';
 import { establishmentService } from '@/modules/establishments/service';
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SobradinhoHubPage() {
+  const events = await getPublicAgenda();
   const now = new Date();
   const allPlaces = await establishmentService.search({});
   const localPlaces = allPlaces
