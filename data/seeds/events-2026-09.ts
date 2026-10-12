@@ -6,7 +6,7 @@ const event = (id: string, title: string, place: string, region: string, dateLab
   admissionNote: id.startsWith('contexto-')
     ? 'O organizador informa couvert artístico obrigatório para ingressos VIP. Valor do couvert e demais ingressos não informado na descrição. Consulte o lote e as condições na fonte.'
     : undefined,
-  category: 'Programação divulgada pelo organizador', sourceStatus: 'manual', publicationStatus: 'published',
+  category: 'Programação divulgada pelo organizador', sourceStatus: 'manual', publicationStatus: id === 'contexto-surra-modao-2026-10-14' ? 'suspended' : 'published',
   source: { kind: 'official', label: 'Canal oficial do estabelecimento ou organizador', url, verifiedAt },
 });
 const oscarito = 'https://www.instagram.com/oscaritobrasilia/p/DdPg0FfgQ5P/';
@@ -274,5 +274,10 @@ export const researchedEvents: EventItem[] = [
     'Feriado com samba, pagode e sertanejo, organizado pela Line Agência. Local: SIG Quadra 6, Rua L, Brasília/DF. Consulte atrações, ingressos e condições na página oficial do organizador.',
     'https://www.sympla.com.br/evento/lgc/3590615',
     '2026-10-12T21:00:00-03:00', '2026-10-12T12:00:00-03:00', '2026-10-09'),
+
+  event("54ae135c-e248-5178-a4dc-60985ba51959", "Forró na Varanda", "Contexto Bar", "Setor de Clubes Sul", "13/10/2026 · 18:00 até 14/10 01:00", "Forró ao vivo na Varanda do Contexto. Local: SCES Trecho 2, conjuntos 26/27, lotes 02A e 02B, Brasília/DF. Evento para maiores de 18 anos.", "https://www.sympla.com.br/evento/forro-na-varanda-13-10-varanda-do-contexto/3595042", "2026-10-14T01:00:00-03:00", "2026-10-13T18:00:00-03:00", "2026-10-12"),
+  event("464e40c1-16dd-5f08-adfe-58e51f42e5a6", "We The Funk", "Contexto Bar", "Setor de Clubes Sul", "15/10/2026 · 21:00 até 16/10 04:00", "Noite de funk na Varanda do Contexto. Local: SCES Trecho 2, Setor de Clubes Sul, Brasília/DF. Evento para maiores de 18 anos.", "https://www.sympla.com.br/evento/we-the-funk-15-10-varanda-do-contexto-o-funk-e-nosso/3597533", "2026-10-16T04:00:00-03:00", "2026-10-15T21:00:00-03:00", "2026-10-12"),
+  event("155e9b5a-e2f8-5176-9149-bc00f2c19e18", "Deu Mó Love", "Contexto Bar", "Setor de Clubes Sul", "16/10/2026 · 18:00 até 17/10 04:00", "Pagode com dois blocos do Grupo Doze Por Oito e funk com DJs residentes. Local: SCES Trecho 2, conjuntos 26/27, lotes 02A e 02B, Brasília/DF. Evento para maiores de 18 anos.", "https://www.sympla.com.br/evento/deu-mo-love-16-10-varanda-do-contexto/3595095", "2026-10-17T04:00:00-03:00", "2026-10-16T18:00:00-03:00", "2026-10-12"),
+  event("f0a3ced5-8c5e-5eab-8b79-2048f684f26a", "Calourada Bsb — Meu Ex, Minha Vida", "Complexo Fora do Eixo", "SAAN", "17/10/2026 · 21:00 até 18/10 05:00", "Calourada com Tr Beat, Manu Soares, Coelho DJ, PDJ e Matteo. Local: SAAN Quadra 1, 700, Brasília/DF. Evento para maiores de 18 anos. Consulte ingressos e condições na fonte oficial.", "https://www.sympla.com.br/evento/calourada-bsb-ep-meu-ex-da-minha-vida-17-de-outubro/3613318", "2026-10-18T05:00:00-03:00", "2026-10-17T21:00:00-03:00", "2026-10-12"),
 
 ];

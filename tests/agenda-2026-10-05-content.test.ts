@@ -26,7 +26,7 @@ describe('Agenda 05-11 de outubro de 2026', () => {
     const monthly = getMonthlyAgenda(events, now);
     const ids = new Set(monthly.map((event) => event.id));
 
-    expect(ids.has('contexto-surra-modao-2026-10-14')).toBe(true);
+    expect(ids.has('contexto-surra-modao-2026-10-14')).toBe(false);
     expect(ids.has('galpao17-hall-of-rock-2026-10-16')).toBe(true);
     expect(ids.has('godofredo-oktoberfest-2026-10-17')).toBe(true);
     expect(ids.has('brutos-volkstreme-2026-10-18')).toBe(true);
