@@ -18,7 +18,7 @@ describe('Dated official programming', () => {
       expect(places.some(place => place.name === event.place)).toBe(true);
       expect(event.source?.kind).toBe('official');
       expect(new URL(event.source!.url!).protocol).toBe('https:');
-      expect(isConfirmedEvent(event)).toBe(true);
+      expect(isConfirmedEvent(event)).toBe(event.publicationStatus === 'published');
     }
   });
   it('expires events at their documented cutoff and preserves later dates', () => {

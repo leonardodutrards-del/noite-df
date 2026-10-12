@@ -1,0 +1,54 @@
+[
+  {
+    "id": "54ae135c-e248-5178-a4dc-60985ba51959",
+    "establishment_id": "contexto-bar",
+    "title": "Forró na Varanda",
+    "category": "Programação divulgada pelo organizador",
+    "description": "Forró ao vivo na Varanda do Contexto. Local: SCES Trecho 2, conjuntos 26/27, lotes 02A e 02B, Brasília/DF. Evento para maiores de 18 anos.",
+    "starts_at": "2026-10-13T18:00:00-03:00",
+    "ends_at": "2026-10-14T01:00:00-03:00",
+    "price_description": "Ingressos VIP têm couvert artístico obrigatório; consulte valores e condições na fonte oficial.",
+    "official_url": "https://www.sympla.com.br/evento/forro-na-varanda-13-10-varanda-do-contexto/3595042",
+    "publication_status": "published",
+    "verified_at": "2026-10-12T22:00:00Z"
+  },
+  {
+    "id": "464e40c1-16dd-5f08-adfe-58e51f42e5a6",
+    "establishment_id": "contexto-bar",
+    "title": "We The Funk",
+    "category": "Programação divulgada pelo organizador",
+    "description": "Noite de funk na Varanda do Contexto. Local: SCES Trecho 2, Setor de Clubes Sul, Brasília/DF. Evento para maiores de 18 anos.",
+    "starts_at": "2026-10-15T21:00:00-03:00",
+    "ends_at": "2026-10-16T04:00:00-03:00",
+    "price_description": "Ingressos VIP têm couvert artístico obrigatório; consulte valores e condições na fonte oficial.",
+    "official_url": "https://www.sympla.com.br/evento/we-the-funk-15-10-varanda-do-contexto-o-funk-e-nosso/3597533",
+    "publication_status": "published",
+    "verified_at": "2026-10-12T22:00:00Z"
+  },
+  {
+    "id": "155e9b5a-e2f8-5176-9149-bc00f2c19e18",
+    "establishment_id": "contexto-bar",
+    "title": "Deu Mó Love",
+    "category": "Programação divulgada pelo organizador",
+    "description": "Pagode com dois blocos do Grupo Doze Por Oito e funk com DJs residentes. Local: SCES Trecho 2, conjuntos 26/27, lotes 02A e 02B, Brasília/DF. Evento para maiores de 18 anos.",
+    "starts_at": "2026-10-16T18:00:00-03:00",
+    "ends_at": "2026-10-17T04:00:00-03:00",
+    "price_description": "Ingressos VIP têm couvert artístico obrigatório; consulte valores e condições na fonte oficial.",
+    "official_url": "https://www.sympla.com.br/evento/deu-mo-love-16-10-varanda-do-contexto/3595095",
+    "publication_status": "published",
+    "verified_at": "2026-10-12T22:00:00Z"
+  },
+  {
+    "id": "f0a3ced5-8c5e-5eab-8b79-2048f684f26a",
+    "establishment_id": "complexo-fora-do-eixo",
+    "title": "Calourada Bsb — Meu Ex, Minha Vida",
+    "category": "Programação divulgada pelo organizador",
+    "description": "Calourada com Tr Beat, Manu Soares, Coelho DJ, PDJ e Matteo. Local: SAAN Quadra 1, 700, Brasília/DF. Evento para maiores de 18 anos. Consulte ingressos e condições na fonte oficial.",
+    "starts_at": "2026-10-17T21:00:00-03:00",
+    "ends_at": "2026-10-18T05:00:00-03:00",
+    "price_description": "Consulte lotes e valores na fonte oficial.",
+    "official_url": "https://www.sympla.com.br/evento/calourada-bsb-ep-meu-ex-da-minha-vida-17-de-outubro/3613318",
+    "publication_status": "published",
+    "verified_at": "2026-10-12T22:00:00Z"
+  }
+]
