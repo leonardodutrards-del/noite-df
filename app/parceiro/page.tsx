@@ -313,6 +313,18 @@ export default function PartnerPage() {
       </section>
 
       <PartnerBillingCard />
+      <section className="panel" style={{ marginTop: 24, marginBottom: 24 }}>
+        <span className="badge">Primeiros passos</span>
+        <h2>Prepare seu perfil para receber clientes</h2>
+        <ul>
+          <li>{description && address ? '✓' : '○'} Confira descrição, endereço e contatos no formulário abaixo.</li>
+          <li>{menuUrl ? '✓' : '○'} Adicione o link oficial do cardápio.</li>
+          <li>{schedule.length ? '✓' : '○'} Preencha a programação semanal com datas e horários confirmados.</li>
+          <li>{promoTitle ? '✓' : '○'} Cadastre uma promoção com prazo de validade.</li>
+        </ul>
+        <p>{entitlements?.source === 'free' ? 'Para editar, escolha um plano após a aprovação do vínculo.' : 'Revise os dados e use Salvar para publicar as alterações permitidas pelo seu plano.'}</p>
+        <Link href="/planos">Escolher ou conferir seu plano →</Link>
+      </section>
 
       {message && (
         <div

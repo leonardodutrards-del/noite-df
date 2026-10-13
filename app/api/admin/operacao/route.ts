@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireMasterAdmin } from '@/modules/auth/session';
 import { establishmentService } from '@/modules/establishments/service';
 import { calculateEstablishmentCompleteness } from '@/modules/operations/completeness';
+import { campaignContact } from '@/modules/operations/contact-status';
+import { supabaseAdminJson } from '@/lib/supabase-admin';
 import {
   listPipeline,
   updatePipeline,
@@ -31,15 +33,23 @@ const stageForVisitStatus: Record<VisitStatus, PipelineStage> = {
 export async function GET(request: NextRequest) {
   try {
     const admin = await requireMasterAdmin(request);
-    const [establishments, pipeline] = await Promise.all([
+    const [establishments, pipeline, claims, subscriptions] = await Promise.all([
       establishmentService.listAllForAdmin(admin),
       listPipeline(),
+      supabaseAdminJson<Array<{ establishment_id: string; status: string }>>('partner_claims?select=establishment_id,status'),
+      supabaseAdminJson<Array<{ establishment_id: string; status: string; current_period_end: string | null }>>('subscription_accounts?select=establishment_id,status,current_period_end'),
     ]);
     const pipelineById = new Map(pipeline.map((item) => [item.establishmentId, item]));
 
     const items = establishments.map((place) => ({
       establishment: place,
       completeness: calculateEstablishmentCompleteness(place),
+      commercial: {
+        contact: campaignContact(place.instagram, place.id),
+        accountRequested: claims.some(c => c.establishment_id === place.id),
+        linkApproved: claims.some(c => c.establishment_id === place.id && c.status === 'approved') || place.ownerManaged,
+        subscriptionActive: subscriptions.some(s => s.establishment_id === place.id && s.status === 'active' && (!s.current_period_end || Date.parse(s.current_period_end) > Date.now())),
+      },
       pipeline: pipelineById.get(place.id) ?? { establishmentId: place.id, stage: 'uncontacted' as PipelineStage },
     }));
     return NextResponse.json({ items });

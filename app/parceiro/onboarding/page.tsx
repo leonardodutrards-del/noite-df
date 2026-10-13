@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { CreateEstablishmentInput } from '@/modules/establishments/types';
 
@@ -36,6 +36,17 @@ export default function BecomePartnerPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [step, setStep] = useState<'info' | 'confirm' | 'success'>('info');
+  const [places, setPlaces] = useState<Array<{ id: string; name: string; region: string; address: string; type: CreateEstablishmentInput['type'] }>>([]);
+  const [placesError, setPlacesError] = useState(false);
+  useEffect(() => {
+    let active = true;
+    fetch('/api/parceiro/claim-options').then(async res => {
+      if (!res.ok) throw new Error('PLACES_UNAVAILABLE');
+      const data = await res.json();
+      if (active) setPlaces(data.places);
+    }).catch(() => { if (active) setPlacesError(true); });
+    return () => { active = false; };
+  }, []);
 
   const [formData, setFormData] = useState<CreateEstablishmentInput>({
     name: '',
@@ -136,6 +147,18 @@ export default function BecomePartnerPage() {
         <div className="panel partner-onboarding-card">
           {step === 'info' && (
             <form onSubmit={handleSubmit} className="partner-onboarding-form" noValidate>
+              <label className="partner-field">
+                <span>Seu estabelecimento já aparece no Noite DF?</span>
+                <select value={formData.establishmentId || ''} disabled={isLoading} onChange={e => {
+                  const place = places.find(p => p.id === e.target.value);
+                  setFormData(prev => place ? { ...prev, establishmentId: place.id, name: place.name, type: place.type, region: place.region, address: place.address } : { ...prev, establishmentId: undefined });
+                }}>
+                  <option value="">Selecione um local ou cadastre um novo</option>
+                  {places.map(p => <option key={p.id} value={p.id}>{p.name} · {p.region}</option>)}
+                </select>
+                <small>Selecionar o local mantém o perfil, a agenda e a elegibilidade da promoção. O vínculo ainda será analisado.</small>
+                {placesError ? <small role="alert">Entre na sua conta para carregar os locais. Se já está conectado, tente novamente antes de criar outro perfil.</small> : null}
+              </label>
               <div className="partner-form-grid">
                 <label className="partner-field">
                   <span>Nome do estabelecimento *</span>
@@ -173,7 +196,7 @@ export default function BecomePartnerPage() {
                     disabled={isLoading}
                   >
                     <option value="">Selecione uma região</option>
-                    {REGIONS.map((region) => (
+                    {Array.from(new Set([...REGIONS, formData.region].filter(Boolean))).map((region) => (
                       <option key={region} value={region}>{region}</option>
                     ))}
                   </select>
