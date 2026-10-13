@@ -1,3 +1,4 @@
+import { aggregateInteractions, type Interaction } from '@/modules/analytics/service';
 import { mercadoPagoGet, syncPaymentResource } from '@/lib/mercado-pago';
 export type MasterOverview = {
   generatedAt: string;
@@ -11,6 +12,8 @@ export type MasterOverview = {
   interactions30d: number;
   interactions24h: number;
   views30d: number;
+  shares30d: number;
+  uniqueSessions30d: number;
   views24h: number;
   whatsappClicks30d: number;
   whatsappClicks24h: number;
@@ -40,6 +43,23 @@ async function request(path: string, init: RequestInit = {}) {
     },
     cache: 'no-store',
   });
+}
+
+async function allInteractions(since: string, until: string): Promise<Interaction[]> {
+  const rows: Interaction[] = [];
+  while (true) {
+    const params = new URLSearchParams({
+      created_at: `gte.${since}`,
+      select: 'action,created_at,metadata,anonymous_session_id',
+      order: 'id.asc', limit: '500', offset: String(rows.length),
+    });
+    params.append('created_at', `lt.${until}`);
+    const response = await request(`interactions?${params}`);
+    if (!response.ok) throw new Error('MASTER_OVERVIEW_INTERACTIONS_FAILED');
+    const page = await response.json() as Interaction[];
+    if (!page.length) return rows;
+    rows.push(...page);
+  }
 }
 
 function parseCount(response: Response): number {
@@ -102,6 +122,8 @@ export async function getMasterOverview(): Promise<MasterOverview> {
       interactions30d: 0,
       interactions24h: 0,
       views30d: 0,
+      shares30d: 0,
+      uniqueSessions30d: 0,
       views24h: 0,
       whatsappClicks30d: 0,
       whatsappClicks24h: 0,
@@ -128,7 +150,7 @@ export async function getMasterOverview(): Promise<MasterOverview> {
     activeSubscriptions,
     auditEvents,
     subscriptionResponse,
-    interactionsResponse,
+    interactions,
   ] = await Promise.all([
     countRows('profiles'),
     countRows('establishments'),
@@ -138,16 +160,12 @@ export async function getMasterOverview(): Promise<MasterOverview> {
     countRows('subscription_accounts', 'status=eq.active'),
     countRows('audit_log'),
     request('subscription_accounts?status=eq.active&provider=eq.mercado_pago&select=amount_cents'),
-    request(
-      `interactions?created_at=gte.${encodeURIComponent(since)}&select=action,created_at`
-    ),
+    allInteractions(since, new Date().toISOString()),
   ]);
 
   if (!subscriptionResponse.ok) throw new Error('MASTER_OVERVIEW_SUBSCRIPTIONS_FAILED');
-  if (!interactionsResponse.ok) throw new Error('MASTER_OVERVIEW_INTERACTIONS_FAILED');
 
   const subscriptions = (await subscriptionResponse.json()) as Array<{ amount_cents?: number }>;
-  const interactions = (await interactionsResponse.json()) as Array<{ action: string; created_at: string }>;
 
   let interactions24h = 0;
   let views30d = 0;
@@ -163,7 +181,7 @@ export async function getMasterOverview(): Promise<MasterOverview> {
   for (const row of interactions) {
     const is24h = Date.parse(row.created_at) >= since24h;
     if (is24h) interactions24h += 1;
-    if (row.action === 'view') {
+    if (row.action === 'view' && row.metadata?.eventName !== 'share') {
       views30d += 1;
       if (is24h) views24h += 1;
     }
@@ -193,6 +211,8 @@ export async function getMasterOverview(): Promise<MasterOverview> {
     interactions30d: interactions.length,
     interactions24h,
     views30d,
+    shares30d: aggregateInteractions(interactions).shares,
+    uniqueSessions30d: aggregateInteractions(interactions).uniqueSessions,
     views24h,
     whatsappClicks30d,
     whatsappClicks24h,

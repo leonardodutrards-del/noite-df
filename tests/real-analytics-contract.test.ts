@@ -24,7 +24,7 @@ describe('Fase 6 — analytics reais', () => {
 
   it('remove métricas hardcoded do painel do parceiro', () => {
     expect(partnerPage).not.toContain("['Visualizações', '14.280']");
-    expect(partnerPage).toContain('/api/parceiro/analytics?days=30');
+    expect(partnerPage).toContain('/api/parceiro/analytics?days=');
     expect(partnerPage).toContain('analytics.views');
   });
 

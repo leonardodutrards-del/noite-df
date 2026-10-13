@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
       analytics: {
         ...analytics,
         conversionRate: detailed ? analytics.conversionRate : null,
+        previous: { ...analytics.previous, conversionRate: detailed ? analytics.previous.conversionRate : null },
       },
       entitlements,
     });

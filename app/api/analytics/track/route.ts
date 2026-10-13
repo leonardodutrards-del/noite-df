@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
       event_id: typeof event.eventId === 'string' ? event.eventId : null,
       action: actionMap[event.name] ?? event.name,
       metadata: {
+        eventName: event.name,
         path: event.path ?? null,
         source: event.source ?? 'web',
         properties,
