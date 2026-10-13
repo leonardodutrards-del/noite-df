@@ -150,7 +150,11 @@ export async function DELETE(request: NextRequest) {
       id: typeof resource.id === 'string' ? resource.id : subscription.provider_subscription_id,
       status: typeof resource.status === 'string' ? resource.status : 'canceled',
       external_reference:
-        typeof resource.external_reference === 'string' ? resource.external_reference : undefined,
+        typeof resource.external_reference === 'string' && resource.external_reference.startsWith('noite-df:')
+          ? resource.external_reference
+          : `noite-df:${establishmentId}:${subscription.plan_code}`,
+      preapproval_plan_id:
+        typeof resource.preapproval_plan_id === 'string' ? resource.preapproval_plan_id : undefined,
       payer_email:
         typeof resource.payer_email === 'string' ? resource.payer_email : subscription.payer_email,
       next_payment_date:
