@@ -14,6 +14,8 @@ type SubscriptionResource = {
   preapproval_plan_id?: string;
   payer_email?: string;
   next_payment_date?: string;
+  card_id?: string | number;
+  payment_method_id?: string;
   auto_recurring?: { transaction_amount?: number };
 };
 
@@ -284,8 +286,18 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
   if (!reference) throw new Error('SUBSCRIPTION_REFERENCE_INVALID');
 
   const now = new Date().toISOString();
+  let promotion = false;
+  if (resource.preapproval_plan_id) {
+    const mapping = await supabase(`payment_provider_plans?provider_plan_id=eq.${encodeURIComponent(resource.preapproval_plan_id)}&payment_method=eq.enterprise_trial_20261013&select=establishment_id&limit=1`);
+    if (!mapping.ok) throw new Error('PROMOTION_REFERENCE_LOOKUP_FAILED');
+    const mapped = await mapping.json() as Array<{ establishment_id: string }>;
+    promotion = mapped.length > 0;
+    if (promotion && mapped[0].establishment_id !== reference.establishmentId) throw new Error('PROMOTION_REFERENCE_MISMATCH');
+    if (promotion && resource.status === 'authorized' && (!resource.card_id || !resource.payment_method_id || !resource.next_payment_date || !Number.isFinite(Date.parse(resource.next_payment_date)) || Date.parse(resource.next_payment_date) <= Date.now())) throw new Error('PROMOTION_PAYMENT_METHOD_NOT_CONFIRMED');
+  }
   const amountCents = Math.round((resource.auto_recurring?.transaction_amount ?? 0) * 100);
   const subscriptionStatus = mapSubscriptionStatus(resource.status);
+  if (promotion && amountCents !== 15000) throw new Error('PROMOTION_AMOUNT_MISMATCH');
   const lookup = await supabase(
     `subscription_accounts?provider_subscription_id=eq.${encodeURIComponent(resource.id)}&select=id,current_period_end`
   );
@@ -310,6 +322,7 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
     );
     if (!updated.ok) throw new Error('SUBSCRIPTION_UPDATE_FAILED');
     await syncCommercialPipeline(reference.establishmentId, subscriptionStatus, now);
+    if (promotion && resource.status === 'authorized') await recordPromotionActivation(reference.establishmentId, resource.next_payment_date!, now);
     return;
   }
 
@@ -330,6 +343,18 @@ export async function syncSubscriptionResource(resource: SubscriptionResource): 
   });
   if (!created.ok) throw new Error('SUBSCRIPTION_CREATE_FAILED');
   await syncCommercialPipeline(reference.establishmentId, subscriptionStatus, now);
+  if (promotion && resource.status === 'authorized') await recordPromotionActivation(reference.establishmentId, resource.next_payment_date!, now);
+}
+
+async function recordPromotionActivation(establishmentId: string, endsAt: string, now: string) {
+  const existing = await supabase(`partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=trial_started_at&limit=1`);
+  if (!existing.ok) throw new Error('PROMOTION_ACTIVATION_LOOKUP_FAILED');
+  const rows = await existing.json() as Array<{ trial_started_at: string | null }>;
+  if (rows[0]?.trial_started_at) return; // Renewals must never restart the free month.
+  const response = await supabase(`partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}&trial_started_at=is.null`, {
+    method: 'PATCH', body: JSON.stringify({ trial_started_at: now, trial_ends_at: endsAt, trial_plan_code: 'enterprise', updated_at: now }),
+  });
+  if (!response.ok) throw new Error('PROMOTION_ACTIVATION_PERSIST_FAILED');
 }
 
 export async function syncPaymentResource(resource: PaymentResource): Promise<void> {
