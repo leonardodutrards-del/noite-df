@@ -10,6 +10,11 @@ import { PartnerBillingCard } from '@/components/PartnerBillingCard';
 type PartnerAnalytics = {
   periodDays: number;
   views: number;
+  shares: number;
+  uniqueSessions: number;
+  viewsWithSession: number;
+  contactClicks: number;
+  previous?: { views: number; contactClicks: number };
   whatsappClicks: number;
   mapClicks: number;
   instagramClicks: number;
@@ -27,6 +32,10 @@ type PartnerEntitlements = {
 const EMPTY_ANALYTICS: PartnerAnalytics = {
   periodDays: 30,
   views: 0,
+  shares: 0,
+  uniqueSessions: 0,
+  viewsWithSession: 0,
+  contactClicks: 0,
   whatsappClicks: 0,
   mapClicks: 0,
   instagramClicks: 0,
@@ -45,6 +54,10 @@ export default function PartnerPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [analytics, setAnalytics] = useState<PartnerAnalytics>(EMPTY_ANALYTICS);
   const [entitlements, setEntitlements] = useState<PartnerEntitlements | null>(null);
+
+  const [periodDays, setPeriodDays] = useState(30);
+  const [analyticsError, setAnalyticsError] = useState(false);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   // Form states
   const [crowdStatus, setCrowdStatus] = useState<CrowdStatus>('a confirmar');
@@ -93,11 +106,7 @@ export default function PartnerPage() {
               if (entitlementData.entitlements) setEntitlements(entitlementData.entitlements);
             }
 
-            const analyticsRes = await fetch('/api/parceiro/analytics?days=30');
-            if (analyticsRes.ok) {
-              const analyticsData = await analyticsRes.json();
-              if (analyticsData.analytics) setAnalytics(analyticsData.analytics);
-            }
+
           }
         }
       } catch {
@@ -109,6 +118,26 @@ export default function PartnerPage() {
 
     loadData();
   }, [router]);
+
+  useEffect(() => {
+    if (!establishment || !(isMasterAdmin || entitlements?.capabilities.includes('analytics_basic'))) return;
+    let active = true;
+    Promise.resolve().then(() => {
+      if (!active) return;
+      setAnalyticsLoading(true);
+      setAnalyticsError(false);
+      return fetch(`/api/parceiro/analytics?days=${periodDays}`);
+    })
+      .then(async response => {
+        if (!active || !response) return;
+        if (!response.ok) throw new Error('analytics');
+        const data = await response.json();
+        if (active) setAnalytics(data.analytics);
+      })
+      .catch(() => { if (active) setAnalyticsError(true); })
+      .finally(() => { if (active) setAnalyticsLoading(false); });
+    return () => { active = false; };
+  }, [establishment, isMasterAdmin, entitlements, periodDays]);
 
   const handleLogout = async () => {
     try {
@@ -181,12 +210,14 @@ export default function PartnerPage() {
   };
 
   const metrics = [
-    ['Visualizações (30 dias)', analytics.views.toLocaleString('pt-BR')],
+    [`Visualizações (${periodDays} dias)`, analytics.views.toLocaleString('pt-BR')],
+    ['Sessões com visualização', analytics.uniqueSessions.toLocaleString('pt-BR')],
+    ['Compartilhamentos / links copiados', analytics.shares.toLocaleString('pt-BR')],
     ['Cliques no WhatsApp', analytics.whatsappClicks.toLocaleString('pt-BR')],
     ['Rotas abertas', analytics.mapClicks.toLocaleString('pt-BR')],
     ['Cliques no Instagram', analytics.instagramClicks.toLocaleString('pt-BR')],
     ['Favoritos', analytics.favorites.toLocaleString('pt-BR')],
-    ['Conversão estimada', analytics.conversionRate === null ? 'Premium' : `${analytics.conversionRate.toLocaleString('pt-BR')}%`],
+    ['Ações por 100 visualizações', analytics.conversionRate === null ? 'Premium' : analytics.conversionRate.toLocaleString('pt-BR')],
   ];
 
   const canEditProfile = Boolean(isMasterAdmin || entitlements?.capabilities.includes('edit_profile'));
@@ -304,14 +335,26 @@ export default function PartnerPage() {
           <div style={{ marginTop: 12 }}><Link className="button" href="/planos">Liberar métricas</Link></div>
         </section>
       ) : null}
-      <div className="metrics-grid" style={{ opacity: canViewAnalytics ? 1 : 0.45 }}>
+      {canViewAnalytics && <section style={{ marginTop: 24 }}>
+        <h2>Resultados do seu estabelecimento</h2>
+        <label>Período <select value={periodDays} onChange={event => setPeriodDays(Number(event.target.value))}>
+          <option value={7}>Últimos 7 dias</option><option value={30}>Últimos 30 dias</option>
+        </select></label>
+        <p>Sessões representam acessos em uma aba do navegador, não pessoas únicas. Compartilhamentos medem o uso do botão ou a cópia do link, não seu recebimento.</p>
+        {analyticsLoading ? <p role="status">Carregando resultados...</p> : analyticsError ? <p role="alert">Não foi possível carregar as métricas. Tente novamente mais tarde.</p> : <>
+          <p>{analytics.contactClicks} cliques no WhatsApp e Instagram neste período; {analytics.previous?.contactClicks ?? 0} nos {periodDays} dias anteriores. Visualizações: {analytics.views} agora e {analytics.previous?.views ?? 0} no período anterior.</p>
+          <p>{analytics.viewsWithSession} visualizações têm identificação de sessão. Dados antigos sem identificação continuam nas visualizações, mas não entram nas sessões. Compartilhamentos antigos sem classificação não podem ser separados retroativamente.</p>
+          <p>Ações por 100 visualizações incluem contatos, rotas e favoritos; podem passar de 100 e não representam vendas confirmadas.</p>
+        </>}
+      </section>}
+      {!analyticsError && !analyticsLoading && <div className="metrics-grid" style={{ opacity: canViewAnalytics ? 1 : 0.45 }}>
         {metrics.map(([label, value]) => (
           <article key={label}>
             <span>{label}</span>
             <strong>{value}</strong>
           </article>
         ))}
-      </div>
+      </div>}
 
       <form onSubmit={handleSave} style={{ marginTop: 36, display: 'grid', gap: 24 }}>
         {/* Lotação e Destaque */}

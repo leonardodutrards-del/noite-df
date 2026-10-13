@@ -19,6 +19,8 @@ type MasterOverview = {
   interactions30d: number;
   interactions24h: number;
   views30d: number;
+  shares30d: number;
+  uniqueSessions30d: number;
   views24h: number;
   whatsappClicks30d: number;
   whatsappClicks24h: number;
@@ -524,6 +526,14 @@ export default function AdminPage() {
         <article>
           <span>Visualizações · 30 dias</span>
           <strong>{overview?.views30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Sessões com visualização · 30 dias</span>
+          <strong>{overview?.uniqueSessions30d ?? 0}</strong>
+        </article>
+        <article>
+          <span>Compartilhamentos / links copiados · 30 dias</span>
+          <strong>{overview?.shares30d ?? 0}</strong>
         </article>
         <article>
           <span>WhatsApp · 30 dias</span>

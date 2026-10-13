@@ -1,5 +1,6 @@
 'use client';
 
+import { PlaceShareButton } from './PlaceShareButton';
 import { track } from '@/lib/analytics';
 import type { Establishment } from '@/modules/establishments/types';
 import { EventArtwork } from './EventArtwork';
@@ -28,6 +29,7 @@ export function PlaceContact({ place, compact = false }: { place: Establishment;
           Contato pelo WhatsApp ↗
         </a>
       )}
+      {!compact && <PlaceShareButton placeId={place.id} name={place.name} slug={place.id} />}
       {!compact && <>
         {place.menu && <div className="contact-section">
           <h2>Cardápio e preços</h2>

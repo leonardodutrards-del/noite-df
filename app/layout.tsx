@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { PageViewTracker } from '@/components/PageViewTracker';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR">
       <body>
         {children}
+        <PageViewTracker />
         {measurementId ? <GoogleAnalytics measurementId={measurementId} /> : null}
       </body>
     </html>
