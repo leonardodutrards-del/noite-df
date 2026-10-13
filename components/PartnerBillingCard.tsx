@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type BillingState = {
+  promotion?: { freeUntil: string } | null;
   entitlements: {
     planCode: 'free' | 'pro' | 'premium' | 'enterprise';
     source: 'free' | 'trial' | 'subscription' | 'admin';
@@ -86,6 +87,7 @@ export function PartnerBillingCard() {
         {billing?.paymentType === 'pix_30_days' ? 'Pagamento via Pix' : 'Assinatura e cobrança automática'}
       </h2>
 
+      {state.promotion && <p><b>Enterprise grátis até {new Date(state.promotion.freeUntil).toLocaleDateString('pt-BR')}.</b> Depois, R$ 150/mês conforme o aceite no Mercado Pago. Cancele antes da renovação para impedir a cobrança.</p>}
       {billing ? (
         <>
           <p>

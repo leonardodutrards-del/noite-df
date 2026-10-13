@@ -13,9 +13,10 @@ interface PlanListProps {
   trialDays: number;
 }
 
-export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, trialDays }: PlanListProps) {
+export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled }: PlanListProps) {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [promotionAccepted, setPromotionAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function routeForAuthentication(planId: string) {
@@ -29,7 +30,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
       const response = await fetch('/api/parceiro/trial', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ planId, acceptRecurringTerms: promotionAccepted }),
       });
       const payload = await response.json().catch(() => ({}));
 
@@ -46,8 +47,9 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
         return;
       }
 
+      if (!payload.initPoint) { setError('O provedor não confirmou o checkout da promoção.'); return; }
       track('trial_start', { planId });
-      router.push('/parceiro');
+      window.location.assign(payload.initPoint);
     } catch {
       setError('Não foi possível iniciar o teste gratuito.');
     } finally {
@@ -117,14 +119,15 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled, t
                 <a className="button ghost" href="/parceiro/onboarding">Cadastrar estabelecimento</a>
               ) : (
                 <>
-                  {trialEnabled ? (
+                  {plan.id === 'enterprise' && paymentsEnabled && <label style={{ display: 'block', marginBottom: 12 }}><input type="checkbox" checked={promotionAccepted} onChange={event => setPromotionAccepted(event.target.checked)} /> Aceito cadastrar um meio de pagamento no Mercado Pago: 1 mês grátis e depois R$ 150/mês, com renovação automática e cancelamento a qualquer momento. Promoção para locais já cadastrados até 13/10/2026. Acesso liberado somente após confirmação do provedor.</label>}
+                  {plan.id === 'enterprise' && paymentsEnabled ? (
                     <button
                       className="button"
                       type="button"
-                      disabled={showcaseMode || Boolean(loadingPlan)}
+                      disabled={showcaseMode || !promotionAccepted || Boolean(loadingPlan)}
                       onClick={() => void handleTrial(plan.id)}
                     >
-                      {trialLoading ? 'Ativando teste…' : `Testar ${trialDays} dias grátis`}
+                      {trialLoading ? 'Abrindo checkout…' : 'Ativar 1 mês grátis'}
                     </button>
                   ) : null}
                   <button

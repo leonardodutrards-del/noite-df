@@ -78,7 +78,10 @@ export async function GET(request: NextRequest) {
         ? adminEntitlements(establishmentId)
         : await getEstablishmentEntitlements(establishmentId);
 
+    const promotions = await supabaseAdminJson<Array<{ trial_ends_at: string | null; trial_plan_code: string | null }>>(`partner_pipeline?establishment_id=eq.${encodeURIComponent(establishmentId)}&select=trial_ends_at,trial_plan_code&limit=1`);
+    const promotion = promotions[0];
     return NextResponse.json({
+      promotion: promotion?.trial_plan_code === 'enterprise' && promotion.trial_ends_at && Date.parse(promotion.trial_ends_at) > Date.now() ? { freeUntil: promotion.trial_ends_at } : null,
       entitlements,
       billing: subscription
         ? {
