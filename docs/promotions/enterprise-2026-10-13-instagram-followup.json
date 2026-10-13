@@ -81,8 +81,10 @@
   },
   {
     "handle": "figueiredocozinhaebar",
-    "status": "sent",
-    "url": "https://www.instagram.com/direct/t/17842021859742338/"
+    "status": "delivery_blocked",
+    "url": "https://www.instagram.com/direct/t/17842021859742338/",
+    "reason": "Instagram informa que o perfil não aceita novas solicitações de contato de todos. A presença da mensagem na conversa não confirma entrega.",
+    "checkedAt": "2026-10-13"
   },
   {
     "handle": "osbrutosdopiseiro1",
