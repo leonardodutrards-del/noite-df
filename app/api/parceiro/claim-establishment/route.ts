@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
         { status: 409 }
       );
     }
+    if (message === 'CLAIM_SELECTION_INVALID') return NextResponse.json({ error: 'Selecione um estabelecimento publicado válido.' }, { status: 400 });
     console.error('claim-establishment', error);
     return NextResponse.json({ error: 'Não foi possível enviar a solicitação.' }, { status: 500 });
   }

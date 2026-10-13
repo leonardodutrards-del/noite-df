@@ -15,6 +15,7 @@ type VisitStatus =
   | 'lost';
 
 type Item = {
+  commercial?: { contact?: { channel: string; status: string; checkedAt: string; label: string }; accountRequested: boolean; linkApproved: boolean; subscriptionActive: boolean };
   establishment: {
     id: string;
     name: string;
@@ -489,6 +490,10 @@ export default function OperationPage() {
       </section>
 
       <div className="metrics-grid" style={{ marginBottom: 24 }}>
+        <article><span>Avisos enviados nesta campanha</span><strong>{regionItems.filter(i => ['sent','acknowledged'].includes(i.commercial?.contact?.status || '')).length}</strong></article>
+        <article><span>Entregas bloqueadas</span><strong>{regionItems.filter(i => i.commercial?.contact?.status === 'delivery_blocked').length}</strong></article>
+        <article><span>Contas com solicitação</span><strong>{regionItems.filter(i => i.commercial?.accountRequested).length}</strong></article>
+        <article><span>Assinaturas confirmadas</span><strong>{regionItems.filter(i => i.commercial?.subscriptionActive).length}</strong></article>
         <article><span>Estabelecimentos</span><strong>{regionItems.length}</strong></article>
         <article><span>Visitados</span><strong>{regionItems.length - summary.visits.not_visited}</strong></article>
         <article><span>Interessados</span><strong>{summary.visits.interested}</strong></article>
@@ -540,6 +545,13 @@ export default function OperationPage() {
                     {item.establishment.region} · cadastro {item.completeness.score}% completo
                   </p>
                   {item.establishment.address ? <small style={{ color: 'var(--muted)' }}>{item.establishment.address}</small> : null}
+                  <div className="tags" style={{ marginTop: 8 }}>
+                    <span className="tag">{item.commercial?.contact?.label || (item.pipeline.stage === 'replied' ? 'Resposta registrada no funil' : item.pipeline.stage === 'contacted' ? 'Contato registrado no funil' : 'Sem aviso registrado nesta campanha')}</span>
+                    <span className="tag">{item.commercial?.accountRequested ? 'Conta com solicitação de vínculo' : 'Sem solicitação de vínculo'}</span>
+                    <span className="tag">{item.commercial?.linkApproved ? 'Vínculo aprovado' : 'Vínculo ainda não aprovado'}</span>
+                    <span className="tag">{item.commercial?.subscriptionActive ? 'Assinatura confirmada' : 'Sem assinatura ativa confirmada'}</span>
+                  </div>
+                  {item.commercial?.contact ? <small>Registro de {item.commercial.contact.checkedAt} · {item.commercial.contact.channel}</small> : null}
                   {item.completeness.missing.length ? (
                     <small style={{ color: 'var(--muted)', display: 'block', marginTop: 4 }}>Falta: {item.completeness.missing.join(', ')}</small>
                   ) : null}

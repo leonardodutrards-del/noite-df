@@ -67,7 +67,8 @@ export class PartnershipService {
       throw new Error('FORBIDDEN_VISITOR_REQUIRED');
     }
 
-    const establishmentId = slugify(input.name);
+    const selectedId = typeof input.establishmentId === 'string' ? input.establishmentId.trim() : '';
+    const establishmentId = selectedId || slugify(input.name);
     const now = new Date().toISOString();
     const evidence = {
       submittedName: input.name,
@@ -83,6 +84,7 @@ export class PartnershipService {
 
     const cfg = config();
     if (!cfg) {
+      if (selectedId) throw new Error('CLAIM_SELECTION_INVALID');
       const claim: PartnerClaim = {
         id: `claim_${crypto.randomUUID()}`,
         establishmentId,
@@ -96,10 +98,13 @@ export class PartnershipService {
     }
 
     const existing = await rest(
-      `establishments?id=eq.${encodeURIComponent(establishmentId)}&select=id`
+      `establishments?id=eq.${encodeURIComponent(establishmentId)}&select=id,publication_status`
     );
     if (!existing.ok) throw new Error('CLAIM_ESTABLISHMENT_LOOKUP_FAILED');
-    const existingRows = (await existing.json()) as Array<{ id: string }>;
+    const existingRows = (await existing.json()) as Array<{ id: string; publication_status?: string }>;
+    if (selectedId && (!existingRows.length || existingRows[0].publication_status !== 'published')) {
+      throw new Error('CLAIM_SELECTION_INVALID');
+    }
 
     if (existingRows.length === 0) {
       const created = await rest('establishments', {
