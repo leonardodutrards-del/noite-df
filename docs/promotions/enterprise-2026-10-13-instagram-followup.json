@@ -130,5 +130,15 @@
     "message": "Olá, equipe Palahop! Sou Leonardo, fundador do Noite DF. Recebi o perfil oficial de vocês e estou conferindo o cadastro da casa no nosso guia para associar o local certo, sem criar duplicata. Podem confirmar o endereço completo e indicar quem cuida da gestão do perfil? Temos uma campanha de 1 mês grátis do Enterprise para os locais já cadastrados, mediante vínculo aprovado, meio de pagamento autorizado no Mercado Pago e aceite de renovação de R$150/mês após o mês gratuito, com cancelamento a qualquer momento. Assim que identificarmos o cadastro correspondente, posso orientar a conta e a ativação. Não precisam enviar senha, código nem dados de cartão por aqui.",
     "establishmentId": "palahop-sobradinho",
     "profileUrl": "https://www.noitedf.com.br/lugar/palahop-sobradinho"
+  },
+  {
+    "handle": "oitogastrobar08",
+    "status": "delivery_blocked",
+    "url": "https://www.instagram.com/direct/t/17851219598624386/",
+    "checkedAt": "2026-10-14",
+    "establishmentId": "oito-gastrobar",
+    "source": "Link do cadastro público do Oito Gastrobar da Quadra 8 lojas 11/12 em Top-Rated.online aponta para oitogastrobar08; seletor de destinatário do Instagram exibiu Oito Gastrobar verificado.",
+    "reason": "Instagram informa que a conta não aceita novas solicitações de mensagem de todos. Mensagem registrada na conversa, mas entrega bloqueada; não tratar como contato entregue.",
+    "notes": "Brasileirinho, P10, Chopp Brasília Bier e Palahop revisados em 14/10/2026, sem nova resposta; nenhuma oferta repetida."
   }
 ]
