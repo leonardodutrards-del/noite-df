@@ -5,6 +5,7 @@ import { listEditorialEvents } from './store';
 import { editorialEventToPublic } from './editorial';
 import type { EventItem } from './types';
 import { confirmedAgendaUpdates, heldAgendaIds } from '@/data/agenda-review-2026-10-13';
+import { confirmedEventsOctober16 } from '@/data/seeds/events-2026-10-16';
 
 export async function getPublicAgenda(): Promise<EventItem[]> {
   if (!getSupabaseAdminConfig()) return events;
@@ -17,9 +18,15 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
     const previous = bySource.get(key);
     if (!previous || Date.parse(row.verified_at || '') >= Date.parse(previous.verified_at || '')) bySource.set(key, row);
   }
-  return Array.from(bySource.values()).flatMap(row => {
+  const publicEvents = Array.from(bySource.values()).flatMap(row => {
     const place = byId.get(row.establishment_id);
     const event = place && editorialEventToPublic(row, place);
     return event ? [event] : [];
   });
+  // Keep source-confirmed events with no published closing time available with
+  // the database enabled, without inventing the required editorial ends_at.
+  const key = (event: EventItem) => `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
+  const existing = new Set(publicEvents.map(key));
+  return [...publicEvents, ...confirmedEventsOctober16.filter(event =>
+    Date.parse(event.expiresAt || '') > Date.now() && !existing.has(key(event)))];
 }
