@@ -5,7 +5,19 @@ const mocks = vi.hoisted(() => ({ rows: vi.fn(), places: vi.fn() }));
 vi.mock('../lib/supabase-admin', () => ({ getSupabaseAdminConfig: () => ({}) }));
 vi.mock('../modules/events/store', () => ({ listEditorialEvents: mocks.rows }));
 vi.mock('../modules/establishments/service', () => ({ establishmentService: { search: mocks.places } }));
-afterEach(() => vi.resetAllMocks());
+afterEach(() => { vi.resetAllMocks(); vi.useRealTimers(); });
+it('shows the confirmed Eita event with database enabled, without inventing closing time, then expires it', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-10-16T13:31:00Z'));
+  mocks.rows.mockResolvedValue([]);
+  mocks.places.mockResolvedValue([]);
+  const event = (await getPublicAgenda()).find(item => item.id === 'eita-the-chaos-party-2026-10-16');
+  expect(event?.startsAt).toBe('2026-10-16T21:00:00-03:00');
+  expect(event?.admissionNote).toContain('R$ 30');
+  expect(event?.endsAt).toBeUndefined();
+  vi.setSystemTime(new Date('2026-10-17T03:00:00Z'));
+  expect((await getPublicAgenda()).some(item => item.id === event?.id)).toBe(false);
+});
 it('holds stale records, publishes confirmed additions once and keeps subsequent editorial updates', async () => {
   const base = confirmedAgendaUpdates[0];
   mocks.places.mockResolvedValue([{ id: 'complexo-fora-do-eixo', name: 'Complexo', region: 'SAAN', publicationStatus: 'published' }]);
