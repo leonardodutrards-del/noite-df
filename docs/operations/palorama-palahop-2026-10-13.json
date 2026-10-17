@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-13",
+  "authorization": "Leonardo confirmed Palorama Burguer has Quadra 8 and Sobradinho II units; Palahop is an independent hookah/pub next to Quadra 8 unit.",
+  "changes": [
+    {
+      "id": "palorama-sobradinho-i",
+      "name": "Palorama Burguer — Quadra 8",
+      "action": "Rename and cross-reference Sobradinho II unit; retain ID, address and ownership."
+    },
+    {
+      "id": "palorama-sobradinho-ii",
+      "name": "Palorama Burguer — Sobradinho II",
+      "action": "Rename and cross-reference Quadra 8 unit; retain ID, address and ownership."
+    },
+    {
+      "id": "palahop-sobradinho",
+      "name": "Palahop",
+      "instagram": "https://www.instagram.com/palahopoficial/",
+      "action": "Create independent public profile. Quadra 8, next to Palorama Burguer; exact lot/shop pending. No payment, ownership or subscription activated."
+    }
+  ],
+  "pending": [
+    "Possible Lago unit unconfirmed; not created.",
+    "Palahop exact lot/shop and responsible contact requested in existing DM."
+  ],
+  "grouping": "Same Palorama Burguer brand with separate unit addresses and mutual references; no destructive record merge."
+}
