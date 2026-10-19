@@ -1,14 +1,10 @@
 import { EventItem } from '@/data/events';
 import { hasRealValue } from '@/lib/data-quality';
 import { EventArtwork } from './EventArtwork';
-
-function splitEventDateLabel(label: string) {
-  const [date, ...timeParts] = label.split(' · ');
-  return { date, time: timeParts.join(' · ') };
-}
+import { eventDateDisplay } from '@/lib/event-date-display';
 
 export function EventCard({ event }: { event: EventItem }) {
-  const dateParts = hasRealValue(event.dateLabel) ? splitEventDateLabel(event.dateLabel) : null;
+  const dateParts = hasRealValue(event.dateLabel) ? eventDateDisplay(event) : null;
 
   return (
     <article className="card event">
@@ -16,6 +12,7 @@ export function EventCard({ event }: { event: EventItem }) {
         <div className="event-date">
           <span className="event-date-day">{dateParts.date}</span>
           {dateParts.time ? <span className="event-date-time">{dateParts.time}</span> : null}
+          {dateParts.note ? <small className="event-date-note">{dateParts.note}</small> : null}
         </div>
       )}
       <div>

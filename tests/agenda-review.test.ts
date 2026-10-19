@@ -19,6 +19,8 @@ it('shows the confirmed Eita event with database enabled, without inventing clos
   expect((await getPublicAgenda()).some(item => item.id === event?.id)).toBe(false);
 });
 it('holds stale records, publishes confirmed additions once and keeps subsequent editorial updates', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-10-16T13:31:00Z'));
   const base = confirmedAgendaUpdates[0];
   mocks.places.mockResolvedValue([{ id: 'complexo-fora-do-eixo', name: 'Complexo', region: 'SAAN', publicationStatus: 'published' }]);
   mocks.rows.mockResolvedValue([{ ...base, id: Array.from(heldAgendaIds)[0], verified_at: '2026-09-16T00:00:00Z', title: 'Needs confirmation' }, { ...base, id: 'db-newer', title: 'Antilove atualizado', verified_at: '2026-10-14T00:00:00Z' }]);
