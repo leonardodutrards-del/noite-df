@@ -1,0 +1,80 @@
+{
+  "campaign": "enterprise-2026-10-13",
+  "publishedCommit": "35a71b6c53a91bd07424fe28de16c13ab957badf",
+  "verifiedProductionVercel": "success",
+  "sent": [
+    {
+      "channel": "email",
+      "venue": "Infinu",
+      "status": "sent",
+      "id": "1a135b7030f3aa78"
+    },
+    {
+      "channel": "email",
+      "venue": "Contexto Bar e Restaurante",
+      "to": "shedclubbaoba@gmail.com",
+      "id": "1a135b78741b33a6",
+      "status": "sent"
+    },
+    {
+      "channel": "email",
+      "venue": "Brasileirinho Sobradinho",
+      "to": "brasileirinhobr08@gmail.com",
+      "id": "1a135b78918e6fa7",
+      "status": "sent"
+    },
+    {
+      "channel": "email",
+      "venue": "IVV",
+      "to": "clubeivv@gmail.com",
+      "id": "1a135b78c2dc6357",
+      "status": "sent"
+    },
+    {
+      "channel": "email",
+      "venue": "Meatz Sudoeste",
+      "to": "meatzburger@gmail.com",
+      "id": "1a135b795b798e6d",
+      "status": "sent"
+    },
+    {
+      "channel": "email",
+      "venue": "Galpão 17",
+      "to": "financeiro@galpao17df.com.br",
+      "id": "1a135b7968920c2c",
+      "status": "sent"
+    },
+    {
+      "channel": "email",
+      "venue": "Ticiana Werner",
+      "to": "ticiana@ticianawerner.com.br",
+      "id": "1a135b79a40f7cc5",
+      "status": "sent"
+    },
+    {
+      "channel": "email",
+      "venue": "Five Sport Bar DF Plaza",
+      "to": "dfplaza@fivesportbar.com",
+      "id": "1a135b79c9bedaba",
+      "status": "sent"
+    },
+    {
+      "channel": "instagram",
+      "venue": "Contexto",
+      "handle": "contextobar",
+      "status": "sent_seen"
+    },
+    {
+      "channel": "instagram",
+      "venue": "Oscarito Brasília",
+      "handle": "oscaritobrasilia",
+      "status": "sent_seen"
+    }
+  ],
+  "pending": {
+    "instagram": "Human verification requested by Instagram before next send; 2 verified DMs sent. Remaining recipients not sent.",
+    "whatsapp": "Not authenticated; no sends.",
+    "otherVenues": "No verified email contact available. Do not infer addresses."
+  },
+  "integrationValidation": "227 automated tests passed; live card enrollment and subscription webhook delivery not tested."
+}
