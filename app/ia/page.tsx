@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, type FormEvent } from 'react';
 
 type Suggestion = { id: string; name: string; region: string; type: string; description: string; price?: string; reasons: string[] };
-type ResponseData = { message?: string; suggestions?: Suggestion[]; disclaimer?: string; notices?: string[]; clarification?: string; error?: string };
+type ResponseData = { aiReply?: string | null; mode?: string; message?: string; suggestions?: Suggestion[]; disclaimer?: string; notices?: string[]; clarification?: string; error?: string };
 
 export default function ConciergePage() {
   const [message, setMessage] = useState('');
@@ -45,7 +45,7 @@ export default function ConciergePage() {
         </button>
       </form>
       {result && <section aria-live="polite" style={{ marginTop: 32 }}>
-        <p>{result.error || result.message}</p>
+        <p>{result.error || result.aiReply || result.message}</p>
         {result.clarification && <p style={{ color: '#c7b6ff' }}>{result.clarification}</p>}
         {result.notices?.map((notice) => <p key={notice} style={{ color: '#e8c887', fontSize: 14 }}>{notice}</p>)}
         <div style={{ display: 'grid', gap: 14 }}>
