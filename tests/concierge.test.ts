@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { recommendEstablishments } from '@/lib/ai/concierge';
+import { analyzeConciergeQuery, recommendEstablishments } from '@/lib/ai/concierge';
 import type { Establishment } from '@/modules/establishments/types';
 
 const sample = (overrides: Partial<Establishment>): Establishment => ({
@@ -20,5 +20,15 @@ describe('concierge', () => {
   });
   it('não inventa correspondências', () => {
     expect(recommendEstablishments('jazz', [sample({})])).toHaveLength(0);
+  });
+  it('reconhece sinônimos de estilo musical', () => {
+    expect(recommendEstablishments('quero ouvir modão', [sample({})])).toHaveLength(1);
+  });
+  it('prioriza música e região sobre descrições genéricas', () => {
+    const places = [sample({ id: '2', name: 'Outro bar', region: 'Taguatinga', music: ['rock'], description: 'sertanejo às vezes' }), sample({ id: '1' })];
+    expect(recommendEstablishments('sertanejo Asa Sul', places)[0].id).toBe('1');
+  });
+  it('identifica pedidos que exigem confirmação externa', () => {
+    expect(analyzeConciergeQuery('Hoje quero gastar até R$ 100 com sertanejo')).toMatchObject({ budgetMentioned: true, timeMentioned: true });
   });
 });
