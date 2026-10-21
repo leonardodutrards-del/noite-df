@@ -37,7 +37,7 @@ export type ConciergeAnalysis = { keywords: string[]; budgetMentioned: boolean; 
 
 export function analyzeConciergeQuery(query: string): ConciergeAnalysis {
   const normalized = normalize(query);
-  const keywords = [...new Set(tokenize(query).filter((word) => word.length > 2 && !stopWords.has(word)).map(canonical))].slice(0, 16);
+  const keywords = Array.from(new Set(tokenize(query).filter((word) => word.length > 2 && !stopWords.has(word)).map(canonical))).slice(0, 16);
   const budgetMentioned = /(?:r\$|reais|orcamento|gastar|barato|economico|caro|preco)/.test(normalized);
   const timeMentioned = /\b(hoje|amanha|agora|aberto|aberta|horario|sabado|domingo|sexta|noite)\b/.test(normalized);
   return { keywords, budgetMentioned, timeMentioned, needsClarification: keywords.length === 0 ? 'Conte um bairro, estilo musical ou tipo de lugar para eu encontrar opções.' : undefined };
