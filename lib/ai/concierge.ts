@@ -60,7 +60,7 @@ export function recommendEstablishments(query: string, establishments: Establish
         if (place.audience.some((item) => includesTerm(item, term))) { score += 3; reasons.push('Perfil de público compatível'); }
         if (includesTerm(place.description, term)) { score += 1; reasons.push('Descrição relacionada'); }
       }
-      return { id: place.id, name: place.name, region: place.region, type: place.type, description: place.description, price: place.price, score, reasons: [...new Set(reasons)], mapsQuery: place.mapsQuery, rating: place.rating };
+      return { id: place.id, name: place.name, region: place.region, type: place.type, description: place.description, price: place.price, score, reasons: Array.from(new Set(reasons)), mapsQuery: place.mapsQuery, rating: place.rating };
     })
     .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'pt-BR'))
