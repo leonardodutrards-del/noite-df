@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 import { useState, type FormEvent } from 'react';
 
@@ -31,7 +32,7 @@ export default function ConciergePage() {
 
   return (
     <main style={{ maxWidth: 780, margin: '0 auto', padding: '48px 20px', minHeight: '100vh', color: '#f7f4ff' }}>
-      <a href="/" style={{ color: '#c7b6ff' }}>← Voltar ao Noite DF</a>
+      <Link href="/" style={{ color: '#c7b6ff' }}>← Voltar ao Noite DF</Link>
       <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginTop: 32 }}>Descubra seu próximo rolê ✨</h1>
       <p style={{ color: '#c4c0cc', lineHeight: 1.6 }}>Conte o que procura: bairro, música, ambiente ou tipo de lugar. O Concierge consulta apenas locais publicados no Noite DF.</p>
       <form onSubmit={submit} style={{ display: 'grid', gap: 12, marginTop: 28 }}>
