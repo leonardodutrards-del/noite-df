@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEstablishmentRepository } from '@/infrastructure/repositories';
 import { analyzeConciergeQuery, recommendEstablishments } from '@/lib/ai/concierge';
+import { generateConciergeReply } from '@/lib/ai/generative';
 import { checkAuthRateLimit, requestIp } from '@/lib/security-rate-limit';
 
 export const runtime = 'nodejs';
@@ -25,8 +26,10 @@ export async function POST(request: NextRequest) {
     const places = await getEstablishmentRepository().listPublished();
     const suggestions = recommendEstablishments(message, places);
     const analysis = analyzeConciergeQuery(message);
+    const aiReply = await generateConciergeReply(message, suggestions);
     return NextResponse.json({
-      mode: 'deterministic',
+      mode: aiReply ? 'generative' : 'deterministic',
+      aiReply,
       message: suggestions.length ? 'Encontrei opções cadastradas relacionadas ao seu pedido.' : 'Não encontrei opções confirmadas para esse pedido. Tente informar um bairro ou estilo.',
       suggestions,
       clarification: analysis.needsClarification,
