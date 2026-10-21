@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEstablishmentRepository } from '@/infrastructure/repositories';
 import { recommendEstablishments } from '@/lib/ai/concierge';
+import { checkAuthRateLimit, requestIp } from '@/lib/security-rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -19,6 +20,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'A mensagem deve ter entre 3 e 500 caracteres.' }, { status: 400 });
   }
   try {
+    const allowed = await checkAuthRateLimit({ ip: requestIp(request.headers), email: 'public-concierge', limit: 20, windowSeconds: 900 });
+    if (!allowed) return NextResponse.json({ error: 'Limite de consultas atingido. Tente novamente em alguns minutos.' }, { status: 429 });
     const places = await getEstablishmentRepository().listPublished();
     const suggestions = recommendEstablishments(message, places);
     return NextResponse.json({
