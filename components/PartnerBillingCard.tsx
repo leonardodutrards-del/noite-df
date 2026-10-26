@@ -130,7 +130,7 @@ export function PartnerBillingCard() {
           <p style={{ color: 'var(--muted)' }}>
             Nenhuma cobrança é feita pelo Noite DF durante o período de teste. Para continuar depois, escolha um plano e conclua a autorização no Mercado Pago.
           </p>
-          <Link className="button" href="/planos">Escolher plano</Link>
+          <Link className="button" href="/divulgar">Conhecer divulgação assistida</Link>
         </>
       ) : (
         <>
@@ -138,7 +138,7 @@ export function PartnerBillingCard() {
           <p style={{ color: 'var(--muted)' }}>
             Seu cadastro permanece salvo. Você pode contratar um plano quando quiser.
           </p>
-          <Link className="button" href="/planos">Ver planos</Link>
+          <Link className="button" href="/assinaturas">Consultar planos do painel</Link>
         </>
       )}
 

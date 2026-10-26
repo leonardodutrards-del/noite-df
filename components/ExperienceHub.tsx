@@ -143,16 +143,11 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
       <header className="topbar">
         <a className="brand" href="/">Noite DF</a>
         <nav>
-          <a href="#radar">Radar</a>
           <a href="#lugares">Lugares</a>
-          <a href="#ranking">Ranking</a>
-          <a href="#agenda">Agenda</a>
           <a href="/hoje">Hoje</a>
           <a href="/agenda-semanal">Agenda semanal</a>
-          <a href="/agenda-mensal">Agenda mensal</a>
-          <a href="/fim-de-semana">Fim de semana</a>
-          <a href="/planos">Para estabelecimentos</a>
-          <a href="/login" style={{ color: 'var(--accent)', fontWeight: 700 }}>Área do Parceiro</a>
+          <a href="/divulgar">Divulgar meu local</a>
+          <a href="/sobre">Sobre e contato</a>
         </nav>
       </header>
 
@@ -445,10 +440,10 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
       <section className="cta">
         <div>
           <span className="eyebrow">Para parceiros</span>
-          <h2>Transforme atualizações em clientes</h2>
-          <p>Publique agenda, promoções e acompanhe visualizações, rotas, WhatsApp e Instagram.</p>
+          <h2>Você envia a programação. A gente publica.</h2>
+          <p>Divulgação assistida por R$30/mês por estabelecimento. Até quatro atualizações mensais, com informações e imagens enviadas pela casa.</p>
         </div>
-        <a className="button light" href="/planos">Conhecer planos</a>
+        <a className="button light" href="/divulgar">Quero divulgar meu local</a>
       </section>
 
       <footer className="footer">
@@ -457,7 +452,8 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
           <div style={{ display: 'flex', gap: 14 }}>
             <a href="/privacidade" style={{ color: 'var(--muted)', fontSize: 13 }}>Privacidade</a>
             <a href="/termos" style={{ color: 'var(--muted)', fontSize: 13 }}>Termos</a>
-            <a href="/planos" style={{ color: 'var(--muted)', fontSize: 13 }}>Planos</a>
+            <a href="/divulgar" style={{ color: 'var(--muted)', fontSize: 13 }}>Divulgar por R$30/mês</a>
+            <a href="/sobre" style={{ color: 'var(--muted)', fontSize: 13 }}>Leonardo Dutra · fundador e CEO</a>
             <a href="/parceiro" style={{ color: 'var(--muted)', fontSize: 13 }}>Área do Parceiro</a>
           </div>
         </div>
