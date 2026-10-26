@@ -51,19 +51,26 @@ export function AgendaEditor({ places, initialEvents, initialNow }: { places: Pl
   const visible = events.filter(event => filter === 'all' || (filter === 'review' ? ['draft', 'pending_review'].includes(event.publication_status) : Date.parse(event.ends_at) > now));
   return <>
     {message && <p role="status" className="panel">{message}</p>}
-    <form id="agenda-form" onSubmit={save} className="panel" style={{ display: 'grid', gap: 16, marginBottom: 28 }}>
+    <form id="agenda-form" onSubmit={save} className="panel agenda-simple-form">
       <h2>{editing ? 'Corrigir evento' : 'Novo evento'}</h2>
-      <label>Local<select required value={form.establishment_id} onChange={e => setForm({ ...form, establishment_id: e.target.value })}><option value="">Selecione o estabelecimento</option>{places.map(place => <option key={place.id} value={place.id}>{place.name}{place.publicationStatus !== 'published' ? ' (fora do guia público)' : ''}</option>)}</select></label>
-      <label>Título<input required maxLength={200} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} /></label>
-      <label>Categoria<input required maxLength={200} value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} /></label>
+      <p className="field-hint">Preencha os dados da programação recebida. Salvar rascunho não publica no site.</p>
+      <fieldset className="agenda-form-section"><legend>1. Onde e o quê?</legend>
+      <label>Qual estabelecimento?<select required value={form.establishment_id} onChange={e => setForm({ ...form, establishment_id: e.target.value })}><option value="">Escolha a casa</option>{places.map(place => <option key={place.id} value={place.id}>{place.name}{place.publicationStatus !== 'published' ? ' (fora do guia público)' : ''}</option>)}</select></label>
+      <label>Nome do evento<input required placeholder="Ex.: Sexta de pagode" maxLength={200} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} /></label>
+      <label>O que vai acontecer?<textarea required placeholder="Atrações, programação e endereço confirmado." maxLength={4000} rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></label>
+      </fieldset>
+      <fieldset className="agenda-form-section"><legend>2. Quando acontece?</legend>
+      <p className="field-hint">Use o horário de Brasília. Se terminar depois da meia-noite, escolha o dia seguinte no encerramento.</p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
-        <label>Início · horário de Brasília<input required type="datetime-local" value={form.starts_at} onChange={e => setForm({ ...form, starts_at: e.target.value })} /></label>
-        <label>Encerramento · horário de Brasília<input required type="datetime-local" value={form.ends_at} onChange={e => setForm({ ...form, ends_at: e.target.value })} /></label>
+        <label>Começa em<input required type="datetime-local" value={form.starts_at} onChange={e => setForm({ ...form, starts_at: e.target.value })} /></label>
+        <label>Termina em<input required type="datetime-local" value={form.ends_at} onChange={e => setForm({ ...form, ends_at: e.target.value })} /></label>
       </div>
-      <label>Descrição e endereço confirmado<textarea required maxLength={4000} rows={4} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></label>
-      <label>Link da publicação oficial<input required type="url" value={form.official_url} onChange={e => setForm({ ...form, official_url: e.target.value })} placeholder="https://" /></label>
-      <label>Entrada, couvert e condições<textarea maxLength={1500} rows={2} value={form.price_description} onChange={e => setForm({ ...form, price_description: e.target.value })} /></label>
-      <fieldset style={{ display: 'grid', gap: 12 }}><legend>Flyer ou foto do evento · opcional</legend>
+      </fieldset>
+      <details className="agenda-extra" open={Boolean(editing && (form.price_description || form.category !== 'Música ao vivo'))}><summary>Detalhes extras: entrada e tipo de evento</summary><div className="agenda-extra-body">
+      <label>Tipo de evento<input required maxLength={200} value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} /></label>
+      <label>Valor de entrada e condições<textarea placeholder="Ex.: entrada gratuita até 20h. Preencha somente o que foi confirmado." maxLength={1500} rows={2} value={form.price_description} onChange={e => setForm({ ...form, price_description: e.target.value })} /></label>
+      </div></details>
+      <details className="agenda-extra" open={Boolean(form.image_url)}><summary>Adicionar imagem · opcional</summary><div className="agenda-extra-body">
         <p className="field-hint">Use o endereço direto de uma imagem estável. Links de posts do Instagram não são arquivos de imagem. O flyer aparece nas agendas e no perfil do local; texto, horário e endereço continuam legíveis fora da arte.</p>
         <label>Link HTTPS da imagem<input type="url" maxLength={2000} value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} placeholder="https://…/flyer.jpg" /></label>
         {form.image_url && <>
@@ -72,10 +79,13 @@ export function AgendaEditor({ places, initialEvents, initialNow }: { places: Pl
           <label>Fonte da imagem<input required type="url" maxLength={2000} value={form.image_source} onChange={e => setForm({ ...form, image_source: e.target.value })} /></label>
           <label><input style={{ width: 'auto' }} type="checkbox" required={form.publication_status === 'published'} checked={form.image_authorized} onChange={e => setForm({ ...form, image_authorized: e.target.checked })} /> Tenho autorização do responsável para usar esta imagem.</label>
         </>}
-      </fieldset>
-      <label>Status<select value={form.publication_status} onChange={e => setForm({ ...form, publication_status: e.target.value as PublicationStatus })}>{Object.entries(labels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+      </div></details>
+      <fieldset className="agenda-form-section"><legend>3. Confira e salve</legend>
+      <label>Link que confirma a programação<input required type="url" value={form.official_url} onChange={e => setForm({ ...form, official_url: e.target.value })} placeholder="Cole o link oficial do evento ou da casa" /></label>
+      <label>O que fazer ao salvar?<select value={form.publication_status} onChange={e => setForm({ ...form, publication_status: e.target.value as PublicationStatus })}>{Object.entries(labels).map(([value, label]) => <option key={value} value={value}>{value === 'draft' ? 'Guardar rascunho (não aparece no site)' : value === 'published' ? 'Publicar no site' : label}</option>)}</select></label>
       {form.publication_status === 'published' && <label><input style={{ width: 'auto' }} type="checkbox" required checked={confirmed} onChange={e => setConfirmed(e.target.checked)} /> Conferi a fonte oficial, data, horário e local desta programação.</label>}
-      <div style={{ display: 'flex', gap: 12 }}><button disabled={busy} type="submit">{busy ? 'Salvando…' : 'Salvar evento'}</button>{editing && <button type="button" disabled={busy} onClick={() => { setEditing(null); setForm(empty); setConfirmed(false); }}>Cancelar edição</button>}</div>
+      <div className="agenda-form-actions"><button disabled={busy} type="submit">{busy ? 'Salvando…' : form.publication_status === 'published' ? 'Publicar programação' : form.publication_status === 'draft' ? 'Salvar rascunho' : 'Salvar alteração'}</button>{editing && <button type="button" disabled={busy} onClick={() => { setEditing(null); setForm(empty); setConfirmed(false); }}>Cancelar edição</button>}</div>
+      </fieldset>
     </form>
     <section><h2>Programação cadastrada</h2><label>Exibir<select value={filter} onChange={e => setFilter(e.target.value)}><option value="current">Ainda válidos</option><option value="review">Rascunhos e revisão</option><option value="all">Todos, incluindo encerrados</option></select></label>
       <div style={{ display: 'grid', gap: 12, marginTop: 16 }}>{visible.map(event => <article className="panel" key={event.id}><h3>{event.title}</h3><p>{places.find(place => place.id === event.establishment_id)?.name} · {new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' }).format(new Date(event.starts_at))}</p><p>{Date.parse(event.ends_at) <= now ? 'Encerrado' : labels[event.publication_status]}</p><a href={event.official_url} target="_blank" rel="noreferrer">Conferir fonte ↗</a><div style={{ marginTop: 12 }}><button type="button" disabled={busy} onClick={() => edit(event)}>Editar programação</button></div></article>)}{!visible.length && <p>Nenhum evento nesta seleção.</p>}</div>
