@@ -6,6 +6,7 @@ import { editorialEventToPublic } from './editorial';
 import type { EventItem } from './types';
 import { confirmedAgendaUpdates, heldAgendaIds } from '@/data/agenda-review-2026-10-13';
 import { confirmedEventsOctober16 } from '@/data/seeds/events-2026-10-16';
+import { confirmedEventsOctober26 } from '@/data/seeds/events-2026-10-26';
 
 export async function getPublicAgenda(): Promise<EventItem[]> {
   if (!getSupabaseAdminConfig()) return events;
@@ -23,10 +24,12 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
     const event = place && editorialEventToPublic(row, place);
     return event ? [event] : [];
   });
-  // Keep source-confirmed events with no published closing time available with
-  // the database enabled, without inventing the required editorial ends_at.
+  // Keep verified editorial additions visible with the database enabled.
+  // Database records take precedence, including edits to a title or location.
   const key = (event: EventItem) => `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
+  const sourceKey = (event: EventItem) => event.source?.url?.split('?')[0].replace(/\/$/, '');
   const existing = new Set(publicEvents.map(key));
-  return [...publicEvents, ...confirmedEventsOctober16.filter(event =>
-    Date.parse(event.expiresAt || '') > Date.now() && !existing.has(key(event)))];
+  const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
+  return [...publicEvents, ...[...confirmedEventsOctober16, ...confirmedEventsOctober26].filter(event =>
+    Date.parse(event.expiresAt || '') > Date.now() && !existing.has(key(event)) && !existingSources.has(sourceKey(event)))];
 }
