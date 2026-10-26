@@ -33,7 +33,9 @@ describe('SEO, Slugs and Sitemap consistency', () => {
 
     // Contém páginas institucionais
     expect(urls.some((u) => u.endsWith('/'))).toBe(true);
-    expect(urls.some((u) => u.endsWith('/planos'))).toBe(true);
+    expect(urls.some((u) => u.endsWith('/divulgar'))).toBe(true);
+    expect(urls.some((u) => u.endsWith('/sobre'))).toBe(true);
+    expect(urls.some((u) => u.endsWith('/planos'))).toBe(false);
     expect(urls.some((u) => u.endsWith('/privacidade'))).toBe(true);
     expect(urls.some((u) => u.endsWith('/termos'))).toBe(true);
 

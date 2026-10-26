@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const plans = readFileSync(resolve(process.cwd(), 'app/planos/page.tsx'), 'utf8');
-const pitch = readFileSync(resolve(process.cwd(), 'app/parceiros/sobradinho/page.tsx'), 'utf8');
+const plans = readFileSync(resolve(process.cwd(), 'app/assinaturas/page.tsx'), 'utf8');
+const pitch = readFileSync(resolve(process.cwd(), 'app/divulgar/page.tsx'), 'utf8');
 const css = readFileSync(resolve(process.cwd(), 'app/globals.css'), 'utf8');
 
 describe('Cabeçalho comercial no mobile', () => {

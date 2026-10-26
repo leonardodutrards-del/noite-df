@@ -20,7 +20,7 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled }:
   const [error, setError] = useState<string | null>(null);
 
   function routeForAuthentication(planId: string) {
-    return `/login?redirect=${encodeURIComponent(`/planos?plan=${planId}`)}`;
+    return `/login?redirect=${encodeURIComponent(`/assinaturas?plan=${planId}`)}`;
   }
 
   async function handleTrial(planId: string) {

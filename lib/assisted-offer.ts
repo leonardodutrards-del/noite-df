@@ -1,0 +1,2 @@
+export const ASSISTED_OFFER = { priceCents: 3000, updatesPerMonth: 4, email: 'leonardodutrards@gmail.com', phone: '5561981347423', phoneLabel: '(61) 98134-7423' } as const;
+export const programmingContactUrl = `https://wa.me/${ASSISTED_OFFER.phone}?text=${encodeURIComponent('Olá, Leonardo! Tenho interesse na divulgação de R$30/mês.\nNome da casa:\nEndereço:\nPerfil oficial:\nResponsável:\nGostaria de confirmar o cadastro existente e combinar o início do atendimento.')}`;

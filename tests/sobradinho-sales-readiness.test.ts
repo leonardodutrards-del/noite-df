@@ -49,11 +49,8 @@ describe('Prontidão comercial de Sobradinho', () => {
     expect(operation).toContain('Ativar parceiro');
   });
 
-  it('possui página comercial específica para Sobradinho', () => {
-    expect(salesPage).toContain('Sobradinho · operação local');
-    expect(salesPage).toContain('Estabelecimentos mapeados');
-    expect(salesPage).toContain('/cadastro');
-    expect(salesPage).toContain('/planos');
+  it('encaminha a página comercial antiga à oferta assistida sem perder locais', () => {
+    expect(salesPage).toContain("redirect('/divulgar')");
     expect(places).toContain("'palorama-sobradinho-i'");
     expect(places).toContain("'palorama-sobradinho-ii'");
   });
