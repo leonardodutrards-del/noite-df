@@ -1,6 +1,7 @@
 import type { EventItem } from '@/modules/events/types';
 import { researchedEvents } from './events-2026-09';
 import { confirmedEventsOctober16 } from './events-2026-10-16';
+import { confirmedEventsOctober26 } from './events-2026-10-26';
 
 export const events: EventItem[] = [
   {
@@ -28,5 +29,6 @@ export const events: EventItem[] = [
     source: { kind: 'manual', label: 'Demonstração do MVP; confirmar programação oficial', verifiedAt: '2026-07-09' }
   },
   ...researchedEvents,
-  ...confirmedEventsOctober16
+  ...confirmedEventsOctober16,
+  ...confirmedEventsOctober26
 ];
