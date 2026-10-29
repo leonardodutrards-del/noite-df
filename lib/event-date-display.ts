@@ -7,6 +7,10 @@ const weekday = (date: Date) => new Intl.DateTimeFormat('pt-BR', { timeZone: zon
 const hour = (date: Date) => new Intl.DateTimeFormat('pt-BR', { timeZone: zone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date).replace(':00', 'h').replace(':', 'h').replace(/^0/, '');
 
 export function eventDateDisplay(event: Pick<EventItem, 'startsAt' | 'endsAt' | 'dateLabel'>) {
+  if (/horário não informado/i.test(event.dateLabel)) {
+    const [date, ...time] = event.dateLabel.split(' · ');
+    return { date, time: time.join(' · '), note: '' };
+  }
   const start = new Date(event.startsAt || '');
   const end = new Date(event.endsAt || '');
   if (!Number.isFinite(start.getTime())) {
