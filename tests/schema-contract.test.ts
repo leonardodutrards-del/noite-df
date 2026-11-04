@@ -6,6 +6,7 @@ const schema = readFileSync(resolve(process.cwd(), 'database/schema.sql'), 'utf8
 const migration001 = readFileSync(resolve(process.cwd(), 'database/migrations/001_auth_and_partner_roles.sql'), 'utf8');
 const migration002 = readFileSync(resolve(process.cwd(), 'database/migrations/002_lgpd_consent.sql'), 'utf8');
 const migration003 = readFileSync(resolve(process.cwd(), 'database/migrations/003_align_domain_identifiers.sql'), 'utf8');
+const migration011 = readFileSync(resolve(process.cwd(), 'database/migrations/011_security_hardening.sql'), 'utf8');
 const repository = readFileSync(
   resolve(process.cwd(), 'infrastructure/repositories/supabase-establishment-repository.ts'),
   'utf8'
@@ -36,6 +37,14 @@ describe('Contrato de IDs e schema de produção', () => {
     );
     expect(schema).toContain('for select using (auth.uid() = auth_user_id)');
     expect(schema).not.toContain('create policy "users_update_own_profile" on profiles');
+  });
+
+  it('protege dados privados e bloqueia atualização direta do perfil', () => {
+    expect(migration011).toContain('alter table public.lgpd_consents enable row level security');
+    expect(migration011).toContain('alter table public.consent_versions enable row level security');
+    expect(migration011).toContain('drop policy if exists users_update_own_profile on public.profiles');
+    expect(migration011).toContain('revoke all on table public.lgpd_consents from anon, authenticated');
+    expect(migration011).toContain('grant execute on function public.security_check_rate_limit(text, integer, integer) to service_role');
   });
 
   it('protege a conversão de bancos legados com dados existentes', () => {
