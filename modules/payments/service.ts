@@ -1,4 +1,5 @@
 import { authService } from '@/modules/auth/service';
+import { isMasterAdminUser } from '@/modules/auth/session';
 import type { AuthUser } from '@/modules/auth/types';
 import type { SubscriptionAccount } from './types';
 import { mercadoPagoRefund } from '@/lib/mercado-pago';
@@ -103,7 +104,7 @@ class PaymentAdminService {
   }
 
   async listAll(actor: AuthUser): Promise<SubscriptionAccount[]> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     if (productionConfig()) {
@@ -118,7 +119,7 @@ class PaymentAdminService {
   }
 
   async getById(paymentId: string, actor: AuthUser): Promise<SubscriptionAccount | null> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     if (productionConfig()) {
@@ -134,7 +135,7 @@ class PaymentAdminService {
   }
 
   async refund(paymentId: string, reason: string, actor: AuthUser): Promise<SubscriptionAccount> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
 
     if (productionConfig()) {
       const payment = await this.getById(paymentId, actor);
