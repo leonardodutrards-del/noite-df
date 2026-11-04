@@ -100,7 +100,7 @@ export async function requireEstablishmentAccess(
 ): Promise<AuthUser> {
   const user = await requireAuth(request);
 
-  if (user.role === 'admin' || user.role === 'master_admin') {
+  if (isMasterAdminUser(user)) {
     return user;
   }
 
