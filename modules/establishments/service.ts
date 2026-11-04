@@ -87,9 +87,21 @@ export class EstablishmentService {
     // Only admin can change publicationStatus or verified
     const sanitizedUpdates = { ...updates };
     if (!isMasterAdminUser(actor)) {
-      delete sanitizedUpdates.publicationStatus;
-      delete sanitizedUpdates.verified;
-      delete sanitizedUpdates.id;
+      const partnerEditableFields = new Set<keyof Establishment>([
+        'description',
+        'address',
+        'whatsapp',
+        'instagram',
+        'vibe',
+        'music',
+        'menu',
+        'crowdStatus',
+        'weeklySchedule',
+        'currentPromotion',
+      ]);
+      for (const key of Object.keys(sanitizedUpdates) as Array<keyof Establishment>) {
+        if (!partnerEditableFields.has(key)) delete sanitizedUpdates[key];
+      }
     }
 
     const updated = await this.repository.update(id, sanitizedUpdates);
