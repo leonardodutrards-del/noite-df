@@ -282,7 +282,7 @@ export class PartnershipService {
     establishmentName: string;
     alreadyLinked: boolean;
   }> {
-    if (actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_ADMIN_REQUIRED');
 
     const email = input.email.trim().toLowerCase();
     const establishmentId = input.establishmentId.trim();
