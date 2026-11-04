@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionUserFromRequest } from '@/modules/auth/session';
+import { getSessionUserFromRequest, isMasterAdminUser } from '@/modules/auth/session';
 import { establishmentService } from '@/modules/establishments/service';
 import { sanitizeTextInput } from '@/lib/security';
 
@@ -41,7 +41,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Acesso negado a outro estabelecimento.' }, { status: 403 });
     }
 
-    if (user.role !== 'admin' && user.role !== 'master_admin' && user.role !== 'partner') {
+    if (!isMasterAdminUser(user) && user.role !== 'partner') {
       return NextResponse.json({ error: 'Perfil sem autorização de edição.' }, { status: 403 });
     }
 
@@ -75,7 +75,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     // Only admin can change publicationStatus directly on this endpoint
-    if ((user.role === 'admin' || user.role === 'master_admin') && body.publicationStatus) {
+    if (isMasterAdminUser(user) && body.publicationStatus) {
       updates.publicationStatus = body.publicationStatus;
     }
 
