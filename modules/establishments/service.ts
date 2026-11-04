@@ -42,7 +42,7 @@ export class EstablishmentService {
 
   async listAllForAdmin(actor: AuthUser): Promise<Establishment[]> {
     if (!isMasterAdminUser(actor)) {
-      throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
+      throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     return this.repository.listAll();
   }
@@ -126,7 +126,7 @@ export class EstablishmentService {
 
   async blockEstablishment(id: string, actor: AuthUser, reason?: string): Promise<Establishment> {
     if (!isMasterAdminUser(actor)) {
-      throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
+      throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
 
     const before = await this.repository.findById(id);
@@ -152,7 +152,7 @@ export class EstablishmentService {
 
   async unblockEstablishment(id: string, actor: AuthUser): Promise<Establishment> {
     if (!isMasterAdminUser(actor)) {
-      throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
+      throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
 
     const before = await this.repository.findById(id);
