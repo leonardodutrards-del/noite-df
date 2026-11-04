@@ -1,5 +1,5 @@
 import type { AuthUser } from '@/modules/auth/types';
-import { isMasterAdminUser } from '@/modules/auth/session';
+import { isMasterAdminUser } from '@/modules/auth/authorization';
 
 export type Interaction = {
   action: string;
