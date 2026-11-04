@@ -17,6 +17,8 @@ alter table public.data_sources enable row level security;
 alter table public.moderation_reviews enable row level security;
 alter table public.payment_webhook_events enable row level security;
 alter table public.security_rate_limits enable row level security;
+alter table public.lgpd_consents enable row level security;
+alter table public.consent_versions enable row level security;
 
 -- 4) Tags e horários continuam públicos somente quando pertencem a
 -- estabelecimentos publicados. Não há política de escrita para clientes.
@@ -68,6 +70,20 @@ drop policy if exists security_rate_limits_clients_denied on public.security_rat
 create policy security_rate_limits_clients_denied
   on public.security_rate_limits for all to anon, authenticated
   using (false) with check (false);
+
+drop policy if exists lgpd_consents_clients_denied on public.lgpd_consents;
+create policy lgpd_consents_clients_denied
+  on public.lgpd_consents for all to anon, authenticated
+  using (false) with check (false);
+
+drop policy if exists consent_versions_clients_denied on public.consent_versions;
+create policy consent_versions_clients_denied
+  on public.consent_versions for all to anon, authenticated
+  using (false) with check (false);
+
+revoke all on table public.security_rate_limits from anon, authenticated;
+revoke all on table public.lgpd_consents from anon, authenticated;
+revoke all on table public.consent_versions from anon, authenticated;
 
 -- 6) Serializa tentativas por chave e limita a execução ao backend confiável.
 create or replace function public.security_check_rate_limit(
