@@ -1,5 +1,5 @@
 import { authService } from '@/modules/auth/service';
-import { isMasterAdminUser } from '@/modules/auth/session';
+import { isMasterAdminUser } from '@/modules/auth/authorization';
 import type { AuthUser } from '@/modules/auth/types';
 import type { SubscriptionAccount } from './types';
 import { mercadoPagoRefund } from '@/lib/mercado-pago';
