@@ -135,7 +135,7 @@ class PaymentAdminService {
   }
 
   async refund(paymentId: string, reason: string, actor: AuthUser): Promise<SubscriptionAccount> {
-    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_ADMIN_REQUIRED');
 
     if (productionConfig()) {
       const payment = await this.getById(paymentId, actor);
