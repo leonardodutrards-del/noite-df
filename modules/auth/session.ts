@@ -2,6 +2,8 @@ import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { authService } from './service';
 import type { AuthUser } from './types';
+import { isMasterAdminUser } from './authorization';
+export { isMasterAdminUser } from './authorization';
 
 export const SESSION_COOKIE_NAME = 'noite_df_session';
 export const REFRESH_COOKIE_NAME = 'noite_df_refresh';
@@ -68,8 +70,6 @@ export async function requireAuth(request?: NextRequest): Promise<AuthUser> {
   return user;
 }
 
-export { isMasterAdminUser } from './authorization';
-import { isMasterAdminUser } from './authorization';
 
 export async function requireMasterAdmin(request?: NextRequest): Promise<AuthUser> {
   const user = await requireAuth(request);
