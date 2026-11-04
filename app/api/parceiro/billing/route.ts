@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/modules/auth/session';
+import { isMasterAdminUser, requireAuth } from '@/modules/auth/session';
 import { getPlan } from '@/lib/plans';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
 import {
@@ -25,10 +25,10 @@ type SubscriptionRow = {
 
 async function resolveEstablishment(request: NextRequest) {
   const user = await requireAuth(request);
-  if (user.role !== 'partner' && user.role !== 'admin' && user.role !== 'master_admin') throw new Error('FORBIDDEN_PARTNER_REQUIRED');
+  if (user.role !== 'partner' && !isMasterAdminUser(user)) throw new Error('FORBIDDEN_PARTNER_REQUIRED');
   const requestedId = request.nextUrl.searchParams.get('establishmentId');
   const establishmentId =
-    (user.role === 'admin' || user.role === 'master_admin') ? requestedId || user.establishmentId : user.establishmentId;
+    isMasterAdminUser(user) ? requestedId || user.establishmentId : user.establishmentId;
   if (!establishmentId) throw new Error('ESTABLISHMENT_REQUIRED');
   return { user, establishmentId };
 }
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     }
 
     const entitlements =
-      (user.role === 'admin' || user.role === 'master_admin')
+      isMasterAdminUser(user)
         ? adminEntitlements(establishmentId)
         : await getEstablishmentEntitlements(establishmentId);
 
