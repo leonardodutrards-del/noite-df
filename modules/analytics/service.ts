@@ -1,4 +1,5 @@
 import type { AuthUser } from '@/modules/auth/types';
+import { isMasterAdminUser } from '@/modules/auth/session';
 
 export type Interaction = {
   action: string;
@@ -63,7 +64,7 @@ export async function getPartnerAnalytics(
   establishmentId: string,
   days = 30
 ): Promise<PartnerAnalytics> {
-  if (actor.role !== 'admin' && actor.role !== 'master_admin' && actor.establishmentId !== establishmentId) {
+  if (!isMasterAdminUser(actor) && (actor.role !== 'partner' || actor.establishmentId !== establishmentId)) {
     throw new Error('FORBIDDEN_ESTABLISHMENT_ACCESS_DENIED');
   }
   const safeDays = Number.isFinite(days) ? Math.min(Math.max(Math.trunc(days), 1), 365) : 30;
