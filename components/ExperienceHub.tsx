@@ -139,7 +139,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
   };
 
   return (
-    <main className="container">
+    <main className="container homepage">
       <header className="topbar">
         <a className="brand" href="/">Noite DF</a>
         <nav>
