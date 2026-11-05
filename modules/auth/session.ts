@@ -2,6 +2,8 @@ import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { authService } from './service';
 import type { AuthUser } from './types';
+import { isMasterAdminUser } from './authorization';
+export { isMasterAdminUser } from './authorization';
 
 export const SESSION_COOKIE_NAME = 'noite_df_session';
 export const REFRESH_COOKIE_NAME = 'noite_df_refresh';
@@ -68,23 +70,6 @@ export async function requireAuth(request?: NextRequest): Promise<AuthUser> {
   return user;
 }
 
-export function isMasterAdminUser(user: AuthUser | null | undefined): boolean {
-  if (!user) return false;
-
-  // Explicit database role is the primary authorization path.
-  if (user.role === 'master_admin') return true;
-
-  // Backward compatibility for the legacy admin + allowlist model.
-  if (user.role !== 'admin') return false;
-
-  // Tests use isolated fixtures and never depend on production secrets.
-  if (process.env.NODE_ENV === 'test') return true;
-
-  const allowedEmail = process.env.MASTER_ADMIN_EMAIL?.trim().toLowerCase();
-  if (!allowedEmail) return false;
-
-  return user.email.trim().toLowerCase() === allowedEmail;
-}
 
 export async function requireMasterAdmin(request?: NextRequest): Promise<AuthUser> {
   const user = await requireAuth(request);
@@ -100,7 +85,7 @@ export async function requireEstablishmentAccess(
 ): Promise<AuthUser> {
   const user = await requireAuth(request);
 
-  if (user.role === 'admin' || user.role === 'master_admin') {
+  if (isMasterAdminUser(user)) {
     return user;
   }
 

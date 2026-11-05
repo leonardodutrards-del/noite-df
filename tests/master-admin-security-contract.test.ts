@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const session = readFileSync(resolve(process.cwd(), 'modules/auth/session.ts'), 'utf8');
+const authorization = readFileSync(resolve(process.cwd(), 'modules/auth/authorization.ts'), 'utf8');
 const adminLayout = readFileSync(resolve(process.cwd(), 'app/admin/layout.tsx'), 'utf8');
 const signup = readFileSync(resolve(process.cwd(), 'app/api/auth/signup/route.ts'), 'utf8');
 const supabaseAuth = readFileSync(resolve(process.cwd(), 'lib/supabase-auth.ts'), 'utf8');
@@ -12,10 +13,11 @@ const adminPage = readFileSync(resolve(process.cwd(), 'app/admin/page.tsx'), 'ut
 
 describe('Fase 8 — Master Admin e hardening geral', () => {
   it('aceita papel master_admin e mantém compatibilidade com admin + e-mail secreto', () => {
-    expect(session).toContain("user.role === 'master_admin'");
-    expect(session).toContain('MASTER_ADMIN_EMAIL');
-    expect(session).toContain("user.role !== 'admin'");
-    expect(session).toContain("user.email.trim().toLowerCase() === allowedEmail");
+    expect(authorization).toContain("user.role === 'master_admin'");
+    expect(authorization).toContain('MASTER_ADMIN_EMAIL');
+    expect(authorization).toContain("user.role !== 'admin'");
+    expect(authorization).toContain("user.email.trim().toLowerCase() === allowedEmail");
+    expect(session).toContain("export { isMasterAdminUser } from './authorization'");
   });
 
   it('oculta /admin de usuários não autorizados e redireciona sessão expirada', () => {

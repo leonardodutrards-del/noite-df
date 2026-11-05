@@ -2,7 +2,7 @@
 create extension if not exists pgcrypto;
 
 create type publication_status as enum ('draft', 'pending_review', 'published', 'expired', 'suspended');
-create type user_role as enum ('visitor', 'partner', 'operator', 'admin');
+create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'master_admin');
 create type review_status as enum ('pending', 'published', 'rejected', 'removed');
 create type claim_status as enum ('pending', 'approved', 'rejected', 'revoked');
 
@@ -317,6 +317,11 @@ create table if not exists payment_webhook_events (
 -- Políticas RLS
 alter table profiles enable row level security;
 alter table establishments enable row level security;
+alter table establishment_tags enable row level security;
+alter table opening_hours enable row level security;
+alter table partner_claims enable row level security;
+alter table data_sources enable row level security;
+alter table moderation_reviews enable row level security;
 alter table events enable row level security;
 alter table promotions enable row level security;
 alter table reviews enable row level security;
@@ -324,6 +329,18 @@ alter table interactions enable row level security;
 alter table audit_log enable row level security;
 alter table subscription_accounts enable row level security;
 alter table payment_provider_plans enable row level security;
+alter table payment_webhook_events enable row level security;
+
+create policy "public_read_published_establishment_tags" on establishment_tags
+  for select to anon, authenticated
+  using (exists (select 1 from establishments e where e.id = establishment_tags.establishment_id and e.publication_status = 'published'));
+create policy "public_read_published_opening_hours" on opening_hours
+  for select to anon, authenticated
+  using (exists (select 1 from establishments e where e.id = opening_hours.establishment_id and e.publication_status = 'published'));
+create policy "partner_claims_clients_denied" on partner_claims for all to anon, authenticated using (false) with check (false);
+create policy "data_sources_clients_denied" on data_sources for all to anon, authenticated using (false) with check (false);
+create policy "moderation_reviews_clients_denied" on moderation_reviews for all to anon, authenticated using (false) with check (false);
+create policy "payment_webhook_events_clients_denied" on payment_webhook_events for all to anon, authenticated using (false) with check (false);
 
 create policy "public_read_published_establishments" on establishments for select using (publication_status = 'published');
 create policy "public_read_published_events" on events for select using (publication_status = 'published');
@@ -335,9 +352,7 @@ create policy "public_read_published_reviews" on reviews for select using (statu
 create policy "users_read_own_profile" on profiles
   for select using (auth.uid() = auth_user_id);
 
-create policy "users_update_own_profile" on profiles
-  for update using (auth.uid() = auth_user_id)
-  with check (auth.uid() = auth_user_id);
+-- UPDATE direto de perfil pelo cliente é bloqueado; o backend controla papel e vínculo.
 
 
 -- Fases 9-12: growth, CRM operacional, retenção e monetização.
