@@ -28,10 +28,16 @@ export default async function SobradinhoHubPage() {
   const events = await getPublicAgenda();
   const now = new Date();
   const allPlaces = await establishmentService.search({});
+  const featuredPlaceIds = ['eita-lounge', 'panca-cheia', 'porks-sobradinho'];
   const localPlaces = allPlaces
     .filter((place) => place.region === 'Sobradinho' && place.publicationStatus !== 'suspended')
     .sort((left, right) => {
       if (left.ownerManaged !== right.ownerManaged) return left.ownerManaged ? -1 : 1;
+      const leftPriority = featuredPlaceIds.indexOf(left.id);
+      const rightPriority = featuredPlaceIds.indexOf(right.id);
+      const leftRank = leftPriority === -1 ? featuredPlaceIds.length : leftPriority;
+      const rightRank = rightPriority === -1 ? featuredPlaceIds.length : rightPriority;
+      if (leftRank !== rightRank) return leftRank - rightRank;
       return left.name.localeCompare(right.name, 'pt-BR');
     });
 
@@ -39,6 +45,7 @@ export default async function SobradinhoHubPage() {
   const weeklyEvents = getWeeklyAgenda(events, now)
     .filter((event) => event.region === 'Sobradinho')
     .filter((event) => !todayEvents.some((today) => today.id === event.id));
+  const cultureEventVisible = new Date('2026-11-08T00:00:00-03:00').getTime() > now.getTime();
 
   const featuredPlaces = localPlaces.slice(0, 9);
   const managedCount = localPlaces.filter((place) => place.ownerManaged).length;
@@ -128,6 +135,30 @@ export default async function SobradinhoHubPage() {
           <div className="grid">
             {weeklyEvents.map((event) => <EventCard key={event.id} event={event} />)}
           </div>
+        </section>
+      ) : null}
+
+      {cultureEventVisible ? (
+        <section style={{ marginTop: 36 }} aria-labelledby="culture-highlights">
+          <div className="section-title">
+            <div>
+              <span className="eyebrow">Cultura e experiências locais</span>
+              <h2 id="culture-highlights">Também acontece em Sobradinho</h2>
+              <p>Programação regional com data e informações publicadas por fontes identificadas.</p>
+            </div>
+          </div>
+          <article className="card event">
+            <div className="event-date">
+              <span className="event-date-day">07/11</span>
+              <span className="event-date-time">19h</span>
+            </div>
+            <div>
+              <h3>Arte na Praça IX</h3>
+              <p>Evento cultural gratuito na Praça das Artes Teodoro Freire, com música, dança, artesanato, gastronomia, brechós e atividades para a família. A programação divulgada inclui Vino Xaavier, Karol Thayná e Simão Santos &amp; Banda.</p>
+              <p className="field-hint">Sábado, 7 de novembro · entrada gratuita. Informação publicada pela imprensa local; confirme eventuais alterações antes de sair.</p>
+              <a href="https://www.correiobraziliense.com.br/cidades-df/2026/11/7533202-sobradinho-recebe-o-evento-arte-na-praca-ix-neste-sabado-07-11.html" target="_blank" rel="noreferrer">Conferir informações do evento ↗</a>
+            </div>
+          </article>
         </section>
       ) : null}
 
