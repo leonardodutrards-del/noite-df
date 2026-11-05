@@ -7,6 +7,7 @@ import type { EventItem } from './types';
 import { confirmedAgendaUpdates, heldAgendaIds } from '@/data/agenda-review-2026-10-13';
 import { confirmedEventsOctober16 } from '@/data/seeds/events-2026-10-16';
 import { confirmedEventsOctober26 } from '@/data/seeds/events-2026-10-26';
+import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 
 export async function getPublicAgenda(): Promise<EventItem[]> {
   if (!getSupabaseAdminConfig()) return events;
@@ -30,6 +31,6 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
   const sourceKey = (event: EventItem) => event.source?.url?.split('?')[0].replace(/\/$/, '');
   const existing = new Set(publicEvents.map(key));
   const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
-  return [...publicEvents, ...[...confirmedEventsOctober16, ...confirmedEventsOctober26].filter(event =>
+  return [...publicEvents, ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter(event =>
     Date.parse(event.expiresAt || '') > Date.now() && !existing.has(key(event)) && !existingSources.has(sourceKey(event)))];
 }

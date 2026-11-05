@@ -2,6 +2,7 @@ import type { EventItem } from '@/modules/events/types';
 import { researchedEvents } from './events-2026-09';
 import { confirmedEventsOctober16 } from './events-2026-10-16';
 import { confirmedEventsOctober26 } from './events-2026-10-26';
+import { confirmedEventsNovember05 } from './events-2026-11-05';
 
 export const events: EventItem[] = [
   {
@@ -63,5 +64,6 @@ export const events: EventItem[] = [
   },
   ...researchedEvents,
   ...confirmedEventsOctober16,
-  ...confirmedEventsOctober26
+  ...confirmedEventsOctober26,
+  ...confirmedEventsNovember05
 ];
