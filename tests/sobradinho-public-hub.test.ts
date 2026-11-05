@@ -27,4 +27,10 @@ describe('Hub público de Sobradinho', () => {
     expect(home).toContain('regionOptions.map');
     expect(sitemap).toContain('/sobradinho');
   });
+  it('prioriza Eita Lounge, Pança Cheia e Porks e divulga o destaque cultural regional', () => {
+    expect(page).toContain("['eita-lounge', 'panca-cheia', 'porks-sobradinho']");
+    expect(page).toContain('Arte na Praça IX');
+    expect(page).toContain('correiobraziliense.com.br');
+  });
+
 });
