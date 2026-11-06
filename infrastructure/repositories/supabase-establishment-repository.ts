@@ -114,7 +114,7 @@ async function updateRow(
   updates: Record<string, unknown>
 ): Promise<unknown> {
   const params = new URLSearchParams();
-  for (const [name, value] of Object.entries(filters)) params.append(name, `eq.${value}`);
+  for (const [key, value] of Object.entries(filters)) params.append(key, `eq.${value}`);
   const query = params.toString();
   const response = await supabaseAdminRequest(`${table}?${query}`, {
     method: 'PATCH',
