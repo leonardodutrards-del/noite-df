@@ -52,6 +52,17 @@ describe('agenda source monitor cron', () => {
     expect(mocks.request.mock.calls[0][0]).not.toContain('events');
   });
 
+  it('blocks local and private-network source addresses even if allowlisted', async () => {
+    vi.stubEnv('AGENDA_SOURCE_ALLOWED_HOSTS', '127.0.0.1');
+    mocks.json.mockImplementation(async (path: string) => path.startsWith('data_sources?')
+      ? [{ id: '11111111-1111-4111-8111-111111111111', entity_id: 'place-1', label: 'Fonte local', url: 'https://127.0.0.1/private', source_kind: 'official' }]
+      : []);
+    const response = await GET(request('Bearer test-secret'));
+    expect(response.status).toBe(200);
+    expect(mocks.request.mock.calls[0][1].body).toContain('"check_status":"blocked"');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('blocks redirects outside the explicit allowlist', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, {
       status: 302,

@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { isIP } from 'node:net';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
 
@@ -8,11 +9,36 @@ export const maxDuration = 30;
 type Source = { id: string; entity_id: string; label: string; url: string | null; source_kind: string };
 type PreviousCheck = { content_sha256: string | null };
 
+function isUnsafeHostname(host: string): boolean {
+  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') || host.endsWith('.internal')) return true;
+  const version = isIP(host);
+  if (version === 4) {
+    const [a, b] = host.split('.').map(Number);
+    return a === 0 || a === 10 || a === 127 || a >= 224 ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 192 && b === 0) ||
+      (a === 198 && (b === 18 || b === 19 || b === 51)) ||
+      (a === 203 && b === 0);
+  }
+  if (version === 6) {
+    const normalized = host.toLowerCase();
+    return normalized === '::' || normalized === '::1' ||
+      normalized.startsWith('fc') || normalized.startsWith('fd') ||
+      normalized.startsWith('fe8') || normalized.startsWith('fe9') ||
+      normalized.startsWith('fea') || normalized.startsWith('feb') ||
+      normalized.startsWith('ff') || normalized.startsWith('::ffff:');
+  }
+  return false;
+}
+
 function allowedUrl(raw: string, allowedHosts: Set<string>): URL | null {
   try {
     const url = new URL(raw);
     const host = url.hostname.toLowerCase();
-    if (url.protocol !== 'https:' || url.username || url.password) return null;
+    if (url.protocol !== 'https:' || url.username || url.password || isUnsafeHostname(host)) return null;
     if (url.port && url.port !== '443') return null;
     if (!allowedHosts.has(host)) return null;
     return url;
