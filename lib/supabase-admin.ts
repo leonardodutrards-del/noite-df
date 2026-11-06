@@ -8,14 +8,20 @@ export async function supabaseAdminRequest(path: string, init: RequestInit = {})
   const config = getSupabaseAdminConfig();
   if (!config) throw new Error('SUPABASE_NOT_CONFIGURED');
 
+  const headers = new Headers(init.headers);
+  headers.set('apikey', config.key);
+  if (config.key.startsWith('sb_secret_')) {
+    // Supabase's newer secret API keys are sent as apikey, not as JWT Bearer tokens.
+    headers.delete('Authorization');
+  } else {
+    // Legacy service_role keys are JWTs and must be sent as the Bearer token.
+    headers.set('Authorization', `Bearer ${config.key}`);
+  }
+  if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+
   return fetch(`${config.url}/rest/v1/${path}`, {
     ...init,
-    headers: {
-      apikey: config.key,
-      Authorization: `Bearer ${config.key}`,
-      'Content-Type': 'application/json',
-      ...(init.headers ?? {}),
-    },
+    headers,
     cache: 'no-store',
   });
 }
