@@ -70,11 +70,11 @@ async function inspectSource(source: Source, allowedHosts: Set<string>) {
     if (!response) throw new Error('NO_RESPONSE');
     if (!response.ok) return { source_id: source.id, check_status: 'http_error', http_status: response.status, content_sha256: null, checked_at: checkedAt, note: 'A fonte respondeu com erro HTTP.' };
     const type = response.headers.get('content-type')?.toLowerCase() || '';
-    if (!/(text\/html|application\/xhtml\+xml|application\/json|text\/plain)/.test(type)) throw new Error('UNSUPPORTED_CONTENT_TYPE');
+    if (!/(text\\/html|application\\/xhtml\\+xml|application\\/json|text\\/plain)/.test(type)) throw new Error('UNSUPPORTED_CONTENT_TYPE');
     const bytes = await readLimited(response, 400_000);
     const digest = createHash('sha256').update(bytes).digest('hex');
     const previous = await supabaseAdminJson<PreviousCheck[]>(
-      `agenda_source_checks?source_id=eq.${encodeURIComponent(source.id)}&select=content_sha256&order=checked_at.desc&limit=1`
+      `agenda_source_checks?source_id=eq.${encodeURIComponent(source.id)}&content_sha256=not.is.null&select=content_sha256&order=checked_at.desc&limit=1`
     );
     const oldDigest = previous[0]?.content_sha256;
     const status = !oldDigest ? 'baseline' : oldDigest === digest ? 'ok' : 'changed';
@@ -105,7 +105,11 @@ export async function GET(request: NextRequest) {
     const selected = sources.length
       ? Array.from({ length: Math.min(batchSize, sources.length) }, (_, index) => sources[(start + index) % sources.length])
       : [];
-    const results = await Promise.all(selected.map(source => inspectSource(source, new Set(hosts))));
+    const results = [];
+    for (let index = 0; index < selected.length; index += 3) {
+      const batch = await Promise.all(selected.slice(index, index + 3).map(source => inspectSource(source, new Set(hosts))));
+      results.push(...batch);
+    }
     if (results.length) {
       const response = await supabaseAdminRequest('agenda_source_checks', {
         method: 'POST',
