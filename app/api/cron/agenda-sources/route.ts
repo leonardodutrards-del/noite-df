@@ -10,10 +10,11 @@ type Source = { id: string; entity_id: string; label: string; url: string | null
 type PreviousCheck = { content_sha256: string | null };
 
 function isUnsafeHostname(host: string): boolean {
-  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') || host.endsWith('.internal')) return true;
-  const version = isIP(host);
+  const normalizedHost = host.startsWith('[') && host.endsWith(']') ? host.slice(1, -1) : host;
+  if (normalizedHost === 'localhost' || normalizedHost.endsWith('.localhost') || normalizedHost.endsWith('.local') || normalizedHost.endsWith('.internal')) return true;
+  const version = isIP(normalizedHost);
   if (version === 4) {
-    const [a, b] = host.split('.').map(Number);
+    const [a, b] = normalizedHost.split('.').map(Number);
     return a === 0 || a === 10 || a === 127 || a >= 224 ||
       (a === 169 && b === 254) ||
       (a === 172 && b >= 16 && b <= 31) ||
@@ -24,7 +25,7 @@ function isUnsafeHostname(host: string): boolean {
       (a === 203 && b === 0);
   }
   if (version === 6) {
-    const normalized = host.toLowerCase();
+    const normalized = normalizedHost.toLowerCase();
     return normalized === '::' || normalized === '::1' ||
       normalized.startsWith('fc') || normalized.startsWith('fd') ||
       normalized.startsWith('fe8') || normalized.startsWith('fe9') ||
