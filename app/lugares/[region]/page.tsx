@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { PlaceCard } from '@/components/PlaceCard';
 import { establishmentService } from '@/modules/establishments/service';
 import {
-  REGION_SLUG_MAP,
   getPlacesByRegionSlug,
   getRegionFromSlug,
   MIN_CONTENT_COUNT_FOR_SEO,
@@ -15,11 +14,8 @@ interface RegionPageProps {
 }
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-export const revalidate = 60;
 
-export async function generateStaticParams() {
-  return Object.keys(REGION_SLUG_MAP).map((region) => ({ region }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: RegionPageProps): Promise<Metadata> {
   const { region } = await params;
