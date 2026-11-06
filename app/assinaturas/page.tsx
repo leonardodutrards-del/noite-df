@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PLAN_CATALOG } from '@/lib/plans';
 import { SHOWCASE_MODE, PAYMENTS_ENABLED, TRIAL_DAYS, TRIAL_ENABLED } from '@/lib/env';
+import { isEnterprisePromotionActive } from '@/lib/enterprise-promotion';
 import { PlanList } from '@/components/PlanList';
 
 export default function PlansPage() {
@@ -34,7 +35,7 @@ export default function PlansPage() {
         plans={plans}
         paymentsEnabled={PAYMENTS_ENABLED}
         showcaseMode={SHOWCASE_MODE}
-        trialEnabled={TRIAL_ENABLED}
+        trialEnabled={TRIAL_ENABLED && isEnterprisePromotionActive()}
         trialDays={TRIAL_DAYS}
       />
 

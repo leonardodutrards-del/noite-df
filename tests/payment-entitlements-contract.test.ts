@@ -33,6 +33,14 @@ describe('Pagamento conectado a benefícios', () => {
     expect(analytics).toContain('analytics_detailed');
   });
 
+  it('respeita a chave TRIAL_ENABLED tanto na API quanto na oferta exibida', () => {
+    const trialRoute = readFileSync(resolve(process.cwd(), 'app/api/parceiro/trial/route.ts'), 'utf8');
+    const plans = readFileSync(resolve(process.cwd(), 'components/PlanList.tsx'), 'utf8');
+    expect(trialRoute).toContain('!TRIAL_ENABLED');
+    expect(plans).toContain('paymentsEnabled && trialEnabled');
+    expect(plans).not.toContain('13/10/2026');
+  });
+
   it('permite cancelamento da assinatura pelo painel', () => {
     const billing = readFileSync(resolve(process.cwd(), 'app/api/parceiro/billing/route.ts'), 'utf8');
     expect(billing).toContain("method: 'PUT'");
