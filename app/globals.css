@@ -806,3 +806,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     animation-duration: .01ms !important;
   }
 }
+
+
+/* Editorial home layout controls and responsive place list. */
+.results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px 0 14px;color:var(--muted);font-size:13px}
+.view-switch{display:inline-flex;gap:5px;padding:4px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.035)}
+.view-switch button{padding:9px 13px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:13px;font-weight:800}
+.view-switch button.is-active{background:linear-gradient(135deg,rgba(255,176,32,.2),rgba(255,77,109,.13));border-color:rgba(255,176,32,.3);color:var(--text)}
+.view-switch button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.place-results--list{display:grid;gap:12px}
+.place-results--list .card{display:grid;grid-template-columns:minmax(190px,.7fr) minmax(0,1.3fr);column-gap:24px;align-items:start;padding:22px 24px;border-radius:20px;background:linear-gradient(120deg,rgba(32,32,51,.96),rgba(18,18,29,.96));}
+.place-results--list .card>h3,.place-results--list .card>div:first-child{grid-column:1}
+.place-results--list .card>p,.place-results--list .card>.tags,.place-results--list .card>.promo,.place-results--list .card>.ratings-box,.place-results--list .card>.schedule-mini,.place-results--list .card>.place-contact,.place-results--list .card>.meta,.place-results--list .card>div:last-of-type{grid-column:2}
+.place-results--list .card>p:first-of-type{margin-top:0}
+.place-results--list .card>.tags{margin-top:0}
+.place-results--list .card>.meta{align-items:center;flex-wrap:wrap}
+.homepage .hero{padding-top:64px}
+.homepage .hero>div:first-child{position:relative}
+.homepage .hero h1{max-width:760px;text-wrap:balance}
+.homepage .decision-card{backdrop-filter:blur(14px);border-color:rgba(255,176,32,.18)}
+.homepage .section-title h2{letter-spacing:-.035em}
+.homepage #lugares,.homepage #agenda{scroll-margin-top:24px}
+@media(max-width:760px){.place-results--list .card{grid-template-columns:1fr;gap:8px;padding:18px}.place-results--list .card>h3,.place-results--list .card>div:first-child,.place-results--list .card>p,.place-results--list .card>.tags,.place-results--list .card>.promo,.place-results--list .card>.ratings-box,.place-results--list .card>.schedule-mini,.place-results--list .card>.place-contact,.place-results--list .card>.meta,.place-results--list .card>div:last-of-type{grid-column:1}.results-toolbar{align-items:flex-start}.view-switch button{padding:8px 10px}}
