@@ -54,7 +54,6 @@ it('shows verified November 6–8 events in the current weekly window', () => {
     'sextanejada-oscarito-2026-11-06',
     'sabado-oscarito-2026-11-07',
     'surra-de-modao-dvd-cota-mil-2026-11-07',
-    'banda29-porks-sobradinho-2026-11-06',
     'bloco-eu-sozinho-galpao17-2026-11-07',
     'molhadera-sunset-complexo-2026-11-08',
   ]));

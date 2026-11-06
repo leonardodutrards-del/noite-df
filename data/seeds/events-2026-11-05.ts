@@ -245,22 +245,7 @@ export const confirmedEventsNovember05: EventItem[] = [
   },
 
 
-  {
-    id: 'banda29-porks-sobradinho-2026-11-06',
-    title: 'Banda29 no Porks Sobradinho',
-    place: 'Porks Sobradinho',
-    region: 'Sobradinho',
-    dateLabel: '06/11/2026 · 20h',
-    category: 'Rock ao vivo',
-    description: 'Show da Banda29 no Porks Sobradinho. O estabelecimento anuncia música ao vivo às sextas e sábados, a partir das 20h.',
-    startsAt: '2026-11-06T20:00:00-03:00',
-    // Visibility cutoff only; the organizer has not published a closing time.
-    expiresAt: '2026-11-07T06:00:00-03:00',
-    admissionNote: 'O site oficial informa que a casa não cobra entrada nem couvert. Confirme disponibilidade e reserve diretamente com o estabelecimento.',
-    sourceStatus: 'manual',
-    publicationStatus: 'published',
-    source: { kind: 'official', label: 'Agenda oficial · Porks Sobradinho', url: 'https://sobradinhoporks.com.br/', verifiedAt: '2026-11-06' },
-  },
+
   {
     id: 'bloco-eu-sozinho-galpao17-2026-11-07',
     title: 'Bloco do Eu Sozinho + DJ Wendel Sousa',
