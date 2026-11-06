@@ -37,6 +37,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
   const [musicFilter, setMusicFilter] = useState('todas');
   const [intentFilter, setIntentFilter] = useState<NightIntent | null>(null);
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
+  const [placeLayout, setPlaceLayout] = useState<'grid' | 'list'>('grid');
 
   const regionOptions = useMemo(
     () => getRegionOptionsWithCounts(places),
@@ -332,8 +333,15 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
           </div>
         </div>
 
+        <div className="results-toolbar" aria-label="Opções de visualização">
+          <span>{filteredPlaces.length} locais</span>
+          <div className="view-switch" role="group" aria-label="Layout dos estabelecimentos">
+            <button type="button" className={placeLayout === 'grid' ? 'is-active' : ''} aria-pressed={placeLayout === 'grid'} onClick={() => setPlaceLayout('grid')}>▦ Grade</button>
+            <button type="button" className={placeLayout === 'list' ? 'is-active' : ''} aria-pressed={placeLayout === 'list'} onClick={() => setPlaceLayout('list')}>☰ Lista</button>
+          </div>
+        </div>
         {filteredPlaces.length ? (
-          <div className="grid">
+          <div className={placeLayout === 'grid' ? 'grid place-results place-results--grid' : 'place-results place-results--list'}>
             {filteredPlaces.map((place) => <PlaceCard key={place.id} place={place} />)}
           </div>
         ) : (
