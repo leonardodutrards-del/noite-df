@@ -17,8 +17,12 @@ describe('Enterprise promotional checkout', () => {
     expect(() => validatePromotionPlan({ ...plan, init_point: 'https://evil.test/' })).toThrow('TERMS_INVALID');
     expect(() => validatePromotionPlan({ ...plan, auto_recurring: { ...plan.auto_recurring, transaction_amount: 160 } })).toThrow('TERMS_INVALID');
   });
+  it('rejects expired promotions before querying or creating provider objects', async () => {
+    await expect(createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br', new Date('2026-11-06T12:00:00-03:00'))).rejects.toThrow('PROMOTION_EXPIRED');
+    expect(mocks.json).not.toHaveBeenCalled();
+  });
   it('rejects new establishments before creating any provider object', async () => {
-    await expect(createEnterprisePromotionCheckout('new-place', 'https://www.noitedf.com.br')).rejects.toThrow('NOT_ELIGIBLE');
+    await expect(createEnterprisePromotionCheckout('new-place', 'https://www.noitedf.com.br', new Date('2026-10-01T12:00:00-03:00'))).rejects.toThrow('NOT_ELIGIBLE');
     expect(mocks.json).not.toHaveBeenCalled();
   });
   it('does not start a trial when opening checkout', async () => {
@@ -31,9 +35,9 @@ describe('Enterprise promotional checkout', () => {
   });
   it('prevents reused trials and duplicate active billing', async () => {
     mocks.json.mockResolvedValueOnce([{ publication_status: 'published' }]).mockResolvedValueOnce([{ trial_started_at: '2026-10-01' }]).mockResolvedValueOnce([]).mockResolvedValueOnce([]);
-    await expect(createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br')).rejects.toThrow('TRIAL_ALREADY_USED');
+    await expect(createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br', new Date('2026-10-01T12:00:00-03:00'))).rejects.toThrow('TRIAL_ALREADY_USED');
     mocks.json.mockResolvedValueOnce([{ publication_status: 'published' }]).mockResolvedValueOnce([]).mockResolvedValueOnce([{ status: 'active', current_period_end: null }]).mockResolvedValueOnce([]);
-    await expect(createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br')).rejects.toThrow('SUBSCRIPTION_ALREADY_ACTIVE');
+    await expect(createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br', new Date('2026-10-01T12:00:00-03:00'))).rejects.toThrow('SUBSCRIPTION_ALREADY_ACTIVE');
     expect(mocks.request).not.toHaveBeenCalled();
   });
 });
