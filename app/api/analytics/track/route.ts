@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
         : typeof properties.placeId === 'string'
           ? properties.placeId
           : null;
+  const safeEstablishmentId = establishmentId?.slice(0, 120) ?? null;
 
   const actionMap: Record<string, string> = {
     page_view: 'view',
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     const result = await insertRow('interactions', {
       anonymous_session_id:
         typeof event.sessionId === 'string' ? event.sessionId.slice(0, 120) : null,
-      establishment_id: establishmentId,
+      establishment_id: safeEstablishmentId,
       event_id: typeof event.eventId === 'string' ? event.eventId.slice(0, 120) : null,
       action: actionMap[event.name] ?? event.name,
       metadata: {
