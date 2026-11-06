@@ -49,8 +49,11 @@ it('shows verified November 6–8 events in the current weekly window', () => {
   const now = new Date('2026-11-06T12:00:00-03:00');
   const visible = getWeeklyAgenda(confirmedEventsNovember05, now);
   expect(visible.map((event) => event.id)).toEqual(expect.arrayContaining([
+    'porks-avva-rock-2026-11-07',
     'deu-mo-love-contexto-2026-11-06',
     'louca-vida-galpao17-2026-11-06',
+    'sabado-magico-contexto-2026-11-07',
+    'calourada-bsb-social-valerio-2026-11-07',
     'sextanejada-oscarito-2026-11-06',
     'sabado-oscarito-2026-11-07',
     'surra-de-modao-dvd-cota-mil-2026-11-07',
