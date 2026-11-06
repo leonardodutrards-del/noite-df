@@ -7,13 +7,24 @@ import { listEditorialEvents } from '@/modules/events/store';
 import { editorialEventToPublic } from '@/modules/events/editorial';
 import { prepareAgendaCommunication } from '@/modules/events/communication';
 import { MenuImageEditor } from '@/components/MenuImageEditor';
+import { supabaseAdminJson } from '@/lib/supabase-admin';
 
 export const dynamic = 'force-dynamic';
+
+type SourceRow = { id: string; label: string; url: string | null; entity_id: string };
+type CheckRow = { source_id: string; check_status: string; http_status: number | null; checked_at: string; note: string | null };
 
 export default async function AdminAgendaPage() {
   const actor = await requireMasterAdmin().catch(() => null);
   if (!actor) redirect('/login?redirect=/admin/agenda');
   const [places, events] = await Promise.all([establishmentService.listAllForAdmin(actor), listEditorialEvents()]);
+  const [sourceRegistry, sourceChecks] = await Promise.all([
+    supabaseAdminJson<SourceRow[]>('data_sources?entity_type=eq.establishment&source_kind=eq.official&url=not.is.null&select=id,label,url,entity_id&order=captured_at.desc&limit=200').catch(() => []),
+    supabaseAdminJson<CheckRow[]>('agenda_source_checks?select=source_id,check_status,http_status,checked_at,note&order=checked_at.desc&limit=100').catch(() => []),
+  ]);
+  const sourceById = new Map(sourceRegistry.map(source => [source.id, source]));
+  const latestChecks = sourceChecks.filter((check, index, all) => all.findIndex(item => item.source_id === check.source_id) === index).slice(0, 30);
+  const checkLabels: Record<string, string> = { baseline: 'Primeira leitura', ok: 'Sem mudança', changed: 'Mudou · revisar', http_error: 'Erro HTTP', blocked: 'Bloqueada', error: 'Falha' };
   const now = new Date();
   const publicEvents = events.flatMap(event => {
     const place = places.find(place => place.id === event.establishment_id);
@@ -38,7 +49,7 @@ export default async function AdminAgendaPage() {
     <AgendaEditor initialEvents={events} initialNow={new Date().getTime()} places={places.map(({ id, name, publicationStatus }) => ({ id, name, publicationStatus }))} />
     <section className="panel" style={{ marginTop: 24 }}>
       <h2>Fontes para monitoramento da agenda</h2>
-      <p>Centralize os canais públicos cadastrados para a equipe conferir novas programações. Esta lista organiza as fontes; ela não significa que o Instagram ou os sites já estejam sendo rastreados automaticamente.</p>
+      <p>Centralize os canais públicos cadastrados para a equipe conferir novas programações. O monitoramento automático consulta somente domínios HTTPS explicitamente autorizados; Instagram não é rastreado.</p>
       <div className="admin-stats-grid" style={{ margin: '16px 0' }}>
         <div><strong>{sourcePlaces.length}</strong><span>estabelecimentos no guia</span></div>
         <div><strong>{sourcePlaces.length - sourcesWithoutLinks}</strong><span>com ao menos uma fonte cadastrada</span></div>
@@ -56,7 +67,21 @@ export default async function AdminAgendaPage() {
           </tr>)}</tbody>
         </table>
       </div>
-      <p className="field-hint">A idade acima considera a atualização do cadastro do estabelecimento, não uma confirmação de que a programação foi verificada. Próxima etapa: registrar verificações por fonte e gerar alertas automáticos de mudança.</p>
+      <p className="field-hint">A idade acima considera a atualização do cadastro do estabelecimento, não uma confirmação de que a programação foi verificada.</p>
+    </section>
+    <section className="panel" style={{ marginTop: 24 }}>
+      <h2>Histórico de verificações automáticas</h2>
+      <p>O monitor consulta até 12 fontes por dia em rodízio, registra somente o hash do conteúdo e sinaliza mudanças. Nenhum evento é publicado automaticamente.</p>
+      {latestChecks.length ? <div style={{ overflowX: 'auto' }}><table>
+        <thead><tr><th>Fonte</th><th>Resultado</th><th>HTTP</th><th>Verificado em</th><th>Observação</th></tr></thead>
+        <tbody>{latestChecks.map(check => <tr key={check.source_id}>
+          <td>{sourceById.get(check.source_id)?.label || sourceById.get(check.source_id)?.entity_id || check.source_id}</td>
+          <td>{checkLabels[check.check_status] || check.check_status}</td>
+          <td>{check.http_status ?? '—'}</td>
+          <td>{new Date(check.checked_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</td>
+          <td>{check.note || '—'}</td>
+        </tr>)}</tbody>
+      </table></div> : <p className="field-hint">Nenhuma verificação registrada ainda. O cron diário depende das variáveis CRON_SECRET e AGENDA_SOURCE_ALLOWED_HOSTS no projeto Vercel.</p>}
     </section>
     <details className="panel" style={{ marginTop: 28 }}><summary>Atualizar imagem de cardápio · opcional</summary><MenuImageEditor places={places.map(({ id, name }) => ({ id, name }))} /></details>
     <details className="panel" style={{ marginTop: 28 }}><summary>Textos sugeridos para divulgação · opcional</summary><h2>Divulgação preparada a partir da agenda</h2>
