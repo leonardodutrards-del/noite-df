@@ -20,14 +20,10 @@ interface PlacePageProps {
 }
 
 // Refresh dated programming so expired entries leave the public page.
-export const revalidate = 300;
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
-export async function generateStaticParams() {
-  const places = await establishmentService.search({});
-  return places.map((place) => ({ slug: place.id }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: PlacePageProps): Promise<Metadata> {
   const { slug } = await params;
