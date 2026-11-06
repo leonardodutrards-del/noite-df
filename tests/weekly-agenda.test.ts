@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getWeeklyAgenda, getWeeklyAgendaWindow } from '@/lib/weekly-agenda';
 import type { EventItem } from '@/modules/events/types';
+import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 
 const sample: EventItem = {
   id: 'confirmed', title: 'Forró na Varanda', place: 'Contexto', region: 'Setor de Clubes Sul',
@@ -41,4 +42,20 @@ describe('weekly agenda', () => {
 it('keeps an ongoing weekly event until its exact expiry', () => {
   expect(getWeeklyAgenda([sample], new Date('2026-10-07T00:30:00-03:00'))).toEqual([sample]);
   expect(getWeeklyAgenda([sample], new Date('2026-10-07T01:00:00-03:00'))).toEqual([]);
+});
+
+
+it('shows verified November 6–8 events in the current weekly window', () => {
+  const now = new Date('2026-11-06T12:00:00-03:00');
+  const visible = getWeeklyAgenda(confirmedEventsNovember05, now);
+  expect(visible.map((event) => event.id)).toEqual(expect.arrayContaining([
+    'deu-mo-love-contexto-2026-11-06',
+    'louca-vida-galpao17-2026-11-06',
+    'sextanejada-oscarito-2026-11-06',
+    'sabado-oscarito-2026-11-07',
+    'surra-de-modao-dvd-cota-mil-2026-11-07',
+    'banda29-porks-sobradinho-2026-11-06',
+    'bloco-eu-sozinho-galpao17-2026-11-07',
+    'molhadera-sunset-complexo-2026-11-08',
+  ]));
 });
