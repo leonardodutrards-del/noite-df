@@ -1,4 +1,5 @@
 import { events } from '@/data/events';
+import { isConfirmedEvent } from '@/lib/data-quality';
 import { getSupabaseAdminConfig } from '@/lib/supabase-admin';
 import { establishmentService } from '@/modules/establishments/service';
 import { listEditorialEvents } from './store';
@@ -10,7 +11,8 @@ import { confirmedEventsOctober26 } from '@/data/seeds/events-2026-10-26';
 import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 
 export async function getPublicAgenda(): Promise<EventItem[]> {
-  if (!getSupabaseAdminConfig()) return events;
+  if (!getSupabaseAdminConfig()) return [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter(isConfirmedEvent);
+  try {
   const [rows, places] = await Promise.all([listEditorialEvents(true), establishmentService.search({})]);
   const byId = new Map(places.map(place => [place.id, place]));
   const bySource = new Map<string, typeof rows[number]>();
@@ -33,4 +35,10 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
   const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
   return [...publicEvents, ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter(event =>
     Date.parse(event.expiresAt || '') > Date.now() && !existing.has(key(event)) && !existingSources.has(sourceKey(event)))];
+  } catch (error) {
+    console.error('Editorial agenda database unavailable; serving verified local agenda:', error);
+    const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05]
+      .filter(isConfirmedEvent);
+    return Array.from(new Map(fallback.map((event) => [event.id, event])).values());
+  }
 }
