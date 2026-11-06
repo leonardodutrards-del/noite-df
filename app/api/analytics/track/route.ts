@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
   const rateAllowed = await checkAuthRateLimit({
     ip: requestIp(request.headers),
-    email: `analytics:${event.name}`,
+    email: 'analytics:public',
     limit: 120,
     windowSeconds: 60,
   });

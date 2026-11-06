@@ -39,3 +39,10 @@ it('limits bursts of public analytics events', async () => {
   expect(response.status).toBe(429);
   expect(insertRow).not.toHaveBeenCalled();
 });
+
+it('shares one rate-limit bucket across all public analytics event types', async () => {
+  await POST(new NextRequest('http://localhost/api/analytics/track', { method: 'POST', body: JSON.stringify({ name: 'page_view' }) }));
+  await POST(new NextRequest('http://localhost/api/analytics/track', { method: 'POST', body: JSON.stringify({ name: 'map_click' }) }));
+  expect(rateLimit).toHaveBeenNthCalledWith(1, expect.objectContaining({ ip: '127.0.0.1', email: 'analytics:public', limit: 120, windowSeconds: 60 }));
+  expect(rateLimit).toHaveBeenNthCalledWith(2, expect.objectContaining({ ip: '127.0.0.1', email: 'analytics:public', limit: 120, windowSeconds: 60 }));
+});
