@@ -32,7 +32,7 @@ describe('Fase 9 — visão geral real do Master Admin', () => {
     expect(adminPage).toContain('overview?.views30d');
     expect(adminPage).toContain('overview?.views24h');
     expect(adminPage).toContain('overview?.checkoutStarts30d');
-    expect(adminPage).toContain('15000');
+    expect(adminPage).toContain('window.setInterval(refreshOverview, 60000)');
   });
 
   it('lê auditoria persistida no Supabase em produção', () => {
