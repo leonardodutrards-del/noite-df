@@ -8,13 +8,12 @@ As agendas de hoje, semana, mês e fim de semana usam os mesmos eventos. A sele�
 
 O endpoint `/api/cron/agenda-sources` é chamado diariamente às 07:00 no horário de Brasília pelo Vercel Cron. Cada execução verifica até 12 fontes oficiais em rodízio, guarda somente o hash SHA-256, código HTTP, horário e resultado; não armazena cópia de páginas nem publica eventos. Uma mudança de hash gera o estado `changed` para revisão humana no painel `/admin/agenda`.
 
-Configurar no projeto Vercel as variáveis:
-- `CRON_SECRET`: segredo aleatório forte. O Vercel Cron envia esse valor como Bearer token.
-- `AGENDA_SOURCE_ALLOWED_HOSTS`: lista separada por vírgulas de hostnames exatos, sem protocolo ou caminho. Começar somente com domínios oficiais revisados, por exemplo `www.pontao.com.br,savassicarnedesol.com.br,www.alfredospizzaria.com.br,www.restaurantexiquexique.com.br,acuolina.com,quintaldatiasandra.com.br,www.sauz.com.br`.
+Configurar no projeto Vercel a variável:
+- `CRON_SECRET`: segredo aleatório forte, armazenado como variável sensível de produção. O Vercel Cron envia esse valor como Bearer token.
 
-A lista de domínios é uma allowlist de segurança contra SSRF. Todo redirecionamento também precisa permanecer em HTTPS e dentro da allowlist. Hosts não autorizados são marcados como bloqueados. Não adicionar Instagram, encurtadores ou domínios genéricos sem avaliar a origem e o destino. O monitor não tenta contornar bloqueios, login, robots.txt ou limites dos sites. Instagram continua sendo fonte manual ou via integração oficial autorizada.
+A allowlist de domínios é derivada automaticamente dos URLs HTTPS cadastrados como fontes oficiais em `data_sources`. Perfis do Instagram são ignorados pelo monitor de páginas; permanecem como referência editorial/manual ou via integração oficial autorizada. Hosts locais, IPs privados, URLs sem HTTPS, portas não padrão e redirecionamentos fora dos hosts cadastrados são bloqueados. O monitor não tenta contornar bloqueios, login, robots.txt ou limites dos sites.
 
-A tabela `agenda_source_checks` tem RLS habilitado e não concede acesso a anon/authenticated; apenas o service role do servidor grava e consulta o histórico. Se o cron não tiver as duas variáveis configuradas, o endpoint não coleta dados e responde com erro de configuração. A primeira leitura de cada fonte estabelece uma linha de base; somente as execuções seguintes podem detectar mudança.
+A tabela `agenda_source_checks` tem RLS habilitado e não concede acesso a anon/authenticated; apenas o service role do servidor grava e consulta o histórico. Se `CRON_SECRET` não estiver configurado, o endpoint rejeita a chamada. A primeira execução autenticada grava a linha de base das fontes elegíveis; somente as execuções seguintes podem detectar mudanças. A primeira leitura de cada fonte estabelece uma linha de base; somente as execuções seguintes podem detectar mudança.
 
 ## Flyers e fotos
 
