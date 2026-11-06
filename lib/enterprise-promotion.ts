@@ -2,14 +2,19 @@ import eligibleIds from '@/data/promotions/enterprise-2026-10-13.json';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
 import { mercadoPagoGet } from '@/lib/mercado-pago';
 
-export const ENTERPRISE_PROMOTION = { id: 'enterprise-2026-10-13', paymentMethod: 'enterprise_trial_20261013', eligibleIds: new Set(eligibleIds) };
+export const ENTERPRISE_PROMOTION = { id: 'enterprise-2026-10-13', paymentMethod: 'enterprise_trial_20261013', expiresAt: '2026-10-14T02:59:59.999Z', eligibleIds: new Set(eligibleIds) };
+
+export function isEnterprisePromotionActive(now = new Date()): boolean {
+  return now.getTime() < Date.parse(ENTERPRISE_PROMOTION.expiresAt);
+}
 type ProviderPlan = { id?: string; status?: string; init_point?: string; auto_recurring?: { transaction_amount?: number; currency_id?: string; free_trial?: { frequency?: number; frequency_type?: string } } };
 export function validatePromotionPlan(plan: ProviderPlan) {
   const trial = plan.auto_recurring?.free_trial;
   if (plan.status !== 'active' || trial?.frequency !== 1 || trial.frequency_type !== 'months' || Number(plan.auto_recurring?.transaction_amount) !== 150 || plan.auto_recurring?.currency_id !== 'BRL' || !plan.init_point || !/^https:\/\/www\.mercadopago\.com\.br\//.test(plan.init_point)) throw new Error('PROMOTION_PROVIDER_TERMS_INVALID');
 }
 
-export async function createEnterprisePromotionCheckout(establishmentId: string, origin: string) {
+export async function createEnterprisePromotionCheckout(establishmentId: string, origin: string, now = new Date()) {
+  if (!isEnterprisePromotionActive(now)) throw new Error('PROMOTION_EXPIRED');
   if (!ENTERPRISE_PROMOTION.eligibleIds.has(establishmentId)) throw new Error('PROMOTION_NOT_ELIGIBLE');
   const filter = `establishment_id=eq.${encodeURIComponent(establishmentId)}`;
   const [places, trials, subscriptions, plans] = await Promise.all([
@@ -20,7 +25,7 @@ export async function createEnterprisePromotionCheckout(establishmentId: string,
   ]);
   if (!places[0] || places[0].publication_status === 'suspended') throw new Error('PROMOTION_NOT_ELIGIBLE');
   if (trials[0]?.trial_started_at) throw new Error('TRIAL_ALREADY_USED');
-  if (subscriptions.some(row => (row.status === 'active' && (!row.current_period_end || Date.parse(row.current_period_end) > Date.now())) || (row.status === 'cancelled' && row.current_period_end && Date.parse(row.current_period_end) > Date.now()))) throw new Error('SUBSCRIPTION_ALREADY_ACTIVE');
+  if (subscriptions.some(row => (row.status === 'active' && (!row.current_period_end || Date.parse(row.current_period_end) > now.getTime())) || (row.status === 'cancelled' && row.current_period_end && Date.parse(row.current_period_end) > Date.now()))) throw new Error('SUBSCRIPTION_ALREADY_ACTIVE');
   if (plans[0]) {
     const plan = await mercadoPagoGet<ProviderPlan>(`/preapproval_plan/${encodeURIComponent(plans[0].provider_plan_id)}`);
     validatePromotionPlan(plan);
