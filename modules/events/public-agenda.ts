@@ -13,32 +13,43 @@ import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 export async function getPublicAgenda(): Promise<EventItem[]> {
   if (!getSupabaseAdminConfig()) return [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter(isConfirmedEvent);
   try {
-  const [rows, places] = await Promise.all([listEditorialEvents(true), establishmentService.search({})]);
-  const byId = new Map(places.map(place => [place.id, place]));
-  const bySource = new Map<string, typeof rows[number]>();
-  for (const row of [...rows, ...confirmedAgendaUpdates]) {
-    if (heldAgendaIds.has(row.id) && (!row.verified_at || Date.parse(row.verified_at) <= Date.parse('2026-10-13T21:00:00Z'))) continue;
-    const key = row.official_url.split('?')[0].replace(/\/$/, '');
-    const previous = bySource.get(key);
-    if (!previous || Date.parse(row.verified_at || '') >= Date.parse(previous.verified_at || '')) bySource.set(key, row);
-  }
-  const publicEvents = Array.from(bySource.values()).flatMap(row => {
+    const [rows, places] = await Promise.all([listEditorialEvents(true), establishmentService.search({})]);
+    const byId = new Map(places.map(place => [place.id, place]));
+    const bySource = new Map<string, typeof rows[number]>();
+    for (const row of [...rows, ...confirmedAgendaUpdates]) {
+      if (heldAgendaIds.has(row.id) && (!row.verified_at || Date.parse(row.verified_at) <= Date.parse('2026-10-13T21:00:00Z'))) continue;
+      const key = row.official_url.split('?')[0].replace(/\/$/, '');
+      const previous = bySource.get(key);
+      if (!previous || Date.parse(row.verified_at || '') >= Date.parse(previous.verified_at || '')) bySource.set(key, row);
+    }
+      const publicEvents = Array.from(bySource.values()).flatMap(row => {
     const place = byId.get(row.establishment_id);
     const event = place && editorialEventToPublic(row, place);
     return event ? [event] : [];
   });
   // Keep verified editorial additions visible with the database enabled.
   // Database records take precedence, including edits to a title or location.
-  const key = (event: EventItem) => `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
-  const sourceKey = (event: EventItem) => event.source?.url?.split('?')[0].replace(/\/$/, '');
-  const existing = new Set(publicEvents.map(key));
-  const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
-  return [...publicEvents, ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter(event =>
+    const key = (event: EventItem) => `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
+    const sourceKey = (event: EventItem) => event.source?.url?.split('?')[0].replace(/\/$/, '');
+    const existing = new Set(publicEvents.map(key));
+    const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
+    return [...publicEvents, ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter(event =>
     Date.parse(event.expiresAt || '') > Date.now() && !existing.has(key(event)) && !existingSources.has(sourceKey(event)))];
   } catch (error) {
     console.error('Editorial agenda database unavailable; serving verified local agenda:', error);
     const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05]
       .filter(isConfirmedEvent);
-    return Array.from(new Map(fallback.map((event) => [event.id, event])).values());
+    const seenIds = new Set<string>();
+    const seenSources = new Set<string>();
+    const seenEvents = new Set<string>();
+    return fallback.filter((event) => {
+      const source = event.source?.url?.split('?')[0].replace(/\/$/, '');
+      const key = `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
+      if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
+      seenIds.add(event.id);
+      if (source) seenSources.add(source);
+      seenEvents.add(key);
+      return true;
+    });
   }
 }
