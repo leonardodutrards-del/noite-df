@@ -23,3 +23,16 @@ it('still tracks if session storage is unavailable', () => {
   expect(() => track('page_view')).not.toThrow();
   expect(JSON.parse(fetch.mock.calls[0][1].body).sessionId).toBeUndefined();
 });
+
+it.each(['trial_start', 'subscription_checkout'] as const)('persists %s funnel events without violating the interaction action constraint', async (name) => {
+  const response = await POST(new NextRequest('http://localhost/api/analytics/track', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ name, properties: { planId: 'enterprise' }, path: '/divulgar' }),
+  }));
+  expect(response.status).toBe(202);
+  expect(insertRow).toHaveBeenCalledWith('interactions', expect.objectContaining({
+    action: 'view',
+    metadata: expect.objectContaining({ eventName: name }),
+  }));
+});
