@@ -10,10 +10,11 @@ type Source = { id: string; entity_id: string; label: string; url: string | null
 type PreviousCheck = { content_sha256: string | null };
 
 function isUnsafeHostname(host: string): boolean {
-  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') || host.endsWith('.internal')) return true;
-  const version = isIP(host);
+  const normalizedHost = host.startsWith('[') && host.endsWith(']') ? host.slice(1, -1) : host;
+  if (normalizedHost === 'localhost' || normalizedHost.endsWith('.localhost') || normalizedHost.endsWith('.local') || normalizedHost.endsWith('.internal')) return true;
+  const version = isIP(normalizedHost);
   if (version === 4) {
-    const [a, b] = host.split('.').map(Number);
+    const [a, b] = normalizedHost.split('.').map(Number);
     return a === 0 || a === 10 || a === 127 || a >= 224 ||
       (a === 169 && b === 254) ||
       (a === 172 && b >= 16 && b <= 31) ||
@@ -24,7 +25,7 @@ function isUnsafeHostname(host: string): boolean {
       (a === 203 && b === 0);
   }
   if (version === 6) {
-    const normalized = host.toLowerCase();
+    const normalized = normalizedHost.toLowerCase();
     return normalized === '::' || normalized === '::1' ||
       normalized.startsWith('fc') || normalized.startsWith('fd') ||
       normalized.startsWith('fe8') || normalized.startsWith('fe9') ||
@@ -117,14 +118,24 @@ export async function GET(request: NextRequest) {
   if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
   }
-  const hosts = (process.env.AGENDA_SOURCE_ALLOWED_HOSTS || '')
-    .split(',').map(host => host.trim().toLowerCase()).filter(Boolean);
-  if (!hosts.length) return NextResponse.json({ error: 'Configure AGENDA_SOURCE_ALLOWED_HOSTS com domínios oficiais autorizados.' }, { status: 503 });
-
   try {
     const sources = await supabaseAdminJson<Source[]>(
       'data_sources?entity_type=eq.establishment&source_kind=eq.official&url=not.is.null&select=id,entity_id,label,url,source_kind&order=captured_at.asc&limit=200'
     );
+    // The allowlist is derived only from URLs already registered as official sources by the admin.
+    // Instagram is intentionally excluded; the monitor does not scrape social networks.
+    const allowedHosts = new Set(sources.flatMap((source) => {
+      if (!source.url) return [];
+      try {
+        const url = new URL(source.url);
+        const host = url.hostname.toLowerCase();
+        if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '443')) return [];
+        if (host === 'instagram.com' || host.endsWith('.instagram.com') || isUnsafeHostname(host)) return [];
+        return [host];
+      } catch {
+        return [];
+      }
+    }));
     const day = Math.floor(Date.now() / 86_400_000);
     const batchSize = 12;
     const start = (day * batchSize) % Math.max(sources.length, 1);
@@ -133,7 +144,7 @@ export async function GET(request: NextRequest) {
       : [];
     const results = [];
     for (let index = 0; index < selected.length; index += 3) {
-      const batch = await Promise.all(selected.slice(index, index + 3).map(source => inspectSource(source, new Set(hosts))));
+      const batch = await Promise.all(selected.slice(index, index + 3).map(source => inspectSource(source, allowedHosts)));
       results.push(...batch);
     }
     if (results.length) {
@@ -146,6 +157,7 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json({
       checked: results.length,
+      authorizedHosts: allowedHosts.size,
       changed: results.filter(item => item.check_status === 'changed').length,
       blocked: results.filter(item => item.check_status === 'blocked').length,
       errors: results.filter(item => item.check_status === 'error' || item.check_status === 'http_error').length,
