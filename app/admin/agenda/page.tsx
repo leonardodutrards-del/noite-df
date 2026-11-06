@@ -49,7 +49,7 @@ export default async function AdminAgendaPage() {
     <AgendaEditor initialEvents={events} initialNow={new Date().getTime()} places={places.map(({ id, name, publicationStatus }) => ({ id, name, publicationStatus }))} />
     <section className="panel" style={{ marginTop: 24 }}>
       <h2>Fontes para monitoramento da agenda</h2>
-      <p>Centralize os canais públicos cadastrados para a equipe conferir novas programações. O monitoramento automático consulta somente domínios HTTPS explicitamente autorizados; Instagram não é rastreado.</p>
+      <p>Centralize os canais públicos cadastrados para a equipe conferir novas programações. O monitoramento automático consulta somente domínios HTTPS das fontes oficiais cadastradas pela equipe; Instagram não é rastreado.</p>
       <div className="admin-stats-grid" style={{ margin: '16px 0' }}>
         <div><strong>{sourcePlaces.length}</strong><span>estabelecimentos no guia</span></div>
         <div><strong>{sourcePlaces.length - sourcesWithoutLinks}</strong><span>com ao menos uma fonte cadastrada</span></div>
@@ -81,7 +81,7 @@ export default async function AdminAgendaPage() {
           <td>{new Date(check.checked_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</td>
           <td>{check.note || '—'}</td>
         </tr>)}</tbody>
-      </table></div> : <p className="field-hint">Nenhuma verificação registrada ainda. O cron diário depende das variáveis CRON_SECRET e AGENDA_SOURCE_ALLOWED_HOSTS no projeto Vercel.</p>}
+      </table></div> : <p className="field-hint">Nenhuma verificação registrada ainda. O cron diário usa o segredo CRON_SECRET da Vercel e monta a lista de domínios a partir das fontes oficiais cadastradas.</p>}
     </section>
     <details className="panel" style={{ marginTop: 28 }}><summary>Atualizar imagem de cardápio · opcional</summary><MenuImageEditor places={places.map(({ id, name }) => ({ id, name }))} /></details>
     <details className="panel" style={{ marginTop: 28 }}><summary>Textos sugeridos para divulgação · opcional</summary><h2>Divulgação preparada a partir da agenda</h2>
