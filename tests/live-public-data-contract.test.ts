@@ -22,6 +22,10 @@ describe('Dados públicos ao vivo do Supabase', () => {
     expect(sitemap).toContain('establishmentService.search({})');
   });
 
+  it('não anuncia o painel privado do parceiro no sitemap público', () => {
+    expect(sitemap).not.toContain("`${base}/parceiro`");
+  });
+
   it('expõe publicamente somente registros published', () => {
     expect(service).toContain("publicationStatus !== 'published'");
     expect(memoryRepo).toContain("publicationStatus === 'published'");
