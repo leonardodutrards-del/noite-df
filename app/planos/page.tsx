@@ -1,2 +1,5 @@
 import { redirect } from 'next/navigation';
-export default function PlansPage() { redirect('/divulgar'); }
+
+export default function PlansPage() {
+  redirect('/assinaturas');
+}
