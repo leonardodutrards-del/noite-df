@@ -20,7 +20,9 @@ export async function POST(request: NextRequest) {
   if (declaredLength > 8192) return NextResponse.json({ error: 'Evento muito grande.' }, { status: 413 });
   const rawBody = await request.text();
   if (rawBody.length > 8192) return NextResponse.json({ error: 'Evento muito grande.' }, { status: 413 });
-  const event = (JSON.parse(rawBody) as null | Record<string, unknown>);
+  let event: null | Record<string, unknown>;
+  try { event = JSON.parse(rawBody) as null | Record<string, unknown>; }
+  catch { return NextResponse.json({ error: 'Evento inválido.' }, { status: 400 }); }
   if (!event || typeof event.name !== 'string' || !allowed.has(event.name)) {
     return NextResponse.json({ error: 'Evento inválido.' }, { status: 400 });
   }
