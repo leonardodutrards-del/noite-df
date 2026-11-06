@@ -1,11 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createEnterprisePromotionCheckout, validatePromotionPlan } from '../lib/enterprise-promotion';
+import { createEnterprisePromotionCheckout, isEnterprisePromotionActive, validatePromotionPlan } from '../lib/enterprise-promotion';
 const mocks = vi.hoisted(() => ({ json: vi.fn(), request: vi.fn(), get: vi.fn() }));
 vi.mock('../lib/supabase-admin', () => ({ supabaseAdminJson: mocks.json, supabaseAdminRequest: mocks.request }));
 vi.mock('../lib/mercado-pago', () => ({ mercadoPagoGet: mocks.get }));
 afterEach(() => { vi.resetAllMocks(); vi.unstubAllGlobals(); });
 const plan = { id: 'promo', status: 'active', init_point: 'https://www.mercadopago.com.br/subscriptions/checkout?id=promo', auto_recurring: { transaction_amount: 150, currency_id: 'BRL', free_trial: { frequency: 1, frequency_type: 'months' } } };
 describe('Enterprise promotional checkout', () => {
+  it('closes the dated promotion after its published deadline', () => {
+    expect(isEnterprisePromotionActive(new Date('2026-10-13T23:59:59-03:00'))).toBe(true);
+    expect(isEnterprisePromotionActive(new Date('2026-10-14T00:00:00-03:00'))).toBe(false);
+    expect(isEnterprisePromotionActive(new Date('2026-11-06T12:00:00-03:00'))).toBe(false);
+  });
   it('rejects missing free month, wrong price and untrusted checkout', () => {
     expect(() => validatePromotionPlan(plan)).not.toThrow();
     expect(() => validatePromotionPlan({ ...plan, auto_recurring: { transaction_amount: 150, currency_id: 'BRL' } })).toThrow('TERMS_INVALID');
@@ -20,7 +25,7 @@ describe('Enterprise promotional checkout', () => {
     mocks.json.mockResolvedValueOnce([{ publication_status: 'published' }]).mockResolvedValueOnce([]).mockResolvedValueOnce([]).mockResolvedValueOnce([]);
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify(plan))));
     mocks.request.mockResolvedValue(new Response(null, { status: 201 }));
-    expect(await createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br')).toBe(plan.init_point);
+    expect(await createEnterprisePromotionCheckout('contexto-bar', 'https://www.noitedf.com.br', new Date('2026-10-01T12:00:00-03:00'))).toBe(plan.init_point);
     expect(mocks.request).toHaveBeenCalledTimes(1);
     expect(mocks.request.mock.calls[0][0]).toBe('payment_provider_plans');
   });
