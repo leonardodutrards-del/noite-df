@@ -3,7 +3,7 @@ import { establishmentService } from '@/modules/establishments/service';
 import { getSitemapCuratedUrls } from '@/lib/curated-routes';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  const base = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
   const now = new Date();
   const places = await establishmentService.search({});
 
@@ -16,7 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/sobradinho`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${base}/divulgar`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${base}/sobre`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${base}/parceiro`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${base}/privacidade`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
     { url: `${base}/termos`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
   ];
