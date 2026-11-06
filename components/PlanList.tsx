@@ -119,8 +119,8 @@ export function PlanList({ plans, paymentsEnabled, showcaseMode, trialEnabled }:
                 <a className="button ghost" href="/parceiro/onboarding">Cadastrar estabelecimento</a>
               ) : (
                 <>
-                  {plan.id === 'enterprise' && paymentsEnabled && <label style={{ display: 'block', marginBottom: 12 }}><input type="checkbox" checked={promotionAccepted} onChange={event => setPromotionAccepted(event.target.checked)} /> Aceito cadastrar um meio de pagamento no Mercado Pago: 1 mês grátis e depois R$ 150/mês, com renovação automática e cancelamento a qualquer momento. Promoção para locais já cadastrados até 13/10/2026. Acesso liberado somente após confirmação do provedor.</label>}
-                  {plan.id === 'enterprise' && paymentsEnabled ? (
+                  {plan.id === 'enterprise' && paymentsEnabled && trialEnabled && <label style={{ display: 'block', marginBottom: 12 }}><input type="checkbox" checked={promotionAccepted} onChange={event => setPromotionAccepted(event.target.checked)} /> Aceito cadastrar um meio de pagamento no Mercado Pago: 1 mês grátis e depois R$ 150/mês, com renovação automática e cancelamento a qualquer momento. Oferta disponível somente para estabelecimentos elegíveis. Acesso liberado após confirmação do provedor.</label>}
+                  {plan.id === 'enterprise' && paymentsEnabled && trialEnabled ? (
                     <button
                       className="button"
                       type="button"
