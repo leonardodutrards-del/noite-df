@@ -124,7 +124,17 @@ export async function GET(request: NextRequest) {
     );
     // The allowlist is derived only from URLs already registered as official sources by the admin.
     // Instagram is intentionally excluded; the monitor does not scrape social networks.
-    const allowedHosts = new Set(sources.flatMap((source) => {
+    const monitoredSources = sources.filter((source) => {
+      if (!source.url) return true; // keep invalid records visible as blocked checks
+      try {
+        const url = new URL(source.url);
+        const host = url.hostname.toLowerCase();
+        return host !== 'instagram.com' && !host.endsWith('.instagram.com');
+      } catch {
+        return true;
+      }
+    });
+    const allowedHosts = new Set(monitoredSources.flatMap((source) => {
       if (!source.url) return [];
       try {
         const url = new URL(source.url);
@@ -138,9 +148,9 @@ export async function GET(request: NextRequest) {
     }));
     const day = Math.floor(Date.now() / 86_400_000);
     const batchSize = 12;
-    const start = (day * batchSize) % Math.max(sources.length, 1);
-    const selected = sources.length
-      ? Array.from({ length: Math.min(batchSize, sources.length) }, (_, index) => sources[(start + index) % sources.length])
+    const start = (day * batchSize) % Math.max(monitoredSources.length, 1);
+    const selected = monitoredSources.length
+      ? Array.from({ length: Math.min(batchSize, monitoredSources.length) }, (_, index) => monitoredSources[(start + index) % monitoredSources.length])
       : [];
     const results = [];
     for (let index = 0; index < selected.length; index += 3) {
@@ -161,7 +171,8 @@ export async function GET(request: NextRequest) {
       changed: results.filter(item => item.check_status === 'changed').length,
       blocked: results.filter(item => item.check_status === 'blocked').length,
       errors: results.filter(item => item.check_status === 'error' || item.check_status === 'http_error').length,
-      nextBatch: (start + batchSize) % Math.max(sources.length, 1),
+      eligibleSources: monitoredSources.length,
+      nextBatch: (start + batchSize) % Math.max(monitoredSources.length, 1),
     });
   } catch (error) {
     console.error('agenda-source-monitor', error);
