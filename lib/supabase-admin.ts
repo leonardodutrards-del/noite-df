@@ -19,11 +19,20 @@ export async function supabaseAdminRequest(path: string, init: RequestInit = {})
   }
   if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
 
-  return fetch(`${config.url}/rest/v1/${path}`, {
+  const response = await fetch(`${config.url}/rest/v1/${path}`, {
     ...init,
     headers,
     cache: 'no-store',
   });
+  if (!response.ok) {
+    const authMode = config.key.startsWith('sb_secret_')
+      ? 'secret-api-key'
+      : config.key.startsWith('eyJ')
+        ? 'legacy-jwt'
+        : 'unknown-key-format';
+    console.error('supabase-admin-request', { status: response.status, authMode });
+  }
+  return response;
 }
 
 export async function supabaseAdminJson<T>(path: string, init: RequestInit = {}): Promise<T> {
