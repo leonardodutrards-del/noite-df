@@ -3,7 +3,7 @@ import './globals.css';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
