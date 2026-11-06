@@ -16,7 +16,6 @@ describe('agenda source monitor cron', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubEnv('CRON_SECRET', 'test-secret');
-    vi.stubEnv('AGENDA_SOURCE_ALLOWED_HOSTS', 'agenda.example.com');
     mocks.json.mockImplementation(async (path: string) => {
       if (path.startsWith('data_sources?')) return [{ id: '11111111-1111-4111-8111-111111111111', entity_id: 'place-1', label: 'Agenda oficial', url: 'https://agenda.example.com/events', source_kind: 'official' }];
       return [];
@@ -35,10 +34,11 @@ describe('agenda source monitor cron', () => {
     expect(mocks.json).not.toHaveBeenCalled();
   });
 
-  it('requires an explicit host allowlist', async () => {
-    vi.stubEnv('AGENDA_SOURCE_ALLOWED_HOSTS', '');
+  it('derives the allowlist from admin-registered official sources', async () => {
     const response = await GET(request('Bearer test-secret'));
-    expect(response.status).toBe(503);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ checked: 1, authorizedHosts: 1 });
+    expect(fetch).toHaveBeenCalledWith(expect.objectContaining({ hostname: 'agenda.example.com' }), expect.anything());
   });
 
   it('records a baseline without publishing or modifying events', async () => {
@@ -53,7 +53,6 @@ describe('agenda source monitor cron', () => {
   });
 
   it('blocks local and private-network source addresses even if allowlisted', async () => {
-    vi.stubEnv('AGENDA_SOURCE_ALLOWED_HOSTS', '127.0.0.1');
     mocks.json.mockImplementation(async (path: string) => path.startsWith('data_sources?')
       ? [{ id: '11111111-1111-4111-8111-111111111111', entity_id: 'place-1', label: 'Fonte local', url: 'https://127.0.0.1/private', source_kind: 'official' }]
       : []);
