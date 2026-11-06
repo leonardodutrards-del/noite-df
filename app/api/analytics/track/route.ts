@@ -39,6 +39,9 @@ export async function POST(request: NextRequest) {
     place_view: 'view',
     favorite: 'save',
     share: 'view',
+    // Preserve the original funnel event in metadata while respecting the DB action constraint.
+    trial_start: 'view',
+    subscription_checkout: 'view',
   };
 
   try {
