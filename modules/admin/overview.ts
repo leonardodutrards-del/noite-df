@@ -82,11 +82,16 @@ async function countRows(table: string, filter = ''): Promise<number> {
   return parseCount(response);
 }
 
+let lastPixReconciliationAt = 0;
+
 async function reconcilePendingPixPayments(): Promise<void> {
+  const now = Date.now();
+  if (now - lastPixReconciliationAt < 5 * 60 * 1000) return;
   const response = await request(
-    'subscription_accounts?provider=eq.mercado_pago_pix&status=eq.pending&provider_payment_id=not.is.null&select=provider_payment_id&order=updated_at.desc&limit=20'
+    'subscription_accounts?provider=eq.mercado_pago_pix&status=eq.pending&provider_payment_id=not.is.null&select=provider_payment_id&order=updated_at.desc&limit=10'
   );
   if (!response.ok) return;
+  lastPixReconciliationAt = now;
 
   const rows = (await response.json()) as Array<{ provider_payment_id: string | null }>;
   for (const row of rows) {
