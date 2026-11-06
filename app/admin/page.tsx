@@ -155,7 +155,7 @@ export default function AdminPage() {
         .catch(() => undefined);
     };
 
-    const timer = window.setInterval(refreshOverview, 15000);
+    const timer = window.setInterval(refreshOverview, 60000);
     return () => {
       cancelled = true;
       window.clearInterval(timer);
@@ -400,7 +400,7 @@ export default function AdminPage() {
         <p>
           Acesso irrestrito a todos os estabelecimentos, pagamentos, suspensões/bloqueios, reembolsos e trilha de auditoria.
         </p>
-        <small style={{ color: 'var(--muted)' }}>Métricas operacionais atualizadas automaticamente a cada 15 segundos.</small>
+        <small style={{ color: 'var(--muted)' }}>Métricas operacionais atualizadas automaticamente a cada 60 segundos.</small>
       </section>
 
       <section className="panel" style={{ marginBottom: 24 }}>

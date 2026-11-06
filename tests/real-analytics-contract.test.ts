@@ -12,7 +12,7 @@ describe('Fase 6 — analytics reais', () => {
   it('associa interações ao estabelecimento', () => {
     expect(analyticsLib).toContain('establishmentId');
     expect(analyticsLib).toContain('properties.placeId');
-    expect(trackRoute).toContain('establishment_id: establishmentId');
+    expect(trackRoute).toContain('establishment_id: safeEstablishmentId');
   });
 
   it('agrega métricas reais do período no servidor', () => {

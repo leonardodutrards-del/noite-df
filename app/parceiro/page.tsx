@@ -58,6 +58,8 @@ export default function PartnerPage() {
   const [periodDays, setPeriodDays] = useState(30);
   const [analyticsError, setAnalyticsError] = useState(false);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const canViewDetailedAnalytics = Boolean(isMasterAdmin || entitlements?.capabilities.includes('analytics_detailed'));
+  const effectivePeriodDays = canViewDetailedAnalytics ? periodDays : Math.min(periodDays, 30);
 
   // Form states
   const [crowdStatus, setCrowdStatus] = useState<CrowdStatus>('a confirmar');
@@ -126,7 +128,7 @@ export default function PartnerPage() {
       if (!active) return;
       setAnalyticsLoading(true);
       setAnalyticsError(false);
-      return fetch(`/api/parceiro/analytics?days=${periodDays}`);
+      return fetch(`/api/parceiro/analytics?days=${effectivePeriodDays}`);
     })
       .then(async response => {
         if (!active || !response) return;
@@ -137,7 +139,7 @@ export default function PartnerPage() {
       .catch(() => { if (active) setAnalyticsError(true); })
       .finally(() => { if (active) setAnalyticsLoading(false); });
     return () => { active = false; };
-  }, [establishment, isMasterAdmin, entitlements, periodDays]);
+  }, [establishment, isMasterAdmin, entitlements, effectivePeriodDays]);
 
   const handleLogout = async () => {
     try {
@@ -210,7 +212,7 @@ export default function PartnerPage() {
   };
 
   const metrics = [
-    [`Visualizações (${periodDays} dias)`, analytics.views.toLocaleString('pt-BR')],
+    [`Visualizações (${effectivePeriodDays} dias)`, analytics.views.toLocaleString('pt-BR')],
     ['Sessões com visualização', analytics.uniqueSessions.toLocaleString('pt-BR')],
     ['Compartilhamentos / links copiados', analytics.shares.toLocaleString('pt-BR')],
     ['Cliques no WhatsApp', analytics.whatsappClicks.toLocaleString('pt-BR')],
@@ -349,12 +351,17 @@ export default function PartnerPage() {
       ) : null}
       {canViewAnalytics && <section style={{ marginTop: 24 }}>
         <h2>Resultados do seu estabelecimento</h2>
-        <label>Período <select value={periodDays} onChange={event => setPeriodDays(Number(event.target.value))}>
+        <label>Período <select value={effectivePeriodDays} onChange={event => setPeriodDays(Number(event.target.value))}>
           <option value={7}>Últimos 7 dias</option><option value={30}>Últimos 30 dias</option>
+          {canViewDetailedAnalytics && <>
+            <option value={90}>Últimos 90 dias</option>
+            <option value={180}>Últimos 180 dias</option>
+            <option value={365}>Últimos 12 meses</option>
+          </>}
         </select></label>
         <p>Sessões representam acessos em uma aba do navegador, não pessoas únicas. Compartilhamentos medem o uso do botão ou a cópia do link, não seu recebimento.</p>
         {analyticsLoading ? <p role="status">Carregando resultados...</p> : analyticsError ? <p role="alert">Não foi possível carregar as métricas. Tente novamente mais tarde.</p> : <>
-          <p>{analytics.contactClicks} cliques no WhatsApp e Instagram neste período; {analytics.previous?.contactClicks ?? 0} nos {periodDays} dias anteriores. Visualizações: {analytics.views} agora e {analytics.previous?.views ?? 0} no período anterior.</p>
+          <p>{analytics.contactClicks} cliques no WhatsApp e Instagram neste período; {analytics.previous?.contactClicks ?? 0} nos {effectivePeriodDays} dias anteriores. Visualizações: {analytics.views} agora e {analytics.previous?.views ?? 0} no período anterior.</p>
           <p>{analytics.viewsWithSession} visualizações têm identificação de sessão. Dados antigos sem identificação continuam nas visualizações, mas não entram nas sessões. Compartilhamentos antigos sem classificação não podem ser separados retroativamente.</p>
           <p>Ações por 100 visualizações incluem contatos, rotas e favoritos; podem passar de 100 e não representam vendas confirmadas.</p>
         </>}
