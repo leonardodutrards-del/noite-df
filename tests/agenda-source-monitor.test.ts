@@ -52,6 +52,20 @@ describe('agenda source monitor cron', () => {
     expect(mocks.request.mock.calls[0][0]).not.toContain('events');
   });
 
+  it('skips Instagram profiles rather than consuming daily source checks', async () => {
+    mocks.json.mockImplementation(async (path: string) => path.startsWith('data_sources?')
+      ? [
+          { id: '11111111-1111-4111-8111-111111111111', entity_id: 'place-1', label: 'Site oficial', url: 'https://agenda.example.com/events', source_kind: 'official' },
+          { id: '22222222-2222-4222-8222-222222222222', entity_id: 'place-1', label: 'Instagram', url: 'https://www.instagram.com/example/', source_kind: 'official' },
+        ]
+      : []);
+    const response = await GET(request('Bearer test-secret'));
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ checked: 1, eligibleSources: 1 });
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(mocks.request.mock.calls[0][1].body).not.toContain('22222222-2222-4222-8222-222222222222');
+  });
+
   it('blocks local and private-network source addresses even if allowlisted', async () => {
     mocks.json.mockImplementation(async (path: string) => path.startsWith('data_sources?')
       ? [{ id: '11111111-1111-4111-8111-111111111111', entity_id: 'place-1', label: 'Fonte local', url: 'https://127.0.0.1/private', source_kind: 'official' }]
