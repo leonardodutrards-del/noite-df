@@ -254,8 +254,8 @@ export const confirmedEventsNovember05: EventItem[] = [
     category: 'Rock ao vivo',
     description: 'Show da Banda29 no Porks Sobradinho. O estabelecimento anuncia música ao vivo às sextas e sábados, a partir das 20h.',
     startsAt: '2026-11-06T20:00:00-03:00',
-    endsAt: '2026-11-07T00:00:00-03:00',
-    expiresAt: '2026-11-07T00:00:00-03:00',
+    // Visibility cutoff only; the organizer has not published a closing time.
+    expiresAt: '2026-11-07T06:00:00-03:00',
     admissionNote: 'O site oficial informa que a casa não cobra entrada nem couvert. Confirme disponibilidade e reserve diretamente com o estabelecimento.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
