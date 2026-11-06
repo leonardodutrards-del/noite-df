@@ -70,7 +70,7 @@ async function inspectSource(source: Source, allowedHosts: Set<string>) {
     if (!response) throw new Error('NO_RESPONSE');
     if (!response.ok) return { source_id: source.id, check_status: 'http_error', http_status: response.status, content_sha256: null, checked_at: checkedAt, note: 'A fonte respondeu com erro HTTP.' };
     const type = response.headers.get('content-type')?.toLowerCase() || '';
-    if (!/(text\/html|application\/xhtml\\+xml|application\/json|text\/plain)/.test(type)) throw new Error('UNSUPPORTED_CONTENT_TYPE');
+    if (!/(text\/html|application\/xhtml\+xml|application\/json|text\/plain)/.test(type)) throw new Error('UNSUPPORTED_CONTENT_TYPE');
     const bytes = await readLimited(response, 400_000);
     const digest = createHash('sha256').update(bytes).digest('hex');
     const previous = await supabaseAdminJson<PreviousCheck[]>(
