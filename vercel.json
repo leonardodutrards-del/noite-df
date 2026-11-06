@@ -3,5 +3,11 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "pnpm install --frozen-lockfile",
-  "regions": ["gru1"]
+  "regions": ["gru1"],
+  "crons": [
+    {
+      "path": "/api/cron/agenda-sources",
+      "schedule": "0 10 * * *"
+    }
+  ]
 }
