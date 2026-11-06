@@ -9,7 +9,7 @@ export const confirmedEventsNovember05: EventItem[] = [
     region: 'Sobradinho',
     dateLabel: '07/11/2026 · 21h',
     category: 'Rock ao vivo',
-    description: 'Show do Grupo AVVA Rock no sábado. O site oficial do estabelecimento informa música ao vivo às sextas e sábados e lista esta apresentação para 7 de novembro. Consulte a casa para confirmar eventuais alterações.',
+    description: 'Show do Grupo AVVA Rock no sábado. O site oficial do estabelecimento informa música ao vivo às sextas e sábados e lista esta apresentação para 7 de novembro. Consulte a casa para verificar eventuais alterações.',
     startsAt: '2026-11-07T21:00:00-03:00',
     // Visibility cutoff only; the organizer did not publish a closing time.
     expiresAt: '2026-11-08T06:00:00-03:00',
