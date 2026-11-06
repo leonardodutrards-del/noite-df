@@ -1,4 +1,5 @@
 import type { EstablishmentRepository } from '@/modules/establishments/repository';
+import { supabaseAdminRequest } from '@/lib/supabase-admin';
 import type { Establishment } from '@/modules/establishments/types';
 
 type SupabaseRow = {
@@ -36,101 +37,74 @@ type SupabaseRow = {
   updated_at: string;
 };
 
-interface SupabaseConfig {
-  url: string;
-  key: string;
-}
+async function fetchPublicFromTable(
+  table: string,
+  filters?: Record<string, unknown>
+): Promise<unknown[]> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '');
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) throw new Error('Supabase public read is not configured');
 
-function config(): SupabaseConfig | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  return { url: url.replace(/\/$/, ''), key };
+  const params = new URLSearchParams();
+  if (filters) {
+    for (const [name, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null) params.append(name, String(value));
+    }
+  }
+  const query = params.toString();
+  const response = await fetch(`${url}/rest/v1/${table}${query ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { apikey: key },
+    cache: 'no-store',
+  });
+  if (!response.ok) throw new Error(`Public read from ${table} failed: ${response.status}`);
+  return response.json();
 }
 
 async function query<T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> {
-  const cfg = config();
-  if (!cfg) throw new Error('Supabase not configured');
-
-  const paramStr = params.map((_, i) => `$${i + 1}`).join(',');
-  const body = {
-    query: sql,
-    params: params.length > 0 ? params : undefined,
-  };
-
-  const response = await fetch(`${cfg.url}/rest/v1/rpc/custom_query`, {
+  const body = { query: sql, params: params.length > 0 ? params : undefined };
+  const response = await supabaseAdminRequest('rpc/custom_query', {
     method: 'POST',
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation',
-    },
+    headers: { Prefer: 'return=representation' },
     body: JSON.stringify(body),
-    cache: 'no-store',
   });
-
-  if (!response.ok) {
-    throw new Error(`Supabase query failed: ${response.status}`);
-  }
-
-  return response.json();
+  if (!response.ok) throw new Error(`Supabase query failed: ${response.status}`);
+  return response.json() as Promise<T[]>;
 }
 
 async function fetchFromTable(
   table: string,
   filters?: Record<string, unknown>
 ): Promise<unknown[]> {
-  const cfg = config();
-  if (!cfg) throw new Error('Supabase not configured');
-
-  let url = `${cfg.url}/rest/v1/${table}`;
+  const params = new URLSearchParams();
   if (filters) {
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(filters)) {
-      if (value !== undefined && value !== null) {
-        params.append(key, String(value));
-      }
+    for (const [name, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null) params.append(name, String(value));
     }
-    url += `?${params.toString()}`;
   }
+  const query = params.toString();
+  const path = `${table}${query ? `?${query}` : ''}`;
+  const response = await supabaseAdminRequest(path, { method: 'GET' });
 
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch from ${table}: ${response.status}`);
+  // Public RLS allows only published establishments. If the privileged key is invalid,
+  // keep public browsing alive with the publishable key, but never use this fallback
+  // for listAll/admin-only records.
+  const isPublicRead = filters?.publication_status === 'eq.published' || typeof filters?.id === 'string';
+  if (response.status === 401 && isPublicRead) {
+    console.warn('Supabase admin key rejected; retrying published establishment read with public key');
+    return fetchPublicFromTable(table, filters);
   }
-
+  if (!response.ok) throw new Error(`Failed to fetch from ${table}: ${response.status}`);
   return response.json();
 }
 
 async function insertRow(table: string, row: Record<string, unknown>): Promise<unknown> {
-  const cfg = config();
-  if (!cfg) throw new Error('Supabase not configured');
-
-  const response = await fetch(`${cfg.url}/rest/v1/${table}`, {
+  const response = await supabaseAdminRequest(table, {
     method: 'POST',
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation',
-    },
+    headers: { Prefer: 'return=representation' },
     body: JSON.stringify(row),
-    cache: 'no-store',
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to insert into ${table}: ${response.status}`);
-  }
-
+  if (!response.ok) throw new Error(`Failed to insert into ${table}: ${response.status}`);
   return response.json();
 }
 
@@ -139,32 +113,15 @@ async function updateRow(
   filters: Record<string, unknown>,
   updates: Record<string, unknown>
 ): Promise<unknown> {
-  const cfg = config();
-  if (!cfg) throw new Error('Supabase not configured');
-
-  let url = `${cfg.url}/rest/v1/${table}`;
   const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(filters)) {
-    params.append(key, `eq.${value}`);
-  }
-  url += `?${params.toString()}`;
-
-  const response = await fetch(url, {
+  for (const [key, value] of Object.entries(filters)) params.append(key, `eq.${value}`);
+  const query = params.toString();
+  const response = await supabaseAdminRequest(`${table}?${query}`, {
     method: 'PATCH',
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation',
-    },
+    headers: { Prefer: 'return=representation' },
     body: JSON.stringify(updates),
-    cache: 'no-store',
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to update ${table}: ${response.status}`);
-  }
-
+  if (!response.ok) throw new Error(`Failed to update ${table}: ${response.status}`);
   return response.json();
 }
 

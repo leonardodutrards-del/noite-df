@@ -60,3 +60,25 @@ it('holds stale records, publishes confirmed additions once and keeps subsequent
   expect(result.filter(e => e.source?.url === base.official_url)).toHaveLength(1);
   expect(result.some(e => e.title === 'Antilove atualizado')).toBe(true);
 });
+
+
+it('serves verified local agenda entries when the editorial database returns 401', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-11-06T15:00:00Z'));
+  mocks.rows.mockRejectedValue(new Error('SUPABASE_ADMIN_REQUEST_FAILED_401'));
+  mocks.places.mockResolvedValue([]);
+  const agenda = await getPublicAgenda();
+  expect(agenda.some(item => item.id === 'surra-de-modao-dvd-cota-mil-2026-11-07')).toBe(true);
+  expect(agenda.some(item => item.id === 'flashback-dance-lobby-2026-11-07')).toBe(true);
+});
+
+
+it('serves verified local agenda entries when the editorial database returns 401', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-11-06T15:00:00Z'));
+  mocks.rows.mockRejectedValue(new Error('SUPABASE_ADMIN_REQUEST_FAILED_401'));
+  mocks.places.mockResolvedValue([]);
+  const agenda = await getPublicAgenda();
+  expect(agenda.some(item => item.id === 'surra-de-modao-dvd-cota-mil-2026-11-07')).toBe(true);
+  expect(agenda.some(item => item.id === 'flashback-dance-lobby-2026-11-07')).toBe(true);
+});
