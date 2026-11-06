@@ -56,5 +56,9 @@ it('shows verified November 6–8 events in the current weekly window', () => {
     'surra-de-modao-dvd-cota-mil-2026-11-07',
     'bloco-eu-sozinho-galpao17-2026-11-07',
     'molhadera-sunset-complexo-2026-11-08',
+    'texxas-bar-thauane-tay-gomes-2026-11-07',
+    'da-roda-a-moda-dom-muster-2026-11-07',
+    'flashback-dance-lobby-2026-11-07',
+    'trance-house-hangar61-2026-11-07',
   ]));
 });
