@@ -25,7 +25,7 @@ export async function createEnterprisePromotionCheckout(establishmentId: string,
   ]);
   if (!places[0] || places[0].publication_status === 'suspended') throw new Error('PROMOTION_NOT_ELIGIBLE');
   if (trials[0]?.trial_started_at) throw new Error('TRIAL_ALREADY_USED');
-  if (subscriptions.some(row => (row.status === 'active' && (!row.current_period_end || Date.parse(row.current_period_end) > now.getTime())) || (row.status === 'cancelled' && row.current_period_end && Date.parse(row.current_period_end) > Date.now()))) throw new Error('SUBSCRIPTION_ALREADY_ACTIVE');
+  if (subscriptions.some(row => (row.status === 'active' && (!row.current_period_end || Date.parse(row.current_period_end) > now.getTime())) || (row.status === 'cancelled' && row.current_period_end && Date.parse(row.current_period_end) > now.getTime()))) throw new Error('SUBSCRIPTION_ALREADY_ACTIVE');
   if (plans[0]) {
     const plan = await mercadoPagoGet<ProviderPlan>(`/preapproval_plan/${encodeURIComponent(plans[0].provider_plan_id)}`);
     validatePromotionPlan(plan);
