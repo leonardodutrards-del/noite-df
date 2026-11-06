@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const code = error instanceof Error ? error.message : '';
     if (code === 'UNAUTHORIZED') return NextResponse.json({ error: 'Autenticação necessária.' }, { status: 401 });
+    if (code === 'PROMOTION_EXPIRED') return NextResponse.json({ error: 'Esta promoção foi encerrada.', code }, { status: 410 });
     if (code === 'PROMOTION_NOT_ELIGIBLE') return NextResponse.json({ error: 'Esta oferta é restrita a estabelecimentos elegíveis e com cadastro habilitado.', code }, { status: 403 });
     if (code === 'TRIAL_ALREADY_USED' || code === 'SUBSCRIPTION_ALREADY_ACTIVE') return NextResponse.json({ error: code === 'TRIAL_ALREADY_USED' ? 'Este local já utilizou a promoção.' : 'O local já tem uma assinatura vigente. Entre em contato para ajustar o benefício sem cobrança dupla.', code }, { status: 409 });
     console.error('enterprise-promotion-checkout', code);
