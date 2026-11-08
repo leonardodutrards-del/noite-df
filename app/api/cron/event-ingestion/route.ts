@@ -160,10 +160,12 @@ async function saveCandidate(connector: Connector, source: Source, event: Parsed
     review_note: candidate.reasons.join(', ') || null,
   };
   const existing = candidate.sourceEventKey
-    ? await supabaseAdminJson<Array<{ id: string }>>(`event_candidates?connector_id=eq.${connector.id}&source_event_key=eq.${encodeURIComponent(candidate.sourceEventKey)}&limit=1`)
-    : await supabaseAdminJson<Array<{ id: string }>>(`event_candidates?connector_id=eq.${connector.id}&fingerprint=eq.${fingerprint}&limit=1`);
+    ? await supabaseAdminJson<Array<{ id: string; status: string }>>(`event_candidates?connector_id=eq.${connector.id}&source_event_key=eq.${encodeURIComponent(candidate.sourceEventKey)}&select=id,status&limit=1`)
+    : await supabaseAdminJson<Array<{ id: string; status: string }>>(`event_candidates?connector_id=eq.${connector.id}&fingerprint=eq.${fingerprint}&select=id,status&limit=1`);
   if (existing[0]) {
-    await supabaseAdminJson(`event_candidates?id=eq.${existing[0].id}`, {
+    // Never overwrite a human decision or a published event when a feed is polled again.
+    if (existing[0].status !== 'pending_review') return { status: existing[0].status, inserted: false };
+    await supabaseAdminJson(`event_candidates?id=eq.${existing[0].id}&status=eq.pending_review`, {
       method: 'PATCH',
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify(row),
