@@ -184,18 +184,10 @@ async function saveCandidate(connector: Connector, source: Source, event: Parsed
   if (existing[0]) {
     // Never overwrite a human decision or a published event when a feed is polled again.
     if (existing[0].status !== 'pending_review') return { status: existing[0].status, inserted: false };
-    await supabaseAdminJson(`event_candidates?id=eq.${existing[0].id}&status=eq.pending_review`, {
-      method: 'PATCH',
-      headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify(row),
-    });
+    await patchWithoutBody(`event_candidates?id=eq.${existing[0].id}&status=eq.pending_review`, row);
     return { status: candidate.status, inserted: false };
   } else {
-    await supabaseAdminJson('event_candidates', {
-      method: 'POST',
-      headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({ ...row, first_seen_at: new Date().toISOString() }),
-    });
+    await patchWithoutBody('event_candidates', { ...row, first_seen_at: new Date().toISOString() });
     return { status: candidate.status, inserted: true };
   }
 }
