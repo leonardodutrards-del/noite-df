@@ -78,7 +78,7 @@ async function requestPinnedHttps(url: URL): Promise<{ status: number; contentTy
       method: 'GET',
       headers: {
         'User-Agent': 'NoiteDFAgendaBot/1.0 (+https://www.noitedf.com.br)',
-        Accept: 'application/rss+xml,application/atom+xml,application/xml,text/xml,text/calendar;q=0.9',
+        Accept: 'application/rss+xml,application/atom+xml,application/xml,text/xml,text/calendar,text/html;q=0.9',
       },
       lookup: (_hostname, _options, callback) => callback(null, selected.address, selected.family),
     }, (response) => {
