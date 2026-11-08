@@ -28,7 +28,11 @@ const text = (value: unknown, max: number): string =>
   typeof value === 'string' ? value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max) : '';
 
 function timestamp(value: unknown): string | null {
-  if (typeof value !== 'string' || !/(Z|[+-]\d{2}:\d{2})$/i.test(value)) return null;
+  if (typeof value !== 'string') return null;
+  // Preserve explicitly marked local Schema.org times for editorial review;
+  // never treat them as UTC or as eligible for automatic publication.
+  if (/^LOCAL=\d{8}T\d{4,6}$/.test(value)) return value;
+  if (!/(Z|[+-]\d{2}:\d{2})$/i.test(value)) return null;
   const parsed = Date.parse(value);
   return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
 }
@@ -68,7 +72,11 @@ export function normalizeEventCandidate(
   if (!category) reasons.push('missing_category');
   if (!establishmentId) reasons.push('missing_establishment');
   if (!startsAt) reasons.push('invalid_or_missing_start');
-  if (!endsAt || (startsAt && Date.parse(endsAt) <= Date.parse(startsAt))) reasons.push('invalid_or_missing_end');
+  const startsAtMs = startsAt ? Date.parse(startsAt) : Number.NaN;
+  const endsAtMs = endsAt ? Date.parse(endsAt) : Number.NaN;
+  if (!endsAt || (Number.isFinite(startsAtMs) && Number.isFinite(endsAtMs) && endsAtMs <= startsAtMs)) {
+    reasons.push('invalid_or_missing_end');
+  }
   const suppliedUrl = input.officialUrl ?? input.official_url ?? input.url;
   if (!officialUrl) reasons.push(suppliedUrl ? 'invalid_source_url' : 'missing_source_url');
   if (!trust.hostAllowed) reasons.push('source_host_not_allowed');
