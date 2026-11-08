@@ -119,7 +119,7 @@ class PaymentAdminService {
   }
 
   async getById(paymentId: string, actor: AuthUser): Promise<SubscriptionAccount | null> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     if (productionConfig()) {
@@ -135,7 +135,7 @@ class PaymentAdminService {
   }
 
   async refund(paymentId: string, reason: string, actor: AuthUser): Promise<SubscriptionAccount> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_ADMIN_REQUIRED');
 
     if (productionConfig()) {
       const payment = await this.getById(paymentId, actor);
