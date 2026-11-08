@@ -28,7 +28,7 @@ export function EventIngestionConsole() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [runs, setRuns] = useState<Run[]>([]);
   const [sourceId, setSourceId] = useState('');
-  const [type, setType] = useState<'rss' | 'atom' | 'ics'>('rss');
+  const [type, setType] = useState<'rss' | 'atom' | 'ics' | 'html'>('rss');
   const [interval, setInterval] = useState(180);
   const [edits, setEdits] = useState<Record<string, { title: string; category: string; description: string; priceDescription: string; startsAt: string; endsAt: string }>>({});
   const [loading, setLoading] = useState(true);
@@ -171,7 +171,7 @@ export function EventIngestionConsole() {
       <div className="event-ingestion-grid">
         <form className="card event-ingestion-form" onSubmit={configure}>
           <h3>Adicionar fonte estruturada</h3>
-          <p className="field-hint">Use apenas feeds RSS, Atom ou calendários iCalendar oficiais e autorizados.</p>
+          <p className="field-hint">Use feeds RSS/Atom, iCalendar ou páginas oficiais com dados estruturados Schema.org. Não rastreia Instagram.</p>
           <label>Fonte oficial
             <select required value={sourceId} onChange={(event) => setSourceId(event.target.value)}>
               <option value="">Selecione um estabelecimento</option>
@@ -179,7 +179,7 @@ export function EventIngestionConsole() {
             </select>
           </label>
           <div className="event-ingestion-inline">
-            <label>Formato<select value={type} onChange={(event) => setType(event.target.value as typeof type)}><option value="rss">RSS</option><option value="atom">Atom</option><option value="ics">iCalendar</option></select></label>
+            <label>Formato<select value={type} onChange={(event) => setType(event.target.value as typeof type)}><option value="rss">RSS</option><option value="atom">Atom</option><option value="ics">iCalendar</option><option value="html">HTML + Schema.org</option></select></label>
             <label>Intervalo em minutos<input type="number" min={5} max={10080} step={5} value={interval} onChange={(event) => setInterval(Number(event.target.value))}/></label>
           </div>
           <button className="button" type="submit" disabled={busy || !sourceId}>{busy ? 'Salvando…' : 'Ativar conector'}</button>
