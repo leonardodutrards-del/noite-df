@@ -8,6 +8,7 @@ import { editorialEventToPublic } from '@/modules/events/editorial';
 import { prepareAgendaCommunication } from '@/modules/events/communication';
 import { MenuImageEditor } from '@/components/MenuImageEditor';
 import { supabaseAdminJson } from '@/lib/supabase-admin';
+import { EventIngestionConsole } from '@/components/EventIngestionConsole';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +48,7 @@ export default async function AdminAgendaPage() {
   return <main className="container"><header className="topbar"><Link className="brand" href="/admin">Noite DF · Admin</Link><Link href="/agenda-semanal">Ver agenda pública</Link></header>
     <section className="page-heading"><h1>Gerenciar agenda</h1><p>Cadastre e corrija a programação sem uma nova publicação do site. Eventos publicados aparecem nas agendas de hoje, semana, mês e fim de semana até o encerramento.</p></section>
     <AgendaEditor initialEvents={events} initialNow={new Date().getTime()} places={places.map(({ id, name, publicationStatus }) => ({ id, name, publicationStatus }))} />
+    <EventIngestionConsole />
     <section className="panel" style={{ marginTop: 24 }}>
       <h2>Fontes para monitoramento da agenda</h2>
       <p>Centralize os canais públicos cadastrados para a equipe conferir novas programações. O monitoramento automático consulta somente domínios HTTPS das fontes oficiais cadastradas pela equipe; Instagram não é rastreado.</p>
