@@ -3,7 +3,7 @@ import { lookup as dnsLookup } from 'node:dns/promises';
 import { request as httpsRequest } from 'node:https';
 import { isIP } from 'node:net';
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdminJson } from '@/lib/supabase-admin';
+import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
 import { normalizeEventCandidate, type EventConnectorType } from '@/modules/events/ingestion';
 import { parseHtmlJsonLdEvents, parseIcsCalendar, parseRssAtomFeed } from '@/modules/events/feed-parsers';
 
@@ -133,6 +133,16 @@ async function fetchFeed(url: URL): Promise<{ text: string; contentType: string 
   throw new Error('REDIRECT_LIMIT');
 }
 
+
+async function patchWithoutBody(path: string, body: Record<string, unknown>): Promise<void> {
+  const response = await supabaseAdminRequest(path, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) throw new Error(`SUPABASE_ADMIN_REQUEST_FAILED_${response.status}`);
+}
+
 async function saveCandidate(connector: Connector, source: Source, event: ParsedEvent): Promise<{ status: string; inserted: boolean }> {
   const sourceUrl = safeSourceUrl(source.url || '');
   if (!sourceUrl) throw new Error('SOURCE_URL_BLOCKED');
@@ -240,40 +250,26 @@ export async function GET(request: NextRequest) {
         else updated += 1;
       }
       const finishedAt = new Date().toISOString();
-      if (runId) await supabaseAdminJson(`event_ingestion_runs?id=eq.${runId}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          status: 'succeeded', finished_at: finishedAt, discovered_count: events.length,
-          created_count: created, updated_count: updated, rejected_count: rejected, summary: { pendingReview: pending },
-        }),
+      if (runId) await patchWithoutBody(`event_ingestion_runs?id=eq.${runId}`, {
+        status: 'succeeded', finished_at: finishedAt, discovered_count: events.length,
+        created_count: created, updated_count: updated, rejected_count: rejected, summary: { pendingReview: pending },
       });
-      await supabaseAdminJson(`event_source_connectors?id=eq.${connector.id}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          last_checked_at: finishedAt, last_success_at: finishedAt, last_error_at: null,
-          last_error_code: null, next_check_at: new Date(now.getTime() + connector.poll_interval_minutes * 60000).toISOString(),
-        }),
+      await patchWithoutBody(`event_source_connectors?id=eq.${connector.id}`, {
+        last_checked_at: finishedAt, last_success_at: finishedAt, last_error_at: null,
+        last_error_code: null, next_check_at: new Date(now.getTime() + connector.poll_interval_minutes * 60000).toISOString(),
       });
       results.push({ connectorId: connector.id, status: 'succeeded', discovered: events.length });
     } catch (error) {
       const code = error instanceof Error ? error.message.slice(0, 120) : 'UNKNOWN';
       const finishedAt = new Date().toISOString();
-      if (runId) await supabaseAdminJson(`event_ingestion_runs?id=eq.${runId}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ status: 'failed', finished_at: finishedAt, error_count: 1, error_code: code }),
-      }).catch(() => []);
-      await supabaseAdminJson(`event_source_connectors?id=eq.${connector.id}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          last_checked_at: finishedAt, last_error_at: finishedAt, last_error_code: code,
-          next_check_at: new Date(now.getTime() + Math.max(connector.poll_interval_minutes, 60) * 60000).toISOString(),
-          status: code === 'CONNECTOR_NOT_IMPLEMENTED' ? 'needs_attention' : 'active',
-        }),
-      }).catch(() => []);
+      if (runId) await patchWithoutBody(`event_ingestion_runs?id=eq.${runId}`, {
+        status: 'failed', finished_at: finishedAt, error_count: 1, error_code: code,
+      }).catch(() => undefined);
+      await patchWithoutBody(`event_source_connectors?id=eq.${connector.id}`, {
+        last_checked_at: finishedAt, last_error_at: finishedAt, last_error_code: code,
+        next_check_at: new Date(now.getTime() + Math.max(connector.poll_interval_minutes, 60) * 60000).toISOString(),
+        status: code === 'CONNECTOR_NOT_IMPLEMENTED' ? 'needs_attention' : 'active',
+      }).catch(() => undefined);
       results.push({ connectorId: connector.id, status: 'failed', error: code });
     }
   }
