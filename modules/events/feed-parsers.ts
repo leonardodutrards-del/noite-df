@@ -131,8 +131,8 @@ export function parseIcsCalendar(ics: string): ParsedFeedEvent[] {
 function jsonLdDate(value: unknown): string | undefined {
   if (typeof value !== 'string' || !value.trim()) return undefined;
   const raw = value.trim();
-  if (/(Z|[+-]\\d{2}:\\d{2})$/i.test(raw)) return normalizeFeedDate(raw);
-  const local = raw.match(/^(\\d{4})-(\\d{2})-(\\d{2})(?:T(\\d{2}):(\\d{2})(?::(\\d{2}))?)?$/);
+  if (/(Z|[+-]\d{2}:\d{2})$/i.test(raw)) return normalizeFeedDate(raw);
+  const local = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?)?$/);
   if (!local) return undefined;
   const [, year, month, day, hour = '00', minute = '00', second = '00'] = local;
   return `LOCAL=${year}${month}${day}T${hour}${minute}${second}`;
@@ -140,7 +140,7 @@ function jsonLdDate(value: unknown): string | undefined {
 
 function eventType(value: unknown): boolean {
   const values = Array.isArray(value) ? value : [value];
-  return values.some((item) => typeof item === 'string' && /(?:^|\\/)Event$/i.test(item));
+  return values.some((item) => typeof item === 'string' && /(?:^|\/)Event$/i.test(item));
 }
 
 /** Extracts Schema.org Event objects from public HTML JSON-LD only.
@@ -148,7 +148,7 @@ function eventType(value: unknown): boolean {
  * unresolved markers for editorial timezone confirmation. */
 export function parseHtmlJsonLdEvents(html: string, pageUrl: string): ParsedFeedEvent[] {
   if (html.length > 400_000) throw new Error('FEED_TOO_LARGE');
-  const scripts = Array.from(html.matchAll(/<script\\b[^>]*type=[\"']application\\/ld\\+json[\"'][^>]*>([\\s\\S]*?)<\\/script\\s*>/gi));
+  const scripts = Array.from(html.matchAll(/<script\b[^>]*type=[\"']application\/ld\+json[\"'][^>]*>([\s\S]*?)<\/script\s*>/gi));
   const found: Record<string, unknown>[] = [];
   const visit = (value: unknown, depth = 0) => {
     if (depth > 12 || !value || typeof value !== 'object') return;
@@ -159,7 +159,7 @@ export function parseHtmlJsonLdEvents(html: string, pageUrl: string): ParsedFeed
     if (record.itemListElement) visit(record.itemListElement, depth + 1);
   };
   for (const match of scripts) {
-    const raw = (match[1] || '').trim().replace(/^<!\\[CDATA\\[/, '').replace(/\\]\\]>$/, '');
+    const raw = (match[1] || '').trim().replace(/^<!\[CDATA\[/, '').replace(/\]\]>$/, '');
     try { visit(JSON.parse(raw)); } catch { /* Invalid JSON-LD is ignored and remains a human-review source issue. */ }
   }
   return found.map((event) => {
