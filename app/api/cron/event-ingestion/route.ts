@@ -223,8 +223,8 @@ export async function GET(request: NextRequest) {
       let rejected = 0;
       for (const event of events) {
         const result = await saveCandidate(connector, source, event);
-        if (result.status === 'blocked') rejected += 1;
-        else pending += 1;
+        if (result.status === 'blocked' || result.status === 'rejected' || result.status === 'duplicate') rejected += 1;
+        else if (result.status === 'pending_review' || result.status === 'eligible_for_auto_publish') pending += 1;
         if (result.inserted) created += 1;
         else updated += 1;
       }
