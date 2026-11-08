@@ -1,4 +1,5 @@
 import { authService } from '@/modules/auth/service';
+import { isMasterAdminUser } from '@/modules/auth/authorization';
 import type { AuthUser } from '@/modules/auth/types';
 import type { SubscriptionAccount } from './types';
 import { mercadoPagoRefund } from '@/lib/mercado-pago';
@@ -103,7 +104,7 @@ class PaymentAdminService {
   }
 
   async listAll(actor: AuthUser): Promise<SubscriptionAccount[]> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     if (productionConfig()) {
