@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { lookup } from 'node:dns/promises';
+import { lookup as dnsLookup } from 'node:dns/promises';
+import { request as httpsRequest } from 'node:https';
 import { isIP } from 'node:net';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdminJson } from '@/lib/supabase-admin';
@@ -66,63 +67,59 @@ function safeSourceUrl(raw: string): URL | null {
   }
 }
 
-async function assertPublicDns(url: URL): Promise<void> {
-  if (isIP(url.hostname)) return;
-  const addresses = await lookup(url.hostname, { all: true, verbatim: true });
-  if (!addresses.length || addresses.some((entry) => unsafeHost(entry.address))) throw new Error('SOURCE_DNS_BLOCKED');
-}
-
-async function readLimited(response: Response): Promise<string> {
-  const maxBytes = 400_000;
-  const declared = Number(response.headers.get('content-length') || 0);
-  if (declared > maxBytes) throw new Error('FEED_TOO_LARGE');
-  if (!response.body) return '';
-  const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    total += value.byteLength;
-    if (total > maxBytes) {
-      await reader.cancel();
-      throw new Error('FEED_TOO_LARGE');
-    }
-    chunks.push(value);
+async function requestPinnedHttps(url: URL): Promise<{ status: number; contentType: string; location: string | null; text: string }> {
+  const addresses = await dnsLookup(url.hostname, { all: true, verbatim: true });
+  if (!addresses.length || addresses.some((entry) => unsafeHost(entry.address))) {
+    throw new Error('SOURCE_DNS_BLOCKED');
   }
-  const bytes = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  const selected = addresses[0];
+  return new Promise((resolve, reject) => {
+    const request = httpsRequest(url, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'NoiteDFAgendaBot/1.0 (+https://www.noitedf.com.br)',
+        Accept: 'application/rss+xml,application/atom+xml,application/xml,text/xml,text/calendar;q=0.9',
+      },
+      lookup: (_hostname, _options, callback) => callback(null, selected.address, selected.family),
+    }, (response) => {
+      const chunks: Buffer[] = [];
+      let total = 0;
+      response.on('data', (chunk: Buffer) => {
+        total += chunk.byteLength;
+        if (total > 400_000) {
+          request.destroy(new Error('FEED_TOO_LARGE'));
+          return;
+        }
+        chunks.push(chunk);
+      });
+      response.on('end', () => resolve({
+        status: response.statusCode ?? 0,
+        contentType: String(response.headers['content-type'] || '').toLowerCase(),
+        location: typeof response.headers.location === 'string' ? response.headers.location : null,
+        text: Buffer.concat(chunks).toString('utf8'),
+      }));
+      response.on('error', reject);
+    });
+    request.setTimeout(5000, () => request.destroy(new Error('FETCH_TIMEOUT')));
+    request.on('error', reject);
+    request.end();
+  });
 }
 
 async function fetchFeed(url: URL): Promise<{ text: string; contentType: string }> {
   let current = url;
   for (let hop = 0; hop <= 2; hop += 1) {
-    await assertPublicDns(current);
-    const response = await fetch(current, {
-      method: 'GET',
-      redirect: 'manual',
-      cache: 'no-store',
-      signal: AbortSignal.timeout(5000),
-      headers: {
-        'User-Agent': 'NoiteDFAgendaBot/1.0 (+https://www.noitedf.com.br)',
-        Accept: 'application/rss+xml,application/atom+xml,application/xml,text/xml,text/calendar;q=0.9',
-      },
-    });
+    const response = await requestPinnedHttps(current);
     if ([301, 302, 303, 307, 308].includes(response.status)) {
-      const location = response.headers.get('location');
-      if (!location || hop === 2) throw new Error('REDIRECT_LIMIT');
-      const next = safeSourceUrl(new URL(location, current).toString());
+      if (!response.location || hop === 2) throw new Error('REDIRECT_LIMIT');
+      const next = safeSourceUrl(new URL(response.location, current).toString());
       if (!next || next.hostname.toLowerCase() !== url.hostname.toLowerCase()) throw new Error('REDIRECT_BLOCKED');
-      await assertPublicDns(next);
       current = next;
       continue;
     }
-    if (!response.ok) throw new Error(`HTTP_${response.status}`);
-    const contentType = (response.headers.get('content-type') || '').toLowerCase();
-    if (!/(xml|rss|atom|calendar|text\/plain)/.test(contentType)) throw new Error('UNSUPPORTED_FEED_CONTENT_TYPE');
-    return { text: await readLimited(response), contentType };
+    if (response.status < 200 || response.status >= 300) throw new Error(`HTTP_${response.status}`);
+    if (!/(xml|rss|atom|calendar|text\/plain)/.test(response.contentType)) throw new Error('UNSUPPORTED_FEED_CONTENT_TYPE');
+    return { text: response.text, contentType: response.contentType };
   }
   throw new Error('REDIRECT_LIMIT');
 }
