@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/modules/auth/session';
+import { isMasterAdminUser, requireAuth } from '@/modules/auth/session';
 import { establishmentService } from '@/modules/establishments/service';
 import { sanitizeTextInput } from '@/lib/security';
 import {
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
 
     let establishmentId = user.establishmentId;
-    if ((user.role === 'admin' || user.role === 'master_admin')) {
+    if (isMasterAdminUser(user)) {
       const queryId = request.nextUrl.searchParams.get('id');
       if (queryId) establishmentId = queryId;
     }
