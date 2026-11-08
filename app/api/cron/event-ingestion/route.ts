@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdminJson } from '@/lib/supabase-admin';
@@ -65,6 +66,12 @@ function safeSourceUrl(raw: string): URL | null {
   }
 }
 
+async function assertPublicDns(url: URL): Promise<void> {
+  if (isIP(url.hostname)) return;
+  const addresses = await lookup(url.hostname, { all: true, verbatim: true });
+  if (!addresses.length || addresses.some((entry) => unsafeHost(entry.address))) throw new Error('SOURCE_DNS_BLOCKED');
+}
+
 async function readLimited(response: Response): Promise<string> {
   const maxBytes = 400_000;
   const declared = Number(response.headers.get('content-length') || 0);
@@ -92,6 +99,7 @@ async function readLimited(response: Response): Promise<string> {
 async function fetchFeed(url: URL): Promise<{ text: string; contentType: string }> {
   let current = url;
   for (let hop = 0; hop <= 2; hop += 1) {
+    await assertPublicDns(current);
     const response = await fetch(current, {
       method: 'GET',
       redirect: 'manual',
@@ -107,6 +115,7 @@ async function fetchFeed(url: URL): Promise<{ text: string; contentType: string 
       if (!location || hop === 2) throw new Error('REDIRECT_LIMIT');
       const next = safeSourceUrl(new URL(location, current).toString());
       if (!next || next.hostname.toLowerCase() !== url.hostname.toLowerCase()) throw new Error('REDIRECT_BLOCKED');
+      await assertPublicDns(next);
       current = next;
       continue;
     }
@@ -118,7 +127,7 @@ async function fetchFeed(url: URL): Promise<{ text: string; contentType: string 
   throw new Error('REDIRECT_LIMIT');
 }
 
-async function saveCandidate(connector: Connector, source: Source, event: ParsedEvent) {
+async function saveCandidate(connector: Connector, source: Source, event: ParsedEvent): Promise<{ status: string; inserted: boolean }> {
   const sourceUrl = safeSourceUrl(source.url || '');
   if (!sourceUrl) throw new Error('SOURCE_URL_BLOCKED');
   const candidate = normalizeEventCandidate({
@@ -162,14 +171,15 @@ async function saveCandidate(connector: Connector, source: Source, event: Parsed
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify(row),
     });
+    return { status: candidate.status, inserted: false };
   } else {
     await supabaseAdminJson('event_candidates', {
       method: 'POST',
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify({ ...row, first_seen_at: new Date().toISOString() }),
     });
+    return { status: candidate.status, inserted: true };
   }
-  return candidate.status;
 }
 
 export async function GET(request: NextRequest) {
@@ -209,13 +219,15 @@ export async function GET(request: NextRequest) {
         ? parseIcsCalendar(feed.text)
         : parseRssAtomFeed(feed.text);
       let created = 0;
+      let updated = 0;
       let pending = 0;
       let rejected = 0;
       for (const event of events) {
-        const status = await saveCandidate(connector, source, event);
-        if (status === 'blocked') rejected += 1;
+        const result = await saveCandidate(connector, source, event);
+        if (result.status === 'blocked') rejected += 1;
         else pending += 1;
-        created += 1;
+        if (result.inserted) created += 1;
+        else updated += 1;
       }
       const finishedAt = new Date().toISOString();
       if (runId) await supabaseAdminJson(`event_ingestion_runs?id=eq.${runId}`, {
@@ -223,7 +235,7 @@ export async function GET(request: NextRequest) {
         headers: { Prefer: 'return=minimal' },
         body: JSON.stringify({
           status: 'succeeded', finished_at: finishedAt, discovered_count: events.length,
-          created_count: created, rejected_count: rejected, summary: { pendingReview: pending },
+          created_count: created, updated_count: updated, rejected_count: rejected, summary: { pendingReview: pending },
         }),
       });
       await supabaseAdminJson(`event_source_connectors?id=eq.${connector.id}`, {
