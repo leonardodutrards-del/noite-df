@@ -139,3 +139,11 @@ Este documento é o registro de trabalho. Marcar itens como concluídos somente 
 - [ ] Revisar alerta de segurança do Supabase: `pg_net` instalado no schema `public` e proteção contra senhas vazadas desabilitada. O primeiro é um aviso do advisor; não houve evidência de exposição de credenciais.
 
 **Estado de publicação:** nova versão visual e estrutura operacional publicadas em produção. Scheduler de ingestão está ativo e foi chamado com sucesso. A automação de eventos depende da configuração e validação de fontes oficiais compatíveis; não afirmar cobertura automática de todos os estabelecimentos até essa etapa estar concluída.
+
+
+## Atualização de conectores — 08/11/2026
+- [x] Cadastrados 17 conectores HTML em fontes oficiais HTTPS verificadas de estabelecimentos.
+- [x] Todos configurados para extrair exclusivamente objetos Schema.org Event em JSON-LD, com revisão humana antes de publicação.
+- [x] Instagram, Linktree e páginas de delivery foram excluídos da rodada inicial de conectores.
+- [ ] A primeira rodada dos 17 conectores ainda precisa ser observada no cron; a última resposta confirmada foi HTTP 200 antes do cadastro, com zero conectores processados.
+- [ ] A cobertura depende de cada site possuir dados estruturados de evento. Fontes sem esse formato continuam precisando de RSS/Atom/iCalendar, integração oficial ou envio pelo parceiro/editorial.
