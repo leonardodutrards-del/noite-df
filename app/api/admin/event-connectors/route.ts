@@ -3,7 +3,7 @@ import { authService } from '@/modules/auth/service';
 import { requireMasterAdmin } from '@/modules/auth/session';
 import { supabaseAdminJson } from '@/lib/supabase-admin';
 
-type ConnectorType = 'rss' | 'atom' | 'ics' | 'html' | 'api' | 'webhook' | 'manual';
+type ConnectorType = 'rss' | 'atom' | 'ics' | 'html';
 type ConnectorStatus = 'active' | 'paused' | 'needs_attention' | 'disabled';
 
 type Source = {
@@ -36,7 +36,8 @@ function validHttpsUrl(value: string | null): boolean {
     const url = new URL(value);
     return url.protocol === 'https:' && !url.username && !url.password &&
       (!url.port || url.port === '443') &&
-      url.hostname !== 'instagram.com' && !url.hostname.endsWith('.instagram.com');
+      url.hostname !== 'instagram.com' && !url.hostname.endsWith('.instagram.com') &&
+      url.hostname !== 'linktr.ee' && !url.hostname.endsWith('.linktr.ee');
   } catch {
     return false;
   }
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
     const connectorType = body.connectorType as ConnectorType;
     const pollInterval = Number(body.pollIntervalMinutes ?? 180);
     if (!/^[0-9a-f-]{36}$/i.test(sourceId) ||
-      !['rss', 'atom', 'ics', 'html', 'api', 'webhook', 'manual'].includes(connectorType) ||
+      !['rss', 'atom', 'ics', 'html'].includes(connectorType) ||
       !Number.isInteger(pollInterval) || pollInterval < 5 || pollInterval > 10080) {
       throw new Error('INVALID_CONNECTOR');
     }
