@@ -134,9 +134,9 @@ async function fetchFeed(url: URL): Promise<{ text: string; contentType: string 
 }
 
 
-async function patchWithoutBody(path: string, body: Record<string, unknown>): Promise<void> {
+async function writeWithoutBody(path: string, method: 'POST' | 'PATCH', body: Record<string, unknown>): Promise<void> {
   const response = await supabaseAdminRequest(path, {
-    method: 'PATCH',
+    method,
     headers: { Prefer: 'return=minimal' },
     body: JSON.stringify(body),
   });
@@ -184,10 +184,10 @@ async function saveCandidate(connector: Connector, source: Source, event: Parsed
   if (existing[0]) {
     // Never overwrite a human decision or a published event when a feed is polled again.
     if (existing[0].status !== 'pending_review') return { status: existing[0].status, inserted: false };
-    await patchWithoutBody(`event_candidates?id=eq.${existing[0].id}&status=eq.pending_review`, row);
+    await writeWithoutBody(`event_candidates?id=eq.${existing[0].id}&status=eq.pending_review`, 'PATCH', row);
     return { status: candidate.status, inserted: false };
   } else {
-    await patchWithoutBody('event_candidates', { ...row, first_seen_at: new Date().toISOString() });
+    await writeWithoutBody('event_candidates', 'POST', { ...row, first_seen_at: new Date().toISOString() });
     return { status: candidate.status, inserted: true };
   }
 }
@@ -242,11 +242,11 @@ export async function GET(request: NextRequest) {
         else updated += 1;
       }
       const finishedAt = new Date().toISOString();
-      if (runId) await patchWithoutBody(`event_ingestion_runs?id=eq.${runId}`, {
+      if (runId) await writeWithoutBody(`event_ingestion_runs?id=eq.${runId}`, 'PATCH', {
         status: 'succeeded', finished_at: finishedAt, discovered_count: events.length,
         created_count: created, updated_count: updated, rejected_count: rejected, summary: { pendingReview: pending },
       });
-      await patchWithoutBody(`event_source_connectors?id=eq.${connector.id}`, {
+      await writeWithoutBody(`event_source_connectors?id=eq.${connector.id}`, 'PATCH', {
         last_checked_at: finishedAt, last_success_at: finishedAt, last_error_at: null,
         last_error_code: null, next_check_at: new Date(now.getTime() + connector.poll_interval_minutes * 60000).toISOString(),
       });
