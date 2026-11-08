@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { authService } from '@/modules/auth/service';
+import { isMasterAdminUser } from '@/modules/auth/authorization';
 import type { AuthUser } from '@/modules/auth/types';
 import type { CreateEstablishmentInput } from '@/modules/establishments/types';
 
@@ -156,7 +157,7 @@ export class PartnershipService {
   }
 
   async listClaims(actor: AuthUser): Promise<PartnerClaim[]> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_ADMIN_REQUIRED');
 
     if (!config()) {
       return Array.from(memoryClaims.values()).sort((a, b) =>
@@ -176,7 +177,7 @@ export class PartnershipService {
     actor: AuthUser,
     reason?: string
   ): Promise<PartnerClaim> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     const now = new Date().toISOString();
 
     if (!config()) {
@@ -281,7 +282,7 @@ export class PartnershipService {
     establishmentName: string;
     alreadyLinked: boolean;
   }> {
-    if (actor.role !== 'master_admin') throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_MASTER_ADMIN_REQUIRED');
 
     const email = input.email.trim().toLowerCase();
     const establishmentId = input.establishmentId.trim();

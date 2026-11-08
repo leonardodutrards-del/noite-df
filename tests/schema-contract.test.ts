@@ -14,7 +14,7 @@ const repository = readFileSync(
 describe('Contrato de IDs e schema de produção', () => {
   it('mantém user_role sem valores duplicados', () => {
     expect(schema).toContain(
-      "create type user_role as enum ('visitor', 'partner', 'operator', 'admin');"
+      "create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'master_admin');"
     );
     expect(schema).not.toContain("'admin', 'partner', 'admin'");
     expect(migration001).not.toContain("'admin', 'partner', 'admin'");
@@ -35,7 +35,7 @@ describe('Contrato de IDs e schema de produção', () => {
       'auth_user_id uuid unique references auth.users(id) on delete set null'
     );
     expect(schema).toContain('for select using (auth.uid() = auth_user_id)');
-    expect(schema).toContain('with check (auth.uid() = auth_user_id)');
+    expect(schema).not.toContain('create policy "users_update_own_profile" on profiles');
   });
 
   it('protege a conversão de bancos legados com dados existentes', () => {

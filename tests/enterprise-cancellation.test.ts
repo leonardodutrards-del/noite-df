@@ -2,7 +2,10 @@ import { NextRequest } from 'next/server';
 import { afterEach, expect, it, vi } from 'vitest';
 import { DELETE } from '../app/api/parceiro/billing/route';
 const mocks = vi.hoisted(() => ({ auth: vi.fn(), json: vi.fn(), request: vi.fn(), sync: vi.fn() }));
-vi.mock('../modules/auth/session', () => ({ requireAuth: mocks.auth }));
+vi.mock('../modules/auth/session', () => ({
+  requireAuth: mocks.auth,
+  isMasterAdminUser: (user: { role?: string } | null | undefined) => user?.role === 'master_admin' || user?.role === 'admin',
+}));
 vi.mock('../lib/supabase-admin', () => ({ supabaseAdminJson: mocks.json, supabaseAdminRequest: mocks.request }));
 vi.mock('../lib/mercado-pago', () => ({ syncSubscriptionResource: mocks.sync, mercadoPagoGet: vi.fn(), syncPaymentResource: vi.fn() }));
 afterEach(() => { vi.resetAllMocks(); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });

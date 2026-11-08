@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/modules/auth/session';
+import { isMasterAdminUser, requireAuth } from '@/modules/auth/session';
 import { establishmentService } from '@/modules/establishments/service';
 import { sanitizeTextInput } from '@/lib/security';
 import {
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
 
     let establishmentId = user.establishmentId;
-    if ((user.role === 'admin' || user.role === 'master_admin')) {
+    if (isMasterAdminUser(user)) {
       const queryId = request.nextUrl.searchParams.get('id');
       if (queryId) establishmentId = queryId;
     }
@@ -72,7 +72,7 @@ export async function PATCH(request: NextRequest) {
       if (!targetEstablishmentId) {
         return NextResponse.json({ error: 'Nenhum estabelecimento associado a esta conta.' }, { status: 400 });
       }
-    } else if ((user.role === 'admin' || user.role === 'master_admin')) {
+    } else if (isMasterAdminUser(user)) {
       targetEstablishmentId = body.establishmentId || request.nextUrl.searchParams.get('id') || user.establishmentId;
       if (!targetEstablishmentId) {
         return NextResponse.json({ error: 'ID do estabelecimento é obrigatório para admin.' }, { status: 400 });
@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const entitlements =
-      (user.role === 'admin' || user.role === 'master_admin')
+      isMasterAdminUser(user)
         ? adminEntitlements(targetEstablishmentId)
         : await getEstablishmentEntitlements(targetEstablishmentId);
 

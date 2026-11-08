@@ -145,4 +145,19 @@ describe('Autorização e Isolamento de Estabelecimentos', () => {
     expect(refundLog?.actorEmail).toBe(TEST_USERS.admin.email);
     expect(refundLog?.entityId).toBe(targetPayment.id);
   });
+  it('partner não pode alterar campos administrativos nem assumir a propriedade do local', async () => {
+    const before = await establishmentService.getById('five-sport-bar', partnerFive);
+    expect(before).not.toBeNull();
+    const updated = await establishmentService.update('five-sport-bar', {
+      name: 'Nome adulterado',
+      ownerManaged: false,
+      verified: !before!.verified,
+      publicationStatus: 'published',
+    }, partnerFive);
+    expect(updated.name).toBe(before!.name);
+    expect(updated.ownerManaged).toBe(before!.ownerManaged);
+    expect(updated.verified).toBe(before!.verified);
+    expect(updated.publicationStatus).toBe(before!.publicationStatus);
+  });
+
 });
