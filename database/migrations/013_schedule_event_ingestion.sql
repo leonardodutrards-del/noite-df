@@ -2,8 +2,15 @@
 -- Executar somente depois do deploy do endpoint /api/cron/event-ingestion.
 -- A credencial é lida do Supabase Vault; nenhum segredo fica versionado no repositório.
 
-create extension if not exists pg_cron;
+create extension if not exists pg_cron with schema pg_catalog;
 create extension if not exists pg_net;
+
+grant usage on schema cron to postgres;
+grant all privileges on all tables in schema cron to postgres;
+
+select cron.unschedule(jobid)
+from cron.job
+where jobname = 'noite-df-event-ingestion';
 
 select cron.schedule(
   'noite-df-event-ingestion',
