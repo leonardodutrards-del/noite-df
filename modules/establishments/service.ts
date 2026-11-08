@@ -1,4 +1,5 @@
 import { authService } from '@/modules/auth/service';
+import { isMasterAdminUser } from '@/modules/auth/authorization';
 import type { AuthUser } from '@/modules/auth/types';
 import type { EstablishmentRepository } from './repository';
 import type { CrowdStatus, Establishment, Promotion, WeeklyScheduleItem } from './types';
@@ -40,7 +41,7 @@ export class EstablishmentService {
   }
 
   async listAllForAdmin(actor: AuthUser): Promise<Establishment[]> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
     return this.repository.listAll();
@@ -58,7 +59,7 @@ export class EstablishmentService {
       return establishment;
     }
 
-    if ((actor.role === 'admin' || actor.role === 'master_admin')) {
+    if (isMasterAdminUser(actor)) {
       return establishment;
     }
 
@@ -69,14 +70,13 @@ export class EstablishmentService {
       return establishment;
     }
 
+    if (establishment.publicationStatus !== 'published') return null;
     return establishment;
   }
 
   async update(id: string, updates: Partial<Establishment>, actor: AuthUser): Promise<Establishment> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
-      if (actor.role !== 'partner' || actor.establishmentId !== id) {
-        throw new Error('FORBIDDEN_ESTABLISHMENT_ACCESS_DENIED');
-      }
+    if (!isMasterAdminUser(actor) && (actor.role !== 'partner' || actor.establishmentId !== id)) {
+      throw new Error('FORBIDDEN_ESTABLISHMENT_ACCESS_DENIED');
     }
 
     const before = await this.repository.findById(id);
@@ -86,10 +86,14 @@ export class EstablishmentService {
 
     // Only admin can change publicationStatus or verified
     const sanitizedUpdates = { ...updates };
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
-      delete sanitizedUpdates.publicationStatus;
-      delete sanitizedUpdates.verified;
-      delete sanitizedUpdates.id;
+    if (!isMasterAdminUser(actor)) {
+      const partnerEditableFields = new Set<keyof Establishment>([
+        'description', 'address', 'whatsapp', 'instagram', 'vibe', 'music',
+        'menu', 'crowdStatus', 'weeklySchedule', 'currentPromotion',
+      ]);
+      for (const key of Object.keys(sanitizedUpdates) as Array<keyof Establishment>) {
+        if (!partnerEditableFields.has(key)) delete sanitizedUpdates[key];
+      }
     }
 
     const updated = await this.repository.update(id, sanitizedUpdates);
