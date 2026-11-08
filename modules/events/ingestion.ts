@@ -69,7 +69,7 @@ export function normalizeEventCandidate(
   if (!establishmentId) reasons.push('missing_establishment');
   if (!startsAt) reasons.push('invalid_or_missing_start');
   if (!endsAt || (startsAt && Date.parse(endsAt) <= Date.parse(startsAt))) reasons.push('invalid_or_missing_end');
-  if (!officialUrl) reasons.push('invalid_source_url');
+  const suppliedUrl = input.officialUrl ?? input.official_url ?? input.url;\n  if (!officialUrl) reasons.push(suppliedUrl ? 'invalid_source_url' : 'missing_source_url');
   if (!trust.hostAllowed) reasons.push('source_host_not_allowed');
   if (!trust.officialSourceVerified) reasons.push('source_not_verified');
   if (trust.duplicateFound) reasons.push('possible_duplicate');
@@ -87,7 +87,7 @@ export function normalizeEventCandidate(
     (trust.hostAllowed ? 0.05 : 0)
   ));
 
-  const blocked = !officialUrl || !trust.hostAllowed || trust.duplicateFound === true;
+  const blocked = (Boolean(suppliedUrl) && !officialUrl) || !trust.hostAllowed || trust.duplicateFound === true;
   const eligible = !blocked && structuredConnector && trust.officialSourceVerified && complete && confidence >= 0.95;
 
   return {
