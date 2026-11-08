@@ -1,5 +1,5 @@
 -- Noite DF — agendamento recorrente da ingestão estruturada de eventos.
--- Executar somente depois do deploy do endpoint /api/cron/event-ingestion.
+-- Aplicada em produção em 2026-11-08 após o deploy do endpoint /api/cron/event-ingestion.
 -- A credencial é lida do Supabase Vault; nenhum segredo fica versionado no repositório.
 
 create extension if not exists pg_cron with schema pg_catalog;
