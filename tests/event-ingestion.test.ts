@@ -58,6 +58,23 @@ describe('event ingestion normalization', () => {
     expect(result.reasons).toContain('invalid_or_missing_start');
   });
 
+  it('preserves explicitly marked local Schema.org times for editorial correction', () => {
+    const result = normalizeEventCandidate({
+      ...base,
+      startsAt: 'LOCAL=20261114T200000',
+      endsAt: 'LOCAL=20261115T020000',
+    }, {
+      connectorType: 'html',
+      officialSourceVerified: true,
+      hostAllowed: true,
+    });
+
+    expect(result.status).toBe('pending_review');
+    expect(result.startsAt).toBe('LOCAL=20261114T200000');
+    expect(result.endsAt).toBe('LOCAL=20261115T020000');
+    expect(result.reasons).not.toContain('invalid_or_missing_start');
+  });
+
   it('does not auto-publish candidates with possible duplicates', () => {
     const result = normalizeEventCandidate(base, {
       connectorType: 'webhook',
