@@ -1,5 +1,5 @@
 -- Noite DF — pipeline de ingestão editorial de eventos.
--- Migration aditiva. Não executada em nenhum ambiente nesta etapa.
+-- Migration aditiva. Aplicada em produção em 2026-11-08.
 -- O acesso operacional ocorre pelo backend com service_role; clientes anon/authenticated não recebem acesso.
 
 create table if not exists public.event_source_connectors (

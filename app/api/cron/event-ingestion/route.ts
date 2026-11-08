@@ -80,7 +80,16 @@ async function requestPinnedHttps(url: URL): Promise<{ status: number; contentTy
         'User-Agent': 'NoiteDFAgendaBot/1.0 (+https://www.noitedf.com.br)',
         Accept: 'application/rss+xml,application/atom+xml,application/xml,text/xml,text/calendar,text/html;q=0.9',
       },
-      lookup: (_hostname, _options, callback) => callback(null, selected.address, selected.family),
+      lookup: (_hostname, options, callback) => {
+        // Node 24 requests all DNS records for some HTTPS internals; honor
+        // the lookup callback's all=true contract instead of returning an
+        // undefined scalar address.
+        if (options?.all) {
+          callback(null, addresses);
+          return;
+        }
+        callback(null, selected.address, selected.family);
+      },
     }, (response) => {
       const chunks: Buffer[] = [];
       let total = 0;
