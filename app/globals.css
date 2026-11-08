@@ -1009,3 +1009,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     transition: none;
   }
 }
+
+
+/* Event ingestion operations console */
+.event-ingestion-console{display:grid;gap:22px}
+.event-ingestion-grid{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(0,1.15fr);gap:16px}
+.event-ingestion-form{display:grid;align-content:start;gap:13px}
+.event-ingestion-form label,.event-ingestion-fields label,.event-ingestion-inline label{display:grid;gap:7px;font-size:13px;font-weight:700;color:var(--text)}
+.event-ingestion-console input,.event-ingestion-console select,.event-ingestion-console textarea{width:100%;min-width:0;border:1px solid var(--border);border-radius:10px;padding:11px 12px;background:rgba(255,255,255,.045);color:var(--text);font:inherit}
+.event-ingestion-inline{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.event-ingestion-list,.event-ingestion-runs{display:grid;gap:10px}
+.event-ingestion-list article,.event-ingestion-runs article{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.event-ingestion-list article p{margin:5px 0}
+.event-ingestion-list article small,.event-ingestion-runs small{color:var(--muted);font-size:12px}
+.event-ingestion-section{display:grid;gap:12px}
+.event-candidate{display:grid;gap:12px}
+.event-candidate-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.event-candidate-heading strong{font-size:17px}
+.event-ingestion-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.event-ingestion-wide{grid-column:1/-1}
+.event-ingestion-actions{display:flex;gap:10px;flex-wrap:wrap}
+.event-ingestion-console .notice{padding:12px 14px}
+@media(max-width:800px){.event-ingestion-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.event-ingestion-inline,.event-ingestion-fields{grid-template-columns:1fr}.event-ingestion-wide{grid-column:auto}.event-candidate-heading{flex-direction:column}.event-ingestion-list article,.event-ingestion-runs article{align-items:flex-start;flex-direction:column}}
