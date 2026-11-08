@@ -254,10 +254,10 @@ export async function GET(request: NextRequest) {
     } catch (error) {
       const code = error instanceof Error ? error.message.slice(0, 120) : 'UNKNOWN';
       const finishedAt = new Date().toISOString();
-      if (runId) await patchWithoutBody(`event_ingestion_runs?id=eq.${runId}`, {
+      if (runId) await writeWithoutBody(`event_ingestion_runs?id=eq.${runId}`, 'PATCH', {
         status: 'failed', finished_at: finishedAt, error_count: 1, error_code: code,
       }).catch(() => undefined);
-      await patchWithoutBody(`event_source_connectors?id=eq.${connector.id}`, {
+      await writeWithoutBody(`event_source_connectors?id=eq.${connector.id}`, 'PATCH', {
         last_checked_at: finishedAt, last_error_at: finishedAt, last_error_code: code,
         next_check_at: new Date(now.getTime() + Math.max(connector.poll_interval_minutes, 60) * 60000).toISOString(),
         status: code === 'CONNECTOR_NOT_IMPLEMENTED' ? 'needs_attention' : 'active',
