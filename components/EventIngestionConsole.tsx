@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 type Source = { id: string; label: string; url: string | null; verified_at: string | null };
 type Connector = { id: string; connector_type: string; status: string; poll_interval_minutes: number; last_success_at: string | null; last_error_code: string | null; source: Source | null };
-type Candidate = { id: string; source_url: string; confidence: number; normalized_payload: Record<string, unknown>; first_seen_at: string; review_note: string | null; auto_publish_eligible: boolean };
+type Candidate = { id: string; source_url: string; confidence: number; normalized_payload: Record<string, unknown>; raw_payload: Record<string, unknown>; first_seen_at: string; review_note: string | null; auto_publish_eligible: boolean };
 type Run = { id: string; status: string; started_at: string; discovered_count: number; created_count: number; updated_count: number; rejected_count: number; error_count: number; error_code: string | null };
 
 const localInput = (value: unknown) => {
@@ -100,7 +100,7 @@ export function EventIngestionConsole() {
     const edit = edits[candidate.id] || {
       title: String(payload.title || ''), category: String(payload.category || 'Evento'),
       description: String(payload.description || ''), priceDescription: String(payload.priceDescription || ''),
-      startsAt: localInput(payload.startsAt), endsAt: localInput(payload.endsAt),
+      startsAt: localInput(payload.startsAt || candidate.raw_payload.startsAt), endsAt: localInput(payload.endsAt || candidate.raw_payload.endsAt),
     };
     setBusy(true);
     setNotice('');
@@ -128,7 +128,7 @@ export function EventIngestionConsole() {
       category: String(candidate.normalized_payload.category || 'Evento'),
       description: String(candidate.normalized_payload.description || ''),
       priceDescription: String(candidate.normalized_payload.priceDescription || ''),
-      startsAt: localInput(candidate.normalized_payload.startsAt), endsAt: localInput(candidate.normalized_payload.endsAt),
+      startsAt: localInput(candidate.normalized_payload.startsAt || candidate.raw_payload.startsAt), endsAt: localInput(candidate.normalized_payload.endsAt || candidate.raw_payload.endsAt),
     };
     setEdits((state) => ({ ...state, [id]: { ...current, [key]: value } }));
   }
@@ -179,7 +179,7 @@ export function EventIngestionConsole() {
           const edit = edits[candidate.id] || {
             title: String(data.title || ''), category: String(data.category || 'Evento'),
             description: String(data.description || ''), priceDescription: String(data.priceDescription || ''),
-            startsAt: localInput(data.startsAt), endsAt: localInput(data.endsAt),
+            startsAt: localInput(data.startsAt || candidate.raw_payload.startsAt), endsAt: localInput(data.endsAt || candidate.raw_payload.endsAt),
           };
           return <article className="card event-candidate" key={candidate.id}>
             <div className="event-candidate-heading"><div><strong>{edit.title || 'Evento sem título'}</strong><p className="field-hint">{String(data.establishmentId || 'Estabelecimento não identificado')} · início {formatDate(data.startsAt)} · fim {formatDate(data.endsAt)}</p></div><span className="tag">{Math.round(candidate.confidence * 100)}% confiança</span></div>
