@@ -118,7 +118,7 @@ async function fetchFeed(url: URL): Promise<{ text: string; contentType: string 
       continue;
     }
     if (response.status < 200 || response.status >= 300) throw new Error(`HTTP_${response.status}`);
-    if (!/(xml|rss|atom|calendar|text\/plain)/.test(response.contentType)) throw new Error('UNSUPPORTED_FEED_CONTENT_TYPE');
+    if (!/(xml|rss|atom|calendar|text\/plain|text\/html)/.test(response.contentType)) throw new Error('UNSUPPORTED_FEED_CONTENT_TYPE');
     return { text: response.text, contentType: response.contentType };
   }
   throw new Error('REDIRECT_LIMIT');
