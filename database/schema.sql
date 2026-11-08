@@ -2,7 +2,7 @@
 create extension if not exists pgcrypto;
 
 create type publication_status as enum ('draft', 'pending_review', 'published', 'expired', 'suspended');
-create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'master_admin');
+create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'establishment_admin', 'master_admin');
 create type review_status as enum ('pending', 'published', 'rejected', 'removed');
 create type claim_status as enum ('pending', 'approved', 'rejected', 'revoked');
 
