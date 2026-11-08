@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PAYMENTS_ENABLED, SHOWCASE_MODE, TRIAL_ENABLED } from '@/lib/env';
-import { requireAuth } from '@/modules/auth/session';
+import { isMasterAdminUser, requireAuth } from '@/modules/auth/session';
 import { authService } from '@/modules/auth/service';
 import { createEnterprisePromotionCheckout, isEnterprisePromotionActive } from '@/lib/enterprise-promotion';
 
@@ -9,10 +9,10 @@ export async function POST(request: NextRequest) {
   if (!PAYMENTS_ENABLED || !TRIAL_ENABLED || SHOWCASE_MODE || !process.env.MERCADO_PAGO_ACCESS_TOKEN) return NextResponse.json({ error: 'Pagamentos indisponíveis.' }, { status: 503 });
   try {
     const user = await requireAuth(request);
-    if (!['partner','admin','master_admin'].includes(user.role)) return NextResponse.json({ error: 'Vincule seu estabelecimento antes de ativar a promoção.' }, { status: 403 });
+    if (user.role !== 'partner' && !isMasterAdminUser(user)) return NextResponse.json({ error: 'Vincule seu estabelecimento antes de ativar a promoção.' }, { status: 403 });
     const body = await request.json().catch(() => ({}));
     if (body.planId !== 'enterprise' || body.acceptRecurringTerms !== true) return NextResponse.json({ error: 'Confirme o aceite: um mês grátis, depois R$ 150/mês, com cancelamento a qualquer momento.' }, { status: 400 });
-    const establishmentId = ['admin','master_admin'].includes(user.role) ? body.establishmentId || user.establishmentId : user.establishmentId;
+    const establishmentId = isMasterAdminUser(user) ? body.establishmentId || user.establishmentId : user.establishmentId;
     if (typeof establishmentId !== 'string' || !establishmentId) return NextResponse.json({ error: 'Estabelecimento não associado.' }, { status: 400 });
     const origin = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
     const initPoint = await createEnterprisePromotionCheckout(establishmentId, origin);
