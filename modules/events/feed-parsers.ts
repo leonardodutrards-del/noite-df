@@ -33,7 +33,7 @@ function tag(block: string, names: string[]): string | undefined {
 }
 
 function atomLink(block: string): string | undefined {
-  const links = [...block.matchAll(/<link\b([^>]*)\/?\s*>/gi)];
+  const links = Array.from(block.matchAll(/<link\b([^>]*)\/?\s*>/gi));
   for (const link of links) {
     const attrs = link[1] ?? '';
     const rel = attrs.match(/\brel=["']([^"']+)["']/i)?.[1];
