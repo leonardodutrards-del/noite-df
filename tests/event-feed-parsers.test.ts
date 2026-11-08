@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseIcsCalendar, parseRssAtomFeed } from '../modules/events/feed-parsers';
+import { parseHtmlJsonLdEvents, parseIcsCalendar, parseRssAtomFeed } from '../modules/events/feed-parsers';
 
 describe('event feed parsers', () => {
   it('maps explicit event dates from RSS without treating pubDate as the event date', () => {
@@ -47,6 +47,20 @@ describe('event feed parsers', () => {
     const [event] = parseIcsCalendar(ics);
     expect(event.startsAt).toContain('LOCAL=');
     expect(event.endsAt).toContain('LOCAL=');
+  });
+
+  it('extracts only Schema.org Event JSON-LD from official HTML and preserves local time for review', () => {
+    const html = `<html><script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicEvent","name":"Show no DF","startDate":"2026-11-14T20:00:00","endDate":"2026-11-15T02:00:00","location":{"@type":"Place","name":"Casa de Shows"},"url":"https://example.org/show","identifier":"show-14"}</script></html>`;
+    const [event] = parseHtmlJsonLdEvents(html, 'https://example.org/agenda');
+    expect(event.title).toBe('Show no DF');
+    expect(event.startsAt).toContain('LOCAL=20261114T200000');
+    expect(event.endsAt).toContain('LOCAL=20261115T020000');
+    expect(event.location).toBe('Casa de Shows');
+    expect(event.sourceEventKey).toBe('show-14');
+  });
+
+  it('ignores generic HTML without structured Event data', () => {
+    expect(parseHtmlJsonLdEvents('<html><h1>Programação</h1></html>', 'https://example.org')).toEqual([]);
   });
 
   it('rejects oversized feeds', () => {
