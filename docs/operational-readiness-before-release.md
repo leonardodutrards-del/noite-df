@@ -123,3 +123,19 @@ Este documento é o registro de trabalho. Marcar itens como concluídos somente 
 - [ ] Smoke test do endpoint protegido, painel Master Admin, ingestão e agenda pública; só então encerrar release.
 
 **Estado atual:** o schema da ingestão já está em produção de forma aditiva, mas o endpoint e o layout ainda estão em prévia/branch. O agendamento recorrente não foi ativado. A produção do site permanece na versão anterior até o merge/deploy controlado.
+
+
+## Publicação em produção — 08/11/2026
+- [x] PR #126 integrado ao `main` (merge commit `6353270b98557b0bcf05754193c4dad7bba88bb6`).
+- [x] Deploy de produção Vercel `dpl_7mbqmwgX5bLhRGt97TcjbFG9fiKQ` em estado READY.
+- [x] Domínio `www.noitedf.com.br` e redirecionamento do apex `noitedf.com.br` apontam para a nova implantação.
+- [x] CI do commit publicado: testes, lint e build aprovados.
+- [x] Migration `schedule_event_ingestion` aplicada; extensões `pg_cron` e `pg_net` instaladas.
+- [x] Job `noite-df-event-ingestion` ativo em `*/5 * * * *`.
+- [x] Primeira execução confirmada: HTTP 200, resposta `processed: 0`, `discovered: 0`, `publicationMode: manual_review_only`.
+- [ ] Configurar fontes estruturadas verificadas na central Master Admin. O banco está atualmente com **zero conectores** ativos; a agenda de todos os bares ainda não está sendo extraída automaticamente.
+- [ ] Não utilizar Instagram ou Linktree como conectores de scraping. Somente RSS, Atom, iCalendar e páginas oficiais com Schema.org JSON-LD.
+- [ ] PR #127 corrige a exclusão de Instagram/Linktree e bloqueia tipos de conector sem adaptador implementado; aguarda CI, preview e merge.
+- [ ] Revisar alerta de segurança do Supabase: `pg_net` instalado no schema `public` e proteção contra senhas vazadas desabilitada. O primeiro é um aviso do advisor; não houve evidência de exposição de credenciais.
+
+**Estado de publicação:** nova versão visual e estrutura operacional publicadas em produção. Scheduler de ingestão está ativo e foi chamado com sucesso. A automação de eventos depende da configuração e validação de fontes oficiais compatíveis; não afirmar cobertura automática de todos os estabelecimentos até essa etapa estar concluída.
