@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ json: vi.fn() }));
-vi.mock('@/lib/supabase-admin', () => ({ supabaseAdminJson: mocks.json }));
+const mocks = vi.hoisted(() => ({ json: vi.fn(), request: vi.fn() }));
+vi.mock('@/lib/supabase-admin', () => ({ supabaseAdminJson: mocks.json, supabaseAdminRequest: mocks.request }));
 
 import { GET, POST } from '@/app/api/cron/event-ingestion/route';
 
