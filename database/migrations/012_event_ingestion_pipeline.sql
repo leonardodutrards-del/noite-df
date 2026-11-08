@@ -50,6 +50,7 @@ create table if not exists public.event_candidates (
   raw_payload jsonb not null default '{}'::jsonb,
   normalized_payload jsonb not null default '{}'::jsonb,
   confidence numeric(4,3) not null default 0 check (confidence between 0 and 1),
+  auto_publish_eligible boolean not null default false,
   status text not null default 'pending_review'
     check (status in ('pending_review', 'approved', 'rejected', 'duplicate', 'published', 'failed')),
   event_id uuid references public.events(id) on delete set null,
