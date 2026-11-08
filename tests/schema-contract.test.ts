@@ -14,7 +14,7 @@ const repository = readFileSync(
 describe('Contrato de IDs e schema de produção', () => {
   it('mantém user_role sem valores duplicados', () => {
     expect(schema).toContain(
-      "create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'master_admin');"
+      "create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'establishment_admin', 'master_admin');"
     );
     expect(schema).not.toContain("'admin', 'partner', 'admin'");
     expect(migration001).not.toContain("'admin', 'partner', 'admin'");
