@@ -3,7 +3,7 @@ import './globals.css';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.noitedf.com.br';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
@@ -13,10 +13,12 @@ export const metadata: Metadata = {
   description: 'Agenda, bares, restaurantes, eventos e experiências locais do Distrito Federal, com curadoria e informação atualizada.',
   applicationName: 'Noite DF',
   manifest: '/manifest.webmanifest',
-  alternates: { canonical: '/' },
   icons: {
-    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
-    shortcut: ['/favicon.svg'],
+    icon: [
+      { url: '/icon.png', type: 'image/png', sizes: '96x96' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: ['/icon.png'],
     apple: [{ url: '/apple-icon.svg', type: 'image/svg+xml' }],
   },
   openGraph: {
