@@ -105,3 +105,21 @@ Nenhuma alteração desta frente pode ser mesclada na `main`, promovida para pro
 
 ## Atualização de status
 Este documento é o registro de trabalho. Marcar itens como concluídos somente com evidência verificável (teste, PR, log ou estado consultado). A confirmação do proprietário sobre links Pix/cartão está registrada como tal e não deve ser apresentada como teste técnico do webhook.
+
+
+## Atualização de execução — 08/11/2026
+- [x] Migration `event_ingestion_pipeline` aplicada no projeto Supabase de produção; cinco tabelas novas confirmadas com RLS habilitado.
+- [x] Migration `event_ingestion_fk_indexes` aplicada; o Performance Advisor deixou de apontar FKs sem índice para as novas tabelas.
+- [x] Segredo dedicado `EVENT_INGESTION_CRON_SECRET` criado no Vercel para produção/prévia e cópia correspondente guardada no Supabase Vault. O valor não é versionado nem exibido.
+- [x] Parser RSS/Atom/iCalendar com testes e parser HTML restrito a Schema.org JSON-LD, sem inferir eventos de texto arbitrário.
+- [x] A central Master Admin oferece RSS, Atom, iCalendar e HTML estruturado; a revisão continua manual.
+- [x] Refresh de feeds preserva decisões editoriais e candidatos já publicados.
+- [x] Testes, lint e build passaram no commit `3805fd5730ba39b40ee54ec5d6c90df50578c0eb`: 281 testes em 71 arquivos.
+- [ ] Revalidar suíte completa após inclusão do parser Schema.org.
+- [ ] Confirmar preview final READY e smoke test.
+- [ ] Mesclar PR #126 e aguardar deploy de produção READY.
+- [ ] Aplicar migration `013_schedule_event_ingestion` somente após o endpoint estar disponível em produção; ela habilita execução Supabase Cron a cada 5 minutos.
+- [ ] Cadastrar conectores apenas para fontes oficiais autorizadas. Instagram e Linktree não são raspados; fontes sem feed/API/JSON-LD continuam no processo editorial atual.
+- [ ] Smoke test do endpoint protegido, painel Master Admin, ingestão e agenda pública; só então encerrar release.
+
+**Estado atual:** o schema da ingestão já está em produção de forma aditiva, mas o endpoint e o layout ainda estão em prévia/branch. O agendamento recorrente não foi ativado. A produção do site permanece na versão anterior até o merge/deploy controlado.
