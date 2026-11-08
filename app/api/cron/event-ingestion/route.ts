@@ -276,3 +276,8 @@ export async function GET(request: NextRequest) {
     publicationMode: 'manual_review_only',
   });
 }
+
+/** Supabase pg_net scheduler invokes this endpoint with POST. */
+export async function POST(request: NextRequest) {
+  return GET(request);
+}
