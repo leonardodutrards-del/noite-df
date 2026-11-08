@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     }
 
     const entitlements =
-      (user.role === 'admin' || user.role === 'master_admin')
+      isMasterAdminUser(user)
         ? adminEntitlements(establishmentId)
         : await getEstablishmentEntitlements(establishmentId);
 
