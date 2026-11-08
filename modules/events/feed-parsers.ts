@@ -53,7 +53,7 @@ function normalizeFeedDate(value?: string): string | undefined {
  * treated as event start dates; only explicit event date fields are mapped. */
 export function parseRssAtomFeed(xml: string): ParsedFeedEvent[] {
   if (xml.length > 400_000) throw new Error('FEED_TOO_LARGE');
-  const blocks = [...xml.matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)];
+  const blocks = Array.from(xml.matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi));
   return blocks.map((match) => {
     const block = match[2] ?? '';
     const link = tag(block, ['link']) ?? atomLink(block);
