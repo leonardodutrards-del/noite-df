@@ -2,7 +2,7 @@
 create extension if not exists pgcrypto;
 
 create type publication_status as enum ('draft', 'pending_review', 'published', 'expired', 'suspended');
-create type user_role as enum ('visitor', 'partner', 'operator', 'admin');
+create type user_role as enum ('visitor', 'partner', 'operator', 'admin', 'master_admin');
 create type review_status as enum ('pending', 'published', 'rejected', 'removed');
 create type claim_status as enum ('pending', 'approved', 'rejected', 'revoked');
 
@@ -334,11 +334,6 @@ create policy "public_read_published_reviews" on reviews for select using (statu
 -- quando existir, fica em auth_user_id e não substitui URLs/slugs do aplicativo.
 create policy "users_read_own_profile" on profiles
   for select using (auth.uid() = auth_user_id);
-
-create policy "users_update_own_profile" on profiles
-  for update using (auth.uid() = auth_user_id)
-  with check (auth.uid() = auth_user_id);
-
 
 -- Fases 9-12: growth, CRM operacional, retenção e monetização.
 -- Fases 9-12: growth, CRM operacional, retenção e funil de monetização.
