@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/modules/auth/session';
+import { isMasterAdminUser, requireAuth } from '@/modules/auth/session';
 import {
   adminEntitlements,
   getEstablishmentEntitlements,
@@ -10,9 +10,9 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
     const requestedId = request.nextUrl.searchParams.get('establishmentId');
     const establishmentId =
-      (user.role === 'admin' || user.role === 'master_admin') ? requestedId || user.establishmentId : user.establishmentId;
+      isMasterAdminUser(user) ? requestedId || user.establishmentId : user.establishmentId;
 
-    if (user.role !== 'partner' && user.role !== 'admin' && user.role !== 'master_admin') {
+    if (user.role !== 'partner' && !isMasterAdminUser(user)) {
       return NextResponse.json(
         { error: 'Vincule um estabelecimento antes de contratar um plano.', code: 'PARTNER_REQUIRED' },
         { status: 403 }
