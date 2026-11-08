@@ -5,7 +5,7 @@ import { isIP } from 'node:net';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdminJson } from '@/lib/supabase-admin';
 import { normalizeEventCandidate, type EventConnectorType } from '@/modules/events/ingestion';
-import { parseIcsCalendar, parseRssAtomFeed } from '@/modules/events/feed-parsers';
+import { parseHtmlJsonLdEvents, parseIcsCalendar, parseRssAtomFeed } from '@/modules/events/feed-parsers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -203,7 +203,7 @@ export async function GET(request: NextRequest) {
       );
       source = sources[0];
       if (!source?.url || !safeSourceUrl(source.url)) throw new Error('OFFICIAL_SOURCE_NOT_AVAILABLE');
-      if (connector.connector_type !== 'rss' && connector.connector_type !== 'atom' && connector.connector_type !== 'ics') {
+      if (connector.connector_type !== 'rss' && connector.connector_type !== 'atom' && connector.connector_type !== 'ics' && connector.connector_type !== 'html') {
         throw new Error('CONNECTOR_NOT_IMPLEMENTED');
       }
 
@@ -216,7 +216,9 @@ export async function GET(request: NextRequest) {
       const feed = await fetchFeed(safeSourceUrl(source.url)!);
       const events = connector.connector_type === 'ics'
         ? parseIcsCalendar(feed.text)
-        : parseRssAtomFeed(feed.text);
+        : connector.connector_type === 'html'
+          ? parseHtmlJsonLdEvents(feed.text, source.url)
+          : parseRssAtomFeed(feed.text);
       let created = 0;
       let updated = 0;
       let pending = 0;
