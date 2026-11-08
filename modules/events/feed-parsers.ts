@@ -140,7 +140,7 @@ function jsonLdDate(value: unknown): string | undefined {
 
 function eventType(value: unknown): boolean {
   const values = Array.isArray(value) ? value : [value];
-  return values.some((item) => typeof item === 'string' && /(?:^|\/)Event$/i.test(item));
+  return values.some((item) => typeof item === 'string' && /(?:^|\/)\\w*Event$/i.test(item));
 }
 
 /** Extracts Schema.org Event objects from public HTML JSON-LD only.
