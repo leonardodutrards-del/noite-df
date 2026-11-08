@@ -36,7 +36,8 @@ function validHttpsUrl(value: string | null): boolean {
     const url = new URL(value);
     return url.protocol === 'https:' && !url.username && !url.password &&
       (!url.port || url.port === '443') &&
-      url.hostname !== 'instagram.com' && !url.hostname.endsWith('.instagram.com') &&\n      url.hostname !== 'linktr.ee' && !url.hostname.endsWith('.linktr.ee');
+      url.hostname !== 'instagram.com' && !url.hostname.endsWith('.instagram.com') &&
+      url.hostname !== 'linktr.ee' && !url.hostname.endsWith('.linktr.ee');
   } catch {
     return false;
   }
