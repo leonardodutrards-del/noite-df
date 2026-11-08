@@ -177,7 +177,7 @@ export class PartnershipService {
     actor: AuthUser,
     reason?: string
   ): Promise<PartnerClaim> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') throw new Error('FORBIDDEN_ADMIN_REQUIRED');
+    if (!isMasterAdminUser(actor)) throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     const now = new Date().toISOString();
 
     if (!config()) {
