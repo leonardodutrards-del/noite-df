@@ -57,7 +57,29 @@ export function EventIngestionConsole() {
     }
   }
 
-  useEffect(() => { void refresh(); }, []);
+  useEffect(() => {
+    let mounted = true;
+    Promise.all([
+      fetch('/api/admin/event-connectors', { cache: 'no-store' }),
+      fetch('/api/admin/event-candidates', { cache: 'no-store' }),
+    ]).then(async ([connectorResponse, candidateResponse]) => {
+      const [connectorData, candidateData] = await Promise.all([
+        connectorResponse.json(), candidateResponse.json(),
+      ]);
+      if (!connectorResponse.ok) throw new Error(connectorData.error || 'Falha ao carregar conectores.');
+      if (!candidateResponse.ok) throw new Error(candidateData.error || 'Falha ao carregar candidatos.');
+      if (!mounted) return;
+      setSources(connectorData.availableSources || []);
+      setConnectors(connectorData.connectors || []);
+      setCandidates(candidateData.candidates || []);
+      setRuns(candidateData.runs || []);
+    }).catch((error: unknown) => {
+      if (mounted) setNotice(error instanceof Error ? error.message : 'Falha ao atualizar a central.');
+    }).finally(() => {
+      if (mounted) setLoading(false);
+    });
+    return () => { mounted = false; };
+  }, []);
 
   async function configure(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
