@@ -134,7 +134,7 @@ async function saveCandidate(connector: Connector, source: Source, event: Parsed
     establishmentId: source.entity_id,
     startsAt: event.startsAt,
     endsAt: event.endsAt,
-    officialUrl: event.url || source.url,
+    officialUrl: (() => { const candidateUrl = safeSourceUrl(event.url || ''); return candidateUrl && candidateUrl.hostname.toLowerCase() === sourceUrl.hostname.toLowerCase() ? candidateUrl.toString() : source.url!; })(),
     sourceEventKey: event.sourceEventKey,
   }, {
     connectorType: connector.connector_type,
