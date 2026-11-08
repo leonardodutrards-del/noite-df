@@ -58,6 +58,8 @@ export async function POST(request: NextRequest) {
     place_view: 'view',
     favorite: 'save',
     share: 'view',
+    trial_start: 'view',
+    subscription_checkout: 'view',
   };
 
   try {
