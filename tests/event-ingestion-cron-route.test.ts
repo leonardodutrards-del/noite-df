@@ -1,4 +1,6 @@
 import { NextRequest } from 'next/server';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({ json: vi.fn() }));
@@ -12,6 +14,11 @@ afterEach(() => {
 });
 
 describe('event ingestion cron endpoint', () => {
+  it('honors Node 24 DNS lookup callbacks requesting all resolved addresses', () => {
+    const source = readFileSync(resolve(process.cwd(), 'app/api/cron/event-ingestion/route.ts'), 'utf8');
+    expect(source).toContain('if (options?.all) {');
+    expect(source).toContain('callback(null, addresses);');
+  });
   it.each(['GET', 'POST'] as const)('accepts authenticated %s scheduler requests', async (method) => {
     vi.stubEnv('EVENT_INGESTION_CRON_SECRET', 'test-cron-secret');
     mocks.json.mockResolvedValue([]);
