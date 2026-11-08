@@ -8,7 +8,7 @@ interface IntentPageProps {
   params: Promise<{ location: string }>;
 }
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
 
 export async function generateStaticParams() {
   return [{ location: 'brasilia' }];

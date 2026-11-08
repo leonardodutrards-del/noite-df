@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { places } from '@/data/places';
 import { PlaceCard } from '@/components/PlaceCard';
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
 
 export const metadata: Metadata = {
   title: 'Lugares Abertos Agora no DF | Noite DF',
