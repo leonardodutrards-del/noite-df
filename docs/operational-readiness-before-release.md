@@ -17,7 +17,8 @@ Nenhuma alteração desta frente pode ser mesclada na `main`, promovida para pro
 - `events`, `data_sources`, `agenda_source_checks`, `interactions`, `subscription_accounts` e `payment_webhook_events` têm RLS habilitado no snapshot consultado.
 - O cron atual `/api/cron/agenda-sources` roda diariamente às 10:00 UTC (07:00 em Brasília), verifica até 12 fontes por execução e compara hashes. Ele detecta mudanças, mas não extrai nem publica eventos.
 - A agenda pública combina registros editoriais do banco com eventos locais versionados em código; isso precisa ser consolidado sem perder os eventos verificados já publicados.
-- PR #101 (security hardening) continua draft; a migration 011 não foi aplicada. Revisar contra o estado real antes de qualquer execução.
+- PR #101 (security hardening) continua draft; a migration 011 não foi aplicada. O histórico do Supabase mostra as migrations até `agenda_source_checks_service_role_policy`; revisar a migration 011 contra o estado real antes de qualquer execução.
+- Supabase Security Advisor: um aviso WARN ativo — proteção contra senhas vazadas desabilitada. Performance Advisor listou 23 índices sem uso (informativos; não remover sem análise de carga). Health Advisor sem alertas.
 - O proprietário confirma checkout Pix/cartão e links funcionais. O estado da integração webhook/entitlements precisa ser comprovado com logs/testes controlados, não inferido pela existência do checkout.
 
 ## Fases e critérios de aceite
@@ -31,10 +32,12 @@ Nenhuma alteração desta frente pode ser mesclada na `main`, promovida para pro
 
 ### Fase 1 — segurança e contas
 - [ ] Revisar PR #101 e migration 011 linha a linha.
-- [ ] Comparar schema/migrations com o estado real do Supabase.
+- [x] Comparar histórico de migrations e catálogo de tabelas/colunas com o estado real disponível.
+- [ ] Inspecionar políticas RLS existentes e validar cada operação com papéis reais; a lista de tabelas mostra RLS habilitado, mas isso isoladamente não prova que as policies estejam corretas.
 - [ ] Preparar testes e instruções de homologação; não aplicar SQL em produção sem backup, plano de rollback e autorização explícita.
 - [ ] Validar Master Admin, parceiro, isolamento por estabelecimento, claims e auditoria.
 - [ ] Validar proteção de rotas e rate limits.
+- [ ] Resolver o aviso de proteção contra senhas vazadas no painel Supabase Auth (configuração operacional, não migration).
 - [ ] Resolver findings de segurança e repetir suíte completa.
 
 ### Fase 2 — cobrança e acesso (sem reabrir links)
