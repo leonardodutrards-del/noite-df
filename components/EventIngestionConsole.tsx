@@ -7,6 +7,15 @@ type Connector = { id: string; connector_type: string; status: string; poll_inte
 type Candidate = { id: string; source_url: string; confidence: number; normalized_payload: Record<string, unknown>; first_seen_at: string; review_note: string | null; auto_publish_eligible: boolean };
 type Run = { id: string; status: string; started_at: string; discovered_count: number; created_count: number; updated_count: number; rejected_count: number; error_count: number; error_code: string | null };
 
+const localInput = (value: unknown) => {
+  if (typeof value !== 'string' || !value) return '';
+  const marker = value.match(/LOCAL=(\d{8})T?(\d{4,6})?/);
+  if (marker) { const day = marker[1]; const clock = marker[2] || '0000'; return day.slice(0,4)+'-'+day.slice(4,6)+'-'+day.slice(6,8)+'T'+clock.slice(0,2)+':'+clock.slice(2,4); }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '' : new Date(date.getTime() - 3 * 60 * 60 * 1000).toISOString().slice(0,16);
+};
+const toIso = (value: string) => value ? new Date(value + ':00-03:00').toISOString() : '';
+
 const formatDate = (value: unknown) => {
   if (typeof value !== 'string' || !value) return '—';
   const date = new Date(value);
@@ -21,7 +30,7 @@ export function EventIngestionConsole() {
   const [sourceId, setSourceId] = useState('');
   const [type, setType] = useState<'rss' | 'atom' | 'ics'>('rss');
   const [interval, setInterval] = useState(180);
-  const [edits, setEdits] = useState<Record<string, { title: string; category: string; description: string; priceDescription: string }>>({});
+  const [edits, setEdits] = useState<Record<string, { title: string; category: string; description: string; priceDescription: string; startsAt: string; endsAt: string }>>({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
@@ -91,6 +100,7 @@ export function EventIngestionConsole() {
     const edit = edits[candidate.id] || {
       title: String(payload.title || ''), category: String(payload.category || 'Evento'),
       description: String(payload.description || ''), priceDescription: String(payload.priceDescription || ''),
+      startsAt: localInput(payload.startsAt), endsAt: localInput(payload.endsAt),
     };
     setBusy(true);
     setNotice('');
@@ -100,7 +110,7 @@ export function EventIngestionConsole() {
         body: JSON.stringify({
           id: candidate.id, action,
           note: action === 'approve' ? 'Revisado e aprovado no Master Admin.' : 'Rejeitado no Master Admin.',
-          event: { title: edit.title, category: edit.category, description: edit.description, price_description: edit.priceDescription },
+          event: { title: edit.title, category: edit.category, description: edit.description, price_description: edit.priceDescription, starts_at: toIso(edit.startsAt), ends_at: toIso(edit.endsAt) },
         }),
       });
       const data = await response.json();
@@ -112,12 +122,13 @@ export function EventIngestionConsole() {
     } finally { setBusy(false); }
   }
 
-  function updateEdit(id: string, key: 'title' | 'category' | 'description' | 'priceDescription', value: string, candidate: Candidate) {
+  function updateEdit(id: string, key: 'title' | 'category' | 'description' | 'priceDescription' | 'startsAt' | 'endsAt', value: string, candidate: Candidate) {
     const current = edits[id] || {
       title: String(candidate.normalized_payload.title || ''),
       category: String(candidate.normalized_payload.category || 'Evento'),
       description: String(candidate.normalized_payload.description || ''),
       priceDescription: String(candidate.normalized_payload.priceDescription || ''),
+      startsAt: localInput(candidate.normalized_payload.startsAt), endsAt: localInput(candidate.normalized_payload.endsAt),
     };
     setEdits((state) => ({ ...state, [id]: { ...current, [key]: value } }));
   }
@@ -168,6 +179,7 @@ export function EventIngestionConsole() {
           const edit = edits[candidate.id] || {
             title: String(data.title || ''), category: String(data.category || 'Evento'),
             description: String(data.description || ''), priceDescription: String(data.priceDescription || ''),
+            startsAt: localInput(data.startsAt), endsAt: localInput(data.endsAt),
           };
           return <article className="card event-candidate" key={candidate.id}>
             <div className="event-candidate-heading"><div><strong>{edit.title || 'Evento sem título'}</strong><p className="field-hint">{String(data.establishmentId || 'Estabelecimento não identificado')} · início {formatDate(data.startsAt)} · fim {formatDate(data.endsAt)}</p></div><span className="tag">{Math.round(candidate.confidence * 100)}% confiança</span></div>
@@ -177,6 +189,8 @@ export function EventIngestionConsole() {
             <div className="event-ingestion-fields">
               <label>Título<input value={edit.title} onChange={(event) => updateEdit(candidate.id, 'title', event.target.value, candidate)}/></label>
               <label>Categoria<input value={edit.category} onChange={(event) => updateEdit(candidate.id, 'category', event.target.value, candidate)}/></label>
+              <label>Início (horário de Brasília)<input type="datetime-local" required value={edit.startsAt} onChange={(event) => updateEdit(candidate.id, 'startsAt', event.target.value, candidate)}/></label>
+              <label>Fim (horário de Brasília)<input type="datetime-local" required value={edit.endsAt} onChange={(event) => updateEdit(candidate.id, 'endsAt', event.target.value, candidate)}/></label>
               <label className="event-ingestion-wide">Descrição<textarea rows={3} value={edit.description} onChange={(event) => updateEdit(candidate.id, 'description', event.target.value, candidate)}/></label>
               <label className="event-ingestion-wide">Entrada / preço<input value={edit.priceDescription} onChange={(event) => updateEdit(candidate.id, 'priceDescription', event.target.value, candidate)}/></label>
             </div>
