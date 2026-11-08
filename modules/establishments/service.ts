@@ -129,7 +129,7 @@ export class EstablishmentService {
   }
 
   async blockEstablishment(id: string, actor: AuthUser, reason?: string): Promise<Establishment> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
 
@@ -155,7 +155,7 @@ export class EstablishmentService {
   }
 
   async unblockEstablishment(id: string, actor: AuthUser): Promise<Establishment> {
-    if (actor.role !== 'admin' && actor.role !== 'master_admin') {
+    if (!isMasterAdminUser(actor)) {
       throw new Error('FORBIDDEN_ADMIN_REQUIRED');
     }
 
