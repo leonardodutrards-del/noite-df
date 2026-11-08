@@ -69,7 +69,8 @@ export function normalizeEventCandidate(
   if (!establishmentId) reasons.push('missing_establishment');
   if (!startsAt) reasons.push('invalid_or_missing_start');
   if (!endsAt || (startsAt && Date.parse(endsAt) <= Date.parse(startsAt))) reasons.push('invalid_or_missing_end');
-  const suppliedUrl = input.officialUrl ?? input.official_url ?? input.url;\n  if (!officialUrl) reasons.push(suppliedUrl ? 'invalid_source_url' : 'missing_source_url');
+  const suppliedUrl = input.officialUrl ?? input.official_url ?? input.url;
+  if (!officialUrl) reasons.push(suppliedUrl ? 'invalid_source_url' : 'missing_source_url');
   if (!trust.hostAllowed) reasons.push('source_host_not_allowed');
   if (!trust.officialSourceVerified) reasons.push('source_not_verified');
   if (trust.duplicateFound) reasons.push('possible_duplicate');
