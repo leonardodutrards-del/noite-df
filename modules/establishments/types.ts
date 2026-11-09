@@ -1,5 +1,6 @@
 import type { PublicationStatus, DataSource } from '@/modules/shared/types';
 import type { EventArtwork } from '@/modules/events/artwork';
+import type { OperatingHours } from './opening-hours';
 
 export type { PublicationStatus, DataSource };
 
@@ -72,7 +73,7 @@ export type Establishment = {
     sourceUrl: string;
     checkedAt: string;
   };
-  operatingHours?: { text: string; sourceUrl: string; checkedAt: string };
+  operatingHours?: OperatingHours | { text: string; sourceUrl: string; checkedAt: string };
   agendaUrl?: string;
   menu?: {
     url: string;
