@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function CadastroUsuarioPage() {
+function CadastroUsuarioForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestedRedirect = searchParams.get('redirect');
@@ -55,4 +55,8 @@ export default function CadastroUsuarioPage() {
       </div>
     </main>
   );
+}
+
+export default function CadastroUsuarioPage() {
+  return <Suspense fallback={<main className="container"><p>Carregando cadastro...</p></main>}><CadastroUsuarioForm /></Suspense>;
 }
