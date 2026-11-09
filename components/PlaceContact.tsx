@@ -14,6 +14,8 @@ export function PlaceContact({ place, compact = false }: { place: Establishment;
   const validWhatsapp = whatsapp && /^\d{10,11}$/.test(whatsapp);
   const phoneLabel = validPhone ? `(${digits.slice(0, 2)}) ${digits.slice(2, -4)}-${digits.slice(-4)}` : '';
   const agendaUrl = place.agendaUrl ?? place.instagram;
+  const legacyHours = place.operatingHours && 'text' in place.operatingHours ? place.operatingHours : undefined;
+  const structuredHours = place.operatingHours && 'schedule' in place.operatingHours ? place.operatingHours : undefined;
 
   return (
     <section className="place-contact" aria-label={`Contato de ${place.name}`}>
@@ -47,7 +49,7 @@ export function PlaceContact({ place, compact = false }: { place: Establishment;
         </div>}
         {place.admissionNote && <div className="contact-section"><h2>Entrada e couvert</h2><p>{place.admissionNote}</p>{place.menu && <a href={place.menu.url} target="_blank" rel="noreferrer">Consultar condições no cardápio ↗</a>}</div>}
         {contact && <p className="field-hint">Contato consultado em fonte pública. <a href={contact.sourceUrl} target="_blank" rel="noreferrer">Ver fonte</a> · Consultado em {contact.checkedAt}.</p>}
-        {place.operatingHours && <div className="contact-section"><h2>Horários de funcionamento</h2><p>{place.operatingHours.text}</p><a href={place.operatingHours.sourceUrl} target="_blank" rel="noreferrer">Consultar horários na fonte ↗</a></div>}
+        {place.operatingHours && <div className="contact-section"><h2>Horários de funcionamento</h2>{legacyHours ? <p>{legacyHours.text}</p> : structuredHours ? <ul>{Object.entries(structuredHours.schedule).map(([day, hours]) => <li key={day}>{day}: {hours?.closed ? 'Fechado' : hours ? `${hours.open}–${hours.close}` : 'Não informado'}</li>)}</ul> : null}{place.operatingHours.sourceUrl && <a href={place.operatingHours.sourceUrl} target="_blank" rel="noreferrer">Consultar horários na fonte ↗</a>}</div>}
         {agendaUrl && <div className="contact-section"><h2>Agenda da semana</h2><p>Confira a programação mais recente e confirme data, horário e reservas diretamente com o local.</p><a href={agendaUrl} target="_blank" rel="noreferrer">Consultar programação no canal do local ↗</a></div>}
       </>}
     </section>
