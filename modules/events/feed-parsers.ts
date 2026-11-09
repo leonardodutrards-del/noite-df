@@ -45,8 +45,17 @@ function atomLink(block: string): string | undefined {
 
 function normalizeFeedDate(value?: string): string | undefined {
   if (!value) return undefined;
-  const parsed = Date.parse(value);
-  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : undefined;
+  const raw = value.trim();
+  if (/(?:Z|[+-]\\d{2}:?\\d{2})$/i.test(raw)) {
+    const parsed = Date.parse(raw);
+    return Number.isFinite(parsed) ? new Date(parsed).toISOString() : undefined;
+  }
+  // Preserve timezone-less ISO values for editorial review; never infer
+  // the server's timezone for an event published in Brasília local time.
+  const local = raw.match(/^(\\d{4})-(\\d{2})-(\\d{2})(?:T(\\d{2}):(\\d{2})(?::(\\d{2}))?)?$/);
+  if (!local) return undefined;
+  const [, year, month, day, hour = '00', minute = '00', second = '00'] = local;
+  return `LOCAL=${year}${month}${day}T${hour}${minute}${second}`;
 }
 
 /** Parses common RSS 2.0 and Atom entries. Feed publication dates are not
@@ -157,6 +166,7 @@ export function parseHtmlJsonLdEvents(html: string, pageUrl: string): ParsedFeed
     if (eventType(record['@type'])) found.push(record);
     if (record['@graph']) visit(record['@graph'], depth + 1);
     if (record.itemListElement) visit(record.itemListElement, depth + 1);
+    if (record.item) visit(record.item, depth + 1);
   };
   for (const match of scripts) {
     const raw = (match[1] || '').trim().replace(/^<!\[CDATA\[/, '').replace(/\]\]>$/, '');
