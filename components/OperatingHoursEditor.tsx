@@ -10,20 +10,27 @@ const DAYS: { key: WeekdayKey; label: string }[] = [
   { key: 'friday', label: 'Sexta' }, { key: 'saturday', label: 'Sábado' },
   { key: 'sunday', label: 'Domingo' },
 ];
-const DEFAULT_DAY: DayOpeningHours = { closed: true, open: '18:00', close: '23:00' };
+const DEFAULT_DAY: DayOpeningHours = { closed: false, open: '18:00', close: '23:00' };
 
 export function OperatingHoursEditor({ place, onSaved }: { place: Establishment; onSaved: () => void }) {
   const initial = place.operatingHours as OperatingHours | undefined;
   const [schedule, setSchedule] = useState<OperatingHours['schedule']>(() =>
-    Object.fromEntries(DAYS.map(({ key }) => [key, initial?.schedule?.[key] ?? DEFAULT_DAY])) as OperatingHours['schedule']
+    Object.fromEntries(DAYS.flatMap(({ key }) => initial?.schedule?.[key] ? [[key, initial.schedule[key]]] : [])) as OperatingHours['schedule']
   );
   const [sourceUrl, setSourceUrl] = useState(initial?.sourceUrl ?? '');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
-  const updateDay = (key: WeekdayKey, patch: Partial<DayOpeningHours>) => {
-    setSchedule((current) => ({ ...current, [key]: { ...(current[key] ?? DEFAULT_DAY), ...patch } }));
+  const updateDay = (key: WeekdayKey, value: 'unknown' | 'closed' | 'open') => {
+    setSchedule((current) => {
+      const next = { ...current };
+      if (value === 'unknown') delete next[key];
+      else if (value === 'closed') next[key] = { ...(current[key] ?? DEFAULT_DAY), closed: true };
+      else next[key] = { ...(current[key] ?? DEFAULT_DAY), closed: false };
+      return next;
+    });
   };
+  const allDaysConfigured = DAYS.every(({ key }) => Boolean(schedule[key]));
 
   async function save() {
     setSaving(true);
@@ -58,16 +65,17 @@ export function OperatingHoursEditor({ place, onSaved }: { place: Establishment;
       <p style={{ color: 'var(--muted)', fontSize: 13 }}>Preencha os dias e indique uma fonte pública (site ou perfil oficial). Horários sem fonte confirmada não serão exibidos como “aberto agora”.</p>
       <div style={{ display: 'grid', gap: 8 }}>
         {DAYS.map(({ key, label }) => {
-          const day = schedule[key] ?? DEFAULT_DAY;
+          const day = schedule[key];
           return (
             <div key={key} style={{ display: 'grid', gridTemplateColumns: 'minmax(70px, .8fr) auto repeat(2, minmax(80px, 1fr))', gap: 8, alignItems: 'center' }}>
               <strong style={{ fontSize: 13 }}>{label}</strong>
-              <label style={{ display: 'flex', gap: 5, alignItems: 'center', fontSize: 12 }}>
-                <input type="checkbox" checked={day.closed} onChange={(event) => updateDay(key, { closed: event.target.checked })} />
-                Fechado
-              </label>
-              <input aria-label={`Abertura ${label}`} type="time" value={day.open} disabled={day.closed} onChange={(event) => updateDay(key, { open: event.target.value })} />
-              <input aria-label={`Fechamento ${label}`} type="time" value={day.close} disabled={day.closed} onChange={(event) => updateDay(key, { close: event.target.value })} />
+              <select aria-label={`Situação ${label}`} value={!day ? 'unknown' : day.closed ? 'closed' : 'open'} onChange={(event) => updateDay(key, event.target.value as 'unknown' | 'closed' | 'open')}>
+                <option value="unknown">Não informado</option>
+                <option value="closed">Fechado</option>
+                <option value="open">Aberto</option>
+              </select>
+              <input aria-label={`Abertura ${label}`} type="time" value={day?.open ?? '18:00'} disabled={!day || day.closed} onChange={(event) => setSchedule((current) => ({ ...current, [key]: { ...(current[key] ?? DEFAULT_DAY), open: event.target.value } }))} />
+              <input aria-label={`Fechamento ${label}`} type="time" value={day?.close ?? '23:00'} disabled={!day || day.closed} onChange={(event) => setSchedule((current) => ({ ...current, [key]: { ...(current[key] ?? DEFAULT_DAY), close: event.target.value } }))} />
             </div>
           );
         })}
@@ -76,8 +84,9 @@ export function OperatingHoursEditor({ place, onSaved }: { place: Establishment;
         Fonte oficial dos horários (URL)
         <input type="url" placeholder="https://..." value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} />
       </label>
+      <p style={{ color: 'var(--muted)', fontSize: 12 }}>Preencha os sete dias. Dias desconhecidos ficam como “Não informado”; assim o sistema não inventa que a casa está fechada.</p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginTop: 12 }}>
-        <button type="button" disabled={saving || !sourceUrl.trim()} onClick={save}>{saving ? 'Salvando…' : 'Salvar horários'}</button>
+        <button type="button" disabled={saving || !sourceUrl.trim() || !allDaysConfigured} onClick={save}>{saving ? 'Salvando…' : 'Salvar horários'}</button>
         {message && <span role="status" style={{ fontSize: 13 }}>{message}</span>}
       </div>
     </section>
