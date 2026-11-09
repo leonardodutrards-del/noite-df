@@ -19,13 +19,15 @@ function errorResponse(error: unknown) {
   const message = error instanceof Error ? error.message : '';
   const status = message === 'UNAUTHORIZED' ? 401 : message.startsWith('FORBIDDEN') ? 403 :
     message === 'CANDIDATE_NOT_FOUND' ? 404 : message === 'INVALID_EVENT' ? 400 :
-    message === 'EVENT_CONFLICT' ? 409 : 503;
+    message === 'EVENT_CONFLICT' || message === 'CANDIDATE_PROCESSING' ? 409 : 503;
   const messages: Record<number, string> = {
     401: 'Entre na sua conta.',
     403: 'Acesso restrito ao Master Admin.',
     404: 'Evento candidato não encontrado.',
     400: 'O evento ainda não tem informações suficientes ou a fonte/imagem precisa de validação.',
-    409: 'Já existe um evento equivalente. Revise a agenda antes de aprovar.',
+    409: message === 'CANDIDATE_PROCESSING'
+      ? 'Este evento já está em processamento ou precisa ser revisado novamente. Atualize a fila e tente depois.'
+      : 'Já existe um evento equivalente. Revise a agenda antes de aprovar.',
     503: 'Não foi possível processar a revisão.',
   };
   return NextResponse.json({ error: messages[status] }, { status });
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
     if (!candidate) throw new Error('CANDIDATE_NOT_FOUND');
 
     if (action === 'reject') {
-      const updated = await supabaseAdminJson<Array<Record<string, unknown>>>(`event_candidates?id=eq.${id}`, {
+      const updated = await supabaseAdminJson<Array<Record<string, unknown>>>(`event_candidates?id=eq.${id}&status=eq.pending_review`, {
         method: 'PATCH',
         headers: { Prefer: 'return=representation' },
         body: JSON.stringify({
@@ -75,6 +77,7 @@ export async function POST(request: NextRequest) {
           updated_at: new Date().toISOString(),
         }),
       });
+      if (!updated.length) throw new Error('CANDIDATE_PROCESSING');
       await authService.logAudit({
         actorId: actor.id, actorEmail: actor.email, actorRole: actor.role,
         action: 'reject_event_candidate', entityType: 'event_candidate', entityId: id,
@@ -82,6 +85,23 @@ export async function POST(request: NextRequest) {
       });
       return NextResponse.json({ candidate: updated[0] });
     }
+
+    const claimRows = await supabaseAdminJson<Array<{
+      candidate_status: string;
+      candidate_event_id: string | null;
+      claimed: boolean;
+    }>>('rpc/claim_event_candidate_for_approval', {
+      method: 'POST',
+      body: JSON.stringify({ p_candidate_id: id, p_actor_id: actor.id }),
+    });
+    const claim = claimRows[0];
+    if (!claim || claim.candidate_status === 'not_found') throw new Error('CANDIDATE_NOT_FOUND');
+    if (claim.candidate_status === 'published' && claim.candidate_event_id) {
+      const published = await findEditorialEvent(claim.candidate_event_id);
+      if (published) return NextResponse.json({ event: published, candidate: { ...candidate, status: 'published', event_id: published.id } });
+      throw new Error('CANDIDATE_PROCESSING');
+    }
+    if (!claim.claimed) throw new Error('CANDIDATE_PROCESSING');
 
     const connectors = await supabaseAdminJson<Array<{ data_source_id: string }>>(
       `event_source_connectors?id=eq.${candidate.connector_id}&limit=1`
@@ -114,14 +134,27 @@ export async function POST(request: NextRequest) {
     const place = await establishmentService.getById(String(validated.establishment_id), actor);
     if (!place || place.publicationStatus !== 'published') throw new Error('INVALID_EVENT');
 
-    const existing = candidate.event_id ? await findEditorialEvent(candidate.event_id) : null;
-    const duplicate = (await listEditorialEvents()).some((event) =>
-      event.id !== existing?.id &&
+    const existing = claim.candidate_event_id
+      ? await findEditorialEvent(claim.candidate_event_id)
+      : candidate.event_id ? await findEditorialEvent(candidate.event_id) : null;
+    const matchingEvent = existing ?? (await listEditorialEvents()).find((event) =>
       event.establishment_id === validated.establishment_id &&
       Date.parse(event.starts_at) === Date.parse(validated.starts_at) &&
       event.title.trim().toLocaleLowerCase() === String(validated.title).toLocaleLowerCase()
-    );
-    if (duplicate) throw new Error('EVENT_CONFLICT');
+    ) ?? null;
+    if (matchingEvent) {
+      const linked = await supabaseAdminJson<Array<Record<string, unknown>>>(`event_candidates?id=eq.${id}&status=eq.approved`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({
+          status: 'published', event_id: matchingEvent.id, reviewed_at: new Date().toISOString(),
+          reviewed_by: actor.id, review_note: note || 'Aprovação retomada e vinculada ao evento já existente.',
+          updated_at: new Date().toISOString(),
+        }),
+      });
+      if (!linked.length) throw new Error('CANDIDATE_PROCESSING');
+      return NextResponse.json({ event: matchingEvent, candidate: linked[0] });
+    }
 
     const event = await saveEditorialEvent({
       ...validated,
@@ -129,7 +162,7 @@ export async function POST(request: NextRequest) {
       updated_by: actor.id,
     }, existing ?? undefined);
 
-    const updated = await supabaseAdminJson<Array<Record<string, unknown>>>(`event_candidates?id=eq.${id}`, {
+    const updated = await supabaseAdminJson<Array<Record<string, unknown>>>(`event_candidates?id=eq.${id}&status=eq.approved`, {
       method: 'PATCH',
       headers: { Prefer: 'return=representation' },
       body: JSON.stringify({
@@ -138,6 +171,7 @@ export async function POST(request: NextRequest) {
         updated_at: new Date().toISOString(),
       }),
     });
+    if (!updated.length) throw new Error('CANDIDATE_PROCESSING');
     await authService.logAudit({
       actorId: actor.id, actorEmail: actor.email, actorRole: actor.role,
       action: 'publish_event_candidate', entityType: 'event', entityId: event.id,
