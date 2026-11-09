@@ -9,9 +9,10 @@ import { confirmedAgendaUpdates, heldAgendaIds } from '@/data/agenda-review-2026
 import { confirmedEventsOctober16 } from '@/data/seeds/events-2026-10-16';
 import { confirmedEventsOctober26 } from '@/data/seeds/events-2026-10-26';
 import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
+import { confirmedEventsNovember09 } from '@/data/seeds/events-2026-11-09';
 
 function verifiedLocalAgenda(): EventItem[] {
-  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05]
+  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09]
     .filter(isConfirmedEvent);
   const seenIds = new Set<string>();
   const seenSources = new Set<string>();
@@ -68,7 +69,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
 
     return [
       ...publicEvents,
-      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05].filter((event) =>
+      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09].filter((event) =>
         Date.parse(event.expiresAt || '') > Date.now() &&
         !existing.has(key(event)) &&
         !existingSources.has(sourceKey(event))
