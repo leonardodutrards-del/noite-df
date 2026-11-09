@@ -23,7 +23,8 @@ describe('Hardening final de produção', () => {
     expect(signupPage).toContain('/cadastro/usuario');
     expect(signupPage).toContain('/cadastro/estabelecimento');
     expect(visitorSignupPage).toContain('/parceiro/onboarding');
-    expect(visitorSignupPage).toContain('role');
+    expect(visitorSignupPage).toContain('router.push(nextPath)');
+    expect(signupRoute).toContain("role: 'visitor'");
     expect(establishmentSignupPage).toContain('aprovação');
   });
 
