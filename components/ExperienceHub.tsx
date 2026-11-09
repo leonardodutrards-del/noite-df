@@ -15,6 +15,7 @@ import { matchesRadar, radarOptions, type RadarFilter } from '@/lib/radar';
 import { getTodayEvents } from '@/lib/today-agenda';
 import { getWeeklyAgenda } from '@/lib/weekly-agenda';
 import { getMonthlyAgenda } from '@/lib/monthly-agenda';
+import { getOpeningStatus } from '@/modules/establishments/opening-hours';
 import {
   getRegionOptionsWithCounts,
   type RegionScope,
@@ -38,6 +39,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
   const [intentFilter, setIntentFilter] = useState<NightIntent | null>(null);
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
   const [placeLayout, setPlaceLayout] = useState<'grid' | 'list'>('grid');
+  const [openNowOnly, setOpenNowOnly] = useState(false);
 
   const regionOptions = useMemo(
     () => getRegionOptionsWithCounts(places),
@@ -88,8 +90,9 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
         (music) => normalizeIntentText(music) === normalizeIntentText(musicFilter)
       ))
       .filter((place) => !radarFilter || matchesRadar(place, radarFilter))
-      .filter((place) => !intentFilter || matchesNightIntent(place, intentFilter, todayEventPlaces)),
-    [query, region, vibe, places, priceFilter, typeFilter, musicFilter, radarFilter, intentFilter, todayEventPlaces]
+      .filter((place) => !intentFilter || matchesNightIntent(place, intentFilter, todayEventPlaces))
+      .filter((place) => !openNowOnly || getOpeningStatus(place).state === 'open'),
+    [query, region, vibe, places, priceFilter, typeFilter, musicFilter, radarFilter, intentFilter, todayEventPlaces, openNowOnly]
   );
 
   const selectedRadar = radarOptions.find((option) => option.id === radarFilter);
@@ -102,7 +105,8 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
     priceFilter !== 'todas' ||
     typeFilter !== 'todos' ||
     musicFilter !== 'todas' ||
-    intentFilter
+    intentFilter ||
+    openNowOnly
   );
 
   const clearFilters = () => {
@@ -114,6 +118,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
     setMusicFilter('todas');
     setIntentFilter(null);
     setRadarFilter(null);
+    setOpenNowOnly(false);
   };
 
   const rankings = useMemo(() => {
@@ -335,7 +340,8 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
 
         <div className="results-toolbar" aria-label="Opções de visualização">
           <span>{filteredPlaces.length} locais</span>
-          <div className="view-switch" role="group" aria-label="Layout dos estabelecimentos">
+          <div className="view-switch" role="group" aria-label="Filtros e layout dos estabelecimentos">
+            <button type="button" className={openNowOnly ? 'is-active' : ''} aria-pressed={openNowOnly} onClick={() => setOpenNowOnly((value) => !value)}>● Abertos agora</button>
             <button type="button" className={placeLayout === 'grid' ? 'is-active' : ''} aria-pressed={placeLayout === 'grid'} onClick={() => setPlaceLayout('grid')}>▦ Grade</button>
             <button type="button" className={placeLayout === 'list' ? 'is-active' : ''} aria-pressed={placeLayout === 'list'} onClick={() => setPlaceLayout('list')}>☰ Lista</button>
           </div>
