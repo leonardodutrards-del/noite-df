@@ -162,7 +162,7 @@ function LoginForm() {
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14 }}>
           <p style={{ margin: 0, textAlign: 'center' }}>
             Quer acompanhar a programação e salvar favoritos? {' '}
-            <Link href={`/cadastro/usuario${redirectPath ? `?redirect=${encodeURIComponent(redirectPath)}` : ''} `} style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
+            <Link href={`/cadastro/usuario${redirectPath ? `?redirect=${encodeURIComponent(redirectPath)}` : ''}`} style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
               Criar conta de usuário
             </Link>
           </p>
