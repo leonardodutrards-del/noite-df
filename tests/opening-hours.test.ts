@@ -8,6 +8,11 @@ const base: OperatingHours = {
   schedule: {
     monday: { closed: false, open: '09:00', close: '18:00' },
     tuesday: { closed: true, open: '09:00', close: '18:00' },
+    wednesday: { closed: true, open: '09:00', close: '18:00' },
+    thursday: { closed: true, open: '09:00', close: '18:00' },
+    friday: { closed: true, open: '09:00', close: '18:00' },
+    saturday: { closed: true, open: '09:00', close: '18:00' },
+    sunday: { closed: true, open: '09:00', close: '18:00' },
   },
 };
 
