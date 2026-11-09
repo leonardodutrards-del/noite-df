@@ -59,7 +59,7 @@ function getDay(hours: OperatingHours, date: Date): DayOpeningHours | undefined 
 
 export function getOpeningStatus(place: Pick<Establishment, 'operatingHours'>, now = new Date()): OpeningStatus {
   const hours = place.operatingHours as OperatingHours | undefined;
-  if (!hours?.schedule || !isFresh(hours, now)) {
+  if (!hours?.schedule || !ORDER.every((key) => hours.schedule[key]) || !isFresh(hours, now)) {
     return { state: 'unknown', label: 'Horário não confirmado' };
   }
   const timezone = hours.timezone || 'America/Sao_Paulo';
@@ -91,6 +91,7 @@ export function isValidOperatingHours(value: unknown): value is OperatingHours {
   if (!value || typeof value !== 'object') return false;
   const hours = value as Partial<OperatingHours>;
   if (hours.timezone !== 'America/Sao_Paulo' || !hours.schedule || typeof hours.schedule !== 'object') return false;
+  if (!ORDER.every((key) => hours.schedule?.[key])) return false;
   for (const key of ORDER) {
     const day = hours.schedule[key];
     if (!day) continue;
