@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     const candidates = await supabaseAdminJson<Candidate[]>(
-      `event_candidates?id=eq.${id}&status=eq.pending_review&limit=1`
+      `event_candidates?id=eq.${id}&status=in.(pending_review,approved,published)&limit=1`
     );
     const candidate = candidates[0];
     if (!candidate) throw new Error('CANDIDATE_NOT_FOUND');
