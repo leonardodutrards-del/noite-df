@@ -60,7 +60,7 @@ export function OperatingHoursEditor({ place, onSaved }: { place: Establishment;
         {DAYS.map(({ key, label }) => {
           const day = schedule[key] ?? DEFAULT_DAY;
           return (
-            <div key={key} style={{ display: 'grid', gridTemplateColumns: 'minmax(90px, 1fr) auto minmax(100px, 1fr) minmax(100px, 1fr)', gap: 8, alignItems: 'center' }}>
+            <div key={key} style={{ display: 'grid', gridTemplateColumns: 'minmax(70px, .8fr) auto repeat(2, minmax(80px, 1fr))', gap: 8, alignItems: 'center' }}>
               <strong style={{ fontSize: 13 }}>{label}</strong>
               <label style={{ display: 'flex', gap: 5, alignItems: 'center', fontSize: 12 }}>
                 <input type="checkbox" checked={day.closed} onChange={(event) => updateDay(key, { closed: event.target.checked })} />
