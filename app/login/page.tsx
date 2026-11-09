@@ -83,7 +83,7 @@ function LoginForm() {
   return (
     <div style={{ maxWidth: 480, margin: '40px auto 80px' }}>
       <div className="panel" style={{ padding: 32 }}>
-        <span className="badge" style={{ marginBottom: 16 }}>Acesso restrito</span>
+        <span className="badge" style={{ marginBottom: 16 }}>Acesso à sua conta</span>
         <h1 style={{ fontSize: '2.2rem', margin: '8px 0 12px' }}>Entrar no Noite DF</h1>
         <p style={{ marginBottom: 24, fontSize: 14 }}>
           Entre para acessar seus favoritos e sua programação salva. O acesso de estabelecimento é separado e depende de aprovação.
