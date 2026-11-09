@@ -3,7 +3,7 @@
 /* Internal hash navigation is intentionally rendered as anchors on this single-page experience. */
 /* eslint-disable @next/next/no-html-link-for-pages */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Establishment } from '@/modules/establishments/types';
 import type { EventItem } from '@/modules/events/types';
 import { PlaceCard } from '@/components/PlaceCard';
@@ -40,6 +40,12 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
   const [placeLayout, setPlaceLayout] = useState<'grid' | 'list'>('grid');
   const [openNowOnly, setOpenNowOnly] = useState(false);
+  const [openingClock, setOpeningClock] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setOpeningClock(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const regionOptions = useMemo(
     () => getRegionOptionsWithCounts(places),
@@ -91,8 +97,8 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
       ))
       .filter((place) => !radarFilter || matchesRadar(place, radarFilter))
       .filter((place) => !intentFilter || matchesNightIntent(place, intentFilter, todayEventPlaces))
-      .filter((place) => !openNowOnly || getOpeningStatus(place).state === 'open'),
-    [query, region, vibe, places, priceFilter, typeFilter, musicFilter, radarFilter, intentFilter, todayEventPlaces, openNowOnly]
+      .filter((place) => !openNowOnly || getOpeningStatus(place, openingClock).state === 'open'),
+    [query, region, vibe, places, priceFilter, typeFilter, musicFilter, radarFilter, intentFilter, todayEventPlaces, openNowOnly, openingClock]
   );
 
   const selectedRadar = radarOptions.find((option) => option.id === radarFilter);
