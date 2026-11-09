@@ -27,7 +27,7 @@ export type NormalizedEventCandidate = {
 const BLOCKED_EVENT_SOURCE_HOSTS = ['instagram.com', 'linktr.ee'];
 
 export function isBlockedEventSourceHost(hostname: string): boolean {
-  const host = hostname.trim().toLowerCase().replace(/^\\[|\\]$/g, '');
+  const host = hostname.trim().toLowerCase();
   return BLOCKED_EVENT_SOURCE_HOSTS.some((blocked) => host === blocked || host.endsWith(`.${blocked}`));
 }
 
@@ -91,7 +91,9 @@ export function normalizeEventCandidate(
   if (trust.duplicateFound) reasons.push('possible_duplicate');
 
   const structuredConnector = ['api', 'rss', 'atom', 'ics', 'webhook'].includes(trust.connectorType);
-  const complete = Boolean(title && category && establishmentId && startsAt && endsAt && officialUrl);
+  const timezoneConfirmationRequired = Boolean(startsAt?.startsWith('LOCAL=') || endsAt?.startsWith('LOCAL='));
+  if (timezoneConfirmationRequired) reasons.push('timezone_confirmation_required');
+  const complete = Boolean(title && category && establishmentId && startsAt && endsAt && officialUrl && !timezoneConfirmationRequired);
   const confidence = Math.max(0, Math.min(1,
     (title ? 0.2 : 0) +
     (category ? 0.1 : 0) +
