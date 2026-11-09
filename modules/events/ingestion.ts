@@ -24,6 +24,13 @@ export type NormalizedEventCandidate = {
   reasons: string[];
 };
 
+const BLOCKED_EVENT_SOURCE_HOSTS = ['instagram.com', 'linktr.ee'];
+
+export function isBlockedEventSourceHost(hostname: string): boolean {
+  const host = hostname.trim().toLowerCase().replace(/^\\[|\\]$/g, '');
+  return BLOCKED_EVENT_SOURCE_HOSTS.some((blocked) => host === blocked || host.endsWith(`.${blocked}`));
+}
+
 const text = (value: unknown, max: number): string =>
   typeof value === 'string' ? value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max) : '';
 
