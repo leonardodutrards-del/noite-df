@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { Establishment, PublicationStatus } from '@/modules/establishments/types';
 import type { SubscriptionAccount } from '@/modules/payments/types';
 import type { AuditLogEntry, AuthUser } from '@/modules/auth/types';
+import { OperatingHoursEditor } from '@/components/OperatingHoursEditor';
 
 type MasterOverview = {
   generatedAt: string;
@@ -68,6 +69,7 @@ export default function AdminPage() {
   const [accountIntegrityError, setAccountIntegrityError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingHoursId, setEditingHoursId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('todos');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -691,6 +693,9 @@ export default function AdminPage() {
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <button type="button" className="button ghost" style={{ padding: '8px 12px', fontSize: 12 }} onClick={() => setEditingHoursId(editingHoursId === place.id ? null : place.id)}>
+                    {editingHoursId === place.id ? 'Fechar horários' : 'Editar horários'}
+                  </button>
                   <Link
                     href={`/lugar/${place.id}`}
                     target="_blank"
@@ -734,6 +739,7 @@ export default function AdminPage() {
                     </button>
                   )}
                 </div>
+                {editingHoursId === place.id && <OperatingHoursEditor place={place} onSaved={reloadData} />}
               </div>
             ))}
           </div>
