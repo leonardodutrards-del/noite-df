@@ -89,7 +89,7 @@ export class EstablishmentService {
     if (!isMasterAdminUser(actor)) {
       const partnerEditableFields = new Set<keyof Establishment>([
         'description', 'address', 'whatsapp', 'instagram', 'vibe', 'music',
-        'menu', 'crowdStatus', 'weeklySchedule', 'currentPromotion', 'operatingHours',
+        'menu', 'crowdStatus', 'weeklySchedule', 'currentPromotion',
       ]);
       for (const key of Object.keys(sanitizedUpdates) as Array<keyof Establishment>) {
         if (!partnerEditableFields.has(key)) delete sanitizedUpdates[key];
