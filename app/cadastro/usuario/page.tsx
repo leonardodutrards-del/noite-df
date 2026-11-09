@@ -6,10 +6,6 @@ import { useRouter } from 'next/navigation';
 
 export default function CadastroPage() {
   const router = useRouter();
-  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const accountType = searchParams?.get('tipo') === 'estabelecimento' ? 'estabelecimento' : 'usuario';
-  const requestedRedirect = searchParams?.get('redirect');
-  const safeRedirect = requestedRedirect?.startsWith('/') && !requestedRedirect.startsWith('//') ? requestedRedirect : null;
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -24,6 +20,11 @@ export default function CadastroPage() {
     if (loading) return;
     if (password !== confirmation) { setError('As senhas precisam ser iguais.'); return; }
     setLoading(true);
+    const searchParams = new URLSearchParams(window.location.search);
+    const accountType = searchParams.get('tipo') === 'estabelecimento' ? 'estabelecimento' : 'usuario';
+    const requestedRedirect = searchParams.get('redirect');
+    const safeRedirect = requestedRedirect?.startsWith('/') && !requestedRedirect.startsWith('//') ? requestedRedirect : null;
+    const nextPath = accountType === 'estabelecimento' ? '/parceiro/onboarding' : (safeRedirect ?? '/');
 
     try {
       const res = await fetch('/api/auth/signup', {
@@ -42,10 +43,10 @@ export default function CadastroPage() {
       }
 
       if (data.requiresEmailConfirmation) {
-        const next = safeRedirect ? `&redirect=${encodeURIComponent(safeRedirect)}` : '';
+        const next = `&redirect=${encodeURIComponent(nextPath)}`;
         router.push(`/login?confirmacao=pendente${next}`);
       } else {
-        router.push(accountType === 'estabelecimento' ? '/parceiro/onboarding' : (safeRedirect ?? '/'));
+        router.push(nextPath);
       }
       router.refresh();
     } catch (err) {
