@@ -46,13 +46,13 @@ function atomLink(block: string): string | undefined {
 function normalizeFeedDate(value?: string): string | undefined {
   if (!value) return undefined;
   const raw = value.trim();
-  if (/(?:Z|[+-]\\d{2}:?\\d{2})$/i.test(raw)) {
+  if (/(?:Z|[+-]\d{2}:?\d{2})$/i.test(raw)) {
     const parsed = Date.parse(raw);
     return Number.isFinite(parsed) ? new Date(parsed).toISOString() : undefined;
   }
   // Preserve timezone-less ISO values for editorial review; never infer
   // the server's timezone for an event published in Brasília local time.
-  const local = raw.match(/^(\\d{4})-(\\d{2})-(\\d{2})(?:T(\\d{2}):(\\d{2})(?::(\\d{2}))?)?$/);
+  const local = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?)?$/);
   if (!local) return undefined;
   const [, year, month, day, hour = '00', minute = '00', second = '00'] = local;
   return `LOCAL=${year}${month}${day}T${hour}${minute}${second}`;
