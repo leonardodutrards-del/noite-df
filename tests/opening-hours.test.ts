@@ -37,6 +37,12 @@ describe('horários de funcionamento', () => {
     expect(getOpeningStatus({ operatingHours: { ...base, checkedAt: '2026-06-01' } }, new Date('2026-11-09T14:00:00.000Z')).state).toBe('unknown');
   });
 
+  it('não confirma funcionamento quando a grade semanal está incompleta', () => {
+    const partial = { ...base, schedule: { monday: base.schedule.monday } };
+    expect(getOpeningStatus({ operatingHours: partial }, new Date('2026-11-09T14:00:00.000Z')).state).toBe('unknown');
+    expect(isValidOperatingHours(partial)).toBe(false);
+  });
+
   it('valida formato de horário e exige fonte HTTPS quando informada', () => {
     expect(isValidOperatingHours(base)).toBe(true);
     expect(isValidOperatingHours({ ...base, sourceUrl: 'http://example.com' })).toBe(false);
