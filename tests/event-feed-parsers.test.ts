@@ -59,6 +59,20 @@ describe('event feed parsers', () => {
     expect(event.sourceEventKey).toBe('show-14');
   });
 
+  it('preserves timezone-less RSS event times for human review', () => {
+    const xml = `<rss><channel><item><title>Show local</title><eventStart>2026-11-08T20:00:00</eventStart><eventEnd>2026-11-09T02:00:00</eventEnd><link>https://example.org/show</link></item></channel></rss>`;
+    const [event] = parseRssAtomFeed(xml);
+    expect(event.startsAt).toBe('LOCAL=20261108T200000');
+    expect(event.endsAt).toBe('LOCAL=20261109T020000');
+  });
+
+  it('extracts Event nested under Schema.org ItemList ListItem.item', () => {
+    const html = `<script type="application/ld+json">{"@type":"ItemList","itemListElement":[{"@type":"ListItem","item":{"@type":"MusicEvent","name":"Show listado","startDate":"2026-11-14T20:00:00-03:00","endDate":"2026-11-15T02:00:00-03:00","url":"https://example.org/show"}}]}</script>`;
+    const [event] = parseHtmlJsonLdEvents(html, 'https://example.org/agenda');
+    expect(event.title).toBe('Show listado');
+    expect(event.startsAt).toBe('2026-11-14T23:00:00.000Z');
+  });
+
   it('ignores generic HTML without structured Event data', () => {
     expect(parseHtmlJsonLdEvents('<html><h1>Programação</h1></html>', 'https://example.org')).toEqual([]);
   });
