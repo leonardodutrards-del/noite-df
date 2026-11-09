@@ -95,9 +95,9 @@ export function isValidOperatingHours(value: unknown): value is OperatingHours {
     const day = hours.schedule[key];
     if (!day) continue;
     if (typeof day.closed !== 'boolean') return false;
-    if (!day.closed && (!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(day.open) || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(day.close) || day.open === day.close)) return false;
+    if (!day.closed && (!/^([01]\d|2[0-3]):[0-5]\d$/.test(day.open) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(day.close) || day.open === day.close)) return false;
   }
-  if (hours.sourceUrl && !/^https:\\/\\//i.test(hours.sourceUrl)) return false;
-  if (hours.checkedAt && !/^\\d{4}-\\d{2}-\\d{2}$/.test(hours.checkedAt)) return false;
+  if (hours.sourceUrl && !/^https:\/\//i.test(hours.sourceUrl)) return false;
+  if (hours.checkedAt && !/^\d{4}-\d{2}-\d{2}$/.test(hours.checkedAt)) return false;
   return true;
 }
