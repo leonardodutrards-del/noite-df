@@ -645,6 +645,7 @@ export default function AdminPage() {
               <option value="published">Apenas Publicados</option>
               <option value="suspended">Apenas Suspensos / Bloqueados</option>
               <option value="draft">Apenas Rascunhos</option>
+              <option value="expired">Encerrados / Inativos</option>
             </select>
           </div>
 
