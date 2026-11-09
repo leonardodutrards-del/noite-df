@@ -7,7 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect');
+  const requestedRedirect = searchParams.get('redirect');
+  const redirectPath = requestedRedirect?.startsWith('/') && !requestedRedirect.startsWith('//') ? requestedRedirect : null;
   const confirmationPending = searchParams.get('confirmacao') === 'pendente';
 
   const [email, setEmail] = useState('');
