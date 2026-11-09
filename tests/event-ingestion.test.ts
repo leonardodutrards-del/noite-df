@@ -75,6 +75,21 @@ describe('event ingestion normalization', () => {
     expect(result.reasons).not.toContain('invalid_or_missing_start');
   });
 
+  it('keeps timezone-less feed timestamps in human review', () => {
+    const result = normalizeEventCandidate({
+      ...base,
+      startsAt: 'LOCAL=20261108T200000',
+      endsAt: 'LOCAL=20261109T020000',
+    }, {
+      connectorType: 'rss',
+      officialSourceVerified: true,
+      hostAllowed: true,
+    });
+
+    expect(result.status).toBe('pending_review');
+    expect(result.reasons).toContain('timezone_confirmation_required');
+  });
+
   it('does not auto-publish candidates with possible duplicates', () => {
     const result = normalizeEventCandidate(base, {
       connectorType: 'webhook',
