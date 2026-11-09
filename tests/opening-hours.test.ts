@@ -26,7 +26,7 @@ describe('horários de funcionamento', () => {
   it('considera funcionamento que atravessa a meia-noite', () => {
     const overnight: OperatingHours = {
       ...base,
-      schedule: { monday: { closed: false, open: '18:00', close: '02:00' } },
+      schedule: { ...base.schedule, monday: { closed: false, open: '18:00', close: '02:00' } },
     };
     const status = getOpeningStatus({ operatingHours: overnight }, new Date('2026-11-10T04:00:00.000Z'));
     expect(status.state).toBe('open');
