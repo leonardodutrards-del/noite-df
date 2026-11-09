@@ -11,8 +11,8 @@ export default function CadastroPage() {
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 20, marginTop: 30 }}>
           <article className="panel" style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 14 }}>
             <span className="badge">Para curtir e descobrir</span><h2 style={{ margin: 0 }}>Quero explorar</h2>
-            <p style={{ lineHeight: 1.65, color: 'var(--muted)' }}>Salve bares e eventos, acompanhe a agenda, monte seus favoritos e encontre sua próxima saída.</p>
-            <ul style={{ paddingLeft: 20, lineHeight: 1.9 }}><li>Salvar estabelecimentos</li><li>Favoritar eventos e programação</li><li>Organizar suas próximas saídas</li></ul>
+            <p style={{ lineHeight: 1.65, color: 'var(--muted)' }}>Salve estabelecimentos, acompanhe a programação e organize suas próximas saídas.</p>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.9 }}><li>Salvar estabelecimentos</li><li>Acompanhar a programação</li><li>Organizar suas próximas saídas</li></ul>
             <Link className="button" href="/cadastro/usuario" style={{ textAlign: 'center', marginTop: 'auto' }}>Criar conta de usuário</Link>
           </article>
           <article className="panel" style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 14 }}>
