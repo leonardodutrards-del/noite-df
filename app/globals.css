@@ -1404,7 +1404,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(167,139,250,
     right: 10px;
     bottom: max(9px, env(safe-area-inset-bottom));
     display: grid;
-    grid-template-columns: repeat(4,minmax(0,1fr));
+    grid-template-columns: repeat(5,minmax(0,1fr));
     gap: 3px;
     padding: 8px 6px;
     border: 1px solid rgba(196,161,255,.2);
@@ -1434,4 +1434,119 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(167,139,250,
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   button, .button { transition: none; }
+}
+
+
+/* Smart map — synced with the public discovery filters */
+.homepage .smart-map-section {
+  margin-top: 42px;
+  scroll-margin-top: 92px;
+}
+.homepage .smart-map-section .section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+}
+.homepage .smart-map-count {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.homepage .smart-map-layout {
+  display: grid;
+  grid-template-columns: minmax(0,1.55fr) minmax(280px,.75fr);
+  gap: 16px;
+  min-width: 0;
+}
+.homepage .smart-map-frame {
+  position: relative;
+  min-width: 0;
+  min-height: 470px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: #151322;
+  box-shadow: 0 18px 48px rgba(0,0,0,.24);
+}
+.homepage .smart-map-frame iframe {
+  display: block;
+  width: 100%;
+  height: 470px;
+  border: 0;
+  background: #151322;
+}
+.homepage .smart-map-attribution {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(9,8,17,.88);
+  color: #d6cde5;
+  font-size: 10px;
+  pointer-events: none;
+}
+.homepage .smart-map-results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: linear-gradient(155deg,rgba(27,23,43,.97),rgba(17,15,28,.98));
+}
+.homepage .smart-map-selected {
+  display: grid;
+  gap: 8px;
+  padding: 4px 2px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.homepage .smart-map-selected > strong { font-size: 18px; letter-spacing: -.025em; }
+.homepage .smart-map-selected > span:not(.eyebrow) { color: var(--muted); font-size: 12px; line-height: 1.45; }
+.homepage .smart-map-selected .button { justify-self: start; margin-top: 4px; }
+.homepage .smart-map-empty { display: grid; gap: 8px; padding: 12px 2px 18px; border-bottom: 1px solid var(--border); }
+.homepage .smart-map-empty span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.homepage .smart-map-place-list { display: grid; gap: 7px; min-height: 0; }
+.homepage .smart-map-place-list > .eyebrow { margin: 2px 0 4px; }
+.homepage .smart-map-place {
+  display: grid;
+  grid-template-columns: 18px minmax(0,1fr) 12px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: rgba(255,255,255,.035);
+  color: var(--text);
+  text-align: left;
+  box-shadow: none;
+}
+.homepage .smart-map-place:hover,
+.homepage .smart-map-place.is-selected {
+  border-color: rgba(196,161,255,.4);
+  background: rgba(167,139,250,.12);
+  transform: none;
+}
+.homepage .smart-map-place > span:nth-child(2) { display: grid; gap: 3px; min-width: 0; }
+.homepage .smart-map-place strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.homepage .smart-map-place small { color: var(--muted); font-size: 10px; }
+.homepage .smart-map-pin { color: #c4a1ff; font-size: 13px; text-align: center; }
+.homepage .smart-map-more { color: var(--muted); font-size: 11px; line-height: 1.5; }
+@media(max-width:900px) {
+  .homepage .smart-map-layout { grid-template-columns: 1fr; }
+  .homepage .smart-map-frame, .homepage .smart-map-frame iframe { min-height: 380px; height: 380px; }
+}
+@media(max-width:700px) {
+  .homepage .smart-map-section { margin-top: 34px; scroll-margin-top: 18px; }
+  .homepage .smart-map-section .section-title { align-items: flex-start; }
+  .homepage .smart-map-frame, .homepage .smart-map-frame iframe { min-height: 320px; height: 320px; }
+  .homepage .smart-map-results { padding: 13px; }
 }
