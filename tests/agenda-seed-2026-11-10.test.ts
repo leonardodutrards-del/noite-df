@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
 import { additionalPlacesNovember10 } from '@/data/seeds/places-2026-11-10';
 import { getPublicAgenda } from '@/modules/events/public-agenda';
+import { getWeeklyAgenda } from '@/lib/weekly-agenda';
 
 vi.mock('@/lib/supabase-admin', () => ({
   getSupabaseAdminConfig: () => null,
@@ -37,6 +38,9 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(3);
     expect(agenda.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
     expect(agenda.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
+    const weekly = getWeeklyAgenda(agenda);
+    expect(weekly.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
+    expect(weekly.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
   });
 
   it('keeps Estação Beira Lago as a draft candidate without guessing an Instagram URL', () => {
