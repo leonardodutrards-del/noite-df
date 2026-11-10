@@ -59,7 +59,7 @@ function getDay(hours: OperatingHours, date: Date): DayOpeningHours | undefined 
 
 export function getOpeningStatus(place: Pick<Establishment, 'operatingHours'>, now = new Date()): OpeningStatus {
   const hours = place.operatingHours as OperatingHours | undefined;
-  if (!hours?.schedule || !ORDER.every((key) => hours.schedule[key]) || !isFresh(hours, now)) {
+  if (!isValidOperatingHours(hours) || !isFresh(hours, now)) {
     return { state: 'unknown', label: 'Horário não confirmado' };
   }
   const timezone = hours.timezone || 'America/Sao_Paulo';
@@ -92,11 +92,25 @@ export function isValidOperatingHours(value: unknown): value is OperatingHours {
   const hours = value as Partial<OperatingHours>;
   if (hours.timezone !== 'America/Sao_Paulo' || !hours.schedule || typeof hours.schedule !== 'object') return false;
   if (!ORDER.every((key) => hours.schedule?.[key])) return false;
+  const isValidDay = (day: unknown): day is DayOpeningHours => {
+    if (!day || typeof day !== 'object') return false;
+    const value = day as Partial<DayOpeningHours>;
+    if (typeof value.closed !== 'boolean') return false;
+    if (typeof value.open !== 'string' || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(value.open)) return false;
+    if (typeof value.close !== 'string' || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(value.close)) return false;
+    return value.open !== value.close;
+  };
   for (const key of ORDER) {
-    const day = hours.schedule[key];
-    if (!day) continue;
-    if (typeof day.closed !== 'boolean') return false;
-    if (!day.closed && (!/^([01]\d|2[0-3]):[0-5]\d$/.test(day.open) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(day.close) || day.open === day.close)) return false;
+    if (!isValidDay(hours.schedule[key])) return false;
+  }
+  if (hours.exceptions !== undefined) {
+    if (!hours.exceptions || typeof hours.exceptions !== 'object' || Array.isArray(hours.exceptions)) return false;
+    for (const [date, day] of Object.entries(hours.exceptions)) {
+      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) return false;
+      const parsedDate = new Date(`${date}T00:00:00.000Z`);
+      if (!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) return false;
+      if (!isValidDay(day)) return false;
+    }
   }
   if (typeof hours.sourceUrl !== 'string' || !hours.sourceUrl.trim()) return false;
   try {
