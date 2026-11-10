@@ -8,6 +8,7 @@ import type { Establishment } from '@/modules/establishments/types';
 import type { EventItem } from '@/modules/events/types';
 import { PlaceCard } from '@/components/PlaceCard';
 import { EventCard } from '@/components/EventCard';
+import { SmartMap } from '@/components/SmartMap';
 import { recommendPlaces } from '@/lib/recommend';
 import { hasConfirmedRating, isConfirmedEvent } from '@/lib/data-quality';
 import { track } from '@/lib/analytics';
@@ -38,6 +39,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
   const [intentFilter, setIntentFilter] = useState<NightIntent | null>(null);
   const [radarFilter, setRadarFilter] = useState<RadarFilter | null>(null);
   const [placeLayout, setPlaceLayout] = useState<'grid' | 'list'>('grid');
+  const [selectedMapPlaceId, setSelectedMapPlaceId] = useState<string | null>(null);
 
   const regionOptions = useMemo(
     () => getRegionOptionsWithCounts(places),
@@ -92,6 +94,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
     [query, region, vibe, places, priceFilter, typeFilter, musicFilter, radarFilter, intentFilter, todayEventPlaces]
   );
 
+  const selectedMapPlace = filteredPlaces.find((place) => place.id === selectedMapPlaceId) ?? filteredPlaces[0] ?? null;
   const selectedRadar = radarOptions.find((option) => option.id === radarFilter);
   const selectedIntent = intentOptions.find((option) => option.id === intentFilter);
   const hasFilters = Boolean(
@@ -145,6 +148,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
         <a className="brand" href="/">Noite DF</a>
         <nav>
           <a href="#lugares">Lugares</a>
+          <a href="#mapa">Mapa</a>
           <a href="/hoje">Hoje</a>
           <a href="/agenda-semanal">Agenda semanal</a>
           <a href="/divulgar">Divulgar meu local</a>
@@ -302,6 +306,8 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
         </div>
       </section>
 
+      <SmartMap places={filteredPlaces} selectedPlaceId={selectedMapPlace?.id ?? null} onSelectPlace={setSelectedMapPlaceId} />
+
       <section id="lugares">
         <div className="section-title">
           <div>
@@ -457,6 +463,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
       <nav className="mobile-bottom-nav" aria-label="Navegação principal">
         <a href="/"><span aria-hidden="true">⌂</span><span>Início</span></a>
         <a href="#lugares"><span aria-hidden="true">⌕</span><span>Explorar</span></a>
+        <a href="#mapa"><span aria-hidden="true">⌖</span><span>Mapa</span></a>
         <a href="/agenda-semanal"><span aria-hidden="true">▦</span><span>Agenda</span></a>
         <a href="/favoritos"><span aria-hidden="true">♡</span><span>Favoritos</span></a>
       </nav>
