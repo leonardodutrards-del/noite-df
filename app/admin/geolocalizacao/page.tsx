@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type GeocodeResult = {
   id: string;
@@ -65,7 +65,7 @@ export default function GeolocalizacaoAdminPage() {
   const [pendingLoading, setPendingLoading] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
 
-  async function loadPendingPlaces() {
+  const loadPendingPlaces = useCallback(async () => {
     setPendingLoading(true);
     try {
       const response = await fetch('/api/admin/discover-establishments?pending=1', { cache: 'no-store' });
@@ -77,14 +77,14 @@ export default function GeolocalizacaoAdminPage() {
     } finally {
       setPendingLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       void loadPendingPlaces();
     });
     return () => window.cancelAnimationFrame(frame);
-  }, []);
+  }, [loadPendingPlaces]);
 
   async function importWazeLocation(place: PendingPlace) {
     const wazeUrl = pendingWazeLinks[place.id]?.trim();
