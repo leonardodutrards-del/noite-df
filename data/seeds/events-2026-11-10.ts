@@ -382,7 +382,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     region: 'SIG',
     dateLabel: 'Sábado, 14/11/2026 · 18h–02h',
     category: 'Samba / Sertanejo / Música ao vivo',
-    description: 'Roda de samba, sertanejo e música ao vivo. Line-up anunciado: DJ Primo, Boteco do Clima e Banda Dexcomplica, com outras entradas do DJ Primo e uma atração a confirmar às 21h30. Endereço: SIG, Quadra 01, lotes 985, Brasília/DF.',
+    description: 'Roda de samba, sertanejo e música ao vivo. Line-up divulgado: DJ Primo, Boteco do Clima e Banda Dexcomplica; a página oficial também lista entradas de DJ Primo e não identifica o nome da atração prevista para 21h30. Endereço: SIG, Quadra 01, lotes 985, Brasília/DF.',
     startsAt: '2026-11-14T18:00:00-03:00',
     endsAt: '2026-11-15T02:00:00-03:00',
     expiresAt: '2026-11-15T02:00:00-03:00',
