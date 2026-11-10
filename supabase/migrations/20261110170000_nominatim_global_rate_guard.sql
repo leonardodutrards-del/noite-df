@@ -19,7 +19,7 @@ create or replace function public.claim_nominatim_request_slot()
 returns integer
 language plpgsql
 security definer
-set search_path = public, pg_temp
+set search_path = pg_catalog, public, pg_temp
 as $$
 declare
   current_slot timestamptz;
@@ -62,7 +62,7 @@ create or replace function public.release_nominatim_request_slot()
 returns void
 language plpgsql
 security definer
-set search_path = public, pg_temp
+set search_path = pg_catalog, public, pg_temp
 as $$
 begin
   update public.nominatim_request_guard
