@@ -8,8 +8,8 @@
 
 - **104 estabelecimentos publicados** carregados diretamente do Supabase; **22 regiões** cobertas.
 - **10 estabelecimentos já cadastrados** têm programação datada confirmada para o período; **94 não tiveram agenda datada localizada** nas fontes oficiais consultadas.
-- **22 eventos novos** preparados neste PR; somados aos 12 eventos já publicados da rodada anterior, a agenda do período passa a ter **34 eventos** em 11 locais (inclui Estação Beira Lago, novo perfil preparado neste PR).
-- **1 novo estabelecimento confirmado e preparado:** Estação Beira Lago. Não foi inserido no Supabase antes da aprovação técnica deste PR.
+- **23 eventos novos** preparados neste PR; somados aos 12 eventos já publicados da rodada anterior, a agenda do período passa a ter **35 eventos** em 11 locais (inclui uma ocorrência em Estação Beira Lago, cujo perfil permanece em rascunho).
+- **0 novos perfis publicados; 1 candidato em rascunho:** Estação Beira Lago. O perfil permanece draft no branch e não foi inserido no Supabase.
 - **6 ocorrências candidatas/pendentes** não foram publicadas por falta de confirmação oficial ou por divergência de data, horário, endereço ou identidade.
 - Nenhum estabelecimento foi despublicado por falta de post recente. Nenhuma mensagem foi enviada a estabelecimentos. Nenhum feed ou Story do Noite DF foi publicado.
 
@@ -79,9 +79,10 @@ As 22 regiões presentes no banco foram carregadas e cobertas: Águas Claras, As
 ### Domingo, 15/11 — destaque
 
 1. **15h–23h59 — Chama no Pagode**, Estação Beira Lago (Setor de Clubes Sul). Sudário (MG), Lucas Alves e DJs. [Sympla](https://www.sympla.com.br/evento/lgc/3631552)
-2. **19h–23h — 3ª Dream Factory**, Galpão 17 (SMAS/Guará). Festival de pole dance e linguagens da dança, mais de 30 apresentações; classificação 18+. [Sympla](https://www.sympla.com.br/evento/3a-dream-factory/3597505)
-3. **21h–23h59 — Papangu**, Infinu (Asa Sul). Rock progressivo/experimental. [Shotgun](https://shtgn.live/pt-br/events/papanguembsb-2)
-4. **22h–05h — Os Meninos de Barão no Telebar**, Telebar (Ceilândia). Show ao vivo; o gênero não é especificado na página do organizador. [Sympla](https://www.sympla.com.br/evento/os-meninos-de-barao-no-telebar-15-11/3632223)
+2. **18h–23h59 — Cabaré Noturno — Plastique Noir**, Infinu (Asa Sul). Darkwave, coldwave, post-punk, gothic rock e dark synth; DJs Moa e Fernoca. Preço/lotes não visíveis no conteúdo acessível. [Shotgun](https://shotgun.live/pt-br/events/cabare-noturno-plastique-noir).
+3. **19h–23h — 3ª Dream Factory**, Galpão 17 (SMAS/Guará). Festival de pole dance e linguagens da dança, mais de 30 apresentações; classificação 18+. [Sympla](https://www.sympla.com.br/evento/3a-dream-factory/3597505)
+4. **21h–23h59 — Papangu**, Infinu (Asa Sul). Rock progressivo/experimental. [Shotgun](https://shtgn.live/pt-br/events/papanguembsb-2)
+5. **22h–05h — Os Meninos de Barão no Telebar**, Telebar (Ceilândia). Show ao vivo; o gênero não é especificado na página do organizador. [Sympla](https://www.sympla.com.br/evento/os-meninos-de-barao-no-telebar-15-11/3632223)
 
 ### Segunda-feira, 16/11
 
@@ -114,9 +115,9 @@ As 22 regiões presentes no banco foram carregadas e cobertas: Águas Claras, As
 
 ## Novos estabelecimentos e candidatos
 
-### Confirmado e preparado neste PR
+### Candidato em rascunho — não publicado
 
-**Estação Beira Lago** — Bar no SCES Trecho 1, Conjunto 3, Setor de Clubes Sul, entre AABR e ASEEL. Linktree oficial: https://linktr.ee/estacaobeiralago. Telefone/WhatsApp divulgado: (61) 99958-1311. O Linktree oferece cardápio, reservas, localização e links de eventos; o destino do cardápio em Drive não foi aberto pelo coletor. O evento Chama no Pagode confirma atividade em 15/11. O Instagram direto não foi confirmado; campo ficará vazio. Perfil preparado no seed e aguardando CI/merge antes de inserção no Supabase.
+**Estação Beira Lago** — candidato de bar no SCES Trecho 1, Conjunto 3, Setor de Clubes Sul, entre AABR e ASEEL. Linktree público associado ao nome: https://linktr.ee/estacaobeiralago. Telefone/WhatsApp divulgado: (61) 99958-1311. A página oficial de ingresso do evento Chama no Pagode confirma o local e o endereço; o Linktree oferece cardápio, reservas e localização, mas o vínculo institucional do Linktree e o Instagram oficial não foram confirmados de forma independente. Por cautela, o perfil permanece em `draft`, com `verified=false`, não é publicado e não será inserido no Supabase nesta rodada. O destino do cardápio em Drive não foi aberto pelo coletor.
 
 ### Candidatos/eventos pendentes — não publicados
 
