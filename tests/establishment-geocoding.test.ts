@@ -43,6 +43,14 @@ describe('geocodificação OpenStreetMap', () => {
     expect(result.accepted).toBe(false);
   });
 
+  it('mantém Planaltina ambígua para revisão quando endereço e região não distinguem DF e GO', () => {
+    const result = scoreNominatimCandidate(
+      { name: 'Casa de Eventos', region: 'Planaltina DF / Planaltina-GO', address: 'Planaltina' },
+      { lat: '-15.62', lon: '-47.65', display_name: 'Casa de Eventos, Planaltina, Distrito Federal, Brasil', type: 'event_venue', class: 'leisure' }
+    );
+    expect(result.accepted).toBe(false);
+  });
+
   it('rejeita coordenadas fora da área operacional do DF e Entorno', () => {
     const result = scoreNominatimCandidate(
       { name: 'Bar Godofredo', region: 'Asa Norte', address: 'CLN 408, Asa Norte, Brasília, DF' },
