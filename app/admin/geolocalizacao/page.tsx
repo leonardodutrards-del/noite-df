@@ -80,7 +80,10 @@ export default function GeolocalizacaoAdminPage() {
   }
 
   useEffect(() => {
-    void loadPendingPlaces();
+    const frame = window.requestAnimationFrame(() => {
+      void loadPendingPlaces();
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   async function importWazeLocation(place: PendingPlace) {
@@ -132,7 +135,7 @@ export default function GeolocalizacaoAdminPage() {
     setSelected(candidate);
     setNewName(searchName.trim());
     setNewRegion(searchRegion.trim());
-    setNewAddress(candidate.displayName);
+    setNewAddress(candidate.displayName.slice(0, 240));
     setWazeShareUrl('');
   }
 
