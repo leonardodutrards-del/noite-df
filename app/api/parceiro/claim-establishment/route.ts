@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
     if (message === 'CLAIM_SELECTION_INVALID') return NextResponse.json({ error: 'Selecione um estabelecimento publicado válido.' }, { status: 400 });
+    if (message === 'CLAIM_ESTABLISHMENT_ALREADY_EXISTS') return NextResponse.json({ error: 'Este estabelecimento já possui um cadastro. Selecione o perfil existente para solicitar o vínculo.' }, { status: 409 });
     console.error('claim-establishment', error);
     return NextResponse.json({ error: 'Não foi possível enviar a solicitação.' }, { status: 500 });
   }
