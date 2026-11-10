@@ -75,7 +75,7 @@ export default function GeolocalizacaoAdminPage() {
       <section className="page-heading">
         <span className="badge">Curadoria geográfica</span>
         <h1>Geolocalização dos estabelecimentos</h1>
-        <p>Busca pontual no OpenStreetMap/Nominatim, em sequência e com intervalo mínimo entre consultas. Só grava coordenadas quando nome e contexto geográfico passam na validação automática.</p>
+        <p>Busca pontual no OpenStreetMap/Nominatim, uma consulta por vez e com intervalo mínimo de 1,2 segundo. Não abra o processo em duas abas simultaneamente. Só grava coordenadas quando nome e contexto geográfico passam na validação automática.</p>
       </section>
 
       <section className="panel" style={{ display: 'grid', gap: 16 }}>
