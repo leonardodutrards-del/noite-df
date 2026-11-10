@@ -155,4 +155,73 @@ As 22 regiões presentes no banco foram carregadas e cobertas: Águas Claras, As
 - Nenhuma tentativa de login, scraping proibido, CAPTCHA ou bypass foi realizada.
 - Nenhuma mensagem foi enviada a estabelecimentos; nenhum feed ou Story do Noite DF foi publicado.
 - A rodada é de terça-feira. A varredura reforçada de flyers está prevista para a próxima execução de quarta-feira, 11/11.
-- **Status técnico no momento da preparação:** conteúdo em branch/PR; publicação em produção depende de testes, lint, build, Vercel Preview READY e merge.
+- **Status técnico da agenda 10–16/11:** PR #138 integrado; Vercel produção READY no commit `9edd64c478686e3f4855fd8d6d59f9a2b38266f9`. Os eventos futuros após 16/11 permanecem em revisão separada.
+
+
+## Próximos eventos confirmados após 16/11 — preparados em PR separado
+
+A varredura das agendas oficiais de Infinu, ām.bar, Birosca do Conic, Contexto, Galpão 17 e Porks Sobradinho identificou **28 eventos adicionais** com data e início confirmados, entre 17/11 e 13/12/2026. Eles foram preparados em arquivo separado, sem duplicar eventos já publicados na rodada anterior.
+
+| Data e horário confirmados | Evento | Local / região | Estilo verificável | Fonte original |
+|---|---|---|---|---|
+| Terça-feira, 17/11/2026 · 18h–01h | Forró na Varanda | Contexto Bar e Restaurante (Setor de Clubes Sul) | Forró | https://www.sympla.com.br/evento/lgc/3625155 |
+| Quarta-feira, 18/11/2026 · 20h15 (encerramento não divulgado) | Isso É Jazz?! — Jimi Oliver toca Clube da Esquina | Infinu Comunidade Criativa (Asa Sul) | Jazz / Bossa Nova | https://shotgun.live/pt-br/venues/infinu-comunidade-criativa |
+| Quinta-feira, 19/11/2026 · 19h–23h (show por volta das 20h) | Tranquilo Apresenta Joyce Alane | Infinu Comunidade Criativa (Asa Sul) | MPB / Pop | https://shotgun.live/pt-br/events/tranquilobrasilia-2026-11-19 |
+| Quinta-feira, 19/11/2026 · 20h–02h | Nu Metal Festival | Galpão 17 (Guará / SMAS) | Nu Metal / Metal industrial | https://www.sympla.com.br/evento/lgc/3563513 |
+| Quinta-feira, 19/11/2026 · 21h–04h | We The Funk | Contexto Bar e Restaurante (Setor de Clubes Sul) | Funk | https://www.sympla.com.br/evento/we-the-funk-19-11-varanda-do-contexto-o-funk-e-nosso/3625200 |
+| Sexta-feira, 20/11/2026 · 21h (encerramento não divulgado) | Almost Unplugged | Porks Sobradinho (Sobradinho) | Música ao vivo (estilo não detalhado) | https://sobradinhoporks.com.br/#agenda |
+| Sábado, 21/11/2026 · 16h–20h30 (show às 17h) | BSB Punk Fest — Ócio | Infinu Comunidade Criativa (Asa Sul) | Indie / Punk / Rock | https://shotgun.live/pt-br/events/bsb-punk-fest-ocio |
+| Sábado, 21/11/2026 · 19h–03h (show às 20h) | Jean Tassy — Turnê Saudade de Mim | ām.bar (Asa Sul) | R&B / Rap / Soul / Música brasileira | https://shotgun.live/pt-br/events/crema-com-jean-tassy |
+| Sábado, 21/11/2026 · 21h–23h59 (bilheteria às 20h) | Miserável Cultura Fest — Lamento + Despenca + Sala de Gritos | Infinu Comunidade Criativa (Asa Sul) | Rock / Hardcore / Punk | https://shotgun.live/pt-br/events/miseravelculturafestcomlamento |
+| Sábado, 21/11/2026 · 21h–09h | Festa TOMA — Edição Agrobaile | Contexto Bar e Restaurante (Setor de Clubes Sul) | Funk / Eletrofunk / 808 | https://www.sympla.com.br/evento/festa-toma-edicao-agrobaile-club-contexto-boate-contexto-sabado-21-11-as-21h/3642351 |
+| Terça-feira, 24/11/2026 · 20h–23h | Infinu Recebe Luizga | Infinu Comunidade Criativa (Asa Sul) | Indie brasileiro | https://shotgun.live/pt-br/events/luizgaembsb |
+| Quinta-feira, 26/11/2026 · 20h–23h30 | Infinu Recebe Vanguart | Infinu Comunidade Criativa (Asa Sul) | Folk / Indie / Rock | https://shotgun.live/pt-br/events/vanguart-em-brasilia |
+| Quinta-feira, 26/11/2026 · 21h–04h | We The Funk | Contexto Bar e Restaurante (Setor de Clubes Sul) | Funk | https://www.sympla.com.br/evento/we-the-funk-26-11-varanda-do-contexto-o-funk-e-nosso/3625202 |
+| Sexta-feira, 27/11/2026 · 20h–02h | Rock 90 — Creed + Oasis | Galpão 17 (Guará / SMAS) | Rock / Post-grunge / Britpop | https://www.sympla.com.br/evento/lgc/3563529 |
+| Sábado, 28/11/2026 · 20h–01h | Punk Rock Brasília | Galpão 17 (Guará / SMAS) | Punk Rock | https://www.sympla.com.br/evento/punk-rock-brasilia-galpao-17/3563547 |
+| Sábado, 28/11/2026 · 20h–23h59 (shows às 21h) | Motal e Infinu recebem YMA — Sentimental Palace | Infinu Comunidade Criativa (Asa Sul) | Indie / Pop | https://shotgun.live/pt-br/events/ymaembsb |
+| Sábado, 28/11/2026 · 22h (encerramento não divulgado) | Chá da Alice | Birosca do Conic (Asa Sul) | Festa (estilo não detalhado) | https://shotgun.live/pt-br/venues/birosca |
+| Domingo, 29/11/2026 · 16h–20h30 (show às 17h) | BSB Punk Fest — Rancore | Infinu Comunidade Criativa (Asa Sul) | Punk / Rock | https://shotgun.live/pt-br/festivals/bsb-punk-fest-rancore |
+| Quinta-feira, 03/12/2026 · 19h–23h | Tranquilo Apresenta Jonatas Belgrande | Infinu Comunidade Criativa (Asa Sul) | Música ao vivo | https://shotgun.live/pt-br/events/tranquilobrasilia-2026-12-03 |
+| Sexta-feira, 04/12/2026 · 19h–03h | Nojo de Farra — A Confraternização (última do ano) | Birosca do Conic (Asa Sul) | Festa / DJs / Jogos | https://shotgun.live/pt-br/events/04-12-nojo-de-farra |
+| Sexta-feira, 04/12/2026 · 22h (encerramento não divulgado) | Lacre 001 | Birosca do Conic (Asa Sul) | Festa (estilo não detalhado) | https://shotgun.live/pt-br/venues/birosca |
+| Sábado, 05/12/2026 · 17h–20h | Infinu Apresenta Daparte | Infinu Comunidade Criativa (Asa Sul) | Indie Rock / Pop | https://shotgun.live/pt-br/events/daparteembsb |
+| Sábado, 05/12/2026 · 20h (encerramento não divulgado) | Infinu Recebe Mombojó | Infinu Comunidade Criativa (Asa Sul) | Música ao vivo | https://shotgun.live/pt-br/venues/infinu-comunidade-criativa |
+| Domingo, 06/12/2026 · 16h–20h | Bastardos da Noite — Blades of Steel | Infinu Comunidade Criativa (Asa Sul) | Heavy Metal | https://shotgun.live/pt-br/events/bladesofsteel |
+| Domingo, 06/12/2026 · 21h–23h30 | Tom Ribeira — Lançamento do EP Vovóvovô | Infinu Comunidade Criativa (Asa Sul) | Folk brasileiro / Indie | https://shotgun.live/pt-br/events/tomribeiraembsb-3 |
+| Quinta-feira, 10/12/2026 · 19h–23h | Tranquilo Apresenta Yoún | Infinu Comunidade Criativa (Asa Sul) | Afrobeat / Alternative / Bass | https://shotgun.live/pt-br/events/tranquilobrasilia-2026-12-10 |
+| Sábado, 12/12/2026 · 20h30–23h (show às 21h) | Infinu Recebe Os Replicantes | Infinu Comunidade Criativa (Asa Sul) | Rock | https://shotgun.live/pt-br/events/osreplicantes |
+| Domingo, 13/12/2026 · 20h30–23h | Valhalla + Device = Death Metal Chaos | Infinu Comunidade Criativa (Asa Sul) | Death Metal | https://shotgun.live/pt-br/events/valhalladevice |
+
+Além desses 28, a base Supabase já contém **Alberto Moreno — O Rei do Brega-Pop**, na Arena Adega dos Amigos, em 21/11 às 21h–04h; mantido como evento existente, sem nova inserção.
+
+### Ocorrências futuras mantidas pendentes
+
+- **Porks Sobradinho — Dead Slug, 21/11:** a agenda oficial informa a data, mas não publica horário de início; não inserir até confirmação.
+- **Birosca / Arena Conic — Na Batida do Morro, 21/11; Garoto: O Circo Dançante, 05/12; Garoto New Year, 02/01:** páginas apresentam divergência entre o cabeçalho “Birosca do Conic Pub” e a descrição/local “Arena Conic”. Não associar ao perfil Birosca do Conic sem confirmação inequívoca.
+- **Club Vittar com Pabllo Vittar, 12/12:** a página identifica “Arena Birosca”, em endereço distinto do Birosca do Conic; manter como candidato de local separado, sem criar perfil ainda.
+- **Porks Plug & Play:** o site confirma jam aberta toda quinta, 19h–23h50. A ocorrência de 12/11 está na agenda da semana; futuras ocorrências não foram multiplicadas automaticamente.
+
+## Cobertura de Instagram e fontes
+
+- A base contém **30 campos de Instagram** associados a perfis publicados; foram registrados 30 checks em 10/11.
+- Resultado dos checks: **29 bloqueados/limitados** pela ferramenta e **1 URL de Reel**, que não é perfil de estabelecimento. Nenhum dos 30 abriu conteúdo suficiente para comprovar visibilidade pública; não há confirmação de perfil privado ou inexistente. Portanto: 0 acessíveis, 29 bloqueados/limitados e 1 URL de conteúdo/identidade não confirmada.
+- Os URLs diretos e evidências de erro estão registrados em `agenda_source_checks` no Supabase; não houve tentativa de login, CAPTCHA ou bypass.
+- Na rodada de fontes web/agenda: 12 checks de páginas oficiais — 8 OK, 3 com mudança de conteúdo e 1 HTTP 404. Os 3 alterados foram Savassi Carne de Sol (Guará), Meatz Burger (Sudoeste) e Figueiredo Cozinha e Bar (Planaltina). Sauz Restaurante retornou HTTP 404; isso não é prova de fechamento e não motivou despublicação.
+- Há 17 conectores de ingestão: 14 ativos e 3 em atenção. Os dois feeds Alfredo’s retornaram `FEED_TOO_LARGE`; Sauz retornou `HTTP_404`. Nenhum local foi despublicado automaticamente.
+
+## Descoberta de novos estabelecimentos — pendentes de revisão
+
+- **Estação Beira Lago:** candidato em draft, sem perfil no Supabase e sem Instagram oficial confirmado. O evento de 15/11 tem página de ingresso oficial e o Linktree público oferece cardápio/reservas; endereço mantido como “entre AABR e ASEEL”, sem CEP ou número não comprovado.
+- **Sobradinho:** Dorin Bar, Empório Cozinha Pizza & Bar, Guarabira Bar e Depósito, Lounge Chopperia, Garden Bar e Bar Moto Race surgiram em fontes de negócios/listagens públicas e não tiveram duplicata por nome/endereço/telefone localizada na base. Ainda não foi confirmada fonte oficial própria (site/Instagram); manter como candidatos pendentes, sem criar perfis.
+- **Simpsons Distribuidora e Bar:** não adicionar; a evidência cadastral consultada indica situação baixada, exigindo confirmação de reabertura antes de qualquer perfil.
+- **Arena Birosca / Arena Conic:** espaços identificados em páginas de eventos, mas a permanência/identidade comercial ainda não está confirmada; não criar perfil.
+- **Rota do Piseiro / Bar LG Sobradinho:** identidade oficial e associação do local não confirmadas. Não vincular ao Galpão dos Brutos.
+- **Galpão dos Brutos:** mantido separado e sem programação atual, respeitando a correção do responsável pelo projeto.
+
+## Estado de publicação atualizado
+
+- **PR #138** foi integrado à `main`; o deployment de produção da Vercel está **READY** no commit `9edd64c478686e3f4855fd8d6d59f9a2b38266f9`. A agenda de 10–16/11 (23 novos eventos, somados aos 12 anteriores) está publicada.
+- Os **28 eventos futuros após 16/11** estão somente na branch `agenda/2026-11-10-daily` e aguardam PR/revisão própria; ainda não estão publicados.
+- Nenhum perfil novo foi inserido no Supabase nesta rodada; Estação Beira Lago permanece draft.
+- Nenhuma mensagem foi enviada a estabelecimentos e nenhum feed/Story do Noite DF foi publicado.
