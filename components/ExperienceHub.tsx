@@ -467,6 +467,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
       <nav className="mobile-bottom-nav" aria-label="Navegação principal">
         <a href="/"><span aria-hidden="true">⌂</span><span>Início</span></a>
         <a href="#lugares"><span aria-hidden="true">⌕</span><span>Explorar</span></a>
+        <a href="#mapa"><span aria-hidden="true">⌖</span><span>Mapa</span></a>
         <a href="/agenda-semanal"><span aria-hidden="true">▦</span><span>Agenda</span></a>
         <a href="/favoritos"><span aria-hidden="true">♡</span><span>Favoritos</span></a>
       </nav>
