@@ -5,6 +5,8 @@ import { resolve } from 'node:path';
 const authService = readFileSync(resolve(process.cwd(), 'modules/auth/service.ts'), 'utf8');
 const signupRoute = readFileSync(resolve(process.cwd(), 'app/api/auth/signup/route.ts'), 'utf8');
 const signupPage = readFileSync(resolve(process.cwd(), 'app/cadastro/page.tsx'), 'utf8');
+const visitorSignupPage = readFileSync(resolve(process.cwd(), 'app/cadastro/usuario/page.tsx'), 'utf8');
+const establishmentSignupPage = readFileSync(resolve(process.cwd(), 'app/cadastro/estabelecimento/page.tsx'), 'utf8');
 const loginPage = readFileSync(resolve(process.cwd(), 'app/login/page.tsx'), 'utf8');
 const visitorSignupPage = readFileSync(resolve(process.cwd(), 'app/visitante/cadastro/page.tsx'), 'utf8');
 const visitorLoginPage = readFileSync(resolve(process.cwd(), 'app/visitante/login/page.tsx'), 'utf8');
@@ -18,8 +20,12 @@ describe('Hardening final de produção', () => {
 
   it('mantém cadastro público sem elevação de privilégios', () => {
     expect(signupRoute).toContain("role: 'visitor'");
-    expect(signupPage).toContain('/parceiro/onboarding');
-    expect(signupPage).toContain('aprovação do Master Admin');
+    expect(signupPage).toContain('/cadastro/usuario');
+    expect(signupPage).toContain('/cadastro/estabelecimento');
+    expect(visitorSignupPage).toContain('/parceiro/onboarding');
+    expect(visitorSignupPage).toContain('router.push(nextPath)');
+    expect(signupRoute).toContain("role: 'visitor'");
+    expect(establishmentSignupPage).toContain('aprovação');
   });
 
   it('aposenta telas legadas de autenticação de visitante', () => {
