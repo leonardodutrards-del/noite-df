@@ -43,6 +43,14 @@ describe('geocodificação OpenStreetMap', () => {
     expect(result.accepted).toBe(false);
   });
 
+  it('rejeita coordenadas fora da área operacional do DF e Entorno', () => {
+    const result = scoreNominatimCandidate(
+      { name: 'Bar Godofredo', region: 'Asa Norte', address: 'CLN 408, Asa Norte, Brasília, DF' },
+      { lat: '-23.55', lon: '-46.63', display_name: 'Bar Godofredo, Asa Norte, Brasília, Distrito Federal, Brasil', type: 'bar', class: 'amenity' }
+    );
+    expect(result.accepted).toBe(false);
+  });
+
   it('mantém resultados ambíguos para revisão em vez de gravar coordenadas', () => {
     const result = scoreNominatimCandidate(
       { name: 'Manzuá — Pontão', region: 'Lago Sul', address: 'Pontão do Lago Sul — SHIS QL 10, Lago Sul, Brasília, DF' },
