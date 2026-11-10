@@ -71,7 +71,7 @@ begin
     where id = 1;
   return true;
 end;
-$;
+$$;
 
 revoke all on function public.claim_nominatim_request_slot() from public, anon, authenticated;
 grant execute on function public.claim_nominatim_request_slot() to service_role;
