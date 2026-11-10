@@ -10,9 +10,10 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 10–16/11/2026', () => {
-  it('contains 22 dated events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember10).toHaveLength(22);
-    expect(new Set(confirmedEventsNovember10.map((event) => event.id)).size).toBe(22);
+  it('contains 23 dated events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember10).toHaveLength(23);
+    expect(new Set(confirmedEventsNovember10.map((event) => event.id)).size).toBe(23);
+    expect(confirmedEventsNovember10.some((event) => event.id === 'infinu-cabare-noturno-plastique-noir-2026-11-15')).toBe(true);
 
     for (const event of confirmedEventsNovember10) {
       expect(event.startsAt).toBeTruthy();
@@ -37,7 +38,7 @@ describe('Agenda diária 10–16/11/2026', () => {
     const station = places.find((place) => place.id === 'estacao-beira-lago');
     expect(station).toBeDefined();
     expect(station?.source?.url).toBe('https://linktr.ee/estacaobeiralago');
-    expect(station?.publicationStatus).toBe('published');
+    expect(station?.publicationStatus).toBe('draft');
     expect(station?.instagram).toBeUndefined();
   });
 });
