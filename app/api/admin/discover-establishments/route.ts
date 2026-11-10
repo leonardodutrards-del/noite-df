@@ -178,7 +178,11 @@ export async function POST(request: NextRequest) {
     const latitude = Number(body?.latitude);
     const longitude = Number(body?.longitude);
     const wazeCoordinates = parseWazeCoordinates(body?.wazeUrl);
+    const hasWazeUrl = typeof body?.wazeUrl === 'string' && body.wazeUrl.trim().length > 0;
 
+    if (hasWazeUrl && !wazeCoordinates) {
+      return NextResponse.json({ error: 'O link compartilhado do Waze não contém coordenadas válidas para DF/Entorno. Confira o link ou deixe o campo vazio para usar o ponto selecionado.' }, { status: 400 });
+    }
     if (!name || name.length > 120 || !region || region.length > 100 || !address || address.length > 240
       || !TYPES.includes(type as typeof TYPES[number]) || !isInCoverage(latitude, longitude)) {
       return NextResponse.json({ error: 'Dados inválidos. Confira nome, região, endereço, categoria e coordenadas dentro de DF/Entorno.' }, { status: 400 });
