@@ -16,6 +16,12 @@ type Tile = { key: string; url: string; left: number; top: number };
 const TILE_SIZE = 256;
 const DEFAULT_CENTER = { latitude: -15.7939, longitude: -47.8828 };
 
+function hasValidCoordinates(place: Establishment): boolean {
+  return Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
+    && place.latitude! >= -90 && place.latitude! <= 90
+    && place.longitude! >= -180 && place.longitude! <= 180;
+}
+
 function project({ latitude, longitude }: Coordinate, zoom: number): WorldPoint {
   const scale = TILE_SIZE * 2 ** zoom;
   const safeLatitude = Math.max(-85.0511, Math.min(85.0511, latitude));
@@ -36,8 +42,7 @@ function unproject(point: WorldPoint, zoom: number): Coordinate {
 
 function fitCoordinates(places: Establishment[]) {
   const points = places.filter(
-    (place): place is Establishment & Coordinate =>
-      Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
+    (place): place is Establishment & Coordinate => hasValidCoordinates(place)
   );
   if (points.length === 0) return { center: DEFAULT_CENTER, zoom: 10 };
   if (points.length === 1) {
@@ -71,7 +76,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
 
   const mappedPlaces = useMemo(
     () => places.filter(
-      (place) => Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
+      (place) => hasValidCoordinates(place)
     ),
     [places]
   );
@@ -103,7 +108,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     if (!selected || !Number.isFinite(selected.latitude) || !Number.isFinite(selected.longitude)) return;
     setCenter({ latitude: selected.latitude!, longitude: selected.longitude! });
     setZoom((current) => Math.max(current, 13));
-  }, [places, selectedPlaceId]);
+  }, [selectedPlaceId, selectedPlace?.latitude, selectedPlace?.longitude]);
 
   const centerWorld = project(center, zoom);
   const originX = centerWorld.x - viewport.width / 2;
@@ -249,7 +254,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
               <>
                 <strong>{selectedPlace.name}</strong>
                 <span>{selectedPlace.address || selectedPlace.region}</span>
-                {Number.isFinite(selectedPlace.latitude) && Number.isFinite(selectedPlace.longitude) ? (
+                {hasValidCoordinates(selectedPlace) ? (
                   <a className="button" href={'https://www.google.com/maps/dir/?api=1&destination=' + selectedPlace.latitude + ',' + selectedPlace.longitude} target="_blank" rel="noreferrer">Traçar rota ↗</a>
                 ) : (
                   <span className="smart-map-pending">Localização exata pendente de validação</span>
@@ -268,7 +273,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
                 aria-pressed={place.id === selectedPlace?.id}
                 onClick={() => onSelectPlace(place.id)}
               >
-                <span className={Number.isFinite(place.latitude) && Number.isFinite(place.longitude) ? 'smart-map-pin' : 'smart-map-pin is-pending'} aria-hidden="true">●</span>
+                <span className={hasValidCoordinates(place) ? 'smart-map-pin' : 'smart-map-pin is-pending'} aria-hidden="true">●</span>
                 <span><strong>{place.name}</strong><small>{place.region} · {place.type}</small></span>
                 <span aria-hidden="true">›</span>
               </button>
