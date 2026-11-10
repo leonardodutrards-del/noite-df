@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { PwaInstallPrompt } from '@/components/PwaInstallPrompt';
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
@@ -15,11 +16,11 @@ export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
   icons: {
     icon: [
-      { url: '/icon.png', type: 'image/png', sizes: '96x96' },
+      { url: '/icon.svg', type: 'image/svg+xml', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: ['/icon.png'],
-    apple: [{ url: '/apple-icon.svg', type: 'image/svg+xml' }],
+    shortcut: ['/icon.svg'],
+    apple: [{ url: '/apple-icon.svg', type: 'image/svg+xml', sizes: '180x180' }],
   },
   openGraph: {
     title: 'Noite DF',
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR">
       <body>
         {children}
+        <PwaInstallPrompt />
         <PageViewTracker />
         {measurementId ? <GoogleAnalytics measurementId={measurementId} /> : null}
       </body>
