@@ -100,17 +100,23 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
   useEffect(() => {
     if (mappedPlaces.length === 0) return;
     const fitted = fitCoordinates(mappedPlaces);
-    setCenter(fitted.center);
-    setZoom(fitted.zoom);
+    const frame = window.requestAnimationFrame(() => {
+      setCenter(fitted.center);
+      setZoom(fitted.zoom);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [mappedPlaces]);
 
   useEffect(() => {
-    if (!selectedPlaceId) return;
-    const selected = places.find((place) => place.id === selectedPlaceId);
-    if (!selected || !Number.isFinite(selected.latitude) || !Number.isFinite(selected.longitude)) return;
-    setCenter({ latitude: selected.latitude!, longitude: selected.longitude! });
-    setZoom((current) => Math.max(current, 13));
-  }, [selectedPlaceId, selectedPlace?.latitude, selectedPlace?.longitude]);
+    if (!selectedPlaceId || selectedPlace?.id !== selectedPlaceId) return;
+    if (!Number.isFinite(selectedPlace.latitude) || !Number.isFinite(selectedPlace.longitude)) return;
+    const nextCenter = { latitude: selectedPlace.latitude!, longitude: selectedPlace.longitude! };
+    const frame = window.requestAnimationFrame(() => {
+      setCenter(nextCenter);
+      setZoom((current) => Math.max(current, 13));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedPlaceId, selectedPlace?.id, selectedPlace?.latitude, selectedPlace?.longitude]);
 
   const centerWorld = project(center, zoom);
   const originX = centerWorld.x - viewport.width / 2;
