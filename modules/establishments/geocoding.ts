@@ -64,6 +64,9 @@ export function scoreNominatimCandidate(
   const regionMatch = Boolean(region && candidateText.includes(region));
   const locationContext = ['brasilia', 'luziania', 'valparaiso', 'cidade ocidental', 'planaltina', 'aguas lindas']
     .some((token) => candidateText.includes(token));
+  const expectedGoias = /\\b(go|goias)\\b/.test(normalizeGeocodingText(place.address));
+  const stateMatches = !expectedGoias || candidateText.includes('goias');
+  const validLocationContext = (regionMatch || locationContext) && stateMatches;
   const type = normalizeGeocodingText(candidate.type ?? '');
   const broadPlace = BROAD_PLACE_TYPES.has(type) || (candidate.class === 'place' && !['house', 'building'].includes(type));
 
@@ -72,9 +75,11 @@ export function scoreNominatimCandidate(
   const hasAddressSupport = addressNumbers.length > 0 && addressScore >= 0.5;
   const accepted = Number.isFinite(Number(candidate.lat))
     && Number.isFinite(Number(candidate.lon))
+    && Number(candidate.lat) >= -90 && Number(candidate.lat) <= 90
+    && Number(candidate.lon) >= -180 && Number(candidate.lon) <= 180
     && !broadPlace
     && (hasStrongName || (nameScore >= 0.65 && hasAddressSupport))
-    && (regionMatch || locationContext)
+    && validLocationContext
     && confidence >= 0.78;
 
   return {
