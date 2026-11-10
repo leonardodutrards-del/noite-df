@@ -44,14 +44,14 @@ begin
 
   wait_ms := greatest(0, ceil(extract(epoch from (greatest(current_slot, current_lease) - now_at)) * 1000)::integer);
 
-  if wait_ms > 2000 then
+  if wait_ms > 1000 then
     return wait_ms;
   end if;
 
-  -- Hold a lease for longer than the six-second upstream timeout. This prevents
+  -- Hold a lease for longer than the five-second upstream timeout. This prevents
   -- overlapping requests from concurrent Vercel instances.
   update public.nominatim_request_guard
-    set lease_until = greatest(current_slot, current_lease, now_at) + interval '8 seconds'
+    set lease_until = greatest(current_slot, current_lease, now_at) + interval '7 seconds'
     where id = 1;
 
   return wait_ms;
