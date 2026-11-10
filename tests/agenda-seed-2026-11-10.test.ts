@@ -41,7 +41,7 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(station?.source?.url).toBe('https://linktr.ee/estacaobeiralago');
     expect(station?.publicationStatus).toBe('draft');
     expect(station?.verified).toBe(false);
-    expect(station?.source?.kind).toBe('third_party');
+    expect(station?.source?.kind).toBe('external');
     expect(station?.instagram).toBeUndefined();
   });
 });
