@@ -12,6 +12,8 @@ import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 import { confirmedEventsNovember09 } from '@/data/seeds/events-2026-11-09';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
 
+const normalizeIdentity = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+
 function verifiedLocalAgenda(): EventItem[] {
   const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10]
     .filter(isConfirmedEvent);
@@ -22,8 +24,8 @@ function verifiedLocalAgenda(): EventItem[] {
   return fallback.filter((event) => {
     const sourceUrl = event.source?.url?.split('?')[0].replace(/\/$/, '');
     const sourceDate = event.startsAt?.slice(0, 10) || '';
-    const source = sourceUrl ? `${sourceUrl}|${sourceDate}|${event.place.toLowerCase()}` : '';
-    const key = `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
+    const source = sourceUrl ? `${sourceUrl.toLowerCase()}|${sourceDate}|${normalizeIdentity(event.place)}|${normalizeIdentity(event.title)}` : '';
+    const key = `${normalizeIdentity(event.place)}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.title)}`;
     if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
     seenIds.add(event.id);
     if (source) seenSources.add(source);
@@ -65,11 +67,11 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
     // Keep verified editorial additions visible with the database enabled.
     // Database records take precedence, including edits to a title or location.
     const key = (event: EventItem) =>
-      `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
+      `${normalizeIdentity(event.place)}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.title)}`;
     const sourceKey = (event: EventItem) => {
       const url = event.source?.url?.split('?')[0].replace(/\/$/, '');
       const sourceDate = event.startsAt?.slice(0, 10) || '';
-      return url ? `${url}|${sourceDate}|${event.place.toLowerCase()}` : '';
+      return url ? `${url.toLowerCase()}|${sourceDate}|${normalizeIdentity(event.place)}|${normalizeIdentity(event.title)}` : '';
     };
     const existing = new Set(publicEvents.map(key));
     const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
