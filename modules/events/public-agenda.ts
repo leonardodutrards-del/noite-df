@@ -10,16 +10,18 @@ import { confirmedEventsOctober16 } from '@/data/seeds/events-2026-10-16';
 import { confirmedEventsOctober26 } from '@/data/seeds/events-2026-10-26';
 import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 import { confirmedEventsNovember09 } from '@/data/seeds/events-2026-11-09';
+import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
 
 function verifiedLocalAgenda(): EventItem[] {
-  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09]
+  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10]
     .filter(isConfirmedEvent);
   const seenIds = new Set<string>();
   const seenSources = new Set<string>();
   const seenEvents = new Set<string>();
 
   return fallback.filter((event) => {
-    const source = event.source?.url?.split('?')[0].replace(/\/$/, '');
+    const sourceUrl = event.source?.url?.split('?')[0].replace(/\/$/, '');
+    const source = sourceUrl ? `${sourceUrl}|${event.startsAt || ''}|${event.place.toLowerCase()}` : '';
     const key = `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
     if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
     seenIds.add(event.id);
@@ -63,7 +65,10 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
     // Database records take precedence, including edits to a title or location.
     const key = (event: EventItem) =>
       `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
-    const sourceKey = (event: EventItem) => event.source?.url?.split('?')[0].replace(/\/$/, '');
+    const sourceKey = (event: EventItem) => {
+      const url = event.source?.url?.split('?')[0].replace(/\/$/, '');
+      return url ? `${url}|${event.startsAt || ''}|${event.place.toLowerCase()}` : '';
+    };
     const existing = new Set(publicEvents.map(key));
     const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
 
