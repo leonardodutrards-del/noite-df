@@ -103,7 +103,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     if (!selected || !Number.isFinite(selected.latitude) || !Number.isFinite(selected.longitude)) return;
     setCenter({ latitude: selected.latitude!, longitude: selected.longitude! });
     setZoom((current) => Math.max(current, 13));
-  }, [selectedPlaceId]);
+  }, [places, selectedPlaceId]);
 
   const centerWorld = project(center, zoom);
   const originX = centerWorld.x - viewport.width / 2;
