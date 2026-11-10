@@ -38,7 +38,7 @@ begin
 
   wait_ms := greatest(0, ceil(extract(epoch from (current_slot - now_at)) * 1000)::integer);
 
-  if wait_ms > 7000 then
+  if wait_ms > 2000 then
     return wait_ms;
   end if;
 
