@@ -51,6 +51,14 @@ describe('geocodificação OpenStreetMap', () => {
     expect(result.accepted).toBe(false);
   });
 
+  it('não confunde Planaltina-DF com Planaltina-GO', () => {
+    const result = scoreNominatimCandidate(
+      { name: 'Circuito de Comitivas', region: 'Planaltina DF', address: 'Planaltina — DF' },
+      { lat: '-15.62', lon: '-47.65', display_name: 'Circuito de Comitivas, Planaltina de Goiás, Goiás, Brasil', type: 'event_venue', class: 'leisure' }
+    );
+    expect(result.accepted).toBe(false);
+  });
+
   it('mantém resultados ambíguos para revisão em vez de gravar coordenadas', () => {
     const result = scoreNominatimCandidate(
       { name: 'Manzuá — Pontão', region: 'Lago Sul', address: 'Pontão do Lago Sul — SHIS QL 10, Lago Sul, Brasília, DF' },
