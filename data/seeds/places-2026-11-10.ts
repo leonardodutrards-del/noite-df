@@ -11,7 +11,6 @@ export const additionalPlacesNovember10: Establishment[] = [
     vibe: ['música ao vivo', 'samba', 'pagode'],
     music: ['samba', 'pagode'],
     audience: [],
-    price: 'A consultar',
     mapsQuery: 'Estação Beira Lago, SCES Trecho 1, Conjunto 3, Brasília, DF',
     agendaUrl: 'https://linktr.ee/estacaobeiralago',
     whatsapp: '5561999581311',
