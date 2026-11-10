@@ -59,6 +59,39 @@ async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
   return response.json() as Promise<NominatimCandidate[]>;
 }
 
+async function geocodeWithGlobalSlot(row: EstablishmentRow): Promise<NominatimCandidate[]> {
+  let waitMs: number;
+  try {
+    waitMs = await supabaseAdminJson<number>('rpc/claim_nominatim_request_slot', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  } catch {
+    throw new Error('NOMINATIM_RATE_GUARD_FAILED');
+  }
+
+  if (!Number.isFinite(waitMs) || waitMs < 0) {
+    throw new Error('NOMINATIM_RATE_GUARD_FAILED');
+  }
+  if (waitMs > MAX_RATE_LIMIT_WAIT_MS) {
+    throw new Error('NOMINATIM_QUEUE_BUSY:' + Math.ceil(waitMs / 1000));
+  }
+  if (waitMs > 0) await wait(waitMs);
+
+  try {
+    return await geocode(row);
+  } finally {
+    await supabaseAdminJson<unknown>('rpc/release_nominatim_request_slot', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    }).catch((error) => {
+      // The lease expires automatically if release fails, so a crashed serverless
+      // invocation cannot permanently block future geocoding.
+      console.error('nominatim-slot-release', error);
+    });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const actor = await requireMasterAdmin(request);
@@ -74,25 +107,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Cursor inválido.' }, { status: 400 });
     }
 
-    let waitMs: number;
-    try {
-      waitMs = await supabaseAdminJson<number>('rpc/claim_nominatim_request_slot', {
-        method: 'POST',
-        body: JSON.stringify({}),
-      });
-    } catch {
-      throw new Error('NOMINATIM_RATE_GUARD_FAILED');
-    }
-    if (!Number.isFinite(waitMs) || waitMs < 0) {
-      throw new Error('NOMINATIM_RATE_GUARD_FAILED');
-    }
-    if (waitMs > MAX_RATE_LIMIT_WAIT_MS) {
-      return NextResponse.json({ error: 'Fila de geocodificação ocupada. Aguarde antes de tentar novamente.' }, {
-        status: 429,
-        headers: { 'Retry-After': String(Math.ceil(waitMs / 1000)) },
-      });
-    }
-    if (waitMs > 0) await wait(waitMs);
     const params = new URLSearchParams({
       select: 'id,name,region,address,latitude,longitude',
       publication_status: 'eq.published',
@@ -132,7 +146,7 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const candidates = await geocode(row);
+        const candidates = await geocodeWithGlobalSlot(row);
         const ranked = candidates
           .map((candidate) => ({
             candidate,
@@ -200,7 +214,7 @@ export async function POST(request: NextRequest) {
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'GEOCODING_FAILED';
-        if (message === 'NOMINATIM_RATE_LIMITED' || message === 'NOMINATIM_UNAVAILABLE' || message === 'ESTABLISHMENT_COORDINATE_UPDATE_FAILED' || message === 'TimeoutError' || message === 'AbortError') {
+        if (message === 'NOMINATIM_RATE_LIMITED' || message.startsWith('NOMINATIM_QUEUE_BUSY:') || message === 'NOMINATIM_UNAVAILABLE' || message === 'ESTABLISHMENT_COORDINATE_UPDATE_FAILED' || message === 'TimeoutError' || message === 'AbortError' || message === 'NOMINATIM_RATE_GUARD_FAILED') {
           return NextResponse.json({
             error: message,
             processed: results.length,
@@ -209,7 +223,12 @@ export async function POST(request: NextRequest) {
             noMatch,
             nextCursor: rows[index - 1]?.id ?? body.afterId ?? null,
             results,
-          }, { status: message === 'NOMINATIM_RATE_LIMITED' ? 429 : 503 });
+          }, {
+            status: message === 'NOMINATIM_RATE_LIMITED' || message.startsWith('NOMINATIM_QUEUE_BUSY:') ? 429 : 503,
+            headers: message.startsWith('NOMINATIM_QUEUE_BUSY:')
+              ? { 'Retry-After': message.split(':')[1] || '3' }
+              : undefined,
+          });
         }
         results.push({ id: row.id, name: row.name, status: 'error', reason: message });
       }
