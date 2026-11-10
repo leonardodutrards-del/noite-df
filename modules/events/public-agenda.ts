@@ -76,7 +76,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
 
     return [
       ...publicEvents,
-      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09].filter((event) =>
+      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10].filter((event) =>
         Date.parse(event.expiresAt || '') > Date.now() &&
         !existing.has(key(event)) &&
         !existingSources.has(sourceKey(event))
