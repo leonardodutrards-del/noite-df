@@ -45,6 +45,9 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(weekly.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
     expect(weekly.some((event) => event.id === 'arena-dose-dupla-os-meninos-barao-2026-11-14')).toBe(true);
     expect(weekly.some((event) => event.id === 'arena-dose-dupla-10-horas-forro-2026-11-15')).toBe(true);
+    const tenHours = confirmedEventsNovember10.find((event) => event.id === 'arena-dose-dupla-10-horas-forro-2026-11-15');
+    expect(tenHours?.endsAt).toBeUndefined();
+    expect(tenHours?.dateLabel).toBe('Domingo, 15/11/2026 · a partir das 16h');
   });
 
   it('keeps Estação Beira Lago as a draft candidate without guessing an Instagram URL', () => {
