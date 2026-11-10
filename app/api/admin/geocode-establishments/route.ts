@@ -8,6 +8,23 @@ export const runtime = 'nodejs';
 export const maxDuration = 10;
 
 const BATCH_SIZE = 1;
+const MAX_RATE_LIMIT_WAIT_MS = 7_500;
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isSafeOrigin(request: NextRequest): boolean {
+  const origin = request.headers.get('origin');
+  const fetchSite = request.headers.get('sec-fetch-site');
+  if (fetchSite === 'cross-site') return false;
+  if (!origin) return true;
+  try {
+    return new URL(origin).origin === new URL(request.url).origin;
+  } catch {
+    return false;
+  }
+}
 
 type EstablishmentRow = {
   id: string;
@@ -45,7 +62,32 @@ async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
 export async function POST(request: NextRequest) {
   try {
     const actor = await requireMasterAdmin(request);
-    const body = await request.json().catch(() => ({})) as { afterId?: string };
+    if (!isSafeOrigin(request)) {
+      return NextResponse.json({ error: 'Origem da requisição não permitida.' }, { status: 403 });
+    }
+    if (!request.headers.get('content-type')?.toLowerCase().includes('application/json')) {
+      return NextResponse.json({ error: 'Content-Type inválido.' }, { status: 415 });
+    }
+    const body = await request.json().catch(() => null) as { afterId?: string } | null;
+    if (!body || typeof body !== 'object' || Array.isArray(body)
+      || (body.afterId !== undefined && (typeof body.afterId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.afterId)))) {
+      return NextResponse.json({ error: 'Cursor inválido.' }, { status: 400 });
+    }
+
+    const waitMs = await supabaseAdminJson<number>('rpc/claim_nominatim_request_slot', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+    if (!Number.isFinite(waitMs) || waitMs < 0) {
+      throw new Error('NOMINATIM_RATE_GUARD_FAILED');
+    }
+    if (waitMs > MAX_RATE_LIMIT_WAIT_MS) {
+      return NextResponse.json({ error: 'Fila de geocodificação ocupada. Aguarde antes de tentar novamente.' }, {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil(waitMs / 1000)) },
+      });
+    }
+    if (waitMs > 0) await wait(waitMs);
     const params = new URLSearchParams({
       select: 'id,name,region,address,latitude,longitude',
       publication_status: 'eq.published',
@@ -72,6 +114,17 @@ export async function POST(request: NextRequest) {
 
     for (let index = 0; index < rows.length; index += 1) {
       const row = rows[index];
+
+      if (row.latitude !== null || row.longitude !== null) {
+        needsReview += 1;
+        results.push({
+          id: row.id,
+          name: row.name,
+          status: 'needs_review',
+          reason: 'O registro já possui uma das coordenadas preenchida; revisão manual necessária para evitar sobrescrever dados existentes.',
+        });
+        continue;
+      }
 
       try {
         const candidates = await geocode(row);
@@ -105,7 +158,7 @@ export async function POST(request: NextRequest) {
 
         const latitude = Number(best.candidate.lat);
         const longitude = Number(best.candidate.lon);
-        const update = await supabaseAdminRequest('establishments?id=eq.' + encodeURIComponent(row.id), {
+        const update = await supabaseAdminRequest('establishments?id=eq.' + encodeURIComponent(row.id) + '&latitude=is.null&longitude=is.null', {
           method: 'PATCH',
           headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({ latitude, longitude }),
@@ -170,6 +223,7 @@ export async function POST(request: NextRequest) {
     const message = error instanceof Error ? error.message : 'GEOCODING_FAILED';
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
     if (message.startsWith('FORBIDDEN')) return NextResponse.json({ error: 'Acesso restrito ao Master Admin.' }, { status: 403 });
+    if (message === 'NOMINATIM_RATE_GUARD_FAILED') return NextResponse.json({ error: 'Proteção de frequência indisponível; operação interrompida por segurança.' }, { status: 503 });
     return NextResponse.json({ error: 'Não foi possível geocodificar os estabelecimentos.' }, { status: 500 });
   }
 }
