@@ -15,7 +15,8 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: 'pt-BR',
     categories: ['entertainment', 'lifestyle', 'travel'],
     icons: [
-      { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }
+      { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+      { src: '/icon-maskable.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' }
     ]
   };
 }
