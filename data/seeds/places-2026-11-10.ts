@@ -1,0 +1,45 @@
+import type { Establishment } from '@/modules/establishments/types';
+
+export const additionalPlacesNovember10: Establishment[] = [
+  {
+    id: 'estacao-beira-lago',
+    name: 'Estação Beira Lago',
+    region: 'Setor de Clubes Sul',
+    type: 'Bar',
+    description: 'Bar e espaço de eventos no Setor de Clubes Sul, com cardápio, reservas, localização e programação musical divulgados pelo Linktree oficial.',
+    address: 'SCES Trecho 1, Conjunto 3, Setor de Clubes Esportivos Sul, entre AABR e ASEEL (Avenida das Nações), Brasília/DF.',
+    vibe: ['música ao vivo', 'samba', 'pagode'],
+    music: ['samba', 'pagode'],
+    audience: [],
+    mapsQuery: 'Estação Beira Lago, SCES Trecho 1, Conjunto 3, entre AABR e ASEEL, Brasília, DF',
+    agendaUrl: 'https://linktr.ee/estacaobeiralago',
+    whatsapp: '5561999581311',
+    businessContact: {
+      phone: '(61) 99958-1311',
+      whatsapp: '(61) 99958-1311',
+      sourceUrl: 'https://linktr.ee/estacaobeiralago',
+      checkedAt: '2026-11-10',
+    },
+    menu: {
+      url: 'https://drive.google.com/drive/folders/1vojw_HmfoT58F9tzXttHlewZmoQDY7r7?usp=drive_link',
+      checkedAt: '2026-11-10',
+      images: [],
+      examples: [],
+    },
+    admissionNote: 'Entrada, couvert e valores variam conforme o evento; consulte a página oficial de ingressos.',
+    source: {
+      kind: 'external',
+      label: 'Linktree público associado à Estação Beira Lago; vínculo oficial pendente',
+      url: 'https://linktr.ee/estacaobeiralago',
+      verifiedAt: '2026-11-10',
+    },
+    verified: false,
+    publicationStatus: 'draft',
+    ownerManaged: false,
+    crowdStatus: 'a confirmar',
+    weeklySchedule: [],
+    lastUpdated: '2026-11-10',
+    publicRatings: [],
+    publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-10' },
+  },
+];
