@@ -43,6 +43,14 @@ describe('horários de funcionamento', () => {
     expect(isValidOperatingHours(partial)).toBe(false);
   });
 
+  it('valida exceções de datas especiais antes de calcular o status', () => {
+    const special = { ...base, exceptions: { '2026-11-09': { closed: false, open: '10:00', close: '16:00' } } };
+    expect(isValidOperatingHours(special)).toBe(true);
+    expect(isValidOperatingHours({ ...special, exceptions: { '2026-02-30': { closed: true, open: '10:00', close: '16:00' } } })).toBe(false);
+    expect(isValidOperatingHours({ ...special, exceptions: { '2026-11-09': { closed: false, open: '27:00', close: '16:00' } } })).toBe(false);
+    expect(getOpeningStatus({ operatingHours: { ...special, exceptions: { '2026-11-09': { closed: false, open: '27:00', close: '16:00' } } } }, new Date('2026-11-09T14:00:00.000Z')).state).toBe('unknown');
+  });
+
   it('exige fonte HTTPS válida e data real de conferência', () => {
     expect(isValidOperatingHours(base)).toBe(true);
     expect(isValidOperatingHours({ ...base, sourceUrl: undefined })).toBe(false);
