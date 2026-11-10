@@ -221,10 +221,23 @@ export async function POST(request: NextRequest) {
         const longitude = Number(best.candidate.lon);
         const update = await supabaseAdminRequest('establishments?id=eq.' + encodeURIComponent(row.id) + '&latitude=is.null&longitude=is.null', {
           method: 'PATCH',
-          headers: { Prefer: 'return=minimal' },
+          headers: { Prefer: 'return=representation' },
           body: JSON.stringify({ latitude, longitude }),
         });
         if (!update.ok) throw new Error('ESTABLISHMENT_COORDINATE_UPDATE_FAILED');
+        const updatedRows = await update.json().catch(() => null) as Array<{ id?: string }> | null;
+        if (!Array.isArray(updatedRows) || updatedRows.length !== 1 || updatedRows[0]?.id !== row.id) {
+          needsReview += 1;
+          results.push({
+            id: row.id,
+            name: row.name,
+            status: 'needs_review',
+            confidence: best.score.confidence,
+            displayName: best.candidate.display_name,
+            reason: 'O registro foi alterado durante a geocodificação; nenhuma coordenada foi sobrescrita. Confira manualmente.',
+          });
+          continue;
+        }
 
         geocoded += 1;
         results.push({
