@@ -77,6 +77,8 @@ export function scoreNominatimCandidate(
     && Number.isFinite(Number(candidate.lon))
     && Number(candidate.lat) >= -90 && Number(candidate.lat) <= 90
     && Number(candidate.lon) >= -180 && Number(candidate.lon) <= 180
+    && Number(candidate.lat) >= -18.5 && Number(candidate.lat) <= -14
+    && Number(candidate.lon) >= -49.5 && Number(candidate.lon) <= -45
     && !broadPlace
     && (hasStrongName || (nameScore >= 0.65 && hasAddressSupport))
     && validLocationContext
