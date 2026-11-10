@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
-import { places } from '@/data/places';
+import { additionalPlacesNovember10 } from '@/data/seeds/places-2026-11-10';
 import { getPublicAgenda } from '@/modules/events/public-agenda';
 
 vi.mock('@/lib/supabase-admin', () => ({
@@ -36,7 +36,7 @@ describe('Agenda diária 10–16/11/2026', () => {
   });
 
   it('keeps Estação Beira Lago as a draft candidate without guessing an Instagram URL', () => {
-    const station = places.find((place) => place.id === 'estacao-beira-lago');
+    const station = additionalPlacesNovember10.find((place) => place.id === 'estacao-beira-lago');
     expect(station).toBeDefined();
     expect(station?.source?.url).toBe('https://linktr.ee/estacaobeiralago');
     expect(station?.publicationStatus).toBe('draft');
