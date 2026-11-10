@@ -374,6 +374,7 @@ export default function OperationPage() {
         <Link className="brand" href="/">Noite DF</Link>
         <nav>
           <Link href="/admin">Master Admin</Link>
+          <Link href="/admin/geolocalizacao">Geolocalização</Link>
           <Link href="/parceiros/sobradinho">Apresentação Sobradinho</Link>
           <Link href="/planos">Planos</Link>
         </nav>
