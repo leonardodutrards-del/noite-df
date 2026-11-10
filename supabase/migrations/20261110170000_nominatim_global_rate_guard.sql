@@ -39,6 +39,10 @@ begin
 
   wait_ms := greatest(0, ceil(extract(epoch from (current_slot - now_at)) * 1000)::integer);
 
+  if wait_ms > 7000 then
+    return wait_ms;
+  end if;
+
   update public.nominatim_request_guard
     set next_slot_at = greatest(current_slot, now_at) + interval '1100 milliseconds'
     where id = 1;
