@@ -7,9 +7,31 @@ type InstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 };
 
+const DISMISS_KEY = 'noite-df:pwa-install-dismissed-at';
+const DISMISS_FOR_DAYS = 30;
+
+function wasRecentlyDismissed() {
+  try {
+    const dismissedAt = Number(window.localStorage.getItem(DISMISS_KEY));
+    return Number.isFinite(dismissedAt) && dismissedAt > 0 &&
+      Date.now() - dismissedAt < DISMISS_FOR_DAYS * 24 * 60 * 60 * 1000;
+  } catch {
+    return false;
+  }
+}
+
+function rememberDismissal() {
+  try {
+    window.localStorage.setItem(DISMISS_KEY, String(Date.now()));
+  } catch {
+    // Installation remains available when browser storage is disabled.
+  }
+}
+
 export function PwaInstallPrompt() {
   const [installEvent, setInstallEvent] = useState<InstallPromptEvent | null>(null);
   const [showIosHelp, setShowIosHelp] = useState(false);
+  const [installError, setInstallError] = useState(false);
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -22,30 +44,50 @@ export function PwaInstallPrompt() {
       window.matchMedia('(display-mode: standalone)').matches ||
       (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
-    if (isStandalone) return;
+    if (isStandalone || wasRecentlyDismissed()) return;
 
     const isIos =
       /iphone|ipad|ipod/i.test(window.navigator.userAgent) ||
       (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1);
-    const iosHelpTimer = isIos ? window.setTimeout(() => setShowIosHelp(true), 0) : undefined;
+
+    const iosHelpTimer = isIos ? window.setTimeout(() => setShowIosHelp(true), 1200) : undefined;
 
     const handleBeforeInstall = (event: Event) => {
       event.preventDefault();
+      setInstallError(false);
       setInstallEvent(event as InstallPromptEvent);
+    };
+    const handleInstalled = () => {
+      setInstallEvent(null);
+      setShowIosHelp(false);
+      rememberDismissal();
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', handleInstalled);
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      window.removeEventListener('appinstalled', handleInstalled);
       if (iosHelpTimer !== undefined) window.clearTimeout(iosHelpTimer);
     };
   }, []);
 
   async function installApp() {
     if (!installEvent) return;
-    await installEvent.prompt();
-    await installEvent.userChoice;
+    try {
+      await installEvent.prompt();
+      const choice = await installEvent.userChoice;
+      if (choice.outcome === 'dismissed') rememberDismissal();
+      setInstallEvent(null);
+    } catch {
+      setInstallError(true);
+    }
+  }
+
+  function dismissPrompt() {
+    rememberDismissal();
     setInstallEvent(null);
+    setShowIosHelp(false);
   }
 
   if (!installEvent && !showIosHelp) return null;
@@ -55,9 +97,11 @@ export function PwaInstallPrompt() {
       <div>
         <strong>Leve o Noite DF com você</strong>
         <p>
-          {installEvent
-            ? 'Instale o aplicativo para abrir a agenda direto da tela inicial.'
-            : 'No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início.'}
+          {installError
+            ? 'Não foi possível iniciar a instalação agora. Você pode tentar novamente pelo menu do navegador.'
+            : installEvent
+              ? 'Instale o aplicativo para abrir a agenda direto da tela inicial.'
+              : 'No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início.'}
         </p>
       </div>
       {installEvent ? (
@@ -69,7 +113,7 @@ export function PwaInstallPrompt() {
         className="pwa-install-close"
         type="button"
         aria-label="Fechar aviso de instalação"
-        onClick={() => setShowIosHelp(false)}
+        onClick={dismissPrompt}
       >
         ×
       </button>
