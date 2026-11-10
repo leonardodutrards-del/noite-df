@@ -35,11 +35,13 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(3);
   });
 
-  it('adds Estação Beira Lago as a verified local profile without guessing an Instagram URL', () => {
+  it('keeps Estação Beira Lago as a draft candidate without guessing an Instagram URL', () => {
     const station = places.find((place) => place.id === 'estacao-beira-lago');
     expect(station).toBeDefined();
     expect(station?.source?.url).toBe('https://linktr.ee/estacaobeiralago');
     expect(station?.publicationStatus).toBe('draft');
+    expect(station?.verified).toBe(false);
+    expect(station?.source?.kind).toBe('third_party');
     expect(station?.instagram).toBeUndefined();
   });
 });
