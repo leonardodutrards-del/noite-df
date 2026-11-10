@@ -1,6 +1,6 @@
 # Oportunidade de aquisição — Noite DF
 
-**Valor de oportunidade: R$ 45.000,00**
+**Valor de oportunidade: R$ 65.000,00**
 
 O **Noite DF** é uma plataforma digital voltada à descoberta de bares, restaurantes, eventos e experiências no Distrito Federal e Entorno. O projeto reúne presença pública para estabelecimentos, agenda de eventos e ferramentas de relacionamento e divulgação.
 
@@ -27,7 +27,7 @@ Oportunidade para empreendedor, agência, grupo de comunicação, empresa de tec
 
 ## Condições
 
-- **Preço anunciado: R$ 45.000,00.**
+- **Preço anunciado: R$ 65.000,00.**
 - Negociação direta com o fundador.
 - Condições de pagamento, escopo final dos ativos e cronograma de transferência serão formalizados em instrumento próprio.
 - Demonstração da plataforma e apresentação técnica/comercial mediante agendamento.

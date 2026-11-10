@@ -1,51 +1,37 @@
-# Estratégia de Expansão da Base de Estabelecimentos — Noite DF
+# Estratégia de expansão e operação — Noite DF
 
-Este documento estabelece as diretrizes para o crescimento ordenado e a manutenção da qualidade e veracidade dos dados do **Noite DF**, garantindo uma experiência confiável, sem dados fictícios ou placeholders.
+Este documento complementa o [Plano de negócio](./plano-de-negocio.md) e define como crescer a base com qualidade e dados verificáveis.
 
----
+## 1. Fases de cobertura
 
-## 1. Metas Graduais de Cobertura
+- **Consolidação:** completar dados, fontes, endereços, contatos e coordenadas dos estabelecimentos já publicados.
+- **Densidade regional:** ampliar cobertura onde exista capacidade de verificar e atualizar informações.
+- **Escala:** avançar para novas regiões e volumes maiores somente quando curadoria, atendimento e atualização suportarem.
 
-* **Etapa Inicial (Foco Atual):** 300 a 500 estabelecimentos com cadastro completo e verificado manualmente ou via parcerias diretas.
-* **Segunda Etapa (Escala Regional):** 1.000 ou mais estabelecimentos com integração a painéis de parceiros e verificação automatizada periódica.
+Metas internas não são resultados alcançados nem promessas públicas.
 
----
+## 2. Cobertura equilibrada
 
-## 2. Cobertura Geográfica Equilibrada
+1. Plano Piloto: Asa Norte, Asa Sul, Setor Comercial, Vila Planalto, Setor de Clubes, Granja do Torto, Noroeste e Sudoeste.
+2. Oeste/Sul: Ceilândia, Taguatinga, Samambaia, Águas Claras, Guará, Vicente Pires, Riacho Fundo, Núcleo Bandeirante, Gama e Santa Maria.
+3. Norte/Leste: Sobradinho, Planaltina, Paranoá, Itapoã, São Sebastião, Jardim Botânico, Lago Norte e Lago Sul.
+4. Entorno: Valparaíso, Cidade Ocidental, Luziânia/Jardim Ingá, Planaltina-GO/Brasilinha, Santo Antônio do Descoberto e Águas Lindas.
 
-A curadoria do Noite DF não se limita ao Plano Piloto. A base deve manter distribuição proporcional em todas as Regiões Administrativas e Entorno:
+## 3. Verificação e deduplicação
 
-1. **Plano Piloto:** Asa Norte, Asa Sul, Setor Comercial, Vila Planalto, Setor de Clubes, Granja do Torto, Noroeste, Sudoeste.
-2. **Eixo Oeste / Sul:** Ceilândia, Taguatinga, Samambaia, Águas Claras, Guará, Vicente Pires, Riacho Fundo, Núcleo Bandeirante, Gama, Santa Maria.
-3. **Eixo Norte / Leste:** Sobradinho I e II, Planaltina, Paranoá, Itapoã, São Sebastião, Jardim Botânico, Lago Norte e Lago Sul.
-4. **Entorno do DF:** Valparaíso de Goiás, Cidade Ocidental, Luziânia / Jardim Ingá, Planaltina de Goiás (Brasilinha), Santo Antônio do Descoberto, Águas Lindas.
+Normalizar nomes sem fundir unidades distintas; conferir logradouro, número, quadra/setor, região e município; manter fonte e data; validar links oficiais; geocodificar com OpenStreetMap e revisão humana de ambiguidades; não tratar centroide regional como endereço exato; suspender registros inconsistentes.
 
----
+## 4. Ciclo de atualização
 
-## 3. Critérios de Verificação e Deduplicação
+- Parceiros assistidos: até quatro lotes por mês, com revisão, publicação e link entregue.
+- Parceiros com painel: incentivar revisão semanal de perfil, agenda e promoções.
+- Curadoria geral: revisar links, endereço e funcionamento a cada 30–60 dias conforme risco e disponibilidade de fonte.
+- Eventos: verificar data, horário, local, ingresso e fonte; expirar eventos passados.
 
-Para evitar cadastros duplicados e inconsistências cadastrais:
+## 5. Ciclo de crescimento
 
-* **Nome Normalizado:** Remoção de acentuação, pontuação e sufixos repetitivos para comparação estrita de unicidade.
-* **Endereço e Coordenadas:** Validação de logradouro, número, setor/quadra e geolocalização exata no Google Maps.
-* **Links Oficiais:** Presença obrigatória de link oficial verificado (Instagram oficial ativo, Google Maps Business, WhatsApp comercial ou website).
-* **Sem Placeholders:** Nenhum registro é promovido a público sem atributos básicos reais (nome, região, tipo, descrição concisa e link de rota).
+Curadoria confiável atrai público; busca, agenda e mapa geram cliques mensuráveis; a oferta assistida de R$ 30/mês converte estabelecimentos; entrega consistente favorece renovação; parceiros que precisem de autonomia podem escolher Pro, Premium ou Enterprise sem migração automática; maior densidade aumenta utilidade e oportunidades comerciais.
 
----
+## 6. Regras operacionais
 
-## 4. Revisão Periódica e Ciclo de Atualização
-
-* **Data de Última Verificação (`lastUpdated` / `verifiedAt`):** Todo estabelecimento exibe a data de sua última checagem.
-* **Ciclo de Revalidação:**
-  * Estabelecimentos parceiros (gerenciados): revalidação semanal via painel ou webhook.
-  * Estabelecimentos da curadoria geral: checagem periódica a cada 30 a 60 dias (links ativos, funcionamento e programação).
-  * Estabelecimentos com dados inconsistentes ou fechados são suspensos imediatamente (`publicationStatus: 'suspended'`).
-
----
-
-## 5. Flywheel de Crescimento e Parcerias
-
-1. **Curadoria Inicial Confiável:** Usuários encontram informações verdadeiras e usam rotas/links.
-2. **Tráfego Qualificado:** Estabelecimentos recebem cliques para mapa, Instagram e WhatsApp.
-3. **Conversão para Parceiro:** Donos de estabelecimentos assumem seus perfis através dos planos do Noite DF para atualizar eventos, promoções e horários em tempo real.
-4. **Ciclo Positivo de Dados:** Mais estabelecimentos parceiros geram atualizações mais frequentes, dispensando intervenção manual e eliminando defasagens.
+Oferta assistida é o caminho comercial principal; assinaturas avançadas permanecem separadas; nenhuma cobrança sem aceite; nenhum evento, preço, horário, endereço ou coordenada inventados; relatórios distinguem cliques de resultados comerciais; produção exige revisão e autorização.

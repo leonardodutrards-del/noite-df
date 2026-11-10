@@ -5,8 +5,8 @@ import { resolve } from 'node:path';
 const plansRoute = readFileSync(resolve(process.cwd(), 'app/planos/page.tsx'), 'utf8');
 
 describe('navegação dos planos', () => {
-  it('direciona CTAs de planos para o catálogo de assinaturas', () => {
-    expect(plansRoute).toContain("redirect('/assinaturas')");
-    expect(plansRoute).not.toContain("redirect('/divulgar')");
+  it('direciona a oferta comercial assistida para a página de divulgação', () => {
+    expect(plansRoute).toContain("redirect('/divulgar')");
+    expect(plansRoute).not.toContain("redirect('/assinaturas')");
   });
 });
