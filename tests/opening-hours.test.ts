@@ -43,9 +43,13 @@ describe('horários de funcionamento', () => {
     expect(isValidOperatingHours(partial)).toBe(false);
   });
 
-  it('valida formato de horário e exige fonte HTTPS quando informada', () => {
+  it('exige fonte HTTPS válida e data real de conferência', () => {
     expect(isValidOperatingHours(base)).toBe(true);
+    expect(isValidOperatingHours({ ...base, sourceUrl: undefined })).toBe(false);
     expect(isValidOperatingHours({ ...base, sourceUrl: 'http://example.com' })).toBe(false);
+    expect(isValidOperatingHours({ ...base, sourceUrl: 'https://' })).toBe(false);
+    expect(isValidOperatingHours({ ...base, checkedAt: undefined })).toBe(false);
+    expect(isValidOperatingHours({ ...base, checkedAt: '2026-02-30' })).toBe(false);
     expect(isValidOperatingHours({ ...base, schedule: { monday: { closed: false, open: '25:00', close: '18:00' } } })).toBe(false);
   });
 });
