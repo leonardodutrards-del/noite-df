@@ -248,6 +248,8 @@ export async function POST(request: NextRequest) {
         longitude: finalCoordinates.longitude,
         publicationStatus: 'draft',
       },
+    }).catch((auditError) => {
+      console.error('establishment-discovery-audit', auditError);
     });
 
     return NextResponse.json({ establishment: inserted[0] }, { status: 201 });
