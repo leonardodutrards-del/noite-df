@@ -345,8 +345,7 @@ export default function BecomePartnerPage() {
                 o painel do parceiro fica disponível para escolher o plano e gerenciar a página.
               </p>
               <div className="partner-confirm-actions">
-                <Link className="button" href="/parceiro">Abrir painel do parceiro</Link>
-                <Link className="button ghost" href="/planos">Conhecer os planos</Link>
+                <Link className="button" href="/">Voltar para a programação</Link>
               </div>
             </div>
           )}
