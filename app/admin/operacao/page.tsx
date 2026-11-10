@@ -458,7 +458,7 @@ export default function OperationPage() {
         <span className="badge">Ativação rápida</span>
         <h2 style={{ marginBottom: 8 }}>Vincular o dono ao estabelecimento na hora</h2>
         <p style={{ color: 'var(--muted)', marginTop: 0 }}>
-          O dono cria a conta em <Link href="/cadastro" target="_blank">/cadastro</Link>. Depois, informe o mesmo e-mail aqui para liberar o painel sem esperar a fila normal de aprovação.
+          O dono cria uma conta pessoal em <Link href="/cadastro/usuario" target="_blank">/cadastro/usuario</Link>. Depois, informe o mesmo e-mail aqui para liberar o painel sem esperar a fila normal de aprovação.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(240px, 1fr) minmax(240px, 1fr) auto', gap: 12, alignItems: 'end' }}>
           <label>

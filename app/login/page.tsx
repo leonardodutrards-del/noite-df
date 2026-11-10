@@ -7,7 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect');
+  const requestedRedirect = searchParams.get('redirect');
+  const redirectPath = requestedRedirect?.startsWith('/') && !requestedRedirect.startsWith('//') ? requestedRedirect : null;
   const confirmationPending = searchParams.get('confirmacao') === 'pendente';
 
   const [email, setEmail] = useState('');
@@ -63,10 +64,12 @@ function LoginForm() {
       const role = data.user?.role;
       if (redirectPath) {
         router.push(redirectPath);
-      } else if (role === 'admin' || role === 'master_admin') {
+      } else if (role === 'admin' || role === 'master_admin' || role === 'operator') {
         router.push('/admin');
-      } else {
+      } else if (role === 'partner') {
         router.push('/parceiro');
+      } else {
+        router.push('/');
       }
       router.refresh();
     } catch (err) {
@@ -80,10 +83,10 @@ function LoginForm() {
   return (
     <div style={{ maxWidth: 480, margin: '40px auto 80px' }}>
       <div className="panel" style={{ padding: 32 }}>
-        <span className="badge" style={{ marginBottom: 16 }}>Acesso restrito</span>
+        <span className="badge" style={{ marginBottom: 16 }}>Acesso à sua conta</span>
         <h1 style={{ fontSize: '2.2rem', margin: '8px 0 12px' }}>Entrar no Noite DF</h1>
         <p style={{ marginBottom: 24, fontSize: 14 }}>
-          Acesse a área autenticada para gerenciar seu estabelecimento ou administrar o portal.
+          Entre para acessar seus favoritos e sua programação salva. O acesso de estabelecimento é separado e depende de aprovação.
         </p>
 
         {confirmationPending && !error && (
@@ -116,7 +119,7 @@ function LoginForm() {
             <label style={{ display: 'block', marginBottom: 6, fontWeight: 700, fontSize: 14 }}>E-mail</label>
             <input
               type="email"
-              placeholder="seu@estabelecimento.com.br"
+              placeholder="voce@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -167,9 +170,9 @@ function LoginForm() {
 
         <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: 14, textAlign: 'center' }}>
           <p style={{ margin: 0 }}>
-            É dono de estabelecimento e ainda não tem conta?{' '}
-            <Link href="/cadastro" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
-              Cadastre seu perfil
+            Representa um bar ou casa de eventos?{' '}
+            <Link href="/cadastro/estabelecimento" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>
+              Acessar área de estabelecimento
             </Link>
           </p>
         </div>
