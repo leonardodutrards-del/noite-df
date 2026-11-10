@@ -62,3 +62,28 @@ A agenda semanal já estava publicada em produção. A conferência direta da p�
 - O evento do Texxas Bar é publicado como evento confirmado, mas o perfil do estabelecimento permanece em draft.
 - Nenhuma gravação direta no Supabase, nenhum contato a estabelecimentos e nenhuma publicação no Instagram/feed/Stories.
 - O PR separado #140, com eventos após 16/11, permanece em revisão e não deve ser mesclado sem CI executado no head atual.
+
+## Complemento 2 — Arena Dose Dupla (10/11/2026)
+
+A busca complementar resolveu a identidade que estava pendente como “Dose Dupla”: as páginas oficiais de ingresso de 14 e 15/11, o endereço QNM 09 e a página oficial anterior da casa convergem para **Arena Dose Dupla**, em Ceilândia Sul. A checagem de duplicidade no Supabase por nome normalizado, variações, slug, Instagram, endereço e telefone retornou zero perfis existentes.
+
+### Eventos confirmados
+
+- **Sábado, 14/11, 21h30–04h30 — Os Meninos de Barão no Dose Dupla.** A página oficial do ingresso usa o nome curto “Dose Dupla”, informa QNM 09 (antigo Lá Casa) e confirma a janela completa. A página oficial da Arena Dose Dupla para 15/11 e o endereço público confirmam a mesma unidade.
+  - Fonte: [Sympla oficial — Os Meninos de Barão no Dose Dupla](https://www.sympla.com.br/evento/os-meninos-de-barao-no-dose-dupla-ceilandia/3587126).
+- **Domingo, 15/11, a partir das 16h — 10 Horas de Forró / Encontro dos Forrozeiros.** Atrações: R10, Kuque do Piseiro, Pyt Sakaninha e Celso Alves. Evento 18+, com documento oficial com foto.
+  - Fonte: [Sympla oficial — 10 Horas de Forró](https://www.sympla.com.br/evento/10-horas-de-forro/3614097).
+  - A página descreve “10 horas de forró”, mas o horário estruturado de término aparece igual ao início (16h). Não foi inferido horário final; a agenda exibe somente “a partir das 16h” e registra a inconsistência.
+
+### Perfil candidato em rascunho
+
+- **Arena Dose Dupla** — tipo casa de show; região Ceilândia; endereço QNM 09, Conjunto A, Lote 2/4, Ceilândia Sul; telefone/WhatsApp (61) 99943-9720.
+- A página oficial anterior da Sympla cita diretamente `@arenadosedupla`; a URL direta foi tentada, mas o Instagram não abriu pela ferramenta. O Google Business confirma o endereço e o telefone.
+- Perfil preparado como `draft`, `verified=false`; não foi inserido diretamente no Supabase nem publicado.
+
+### Totais após este complemento
+
+- A agenda de produção tinha 36 cards antes deste complemento.
+- Este PR adiciona 2 eventos confirmados; total esperado após merge: 38 cards.
+- O status “Dose Dupla pendente” do primeiro adendo foi resolvido como Arena Dose Dupla. Permanecem pendentes Vera Cruz Gastrobar (divergência de endereço) e Viracopos Gastro bar (data/endereço inconsistentes).
+- O total de 93 estabelecimentos publicados sem agenda datada localizada não muda: Arena Dose Dupla ainda é um candidato novo e não faz parte dos 104 perfis publicados.
