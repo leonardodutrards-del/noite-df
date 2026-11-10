@@ -30,7 +30,7 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(agenda.filter((event) => event.id.startsWith('ticiana-')).length).toBe(6);
     expect(agenda.filter((event) => event.id.startsWith('ambar-')).length).toBe(3);
     expect(agenda.filter((event) => event.id.startsWith('birosca-')).length).toBe(2);
-    expect(agenda.filter((event) => event.id.startsWith('porks-')).length).toBe(3);
+    expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(3);
   });
 
   it('adds Estação Beira Lago as a verified local profile without guessing an Instagram URL', () => {
