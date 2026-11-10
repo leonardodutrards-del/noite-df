@@ -65,15 +65,22 @@ export function scoreNominatimCandidate(
   const locationContext = ['brasilia', 'luziania', 'valparaiso', 'cidade ocidental', 'planaltina', 'aguas lindas']
     .some((token) => candidateText.includes(token));
   const normalizedAddress = normalizeGeocodingText(place.address);
-  const expectedGoias = /\b(go|goias)\b/.test(normalizedAddress);
-  const expectedDistritoFederal = /\b(df|distrito federal)\b/.test(normalizedAddress);
+  const normalizedRegion = normalizeGeocodingText(place.region);
+  const addressSaysGoias = /\b(go|goias)\b/.test(normalizedAddress);
+  const addressSaysDistritoFederal = /\b(df|distrito federal)\b/.test(normalizedAddress);
+  const regionSaysGoias = /\b(go|goias)\b/.test(normalizedRegion);
+  const regionSaysDistritoFederal = /\b(df|distrito federal)\b/.test(normalizedRegion);
+  const ambiguousRegionState = !addressSaysGoias && !addressSaysDistritoFederal
+    && regionSaysGoias && regionSaysDistritoFederal;
+  const expectedGoias = addressSaysGoias || (!addressSaysDistritoFederal && regionSaysGoias && !regionSaysDistritoFederal);
+  const expectedDistritoFederal = addressSaysDistritoFederal || (!addressSaysGoias && regionSaysDistritoFederal && !regionSaysGoias);
   const candidateGoias = /\bgoias\b/.test(candidateText);
   const candidateDistritoFederal = /\b(distrito federal|df)\b/.test(candidateText);
-  const stateMatches = expectedGoias
+  const stateMatches = !ambiguousRegionState && (expectedGoias
     ? candidateGoias
     : expectedDistritoFederal
       ? candidateDistritoFederal
-      : true;
+      : true);
   const validLocationContext = (regionMatch || locationContext) && stateMatches;
   const type = normalizeGeocodingText(candidate.type ?? '');
   const broadPlace = BROAD_PLACE_TYPES.has(type) || (candidate.class === 'place' && !['house', 'building'].includes(type));
