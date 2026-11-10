@@ -19,7 +19,9 @@ const DEFAULT_CENTER = { latitude: -15.7939, longitude: -47.8828 };
 function hasValidCoordinates(place: Establishment): boolean {
   return Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
     && place.latitude! >= -90 && place.latitude! <= 90
-    && place.longitude! >= -180 && place.longitude! <= 180;
+    && place.longitude! >= -180 && place.longitude! <= 180
+    && place.latitude! >= -18.5 && place.latitude! <= -14
+    && place.longitude! >= -49.5 && place.longitude! <= -45;
 }
 
 function project({ latitude, longitude }: Coordinate, zoom: number): WorldPoint {
@@ -255,7 +257,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
                 <strong>{selectedPlace.name}</strong>
                 <span>{selectedPlace.address || selectedPlace.region}</span>
                 {hasValidCoordinates(selectedPlace) ? (
-                  <a className="button" href={'https://www.google.com/maps/dir/?api=1&destination=' + selectedPlace.latitude + ',' + selectedPlace.longitude} target="_blank" rel="noreferrer">Traçar rota ↗</a>
+                  <a className="button" href={'https://www.google.com/maps/dir/?api=1&destination=' + selectedPlace.latitude + ',' + selectedPlace.longitude} target="_blank" rel="noopener noreferrer">Traçar rota ↗</a>
                 ) : (
                   <span className="smart-map-pending">Localização exata pendente de validação</span>
                 )}
