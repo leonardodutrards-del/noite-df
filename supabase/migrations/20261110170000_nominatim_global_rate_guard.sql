@@ -77,3 +77,18 @@ revoke all on function public.claim_nominatim_request_slot() from public, anon, 
 grant execute on function public.claim_nominatim_request_slot() to service_role;
 revoke all on function public.release_nominatim_request_slot() from public, anon, authenticated;
 grant execute on function public.release_nominatim_request_slot() to service_role;
+
+
+-- Cache provider responses to avoid repeating identical public Nominatim queries.
+create table if not exists public.establishment_geocode_cache (
+  id uuid primary key default gen_random_uuid(),
+  establishment_id uuid not null references public.establishments(id) on delete cascade,
+  query_fingerprint text not null check (query_fingerprint ~ '^[0-9a-f]{64}$'),
+  candidates jsonb not null default '[]'::jsonb check (jsonb_typeof(candidates) = 'array'),
+  created_at timestamptz not null default now(),
+  unique (establishment_id, query_fingerprint)
+);
+
+alter table public.establishment_geocode_cache enable row level security;
+revoke all on public.establishment_geocode_cache from public, anon, authenticated;
+grant select, insert, update on public.establishment_geocode_cache to service_role;
