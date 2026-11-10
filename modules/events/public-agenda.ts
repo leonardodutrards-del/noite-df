@@ -21,7 +21,8 @@ function verifiedLocalAgenda(): EventItem[] {
 
   return fallback.filter((event) => {
     const sourceUrl = event.source?.url?.split('?')[0].replace(/\/$/, '');
-    const source = sourceUrl ? `${sourceUrl}|${event.startsAt || ''}|${event.place.toLowerCase()}` : '';
+    const sourceDate = event.startsAt?.slice(0, 10) || '';
+    const source = sourceUrl ? `${sourceUrl}|${sourceDate}|${event.place.toLowerCase()}` : '';
     const key = `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
     if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
     seenIds.add(event.id);
@@ -67,7 +68,8 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
       `${event.place.toLowerCase()}|${Date.parse(event.startsAt || '')}|${event.title.toLowerCase()}`;
     const sourceKey = (event: EventItem) => {
       const url = event.source?.url?.split('?')[0].replace(/\/$/, '');
-      return url ? `${url}|${event.startsAt || ''}|${event.place.toLowerCase()}` : '';
+      const sourceDate = event.startsAt?.slice(0, 10) || '';
+      return url ? `${url}|${sourceDate}|${event.place.toLowerCase()}` : '';
     };
     const existing = new Set(publicEvents.map(key));
     const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
