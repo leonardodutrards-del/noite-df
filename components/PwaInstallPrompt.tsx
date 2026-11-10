@@ -24,7 +24,9 @@ export function PwaInstallPrompt() {
 
     if (isStandalone) return;
 
-    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    const isIos =
+      /iphone|ipad|ipod/i.test(window.navigator.userAgent) ||
+      (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1);
     const iosHelpTimer = isIos ? window.setTimeout(() => setShowIosHelp(true), 0) : undefined;
 
     const handleBeforeInstall = (event: Event) => {
