@@ -11,12 +11,14 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 10–16/11/2026', () => {
-  it('contains 25 dated events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember10).toHaveLength(25);
-    expect(new Set(confirmedEventsNovember10.map((event) => event.id)).size).toBe(25);
+  it('contains 27 dated events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember10).toHaveLength(27);
+    expect(new Set(confirmedEventsNovember10.map((event) => event.id)).size).toBe(27);
     expect(confirmedEventsNovember10.some((event) => event.id === 'infinu-cabare-noturno-plastique-noir-2026-11-15')).toBe(true);
     expect(confirmedEventsNovember10.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
     expect(confirmedEventsNovember10.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
+    expect(confirmedEventsNovember10.some((event) => event.id === 'arena-dose-dupla-os-meninos-barao-2026-11-14')).toBe(true);
+    expect(confirmedEventsNovember10.some((event) => event.id === 'arena-dose-dupla-10-horas-forro-2026-11-15')).toBe(true);
 
     for (const event of confirmedEventsNovember10) {
       expect(event.startsAt).toBeTruthy();
@@ -41,6 +43,8 @@ describe('Agenda diária 10–16/11/2026', () => {
     const weekly = getWeeklyAgenda(agenda);
     expect(weekly.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
     expect(weekly.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
+    expect(weekly.some((event) => event.id === 'arena-dose-dupla-os-meninos-barao-2026-11-14')).toBe(true);
+    expect(weekly.some((event) => event.id === 'arena-dose-dupla-10-horas-forro-2026-11-15')).toBe(true);
   });
 
   it('keeps Estação Beira Lago as a draft candidate without guessing an Instagram URL', () => {
@@ -58,5 +62,12 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(texxas?.verified).toBe(false);
     expect(texxas?.instagram).toBe('https://www.instagram.com/texxasbarbsb/');
     expect(texxas?.source?.url).toBe('https://www.sympla.com.br/evento/lgc/3586903');
+
+    const arena = additionalPlacesNovember10.find((place) => place.id === 'arena-dose-dupla');
+    expect(arena).toBeDefined();
+    expect(arena?.publicationStatus).toBe('draft');
+    expect(arena?.verified).toBe(false);
+    expect(arena?.instagram).toBe('https://www.instagram.com/arenadosedupla/');
+    expect(arena?.source?.url).toBe('https://www.sympla.com.br/evento/10-horas-de-forro/3614097');
   });
 });
