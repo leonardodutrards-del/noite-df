@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireMasterAdmin } from '@/modules/auth/session';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
@@ -26,6 +27,8 @@ function isSafeOrigin(request: NextRequest): boolean {
   }
 }
 
+type GeocodeCacheRow = { candidates: NominatimCandidate[] };
+
 type EstablishmentRow = {
   id: string;
   name: string;
@@ -35,8 +38,11 @@ type EstablishmentRow = {
   longitude: number | null;
 };
 
-async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
-  const query = [row.name, row.address, row.region, 'Brasil'].filter(Boolean).join(', ');
+function buildGeocodingQuery(row: EstablishmentRow): string {
+  return [row.name, row.address, row.region, 'Brasil'].filter(Boolean).join(', ');
+}
+
+async function geocode(query: string): Promise<NominatimCandidate[]> {
   const url = new URL('https://nominatim.openstreetmap.org/search');
   url.searchParams.set('q', query);
   url.searchParams.set('format', 'jsonv2');
@@ -59,7 +65,7 @@ async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
   return response.json() as Promise<NominatimCandidate[]>;
 }
 
-async function geocodeWithGlobalSlot(row: EstablishmentRow): Promise<NominatimCandidate[]> {
+async function geocodeWithGlobalSlot(query: string): Promise<NominatimCandidate[]> {
   let waitMs: number;
   try {
     waitMs = await supabaseAdminJson<number>('rpc/claim_nominatim_request_slot', {
@@ -79,7 +85,7 @@ async function geocodeWithGlobalSlot(row: EstablishmentRow): Promise<NominatimCa
   if (waitMs > 0) await wait(waitMs);
 
   try {
-    return await geocode(row);
+    return await geocode(query);
   } finally {
     await supabaseAdminJson<unknown>('rpc/release_nominatim_request_slot', {
       method: 'POST',
@@ -146,7 +152,43 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const candidates = await geocodeWithGlobalSlot(row);
+        const query = buildGeocodingQuery(row);
+        const queryFingerprint = createHash('sha256').update(query).digest('hex');
+        const cacheParams = new URLSearchParams({
+          select: 'candidates',
+          establishment_id: 'eq.' + row.id,
+          query_fingerprint: 'eq.' + queryFingerprint,
+          limit: '1',
+        });
+        let cacheRows: GeocodeCacheRow[];
+        try {
+          cacheRows = await supabaseAdminJson<GeocodeCacheRow[]>(
+            'establishment_geocode_cache?' + cacheParams.toString()
+          );
+        } catch {
+          throw new Error('GEOCODING_CACHE_UNAVAILABLE');
+        }
+
+        let candidates = Array.isArray(cacheRows[0]?.candidates)
+          ? cacheRows[0].candidates
+          : null;
+        if (!candidates) {
+          candidates = await geocodeWithGlobalSlot(query);
+          const cacheWrite = await supabaseAdminRequest(
+            'establishment_geocode_cache?on_conflict=establishment_id%2Cquery_fingerprint',
+            {
+              method: 'POST',
+              headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+              body: JSON.stringify({
+                establishment_id: row.id,
+                query_fingerprint: queryFingerprint,
+                candidates,
+              }),
+            }
+          );
+          if (!cacheWrite.ok) throw new Error('GEOCODING_CACHE_WRITE_FAILED');
+        }
+
         const ranked = candidates
           .map((candidate) => ({
             candidate,
@@ -214,7 +256,7 @@ export async function POST(request: NextRequest) {
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'GEOCODING_FAILED';
-        if (message === 'NOMINATIM_RATE_LIMITED' || message.startsWith('NOMINATIM_QUEUE_BUSY:') || message === 'NOMINATIM_UNAVAILABLE' || message === 'ESTABLISHMENT_COORDINATE_UPDATE_FAILED' || message === 'TimeoutError' || message === 'AbortError' || message === 'NOMINATIM_RATE_GUARD_FAILED') {
+        if (message === 'NOMINATIM_RATE_LIMITED' || message.startsWith('NOMINATIM_QUEUE_BUSY:') || message === 'NOMINATIM_UNAVAILABLE' || message === 'ESTABLISHMENT_COORDINATE_UPDATE_FAILED' || message === 'TimeoutError' || message === 'AbortError' || message === 'NOMINATIM_RATE_GUARD_FAILED' || message === 'GEOCODING_CACHE_UNAVAILABLE' || message === 'GEOCODING_CACHE_WRITE_FAILED') {
           return NextResponse.json({
             error: message,
             processed: results.length,
@@ -247,7 +289,7 @@ export async function POST(request: NextRequest) {
     const message = error instanceof Error ? error.message : 'GEOCODING_FAILED';
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
     if (message.startsWith('FORBIDDEN')) return NextResponse.json({ error: 'Acesso restrito ao Master Admin.' }, { status: 403 });
-    if (message === 'NOMINATIM_RATE_GUARD_FAILED') return NextResponse.json({ error: 'Proteção de frequência indisponível; operação interrompida por segurança.' }, { status: 503 });
+    if (message === 'NOMINATIM_RATE_GUARD_FAILED' || message === 'GEOCODING_CACHE_UNAVAILABLE' || message === 'GEOCODING_CACHE_WRITE_FAILED') return NextResponse.json({ error: 'Proteção de geocodificação indisponível; operação interrompida por segurança.' }, { status: 503 });
     return NextResponse.json({ error: 'Não foi possível geocodificar os estabelecimentos.' }, { status: 500 });
   }
 }
