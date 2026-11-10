@@ -25,7 +25,7 @@ export function PwaInstallPrompt() {
     if (isStandalone) return;
 
     const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    if (isIos) setShowIosHelp(true);
+    const iosHelpTimer = isIos ? window.setTimeout(() => setShowIosHelp(true), 0) : undefined;
 
     const handleBeforeInstall = (event: Event) => {
       event.preventDefault();
@@ -33,7 +33,10 @@ export function PwaInstallPrompt() {
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      if (iosHelpTimer !== undefined) window.clearTimeout(iosHelpTimer);
+    };
   }, []);
 
   async function installApp() {
