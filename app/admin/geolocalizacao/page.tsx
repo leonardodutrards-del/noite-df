@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type GeocodeResult = {
   id: string;
@@ -21,6 +21,16 @@ type DiscoveryCandidate = {
   address: string;
   duplicateMatches: Array<{ id: string; name: string; region: string }>;
   wazeUrl: string;
+};
+
+type PendingPlace = {
+  id: string;
+  name: string;
+  region: string;
+  address: string;
+  latitude: number | null;
+  longitude: number | null;
+  publication_status: string;
 };
 
 const TYPES = ['Bar', 'Restaurante', 'Boate', 'Casa de show', 'Evento agro', 'Gastrobar', 'Pub', 'Complexo gastronômico', 'Clube / espaço de eventos'];
@@ -50,6 +60,51 @@ export default function GeolocalizacaoAdminPage() {
   const [wazeShareUrl, setWazeShareUrl] = useState('');
   const [discoveryBusy, setDiscoveryBusy] = useState(false);
   const [discoveryMessage, setDiscoveryMessage] = useState('');
+  const [pendingPlaces, setPendingPlaces] = useState<PendingPlace[]>([]);
+  const [pendingWazeLinks, setPendingWazeLinks] = useState<Record<string, string>>({});
+  const [pendingLoading, setPendingLoading] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState('');
+
+  async function loadPendingPlaces() {
+    setPendingLoading(true);
+    try {
+      const response = await fetch('/api/admin/discover-establishments?pending=1', { cache: 'no-store' });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Falha ao carregar locais pendentes.');
+      setPendingPlaces(payload.establishments ?? []);
+    } catch (error) {
+      setPendingMessage(error instanceof Error ? error.message : 'Falha ao carregar locais pendentes.');
+    } finally {
+      setPendingLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    void loadPendingPlaces();
+  }, []);
+
+  async function importWazeLocation(place: PendingPlace) {
+    const wazeUrl = pendingWazeLinks[place.id]?.trim();
+    if (!wazeUrl || pendingLoading) return;
+    setPendingLoading(true);
+    setPendingMessage('Importando coordenadas do link Waze de ' + place.name + '…');
+    try {
+      const response = await fetch('/api/admin/discover-establishments', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'import_waze_location', establishmentId: place.id, wazeUrl }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Não foi possível importar a localização.');
+      setPendingWazeLinks((current) => ({ ...current, [place.id]: '' }));
+      setPendingMessage('Localização Waze importada para ' + place.name + '.');
+      await loadPendingPlaces();
+    } catch (error) {
+      setPendingMessage(error instanceof Error ? error.message : 'Falha ao importar localização.');
+    } finally {
+      setPendingLoading(false);
+    }
+  }
 
   async function searchMissingEstablishments() {
     if (searchName.trim().length < 3 || discoveryBusy) return;
@@ -172,6 +227,56 @@ export default function GeolocalizacaoAdminPage() {
         <span className="badge">Curadoria geográfica</span>
         <h1>Geolocalização dos estabelecimentos</h1>
         <p>Localize cadastros existentes, pesquise novos lugares no DF e Entorno e confira cada ponto no Waze antes de incluir. Novos registros entram como rascunho, nunca publicados automaticamente.</p>
+      </section>
+
+      <section className="panel" style={{ display: 'grid', gap: 14, marginBottom: 22 }}>
+        <div>
+          <span className="eyebrow">Importação direta do Waze</span>
+          <h2 style={{ marginTop: 6 }}>Coordenadas dos locais já cadastrados</h2>
+          <p>Para cada local sem coordenadas, abra a busca no Waze, escolha o destino correto, use Compartilhar rota e cole aqui o link compartilhado. O sistema importa o parâmetro ll e não sobrescreve coordenadas já existentes.</p>
+        </div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+          <strong>{pendingPlaces.length} locais com localização pendente</strong>
+          <button className="button ghost" type="button" disabled={pendingLoading} onClick={() => void loadPendingPlaces()}>Atualizar lista</button>
+        </div>
+        {pendingMessage ? <div className="notice" role="status">{pendingMessage}</div> : null}
+        {pendingLoading && pendingPlaces.length === 0 ? <p>Carregando estabelecimentos…</p> : null}
+        <div style={{ display: 'grid', gap: 10 }}>
+          {pendingPlaces.map((place) => {
+            const hasPartialCoordinates = place.latitude !== null || place.longitude !== null;
+            const wazeSearch = 'https://waze.com/ul?q=' + encodeURIComponent([place.name, place.address, place.region].filter(Boolean).join(', '));
+            return (
+              <article key={place.id} className="panel" style={{ display: 'grid', gap: 8, padding: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+                  <strong>{place.name}</strong>
+                  <small>{place.region} · {place.publication_status}</small>
+                </div>
+                <small>{place.address}</small>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <a className="button ghost" href={wazeSearch} target="_blank" rel="noopener noreferrer">Buscar no Waze ↗</a>
+                  {hasPartialCoordinates ? <small>Coordenada parcial já existe — revisão manual, sem sobrescrita automática.</small> : null}
+                </div>
+                {!hasPartialCoordinates ? (
+                  <>
+                    <label style={{ display: 'grid', gap: 6 }}>Cole o link compartilhado do Waze
+                      <input
+                        value={pendingWazeLinks[place.id] || ''}
+                        onChange={(event) => setPendingWazeLinks((current) => ({ ...current, [place.id]: event.target.value }))}
+                        placeholder="https://waze.com/ul?ll=..."
+                      />
+                    </label>
+                    <div>
+                      <button className="button" type="button" disabled={pendingLoading || !(pendingWazeLinks[place.id] || '').trim()} onClick={() => void importWazeLocation(place)}>
+                        Importar coordenadas do Waze
+                      </button>
+                    </div>
+                  </>
+                ) : null}
+              </article>
+            );
+          })}
+          {!pendingLoading && pendingPlaces.length === 0 ? <p>Não há locais pendentes de coordenadas.</p> : null}
+        </div>
       </section>
 
       <section className="panel" style={{ display: 'grid', gap: 16, marginBottom: 22 }}>
