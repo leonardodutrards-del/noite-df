@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     }
     const body = await request.json().catch(() => null) as { afterId?: string } | null;
     if (!body || typeof body !== 'object' || Array.isArray(body)
-      || (body.afterId !== undefined && (typeof body.afterId !== 'string' || body.afterId.length > 160 || !/^[\p{L}\p{N}][\p{L}\p{N}._-]*$/u.test(body.afterId)))) {
+      || (body.afterId !== undefined && (typeof body.afterId !== 'string' || body.afterId.length > 160 || !/^[^\\s/?#]+$/.test(body.afterId)))) {
       return NextResponse.json({ error: 'Cursor inválido.' }, { status: 400 });
     }
 
