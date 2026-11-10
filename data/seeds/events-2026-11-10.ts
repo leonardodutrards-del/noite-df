@@ -408,4 +408,37 @@ export const confirmedEventsNovember10: EventItem[] = [
     source: officialSource('Sympla oficial — evento do organizador TEXXAS BAR', 'https://www.sympla.com.br/evento/lgc/3586903'),
   },
 
+
+  {
+    id: 'arena-dose-dupla-os-meninos-barao-2026-11-14',
+    title: 'Os Meninos de Barão no Dose Dupla',
+    place: 'Arena Dose Dupla',
+    region: 'Ceilândia',
+    dateLabel: 'Sábado, 14/11/2026 · 21h30–04h30',
+    category: 'Música ao vivo',
+    description: 'Os Meninos de Barão estão de volta à casa. O ingresso identifica o local como Dose Dupla, QNM 09 (antigo Lá Casa); a página oficial da Arena Dose Dupla para 15/11 e o endereço público confirmam a mesma unidade em Ceilândia.',
+    startsAt: '2026-11-14T21:30:00-03:00',
+    endsAt: '2026-11-15T04:30:00-03:00',
+    expiresAt: '2026-11-15T04:30:00-03:00',
+    admissionNote: 'A página de ingresso não informa valor no conteúdo consultado.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: officialSource('Sympla oficial — Os Meninos de Barão no Dose Dupla', 'https://www.sympla.com.br/evento/os-meninos-de-barao-no-dose-dupla-ceilandia/3587126'),
+  },
+  {
+    id: 'arena-dose-dupla-10-horas-forro-2026-11-15',
+    title: '10 Horas de Forró — Encontro dos Forrozeiros',
+    place: 'Arena Dose Dupla',
+    region: 'Ceilândia',
+    dateLabel: 'Domingo, 15/11/2026 · a partir das 16h',
+    category: 'Forró',
+    description: 'Encontro dos forrozeiros com R10, Kuque do Piseiro, Pyt Sakaninha e Celso Alves. A página oficial informa início às 16h e descreve a programação como 10 horas de forró, mas não publica um horário final específico.',
+    startsAt: '2026-11-15T16:00:00-03:00',
+    expiresAt: '2026-11-16T00:00:00-03:00',
+    admissionNote: 'Evento para maiores de 18 anos, com documento oficial com foto. O valor do ingresso não está informado na página consultada.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: officialSource('Sympla oficial — 10 Horas de Forró / Arena Dose Dupla', 'https://www.sympla.com.br/evento/10-horas-de-forro/3614097'),
+  },
+
 ];
