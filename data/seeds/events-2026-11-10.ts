@@ -321,7 +321,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     startsAt: '2026-11-15T18:00:00-03:00',
     endsAt: '2026-11-15T23:59:00-03:00',
     expiresAt: '2026-11-15T23:59:00-03:00',
-    admissionNote: 'O 1º lote de R$ 50 aparece esgotado; 2º lote anunciado a R$ 60 na página oficial, sujeito a alteração.',
+    admissionNote: 'Preço e lotes não aparecem no conteúdo acessível da página; conferir disponibilidade diretamente na Shotgun.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
     source: officialSource('Shotgun oficial — Cabaré Noturno / Plastique Noir', 'https://shotgun.live/pt-br/events/cabare-noturno-plastique-noir'),
