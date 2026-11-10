@@ -87,6 +87,20 @@ export async function GET(request: NextRequest) {
     await requireMasterAdmin(request);
     if (!isSafeOrigin(request)) return NextResponse.json({ error: 'Origem não permitida.' }, { status: 403 });
 
+    if (request.nextUrl.searchParams.get('pending') === '1') {
+      const params = new URLSearchParams({
+        select: 'id,name,region,address,latitude,longitude,publication_status',
+        or: '(latitude.is.null,longitude.is.null)',
+        order: 'name.asc',
+        limit: '300',
+      });
+      const establishments = await supabaseAdminJson<Array<{
+        id: string; name: string; region: string; address: string;
+        latitude: number | null; longitude: number | null; publication_status: string;
+      }>>('establishments?' + params.toString());
+      return NextResponse.json({ establishments });
+    }
+
     const query = (request.nextUrl.searchParams.get('q') || '').trim();
     const region = (request.nextUrl.searchParams.get('region') || '').trim();
     if (query.length < 3 || query.length > 100 || region.length > 100) {
@@ -170,6 +184,39 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json().catch(() => null) as Record<string, unknown> | null;
+
+    if (body?.action === 'import_waze_location') {
+      const establishmentId = typeof body.establishmentId === 'string' ? body.establishmentId.trim() : '';
+      const wazeUrl = body.wazeUrl;
+      const coordinates = parseWazeCoordinates(wazeUrl);
+      if (!establishmentId || establishmentId.length > 160 || !coordinates) {
+        return NextResponse.json({ error: 'Informe o estabelecimento e um link compartilhado do Waze contendo coordenadas ll válidas para DF/Entorno.' }, { status: 400 });
+      }
+      const update = await supabaseAdminRequest(
+        'establishments?id=eq.' + encodeURIComponent(establishmentId) + '&latitude=is.null&longitude=is.null',
+        {
+          method: 'PATCH',
+          headers: { Prefer: 'return=representation' },
+          body: JSON.stringify({ latitude: coordinates.latitude, longitude: coordinates.longitude, updated_at: new Date().toISOString() }),
+        }
+      );
+      if (!update.ok) return NextResponse.json({ error: 'Não foi possível atualizar a localização.' }, { status: 502 });
+      const updatedRows = await update.json() as Array<{ id: string; name: string; latitude: number; longitude: number }>;
+      if (!Array.isArray(updatedRows) || updatedRows.length !== 1 || updatedRows[0]?.id !== establishmentId) {
+        return NextResponse.json({ error: 'O cadastro já possui coordenadas ou foi alterado. Nada foi sobrescrito.' }, { status: 409 });
+      }
+      await authService.logAudit({
+        actorId: actor.id,
+        actorEmail: actor.email,
+        actorRole: actor.role,
+        action: 'import_waze_establishment_coordinates',
+        entityType: 'establishment',
+        entityId: establishmentId,
+        details: { provider: 'Waze shared deep link', latitude: coordinates.latitude, longitude: coordinates.longitude },
+      }).catch((auditError) => console.error('waze-location-audit', auditError));
+      return NextResponse.json({ establishment: updatedRows[0] });
+    }
+
     const name = typeof body?.name === 'string' ? body.name.trim() : '';
     const region = typeof body?.region === 'string' ? body.region.trim() : '';
     const address = typeof body?.address === 'string' ? body.address.trim() : '';
