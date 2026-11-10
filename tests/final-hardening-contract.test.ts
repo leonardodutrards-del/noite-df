@@ -28,6 +28,9 @@ describe('Hardening final de produção', () => {
     expect(partnerSignupPage).toContain('/parceiro/onboarding');
     expect(partnerOnboardingPage).toContain('Solicitação enviada');
     expect(partnerOnboardingPage).not.toContain('Abrir painel do parceiro');
+    const partnershipService = readFileSync(resolve(process.cwd(), 'modules/partnerships/service.ts'), 'utf8');
+    expect(partnershipService).toContain("if (!selectedId && existingRows.length > 0)");
+    expect(partnershipService).toContain("CLAIM_ESTABLISHMENT_ALREADY_EXISTS");
   });
 
   it('aposenta telas legadas de autenticação de visitante', () => {
