@@ -78,4 +78,40 @@ export const additionalPlacesNovember10: Establishment[] = [
     lastUpdated: '2026-11-10',
   },
 
+
+  {
+    id: 'arena-dose-dupla',
+    name: 'Arena Dose Dupla',
+    region: 'Ceilândia',
+    type: 'Casa de show',
+    description: 'Casa de shows e festas em Ceilândia Sul, identificada em páginas oficiais recentes como Arena Dose Dupla e, no ingresso de 14/11, como Dose Dupla (QNM 09, antigo Lá Casa). A programação confirmada nesta semana inclui shows e encontro de forrozeiros.',
+    address: 'QNM 09, Conjunto A, Lote 2/4, Ceilândia Sul, Brasília/DF.',
+    vibe: ['forró', 'piseiro', 'música ao vivo'],
+    music: ['forró', 'piseiro'],
+    audience: ['18+ em eventos noturnos'],
+    instagram: 'https://www.instagram.com/arenadosedupla/',
+    whatsapp: '5561999439720',
+    businessContact: {
+      phone: '(61) 99943-9720',
+      whatsapp: '(61) 99943-9720',
+      sourceUrl: 'https://www.sympla.com.br/evento/10-horas-de-forro/3614097',
+      checkedAt: '2026-11-10',
+    },
+    agendaUrl: 'https://www.sympla.com.br/evento/10-horas-de-forro/3614097',
+    admissionNote: 'Eventos recentes informam classificação 18+; valores variam conforme a programação.',
+    mapsQuery: 'Arena Dose Dupla, QNM 09, Conjunto A, Lote 2/4, Ceilândia Sul, Brasília, DF',
+    source: {
+      kind: 'official',
+      label: 'Sympla oficial — 10 Horas de Forró; evento oficial anterior da casa cita @arenadosedupla; Google Business confirma endereço e telefone',
+      url: 'https://www.sympla.com.br/evento/10-horas-de-forro/3614097',
+      verifiedAt: '2026-11-10',
+    },
+    verified: false,
+    publicationStatus: 'draft',
+    ownerManaged: false,
+    crowdStatus: 'a confirmar',
+    weeklySchedule: [],
+    lastUpdated: '2026-11-10',
+  },
+
 ];
