@@ -43,6 +43,7 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
       "style-src 'self' 'unsafe-inline'",
       scriptSrc,
       "connect-src 'self' https://*.supabase.co https://api.mercadopago.com",
+      "frame-src https://www.google.com https://*.google.com",
       "upgrade-insecure-requests",
     ].join('; ')
   );
