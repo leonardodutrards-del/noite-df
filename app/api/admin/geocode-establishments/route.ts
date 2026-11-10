@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     if (!isSafeOrigin(request)) {
       return NextResponse.json({ error: 'Origem da requisição não permitida.' }, { status: 403 });
     }
-    if (!request.headers.get('content-type')?.toLowerCase().includes('application/json')) {
+    if (request.headers.get('content-type')?.split(';', 1)[0].trim().toLowerCase() !== 'application/json') {
       return NextResponse.json({ error: 'Content-Type inválido.' }, { status: 415 });
     }
     const body = await request.json().catch(() => null) as { afterId?: string } | null;
