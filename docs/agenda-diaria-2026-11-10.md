@@ -222,6 +222,6 @@ Além desses 28, a base Supabase já contém **Alberto Moreno — O Rei do Brega
 ## Estado de publicação atualizado
 
 - **PR #138** foi integrado à `main`; o deployment de produção da Vercel está **READY** no commit `9edd64c478686e3f4855fd8d6d59f9a2b38266f9`. A agenda de 10–16/11 (23 novos eventos, somados aos 12 anteriores) está publicada.
-- Os **28 eventos futuros após 16/11** estão no PR #140, em revisão. O Vercel Preview está READY; o workflow de CI do GitHub ainda está pendente de execução. Esses eventos ainda não estão publicados.
+- Os **28 eventos futuros após 16/11** estão no PR #140, em revisão. O Vercel Preview está READY no commit `603339336fd3e959198a3d11cbf11e634d5abe86`; o GitHub Actions não executou no head atual. O único CI verde disponível (#471) é de um commit anterior (`a26d9a`), portanto não valida esta revisão. Esses eventos ainda não estão publicados.
 - Nenhum perfil novo foi inserido no Supabase nesta rodada; Estação Beira Lago permanece draft.
 - Nenhuma mensagem foi enviada a estabelecimentos e nenhum feed/Story do Noite DF foi publicado.
