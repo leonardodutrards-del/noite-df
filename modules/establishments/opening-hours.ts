@@ -98,7 +98,15 @@ export function isValidOperatingHours(value: unknown): value is OperatingHours {
     if (typeof day.closed !== 'boolean') return false;
     if (!day.closed && (!/^([01]\d|2[0-3]):[0-5]\d$/.test(day.open) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(day.close) || day.open === day.close)) return false;
   }
-  if (hours.sourceUrl && !/^https:\/\//i.test(hours.sourceUrl)) return false;
-  if (hours.checkedAt && !/^\d{4}-\d{2}-\d{2}$/.test(hours.checkedAt)) return false;
+  if (typeof hours.sourceUrl !== 'string' || !hours.sourceUrl.trim()) return false;
+  try {
+    const source = new URL(hours.sourceUrl);
+    if (source.protocol !== 'https:' || !source.hostname || source.username || source.password) return false;
+  } catch {
+    return false;
+  }
+  if (typeof hours.checkedAt !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(hours.checkedAt)) return false;
+  const checkedDate = new Date(`${hours.checkedAt}T00:00:00.000Z`);
+  if (!Number.isFinite(checkedDate.getTime()) || checkedDate.toISOString().slice(0, 10) !== hours.checkedAt) return false;
   return true;
 }
