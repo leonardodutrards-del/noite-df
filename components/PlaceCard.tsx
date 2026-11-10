@@ -8,6 +8,7 @@ import { getConfirmedCrowdStatus, getConfirmedSchedules, hasConfirmedRating, has
 import { track } from '@/lib/analytics';
 import { PlaceContact } from '@/components/PlaceContact';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { OpeningStatus } from '@/components/OpeningStatus';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
@@ -36,6 +37,7 @@ export function PlaceCard({ place }: { place: Place }) {
       {hasRealValue(place.address) && <p style={{ marginTop: '6px', color: 'var(--muted)', fontSize: '13px' }}>📍 {place.address}</p>}
       <div className="tags">
         {place.verified && <span className="tag verified">✔ verificado</span>}
+        <OpeningStatus place={place} />
         {place.ownerManaged && <span className="tag">gerenciado pelo local</span>}
         {confirmedCrowd && <span className="tag">lotação: {confirmedCrowd}</span>}
         {hasRealValue(place.region) && <span className="tag">{place.region}</span>}

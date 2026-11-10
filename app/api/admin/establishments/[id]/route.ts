@@ -3,6 +3,7 @@ import { requireMasterAdmin } from '@/modules/auth/session';
 import { establishmentService } from '@/modules/establishments/service';
 import { sanitizeTextInput } from '@/lib/security';
 import { validateMenu } from '@/modules/establishments/menu';
+import { isValidOperatingHours } from '@/modules/establishments/opening-hours';
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -39,6 +40,12 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     const updates: Record<string, unknown> = {};
     if (body.menu !== undefined) updates.menu = validateMenu(body.menu);
+    if (body.operatingHours !== undefined) {
+      if (!isValidOperatingHours(body.operatingHours)) {
+        return NextResponse.json({ error: 'Informe horários válidos e uma fonte HTTPS.' }, { status: 400 });
+      }
+      updates.operatingHours = body.operatingHours;
+    }
 
     if (body.name && typeof body.name === 'string') {
       updates.name = sanitizeTextInput(body.name);

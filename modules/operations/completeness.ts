@@ -16,7 +16,7 @@ export function calculateEstablishmentCompleteness(place: Establishment): Comple
     ['descrição', text(place.description, 40)],
     ['endereço', text(place.address, 8)],
     ['contato', Boolean(place.businessContact?.phone || place.businessContact?.whatsapp || place.whatsapp)],
-    ['horários', Boolean(place.operatingHours?.text)],
+    ['horários', Boolean(place.operatingHours && ('text' in place.operatingHours ? text(place.operatingHours.text) : Object.keys(place.operatingHours.schedule).length > 0))],
     ['agenda', Boolean(place.agendaUrl || place.weeklySchedule.length > 0)],
     ['cardápio', Boolean(place.menu?.url)],
     ['faixa de preço', Boolean(place.price)],

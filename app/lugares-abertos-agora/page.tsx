@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { places } from '@/data/places';
+import { establishmentService } from '@/modules/establishments/service';
+import { getOpeningStatus } from '@/modules/establishments/opening-hours';
 import { PlaceCard } from '@/components/PlaceCard';
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || 'https://www.noitedf.com.br';
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function LugaresAbertosAgoraPage() {
+export default async function LugaresAbertosAgoraPage() {
+  const places = await establishmentService.search({});
+  const openPlaces = places.filter((place) => getOpeningStatus(place).state === 'open');
+  const unknownCount = places.filter((place) => getOpeningStatus(place).state === 'unknown').length;
   return (
     <main className="container">
       <header className="topbar">
@@ -36,16 +40,16 @@ export default function LugaresAbertosAgoraPage() {
         <span className="badge">Status em tempo real</span>
         <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', margin: '12px 0' }}>Funcionamento em Tempo Real</h1>
         <p style={{ maxWidth: '750px', fontSize: '16px' }}>
-          O Noite DF prioriza dados honestos: não simulamos status fictício de portas abertas.
-          Confira abaixo os locais verificados e use os links oficiais de rota no Google Maps e Instagram para confirmação imediata.
+          Exibimos apenas estabelecimentos com horários confirmados e dentro do período de validade da conferência. O status é calculado pelo horário local de Brasília.
         </p>
       </section>
 
-      <div className="grid">
-        {places.slice(0, 12).map((place) => (
+      <p style={{ color: 'var(--muted)' }}>{openPlaces.length} locais abertos agora · {unknownCount} sem horário confirmado (não incluídos nesta lista).</p>
+      {openPlaces.length ? <div className="grid">
+        {openPlaces.map((place) => (
           <PlaceCard key={place.id} place={place} />
         ))}
-      </div>
+      </div> : <div className="empty"><h2>Nenhum local com horário confirmado aberto neste momento.</h2><p>Consulte os perfis e confirme diretamente com o estabelecimento.</p></div>}
 
       <footer className="footer">
         <Link href="/" style={{ color: 'var(--muted)', textDecoration: 'none' }}>← Voltar para a página principal do Noite DF</Link>
