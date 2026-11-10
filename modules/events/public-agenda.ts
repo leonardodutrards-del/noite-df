@@ -71,7 +71,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
     const sourceKey = (event: EventItem) => {
       const url = event.source?.url?.split('?')[0].replace(/\/$/, '');
       const sourceDate = event.startsAt?.slice(0, 10) || '';
-      return url ? `${url.toLowerCase()}|${sourceDate}|${normalizeIdentity(event.place)}|${normalizeIdentity(event.title)}` : '';
+      return url ? `${url.toLowerCase()}|${sourceDate}|${normalizeIdentity(event.place)}` : '';
     };
     const existing = new Set(publicEvents.map(key));
     const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
