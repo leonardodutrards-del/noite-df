@@ -139,7 +139,7 @@ const paymentStateLabels: Record<CommercialHealth['firstPayment']['state'], stri
 export default function OperationPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [query, setQuery] = useState('');
-  const [regionFilter, setRegionFilter] = useState('Sobradinho');
+  const [regionFilter, setRegionFilter] = useState('todas');
   const [message, setMessage] = useState('');
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   const [activationEmail, setActivationEmail] = useState('');
@@ -502,6 +502,18 @@ export default function OperationPage() {
         <article><span>Trials</span><strong>{summary.visits.trial}</strong></article>
         <article><span>Assinaram</span><strong>{summary.visits.signed}</strong></article>
       </div>
+
+      <section className="panel" style={{ marginBottom: 18 }}>
+        <h2 style={{ marginTop: 0 }}>Funil de conversão · todas as regiões</h2>
+        <div className="metrics-grid">
+          <article><span>Não contatados</span><strong>{summary.counts.uncontacted}</strong></article>
+          <article><span>Contato enviado</span><strong>{summary.counts.contacted}</strong></article>
+          <article><span>Respondeu</span><strong>{summary.counts.replied}</strong></article>
+          <article><span>Teste grátis</span><strong>{summary.counts.trial}</strong></article>
+          <article><span>Parceiros ativos</span><strong>{summary.counts.partner}</strong></article>
+          <article><span>Não convertidos</span><strong>{summary.counts.lost}</strong></article>
+        </div>
+      </section>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: 12, marginBottom: 18 }}>
         <input
