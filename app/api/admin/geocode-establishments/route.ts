@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 10;
 
 const BATCH_SIZE = 1;
-const MAX_RATE_LIMIT_WAIT_MS = 7_500;
+const MAX_RATE_LIMIT_WAIT_MS = 2_000;
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -74,10 +74,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Cursor inválido.' }, { status: 400 });
     }
 
-    const waitMs = await supabaseAdminJson<number>('rpc/claim_nominatim_request_slot', {
-      method: 'POST',
-      body: JSON.stringify({}),
-    });
+    let waitMs: number;
+    try {
+      waitMs = await supabaseAdminJson<number>('rpc/claim_nominatim_request_slot', {
+        method: 'POST',
+        body: JSON.stringify({}),
+      });
+    } catch {
+      throw new Error('NOMINATIM_RATE_GUARD_FAILED');
+    }
     if (!Number.isFinite(waitMs) || waitMs < 0) {
       throw new Error('NOMINATIM_RATE_GUARD_FAILED');
     }
