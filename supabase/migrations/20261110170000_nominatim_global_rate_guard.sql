@@ -9,8 +9,7 @@ values (1, now())
 on conflict (id) do nothing;
 
 alter table public.nominatim_request_guard enable row level security;
-revoke all on public.nominatim_request_guard from public, anon, authenticated;
-grant select, insert, update, delete on public.nominatim_request_guard to service_role;
+revoke all on public.nominatim_request_guard from public, anon, authenticated, service_role;
 
 create or replace function public.claim_nominatim_request_slot()
 returns integer
