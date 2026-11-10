@@ -1241,3 +1241,11 @@ body {
 @media (max-width: 480px) {
   .pwa-install { align-items: flex-start; flex-wrap: wrap; gap: 8px 12px; }
 }
+
+/* Keep the install prompt clear of the mobile navigation bar. */
+@media (max-width: 700px) {
+  .pwa-install {
+    z-index: 100;
+    bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+}
