@@ -11,6 +11,9 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 
 export function PlaceCard({ place }: { place: Place }) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`;
+  const wazeUrl = Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
+    ? `https://waze.com/ul?ll=${encodeURIComponent(place.latitude + ',' + place.longitude)}&navigate=yes&utm_source=noitedf`
+    : `https://waze.com/ul?q=${encodeURIComponent(place.mapsQuery || [place.name, place.address, place.region].join(', '))}`;
   const instagramUrl = place.instagram?.trim();
   const confirmedCrowd = getConfirmedCrowdStatus(place.crowdStatus);
   const confirmedSchedule = getConfirmedSchedules(place.weeklySchedule);
@@ -98,6 +101,9 @@ export function PlaceCard({ place }: { place: Place }) {
             onClick={() => track('map_click', { placeId: place.id, placeName: place.name })}
           >
             Ver no mapa
+          </a>
+          <a href={wazeUrl} target="_blank" rel="noopener noreferrer">
+            Abrir no Waze ↗
           </a>
           <a href={mapsUrl} target="_blank" rel="noreferrer" aria-label={`Buscar avaliações de ${place.name} no Google Maps`}>
             Buscar avaliações no Google ↗
