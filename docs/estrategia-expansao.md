@@ -1,51 +1,54 @@
-# Estratégia de Expansão da Base de Estabelecimentos — Noite DF
+# Estratégia de expansão e operação — Noite DF
 
-Este documento estabelece as diretrizes para o crescimento ordenado e a manutenção da qualidade e veracidade dos dados do **Noite DF**, garantindo uma experiência confiável, sem dados fictícios ou placeholders.
+Este documento complementa o [Plano de negócio](./plano-de-negocio.md) e define como crescer a base com qualidade, cobertura regional e dados verificáveis.
 
----
+## 1. Metas graduais de cobertura
 
-## 1. Metas Graduais de Cobertura
+- **Fase de consolidação:** priorizar a qualidade dos estabelecimentos já publicados, completando endereços, contatos, fontes e coordenadas.
+- **Fase de densidade regional:** ampliar a cobertura onde exista capacidade real de verificar e atualizar os dados.
+- **Fase de escala:** expandir para novas regiões e para 1.000 ou mais estabelecimentos somente quando os processos de curadoria, atendimento e atualização suportarem esse volume.
 
-* **Etapa Inicial (Foco Atual):** 300 a 500 estabelecimentos com cadastro completo e verificado manualmente ou via parcerias diretas.
-* **Segunda Etapa (Escala Regional):** 1.000 ou mais estabelecimentos com integração a painéis de parceiros e verificação automatizada periódica.
+As metas são direcionadores internos, não resultados alcançados nem promessas públicas.
 
----
+## 2. Cobertura geográfica equilibrada
 
-## 2. Cobertura Geográfica Equilibrada
+A curadoria deve abranger o DF e o Entorno, evitando concentração exclusiva no Plano Piloto:
 
-A curadoria do Noite DF não se limita ao Plano Piloto. A base deve manter distribuição proporcional em todas as Regiões Administrativas e Entorno:
+1. **Plano Piloto:** Asa Norte, Asa Sul, Setor Comercial, Vila Planalto, Setor de Clubes, Granja do Torto, Noroeste e Sudoeste.
+2. **Eixo Oeste / Sul:** Ceilândia, Taguatinga, Samambaia, Águas Claras, Guará, Vicente Pires, Riacho Fundo, Núcleo Bandeirante, Gama e Santa Maria.
+3. **Eixo Norte / Leste:** Sobradinho, Planaltina, Paranoá, Itapoã, São Sebastião, Jardim Botânico, Lago Norte e Lago Sul.
+4. **Entorno:** Valparaíso, Cidade Ocidental, Luziânia/Jardim Ingá, Planaltina-GO/Brasilinha, Santo Antônio do Descoberto e Águas Lindas.
 
-1. **Plano Piloto:** Asa Norte, Asa Sul, Setor Comercial, Vila Planalto, Setor de Clubes, Granja do Torto, Noroeste, Sudoeste.
-2. **Eixo Oeste / Sul:** Ceilândia, Taguatinga, Samambaia, Águas Claras, Guará, Vicente Pires, Riacho Fundo, Núcleo Bandeirante, Gama, Santa Maria.
-3. **Eixo Norte / Leste:** Sobradinho I e II, Planaltina, Paranoá, Itapoã, São Sebastião, Jardim Botânico, Lago Norte e Lago Sul.
-4. **Entorno do DF:** Valparaíso de Goiás, Cidade Ocidental, Luziânia / Jardim Ingá, Planaltina de Goiás (Brasilinha), Santo Antônio do Descoberto, Águas Lindas.
+## 3. Verificação e deduplicação
 
----
+- Normalizar nomes para identificar duplicatas sem fundir unidades distintas.
+- Conferir logradouro, número, setor/quadra, região e município.
+- Manter fonte e data da última verificação.
+- Validar links oficiais e contato comercial.
+- Usar geocodificação OpenStreetMap/Nominatim com respeito aos termos de uso e revisão humana de resultados ambíguos.
+- Não publicar coordenada aproximada como se fosse a porta do estabelecimento.
+- Suspender registros fechados ou inconsistentes até nova confirmação.
 
-## 3. Critérios de Verificação e Deduplicação
+## 4. Ciclo de atualização
 
-Para evitar cadastros duplicados e inconsistências cadastrais:
+- Parceiros assistidos: receber até quatro lotes de atualização por mês, revisar, publicar e registrar o link entregue.
+- Parceiros com painel: incentivar revisão semanal de perfil, agenda e promoções.
+- Curadoria geral: revisar links, endereço e funcionamento a cada 30–60 dias, conforme risco e disponibilidade de fonte.
+- Eventos: verificar data, horário, local, ingresso e fonte antes de publicar; expirar eventos passados.
 
-* **Nome Normalizado:** Remoção de acentuação, pontuação e sufixos repetitivos para comparação estrita de unicidade.
-* **Endereço e Coordenadas:** Validação de logradouro, número, setor/quadra e geolocalização exata no Google Maps.
-* **Links Oficiais:** Presença obrigatória de link oficial verificado (Instagram oficial ativo, Google Maps Business, WhatsApp comercial ou website).
-* **Sem Placeholders:** Nenhum registro é promovido a público sem atributos básicos reais (nome, região, tipo, descrição concisa e link de rota).
+## 5. Ciclo de crescimento
 
----
+1. Curadoria confiável atrai usuários que procuram opções locais.
+2. Busca, agenda e mapa geram cliques mensuráveis para os estabelecimentos.
+3. A oferta assistida de R$ 30/mês converte casas que precisam de ajuda para manter perfil e agenda.
+4. Entrega consistente e relatório simples favorecem renovação.
+5. Parceiros com necessidade de autonomia podem migrar voluntariamente para Pro, Premium ou Enterprise, sem alteração automática de contratos.
+6. Maior densidade e atualização tornam o guia mais útil e ampliam oportunidades comerciais.
 
-## 4. Revisão Periódica e Ciclo de Atualização
+## 6. Regras operacionais
 
-* **Data de Última Verificação (`lastUpdated` / `verifiedAt`):** Todo estabelecimento exibe a data de sua última checagem.
-* **Ciclo de Revalidação:**
-  * Estabelecimentos parceiros (gerenciados): revalidação semanal via painel ou webhook.
-  * Estabelecimentos da curadoria geral: checagem periódica a cada 30 a 60 dias (links ativos, funcionamento e programação).
-  * Estabelecimentos com dados inconsistentes ou fechados são suspensos imediatamente (`publicationStatus: 'suspended'`).
-
----
-
-## 5. Flywheel de Crescimento e Parcerias
-
-1. **Curadoria Inicial Confiável:** Usuários encontram informações verdadeiras e usam rotas/links.
-2. **Tráfego Qualificado:** Estabelecimentos recebem cliques para mapa, Instagram e WhatsApp.
-3. **Conversão para Parceiro:** Donos de estabelecimentos assumem seus perfis através dos planos do Noite DF para atualizar eventos, promoções e horários em tempo real.
-4. **Ciclo Positivo de Dados:** Mais estabelecimentos parceiros geram atualizações mais frequentes, dispensando intervenção manual e eliminando defasagens.
+- A oferta assistida é o caminho comercial principal; o catálogo de assinaturas avançadas permanece separado.
+- Nenhuma cobrança é iniciada sem combinação e aceite explícitos.
+- Nenhum evento, preço, horário, endereço ou coordenada deve ser inventado.
+- Relatórios devem separar visualizações e cliques de resultados comerciais efetivos.
+- Mudanças estruturais ou publicação em produção seguem revisão e autorização.
