@@ -95,13 +95,15 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     const fitted = fitCoordinates(mappedPlaces);
     setCenter(fitted.center);
     setZoom(fitted.zoom);
-  }, [mappedPlaces.length]);
+  }, [mappedPlaces]);
 
   useEffect(() => {
-    if (!selectedPlace || !Number.isFinite(selectedPlace.latitude) || !Number.isFinite(selectedPlace.longitude)) return;
-    setCenter({ latitude: selectedPlace.latitude!, longitude: selectedPlace.longitude! });
+    if (!selectedPlaceId) return;
+    const selected = places.find((place) => place.id === selectedPlaceId);
+    if (!selected || !Number.isFinite(selected.latitude) || !Number.isFinite(selected.longitude)) return;
+    setCenter({ latitude: selected.latitude!, longitude: selected.longitude! });
     setZoom((current) => Math.max(current, 13));
-  }, [selectedPlace?.id]);
+  }, [selectedPlaceId]);
 
   const centerWorld = project(center, zoom);
   const originX = centerWorld.x - viewport.width / 2;
