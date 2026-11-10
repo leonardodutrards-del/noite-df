@@ -19,8 +19,8 @@ export const metadata: Metadata = {
       { url: '/icon.svg', type: 'image/svg+xml', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: ['/icon.png'],
-    apple: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: ['/icon.svg'],
+    apple: [{ url: '/apple-icon.svg', type: 'image/svg+xml', sizes: '180x180' }],
   },
   openGraph: {
     title: 'Noite DF',
