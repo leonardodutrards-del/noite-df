@@ -24,7 +24,7 @@ function wait(ms: number) {
 }
 
 async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
-  const query = [row.name, row.address, row.region, 'Distrito Federal, Brasil'].filter(Boolean).join(', ');
+  const query = [row.name, row.address, row.region, 'Brasil'].filter(Boolean).join(', ');
   const url = new URL('https://nominatim.openstreetmap.org/search');
   url.searchParams.set('q', query);
   url.searchParams.set('format', 'jsonv2');
@@ -143,6 +143,8 @@ export async function POST(request: NextRequest) {
             latitude,
             longitude,
           },
+        }).catch((auditError) => {
+          console.error('geocode-audit-log', auditError);
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'GEOCODING_FAILED';
