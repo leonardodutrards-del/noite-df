@@ -7,8 +7,7 @@ import { scoreNominatimCandidate, type NominatimCandidate } from '@/modules/esta
 export const runtime = 'nodejs';
 export const maxDuration = 10;
 
-const BATCH_SIZE = 3;
-const REQUEST_INTERVAL_MS = 1_100;
+const BATCH_SIZE = 1;
 
 type EstablishmentRow = {
   id: string;
@@ -18,10 +17,6 @@ type EstablishmentRow = {
   latitude: number | null;
   longitude: number | null;
 };
-
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
   const query = [row.name, row.address, row.region, 'Brasil'].filter(Boolean).join(', ');
@@ -39,7 +34,7 @@ async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
       'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.5',
     },
     cache: 'no-store',
-    signal: AbortSignal.timeout(8_000),
+    signal: AbortSignal.timeout(6_000),
   });
 
   if (response.status === 429) throw new Error('NOMINATIM_RATE_LIMITED');
@@ -76,7 +71,6 @@ export async function POST(request: NextRequest) {
     let noMatch = 0;
 
     for (let index = 0; index < rows.length; index += 1) {
-      if (index > 0) await wait(REQUEST_INTERVAL_MS);
       const row = rows[index];
 
       try {
@@ -148,7 +142,7 @@ export async function POST(request: NextRequest) {
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'GEOCODING_FAILED';
-        if (message === 'NOMINATIM_RATE_LIMITED' || message === 'NOMINATIM_UNAVAILABLE') {
+        if (message === 'NOMINATIM_RATE_LIMITED' || message === 'NOMINATIM_UNAVAILABLE' || message === 'ESTABLISHMENT_COORDINATE_UPDATE_FAILED' || message === 'TimeoutError' || message === 'AbortError') {
           return NextResponse.json({
             error: message,
             processed: results.length,
