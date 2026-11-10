@@ -64,7 +64,7 @@ export function scoreNominatimCandidate(
   const regionMatch = Boolean(region && candidateText.includes(region));
   const locationContext = ['brasilia', 'luziania', 'valparaiso', 'cidade ocidental', 'planaltina', 'aguas lindas']
     .some((token) => candidateText.includes(token));
-  const expectedGoias = /\\b(go|goias)\\b/.test(normalizeGeocodingText(place.address));
+  const expectedGoias = /\b(go|goias)\b/.test(normalizeGeocodingText(place.address));
   const stateMatches = !expectedGoias || candidateText.includes('goias');
   const validLocationContext = (regionMatch || locationContext) && stateMatches;
   const type = normalizeGeocodingText(candidate.type ?? '');
