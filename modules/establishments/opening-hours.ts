@@ -96,8 +96,8 @@ export function isValidOperatingHours(value: unknown): value is OperatingHours {
     if (!day || typeof day !== 'object') return false;
     const value = day as Partial<DayOpeningHours>;
     if (typeof value.closed !== 'boolean') return false;
-    if (typeof value.open !== 'string' || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(value.open)) return false;
-    if (typeof value.close !== 'string' || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(value.close)) return false;
+    if (typeof value.open !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(value.open)) return false;
+    if (typeof value.close !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(value.close)) return false;
     return value.open !== value.close;
   };
   for (const key of ORDER) {
@@ -106,7 +106,7 @@ export function isValidOperatingHours(value: unknown): value is OperatingHours {
   if (hours.exceptions !== undefined) {
     if (!hours.exceptions || typeof hours.exceptions !== 'object' || Array.isArray(hours.exceptions)) return false;
     for (const [date, day] of Object.entries(hours.exceptions)) {
-      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) return false;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
       const parsedDate = new Date(`${date}T00:00:00.000Z`);
       if (!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) return false;
       if (!isValidDay(day)) return false;
