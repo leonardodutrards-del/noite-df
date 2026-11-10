@@ -263,9 +263,15 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
                 <strong>{selectedPlace.name}</strong>
                 <span>{selectedPlace.address || selectedPlace.region}</span>
                 {hasValidCoordinates(selectedPlace) ? (
-                  <a className="button" href={'https://www.google.com/maps/dir/?api=1&destination=' + selectedPlace.latitude + ',' + selectedPlace.longitude} target="_blank" rel="noopener noreferrer">Traçar rota ↗</a>
+                  <div className="smart-map-route-links">
+                    <a className="button" href={'https://www.google.com/maps/dir/?api=1&destination=' + selectedPlace.latitude + ',' + selectedPlace.longitude} target="_blank" rel="noopener noreferrer">Google Maps ↗</a>
+                    <a className="button ghost" href={'https://waze.com/ul?ll=' + encodeURIComponent(selectedPlace.latitude + ',' + selectedPlace.longitude) + '&navigate=yes&utm_source=noitedf'} target="_blank" rel="noopener noreferrer">Waze ↗</a>
+                  </div>
                 ) : (
-                  <span className="smart-map-pending">Localização exata pendente de validação</span>
+                  <div className="smart-map-route-links">
+                    <span className="smart-map-pending">Localização exata pendente de validação</span>
+                    <a className="button ghost" href={'https://waze.com/ul?q=' + encodeURIComponent([selectedPlace.name, selectedPlace.address, selectedPlace.region, 'DF ou GO'].filter(Boolean).join(', '))} target="_blank" rel="noopener noreferrer">Pesquisar no Waze ↗</a>
+                  </div>
                 )}
               </>
             ) : <span>Nenhum local corresponde aos filtros atuais.</span>}
