@@ -24,7 +24,7 @@ function verifiedLocalAgenda(): EventItem[] {
   return fallback.filter((event) => {
     const sourceUrl = event.source?.url?.split('?')[0].replace(/\/$/, '');
     const sourceDate = event.startsAt?.slice(0, 10) || '';
-    const source = sourceUrl ? `${sourceUrl.toLowerCase()}|${sourceDate}|${normalizeIdentity(event.place)}|${normalizeIdentity(event.title)}` : '';
+    const source = sourceUrl ? `${sourceUrl.toLowerCase()}|${sourceDate}|${normalizeIdentity(event.place)}` : '';
     const key = `${normalizeIdentity(event.place)}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.title)}`;
     if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
     seenIds.add(event.id);
