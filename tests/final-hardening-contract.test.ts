@@ -7,6 +7,7 @@ const signupRoute = readFileSync(resolve(process.cwd(), 'app/api/auth/signup/rou
 const signupPage = readFileSync(resolve(process.cwd(), 'app/cadastro/usuario/page.tsx'), 'utf8');
 const signupChoicePage = readFileSync(resolve(process.cwd(), 'app/cadastro/page.tsx'), 'utf8');
 const partnerSignupPage = readFileSync(resolve(process.cwd(), 'app/cadastro/estabelecimento/page.tsx'), 'utf8');
+const partnerOnboardingPage = readFileSync(resolve(process.cwd(), 'app/parceiro/onboarding/page.tsx'), 'utf8');
 const loginPage = readFileSync(resolve(process.cwd(), 'app/login/page.tsx'), 'utf8');
 const visitorSignupPage = readFileSync(resolve(process.cwd(), 'app/visitante/cadastro/page.tsx'), 'utf8');
 const visitorLoginPage = readFileSync(resolve(process.cwd(), 'app/visitante/login/page.tsx'), 'utf8');
@@ -25,6 +26,8 @@ describe('Hardening final de produção', () => {
     expect(signupChoicePage).toContain('acompanhe a programação');
     expect(signupPage).toContain('Não é necessário cadastrar um estabelecimento.');
     expect(partnerSignupPage).toContain('/parceiro/onboarding');
+    expect(partnerOnboardingPage).toContain('Solicitação enviada');
+    expect(partnerOnboardingPage).not.toContain('Abrir painel do parceiro');
   });
 
   it('aposenta telas legadas de autenticação de visitante', () => {
