@@ -10,6 +10,8 @@ type SupabaseRow = {
   description: string | null;
   region: string;
   address: string;
+  latitude: number | null;
+  longitude: number | null;
   phone: string | null;
   instagram: string | null;
   whatsapp: string | null;
@@ -133,6 +135,8 @@ function rowToEstablishment(row: SupabaseRow): Establishment {
     type: row.type as Establishment['type'],
     description: row.description || '',
     address: row.address,
+    latitude: row.latitude ?? undefined,
+    longitude: row.longitude ?? undefined,
     vibe: row.vibe ?? [],
     music: row.music ?? [],
     audience: row.audience ?? [],
@@ -175,6 +179,8 @@ function establishmentPatchToRow(establishment: Partial<Establishment>): Record<
   if (establishment.description !== undefined) row.description = establishment.description;
   if (establishment.region !== undefined) row.region = establishment.region;
   if (establishment.address !== undefined) row.address = establishment.address;
+  if (establishment.latitude !== undefined) row.latitude = establishment.latitude;
+  if (establishment.longitude !== undefined) row.longitude = establishment.longitude;
   if (establishment.instagram !== undefined) row.instagram = establishment.instagram;
   if (establishment.whatsapp !== undefined) row.whatsapp = establishment.whatsapp;
   if (establishment.businessContact !== undefined) {
