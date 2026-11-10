@@ -28,7 +28,7 @@ export const additionalPlacesNovember10: Establishment[] = [
     },
     admissionNote: 'Entrada, couvert e valores variam conforme o evento; consulte a página oficial de ingressos.',
     source: {
-      kind: 'third_party',
+      kind: 'external',
       label: 'Linktree público associado à Estação Beira Lago; vínculo oficial pendente',
       url: 'https://linktr.ee/estacaobeiralago',
       verifiedAt: '2026-11-10',
