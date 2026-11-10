@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 10;
 
 const BATCH_SIZE = 1;
-const MAX_RATE_LIMIT_WAIT_MS = 2_000;
+const MAX_RATE_LIMIT_WAIT_MS = 1_000;
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -51,7 +51,7 @@ async function geocode(row: EstablishmentRow): Promise<NominatimCandidate[]> {
       'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.5',
     },
     cache: 'no-store',
-    signal: AbortSignal.timeout(6_000),
+    signal: AbortSignal.timeout(5_000),
   });
 
   if (response.status === 429) throw new Error('NOMINATIM_RATE_LIMITED');
