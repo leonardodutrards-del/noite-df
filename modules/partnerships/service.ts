@@ -106,6 +106,11 @@ export class PartnershipService {
     if (selectedId && (!existingRows.length || existingRows[0].publication_status !== 'published')) {
       throw new Error('CLAIM_SELECTION_INVALID');
     }
+    // A new-name submission must never silently attach to an existing slug.
+    // Existing listings must be explicitly selected from the published options.
+    if (!selectedId && existingRows.length > 0) {
+      throw new Error('CLAIM_ESTABLISHMENT_ALREADY_EXISTS');
+    }
 
     if (existingRows.length === 0) {
       const created = await rest('establishments', {
