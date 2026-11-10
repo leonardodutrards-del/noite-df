@@ -59,7 +59,7 @@ end;
 $$;
 
 create or replace function public.release_nominatim_request_slot()
-returns void
+returns boolean
 language plpgsql
 security definer
 set search_path = pg_catalog, public, pg_temp
@@ -69,8 +69,9 @@ begin
     set lease_until = clock_timestamp(),
         next_slot_at = greatest(next_slot_at, clock_timestamp() + interval '1100 milliseconds')
     where id = 1;
+  return true;
 end;
-$$;
+$;
 
 revoke all on function public.claim_nominatim_request_slot() from public, anon, authenticated;
 grant execute on function public.claim_nominatim_request_slot() to service_role;
