@@ -99,7 +99,7 @@ Fontes principais usadas nos rascunhos: [Linktree Aflora](https://linktr.ee/aflo
 - O commit principal mais recente consultado, `5fad2e162b904fa6851e1177a4d4a5930259d497`, está sem deployment de produção posterior; o status Vercel retornou **FAILURE por limite de builds**. Portanto, o deployment READY é anterior ao último merge e não comprova que a versão atual esteja publicada.
 - Verificação pública: `/agenda-semanal` mostra apenas 4 eventos, `/agenda-mensal` mostra 6, e `/fim-de-semana` ainda apresenta 16–18/10/2026. Isso é uma divergência de produção a corrigir antes de qualquer publicação de agenda.
 - PR #140 continua aberto para eventos de 17/11 a 13/12; a prévia Vercel estava READY, mas não foi encontrado resultado CI completo no head. Não foi mesclado.
-- PR desta rodada será mantido em rascunho até CI, lint, testes, build e preview estarem verdes e a divergência da produção ser resolvida.
+- PR desta rodada: [#148](https://github.com/leonardodutrards-del/noite-df/pull/148). CI GitHub Actions passou em testes, lint e build; Vercel Preview está READY em [agenda/2026-11-11-daily-coverage](https://noite-3hqezppbn-leonardodutrards-dels-projects.vercel.app). A inspeção de rota pelo navegador desta execução foi bloqueada, então a prévia não foi conferida visualmente. O PR permanece em rascunho porque a cobertura geral ainda tem lacunas de Instagram e a produção continua sem deployment do último commit.
 
 ## 5. Segurança e limites respeitados
 
