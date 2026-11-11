@@ -1444,7 +1444,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(167,139,250,
 .smart-map-frame { position: relative; min-width: 0; height: 460px; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 22px; background: #101018; cursor: grab; touch-action: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.025), 0 18px 48px rgba(0,0,0,.28); }
 .smart-map-frame:active { cursor: grabbing; }
 .smart-map-canvas { position: relative; overflow: hidden; }
-.smart-map-tile { position: absolute; width: 256px; height: 256px; max-width: none; user-select: none; pointer-events: none; }
+.smart-map-tile { position: absolute; width: 256px; height: 256px; max-width: none; filter: grayscale(1) brightness(.68) contrast(1.15); user-select: none; pointer-events: none; }
 .smart-map-marker { position: absolute; z-index: 3; display: grid; place-items: center; width: 27px; height: 27px; min-width: 27px; padding: 0; border: 2px solid #fff; border-radius: 50% 50% 50% 4px; transform: translate(-50%, -100%) rotate(-45deg); background: #8b5cf6; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.35); cursor: pointer; }
 .smart-map-marker span { width: 7px; height: 7px; border-radius: 50%; background: #fff; transform: rotate(45deg); }
 .smart-map-marker.is-selected { width: 34px; height: 34px; background: #e34b62; box-shadow: 0 0 0 5px rgba(227,75,98,.22), 0 3px 10px rgba(0,0,0,.4); }
