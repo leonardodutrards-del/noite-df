@@ -34,12 +34,13 @@ type EstablishmentRow = {
   name: string;
   region: string;
   address: string;
+  maps_query: string | null;
   latitude: number | null;
   longitude: number | null;
 };
 
 function buildGeocodingQuery(row: EstablishmentRow): string {
-  return [row.name, row.address, row.region, 'Brasil'].filter(Boolean).join(', ');
+  return [row.maps_query || [row.name, row.address, row.region].filter(Boolean).join(' '), 'Brasil'].filter(Boolean).join(', ');
 }
 
 async function geocode(query: string): Promise<NominatimCandidate[]> {
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     const params = new URLSearchParams({
-      select: 'id,name,region,address,latitude,longitude',
+      select: 'id,name,region,address,maps_query,latitude,longitude',
       publication_status: 'eq.published',
       or: '(latitude.is.null,longitude.is.null)',
       order: 'id.asc',
