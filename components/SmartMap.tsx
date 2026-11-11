@@ -138,7 +138,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
         const wrappedX = ((x % tileCount) + tileCount) % tileCount;
         next.push({
           key: zoom + '/' + wrappedX + '/' + y,
-          url: 'https://basemaps.cartocdn.com/dark_all/' + zoom + '/' + wrappedX + '/' + y + '.png',
+          url: 'https://tile.openstreetmap.org/' + zoom + '/' + wrappedX + '/' + y + '.png',
           left: x * TILE_SIZE - originX,
           top: y * TILE_SIZE - originY,
         });
@@ -253,7 +253,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
           ) : null}
 
           <div className="smart-map-attribution">
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors · © CARTO</a>
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a>
           </div>
         </div>
 
