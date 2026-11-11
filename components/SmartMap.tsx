@@ -101,6 +101,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     if (mappedPlaces.length === 0) return;
     const fitted = fitCoordinates(mappedPlaces);
     const frame = window.requestAnimationFrame(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- defer viewport sync to the next paint
       setCenter(fitted.center);
       setZoom(fitted.zoom);
     });
@@ -112,6 +113,7 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     if (!Number.isFinite(selectedPlace.latitude) || !Number.isFinite(selectedPlace.longitude)) return;
     const nextCenter = { latitude: selectedPlace.latitude!, longitude: selectedPlace.longitude! };
     const frame = window.requestAnimationFrame(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- defer selection sync to the next paint
       setCenter(nextCenter);
       setZoom((current) => Math.max(current, 13));
     });
