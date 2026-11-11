@@ -86,6 +86,15 @@ export default function GeolocalizacaoAdminPage() {
     return () => window.cancelAnimationFrame(frame);
   }, [loadPendingPlaces]);
 
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      void startGeocoding();
+    });
+    return () => window.cancelAnimationFrame(frame);
+    // The admin geocoding job intentionally starts once when this protected page opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function importWazeLocation(place: PendingPlace) {
     const wazeUrl = pendingWazeLinks[place.id]?.trim();
     if (!wazeUrl || pendingLoading) return;
@@ -181,7 +190,7 @@ export default function GeolocalizacaoAdminPage() {
     setNeedsReview(0);
     setNoMatch(0);
     setResults([]);
-    setMessage('Iniciando lote controlado. Mantenha esta tela aberta.');
+    setMessage('Iniciando lote automático e sequencial. O processo pode continuar enquanto esta tela permanecer aberta.');
 
     let afterId: string | undefined;
     try {
@@ -196,6 +205,11 @@ export default function GeolocalizacaoAdminPage() {
           const retrySeconds = Number(response.headers.get('Retry-After')) || 3;
           setMessage('Serviço de mapas ocupado. Retomando em ' + retrySeconds + ' segundos…');
           await wait(Math.min(Math.max(retrySeconds, 2), 30) * 1000);
+          continue;
+        }
+        if (!response.ok && (response.status === 502 || response.status === 503) && !String(payload.error || '').includes('RATE_GUARD') && !String(payload.error || '').includes('CACHE')) {
+          setMessage('Serviço de mapas temporariamente indisponível. Tentando novamente em 4 segundos…');
+          await wait(4_000);
           continue;
         }
         if (!response.ok) throw new Error(payload.error || 'Falha no serviço de geocodificação.');
