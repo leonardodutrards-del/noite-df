@@ -90,13 +90,12 @@ As datas, horários, locais e atrações abaixo foram conferidos em páginas ofi
 
 O evento Pagodão das Estrelas é mantido como **Amsterdã (antigo Bahrein)**, no Setor Hortigranjeiro, Chácara 12, km 1/2. A página da Sympla também mostra “Bahrein Comida de Boteco” no campo do local, mas a descrição identifica Amsterdã. Não associar ao Bahrein Cozinha e Bar de Valparaíso.
 
-Além desses 13 eventos novos, o PR consolida os 28 eventos futuros já documentados no PR #140, mantendo a data original de verificação de 10/11 para essas fontes.
+Além desses 16 eventos novos, o PR consolida os 28 eventos futuros já documentados no PR #140, mantendo a data original de verificação de 10/11 para essas fontes.
 
 
 ### Eventos adicionais confirmados em fontes oficiais
 
 - **13/11, 21h–03h — PAGODIN 0800**, Portal Pub e Lounge, Novo Gama/GO. Grupo Vibe Pura e DJ Junio Muniz; entrada gratuita via Sympla; happy hour 21h–22h30. [Fonte oficial Sympla](https://www.sympla.com.br/evento/pagodin-0800-13-11-sexta/3637153).
-- **14/11, 21h30–04h30 — Os Meninos de Barão no Dose Dupla**, QNM 09 (antigo Lá Casa), Ceilândia/DF. Data, horário e local confirmados; gênero não informado. [Fonte oficial Sympla](https://www.sympla.com.br/evento/lgc/3587126).
 - **14/11, 19h–04h — 5º Piseiro Mistura Louca**, Rancho do João Paulin, Quadra 2, S/N, Novo Gama/GO. Data, horário e local confirmados; atrações e preço não aparecem no conteúdo acessível. [Fonte oficial Sympla](https://www.sympla.com.br/evento/5o-piseiro-mistura-louca/3548228).
 - **15/11, 15h–23h59 — Tardezinha da Club**, Club Gastrobar, Rua 2, Qd 58, Lote 21, Jardim Oriente, Valparaíso de Goiás/GO. Data, horário e local confirmados; atrações e gênero não informados. [Fonte oficial Sympla](https://www.sympla.com.br/evento/tardezinha-da-club/3636567).
 
@@ -138,9 +137,9 @@ Pesquisa local/Google Business apontou leads para revisão, sem fonte oficial su
 - **Sauz Restaurante** — site cadastrado respondeu HTTP 404; isso indica falha da URL registrada, não encerramento confirmado. Manter o estabelecimento publicado e recomendar revisão da fonte. [URL cadastrada](https://www.sauz.com.br/).
 
 
-- **Portal Pub e Lounge — Novo Gama/GO:** perfil preparado em rascunho a partir de página Sympla do próprio produtor, com endereço e atividade de casa de shows confirmados. Sem Instagram oficial identificado nesta rodada.
+- **Portal Pub e Lounge — Novo Gama/GO:** perfil preparado em rascunho a partir de página Sympla do próprio produtor, com endereço e atividade de casa de shows confirmados. Google Business/RestaurantGuru também retornou telefone (61) 98416-9671 e horários de quinta a domingo; estes dados foram marcados como fonte secundária e não como confirmação oficial. Sem Instagram oficial identificado nesta rodada.
 - **Club Gastrobar — Valparaíso/GO:** perfil preparado em rascunho com Linktree oficial, Instagram vinculado (@clubgastrobar), WhatsApp/localização e Google Business (4,2/15 avaliações). A página direta do Instagram falhou ao abrir; identidade do perfil foi confirmada pelo Linktree, mas visibilidade pública/privada não foi determinada.
-- **Dose Dupla — Ceilândia** e **Rancho do João Paulin — Novo Gama** foram identificados apenas como locais de eventos em páginas Sympla; sem fonte oficial permanente suficiente, ficaram como candidatos de local, sem perfil.
+- **Rancho do João Paulin — Novo Gama** foi identificado apenas como local de evento em página Sympla; sem fonte oficial permanente suficiente, ficou como candidato de local, sem perfil. **Dose Dupla** já corresponde ao rascunho existente **Arena Dose Dupla** do PR #140; o evento de 14/11 foi mantido lá e não duplicado.
 - **Viracopos Gastro bar — Valparaíso** e **Chácara Três Passos — Águas Lindas** permanecem candidatos de local; o anúncio do Viracopos tem conflito de data e o anúncio da Chácara tem conflito entre intervalo do cabeçalho e horário descrito.
 
 ### Leads adicionais descobertos em pesquisa local
@@ -163,7 +162,7 @@ A pesquisa de descoberta por Google Business encontrou os seguintes estabelecime
 
 - Branch: \`agenda/2026-11-12-daily-coverage\`
 - PR #154: https://github.com/leonardodutrards-del/noite-df/pull/154 (branch atualizada; sem merge).
-- A branch parte do \`main\` atual. O PR inclui 17 eventos novos confirmados, 28 eventos futuros já pesquisados (45 entradas futuras antes da revisão final), deduplicação por título + início + estabelecimento + fonte, testes e cinco perfis novos em draft.
+- A branch parte do \`main\` atual. O PR inclui 16 eventos novos confirmados, 28 eventos futuros já pesquisados (44 entradas futuras antes da revisão final), deduplicação por título + início + estabelecimento + fonte, testes e cinco perfis novos em draft.
 - A lista pública filtra perfis \`draft\`; os cinco novos locais não serão exibidos.
 - **Nenhum merge ou deploy de produção foi executado.** A produção atual está Vercel `READY` no commit `5b72d2b` (`main`), com aliases `noitedf.com.br` e `www.noitedf.com.br`. A home informa 104 locais; `/fim-de-semana` mostra 27 eventos de 13–15/11. A captura indexada de `/agenda-semanal` (rastreada há 2 dias) mostra 4 eventos e inclui 10/11 e 11/11; como não é uma captura live, a divergência ficou registrada para revalidação.
 - A produção estava Vercel \`READY\` no commit \`5b72d2b\` no início da rodada. A página pública de fim de semana tinha um snapshot indexado com 27 eventos; a rota semanal não pôde ser validada por acesso direto com cache-bust nesta execução.
