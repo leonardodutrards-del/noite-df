@@ -10,7 +10,7 @@ export const additionalPlacesNovember12: Establishment[] = [
     address: 'SIA Trecho 3, Lotes 2115 a 2145, Brasília/DF',
     vibe: ['festas', 'música ao vivo'],
     music: [],
-    audience: ['18+ conforme as páginas dos eventos'],
+    audience: [],
     mapsQuery: 'Worlld Brasília, SIA Trecho 3, Lotes 2115 a 2145, Brasília, DF',
     whatsapp: '5561983833939',
     businessContact: {
@@ -68,7 +68,7 @@ export const additionalPlacesNovember12: Establishment[] = [
     description: 'Espaço de experiências intimistas e revitalização urbana, identificado pelo próprio produtor em página oficial de evento, com endereço na 514 Sul e programação de shows.',
     address: 'Quadra CRS 514, Bloco A, Loja 16, entrada pela W2 Sul, Asa Sul, Brasília/DF',
     vibe: ['música ao vivo', 'experiências intimistas'],
-    music: ['rock', 'soul', 'groove', 'reggae'],
+    music: [],
     audience: ['público de shows'],
     mapsQuery: 'Eye Patch Panda, CRS 514, Bloco A, Loja 16, Asa Sul, Brasília, DF',
     source: {
