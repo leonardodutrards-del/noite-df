@@ -1,6 +1,7 @@
 import type { Establishment } from '@/modules/establishments/types';
 import { additionalPlaces } from './places-2026-09';
 import { additionalPlacesNovember10 } from './places-2026-11-10';
+import { additionalPlacesNovember11 } from './places-2026-11-11';
 import { enrichContact } from './contact-updates';
 
 const createPlace = (overrides: Partial<Establishment> & Pick<Establishment, 'id' | 'name' | 'region' | 'type' | 'description' | 'address' | 'vibe' | 'music' | 'audience' | 'price' | 'mapsQuery'>): Establishment => {
@@ -85,4 +86,5 @@ export const places: Establishment[] = [
   createPlace({ id: 'bahrein-cozinha-e-bar', name: 'Bahrein Cozinha e Bar', region: 'Valparaíso · Entorno', type: 'Bar', description: 'Comida de boteco, bebidas e programação musical em Valparaíso de Goiás.', address: 'Valparaíso de Goiás — GO', vibe: ['boteco', 'petiscos'], music: ['samba', 'mpb'], audience: ['amigos', 'grupos'], price: '$$', mapsQuery: 'Bahrein Cozinha e Bar Valparaíso de Goiás', instagram: 'https://www.instagram.com/bahreincozinhabar/', publicRatings: [{ provider: 'official', label: 'Instagram oficial', url: 'https://www.instagram.com/bahreincozinhabar/', collectedAt: '2026-08-02', matchedBy: ['nome', 'Instagram oficial'], status: 'needs_review', observation: 'Perfil oficial localizado, mas sem avaliação pública confirmada.' }], publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-08-02' } }),
   ...additionalPlaces,
   ...additionalPlacesNovember10,
+  ...additionalPlacesNovember11,
 ].filter((place) => place.publicationStatus !== 'draft').map(enrichContact);

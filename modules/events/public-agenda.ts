@@ -11,11 +11,12 @@ import { confirmedEventsOctober26 } from '@/data/seeds/events-2026-10-26';
 import { confirmedEventsNovember05 } from '@/data/seeds/events-2026-11-05';
 import { confirmedEventsNovember09 } from '@/data/seeds/events-2026-11-09';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
+import { confirmedEventsNovember11 } from '@/data/seeds/events-2026-11-11';
 
 const normalizeIdentity = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 
 function verifiedLocalAgenda(): EventItem[] {
-  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10]
+  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember11]
     .filter(isConfirmedEvent);
   const seenIds = new Set<string>();
   const seenSources = new Set<string>();
@@ -78,7 +79,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
 
     return [
       ...publicEvents,
-      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10].filter((event) =>
+      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember11].filter((event) =>
         Date.parse(event.expiresAt || '') > Date.now() &&
         !existing.has(key(event)) &&
         !existingSources.has(sourceKey(event))
