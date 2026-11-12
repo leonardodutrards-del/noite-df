@@ -72,19 +72,19 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
     // Database records take precedence, including edits to a title or location.
     const key = (event: EventItem) =>
       `${normalizeIdentity(event.place)}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.title)}`;
-    const sourceKey = (event: EventItem) => {
+    const correctionSourceKey = (event: EventItem) => {
       const url = event.source?.url?.split('?')[0].replace(/\/$/, '');
-      return url ? `${url.toLowerCase()}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.place)}|${normalizeIdentity(event.title)}` : '';
+      return url ? `${url.toLowerCase()}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.place)}` : '';
     };
     const existing = new Set(publicEvents.map(key));
-    const existingSources = new Set(publicEvents.map(sourceKey).filter(Boolean));
+    const existingSources = new Set(publicEvents.map(correctionSourceKey).filter(Boolean));
 
     return [
       ...publicEvents,
       ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember10Upcoming, ...confirmedEventsNovember11, ...confirmedEventsNovember12, ...confirmedEventsNovember12Upcoming].filter((event) =>
         Date.parse(event.expiresAt || '') > Date.now() &&
         !existing.has(key(event)) &&
-        !existingSources.has(sourceKey(event))
+        !existingSources.has(correctionSourceKey(event))
       ),
     ];
   } catch (error) {
