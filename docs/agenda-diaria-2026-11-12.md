@@ -101,6 +101,8 @@ Além desses 16 eventos novos, o PR consolida os 28 eventos futuros já document
 
 ### Expirados, cancelados e pendentes
 
+**Resumo da rodada:** 16 novos eventos confirmados e preparados no PR; 0 eventos existentes atualizados; 1 expirado; 0 cancelados; 14 anúncios pendentes.
+
 - **Expirado:** Surra de Modão + Cardápio em Dobro, 11/11, Contexto. O horário divulgado terminava às 02h de 12/11; a edição está vencida e não deve aparecer na agenda futura.
 - **Cancelados:** nenhum cancelamento confirmado nesta rodada.
 - **Pendentes (14 anúncios):** Quarta Delas no Quintal da Tia Sandra (sem line-up/datado na fonte oficial); New Khoder Lounge & Bar e Royal Lounge (páginas oficiais com cache miss); evento de 14/11 no Texxas Bar (página de ingresso indisponível para leitura direta); 299 Club (sem endereço exato); Intense Lounges (identificação/local ambíguos); Moonshine (local não identificado); Poll Party (local “a definir”); Ressaca do Jorem (horário de início sem confirmação); Arena Conic/Arena Birosca (conflito de local); Dead Slug no Porks (sem horário de início); Os Meninos de Barão no Viracopos (cabeçalho 15/11, descrição “domingo 11 de novembro”); Piseiro dos Brutos (intervalo do cabeçalho 07/11–05/12 diverge do horário de 05/12 às 21h na descrição); Corona Day no Osca (página de ingresso não abriu).
@@ -117,6 +119,8 @@ Além desses 16 eventos novos, o PR consolida os 28 eventos futuros já document
 - **Galpão dos Brutos:** permanece tratado como parado; nenhum evento foi associado a ele. A Rota do Piseiro e o Bar LG continuam separados; não apareceu flyer/post oficial atual que confirme o Bar LG como local.
 
 ## 5. Descoberta de estabelecimentos
+
+**Resumo:** 5 novos perfis confirmados o suficiente para rascunho e preparados no PR; 0 inseridos no Supabase e 0 publicados. Além dos 33 rascunhos anteriores, 7 leads locais novos aguardam fonte oficial direta e 3 locais identificados apenas por anúncios de evento aguardam confirmação de operação permanente.
 
 ### Perfis preparados em draft no repositório
 
@@ -165,11 +169,12 @@ A pesquisa de descoberta por Google Business encontrou os seguintes estabelecime
 - A branch parte do \`main\` atual. O PR inclui 16 eventos novos confirmados, 28 eventos futuros já pesquisados (44 entradas futuras antes da revisão final), deduplicação por título + início + estabelecimento + fonte, testes e cinco perfis novos em draft.
 - A lista pública filtra perfis \`draft\`; os cinco novos locais não serão exibidos.
 - **Nenhum merge ou deploy de produção foi executado.** A produção atual está Vercel `READY` no commit `5b72d2b` (`main`), com aliases `noitedf.com.br` e `www.noitedf.com.br`. A home informa 104 locais; `/fim-de-semana` mostra 27 eventos de 13–15/11. A captura indexada de `/agenda-semanal` (rastreada há 2 dias) mostra 4 eventos e inclui 10/11 e 11/11; como não é uma captura live, a divergência ficou registrada para revalidação.
-- A produção estava Vercel \`READY\` no commit \`5b72d2b\` no início da rodada. A página pública de fim de semana tinha um snapshot indexado com 27 eventos; a rota semanal não pôde ser validada por acesso direto com cache-bust nesta execução.
 - Não houve postagem no Instagram, feed ou Stories e nenhum estabelecimento foi contatado.
 
 ## 7. Bloqueios e próximos passos
 
 O bloqueio dominante é a impossibilidade de abrir os perfis do Instagram pela ferramenta, não uma confirmação de que estejam privados ou inexistentes. A rodada não é suficiente para autorizar publicação: é necessário revisar os perfis bloqueados, os eventos pendentes e a correspondência de unidades compartilhando Instagram.
 
-Aguardar CI, lint, build e Vercel Preview READY no head deste PR. Mesmo com verificações verdes, manter o PR sem merge até a revisão das lacunas e conflitos de fonte/local.
+**CI #556 aprovado no head `a3dabc3`:** 78/78 arquivos de teste, 315/315 testes; lint passou com 4 avisos não bloqueantes; build passou. Vercel Preview `READY`: https://noite-3d0vldlgb-leonardodutrards-dels-projects.vercel.app. A ferramenta de navegação não conseguiu abrir a rota protegida do Preview; o estado do deployment foi confirmado, mas não a revisão visual.
+
+O deployment de produção permanece `READY` no `main` (`5b72d2b`), sem alterações desta rodada. **PR #154 permanece aberto e sem merge**, porque ainda existem lacunas de fontes/Instagram e eventos pendentes. Mesmo com CI verde, não publicar agenda parcial.
