@@ -20,7 +20,7 @@ const normalizeIdentity = (value: string) => value.normalize('NFD').replace(/[\u
 
 function verifiedLocalAgenda(): EventItem[] {
   const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember10Upcoming, ...confirmedEventsNovember11, ...confirmedEventsNovember12, ...confirmedEventsNovember12Upcoming]
-    .filter(isConfirmedEvent);
+    .filter((event) => isConfirmedEvent(event) && Date.parse(event.expiresAt || '') > Date.now());
   const seenIds = new Set<string>();
   const seenSources = new Set<string>();
   const seenEvents = new Set<string>();
