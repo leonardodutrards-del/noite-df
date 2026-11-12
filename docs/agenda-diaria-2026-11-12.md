@@ -121,6 +121,13 @@ Os 33 candidatos em draft do PR #148 foram carregados para esta branch e permane
 Pesquisa local/Google Business apontou leads para revisão, sem fonte oficial suficiente para criar perfil: Rota 060 Beer e Via Park Bar (Samambaia); Toinha Rock Pub (Samambaia); DIG ROCK BAR, Santa Vibe e APICE Entretenimento (Santa Maria); Wiskytorio Cervejaria e Supremo Restaurante (Gama); Cheiro do Mato (Planaltina); Quintal do Sucupira, Praianos Restaurante e Bohemios Bar Espetinho (Valparaíso); Santo Butiquim (endereço/região divergente). Bar do Batata já está publicado e Origen Bar já está em draft.
 
 
+### Fontes não-Instagram com mudança/erro
+
+- **Savassi Carne de Sol** — site oficial respondeu HTTP 200 e confirma as unidades Guará e Valparaíso, com cardápios e horários; não apresenta agenda de eventos datados. [Site oficial](https://savassicarnedesol.com.br/).
+- **Quintal da Tia Sandra** — site oficial respondeu HTTP 200, confirma funcionamento de terça a domingo e música ao vivo semanal. A seção “Programação Musical” não expõe no HTML acessível nomes/datas/horários do line-up; Instagram e Facebook não foram usados para inferir conteúdo inacessível. [Site oficial](https://quintaldatiasandra.com.br/).
+- **Meatz Burger — Sudoeste** — página oficial de delivery respondeu HTTP 200 e confirma endereço no CLSW 101, Bloco A, entrada 40; não divulga agenda de eventos. A página indica indisponibilidade no momento da consulta, o que não comprova encerramento. [Página da unidade](https://deliverydireto.com.br/meatzburger/sudoeste/pages/sobre-nos).
+- **Sauz Restaurante** — site cadastrado respondeu HTTP 404; isso indica falha da URL registrada, não encerramento confirmado. Manter o estabelecimento publicado e recomendar revisão da fonte. [URL cadastrada](https://www.sauz.com.br/).
+
 ### Leads adicionais descobertos em pesquisa local
 
 A pesquisa de descoberta por Google Business encontrou os seguintes estabelecimentos, sem correspondência pelo nome no Supabase nesta rodada. Foram mantidos como **candidatos pendentes**, sem criação de perfil, porque ainda falta vincular uma fonte direta oficial (Instagram/site/página do próprio estabelecimento) e confirmar a identidade operacional:
