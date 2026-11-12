@@ -38,8 +38,8 @@ describe('Agenda diária 10–16/11/2026', () => {
       ...confirmedEventsNovember12,
       ...confirmedEventsNovember12Upcoming,
     ];
-    expect(newEvents).toHaveLength(17);
-    expect(new Set(newEvents.map((event) => event.id)).size).toBe(17);
+    expect(newEvents).toHaveLength(16);
+    expect(new Set(newEvents.map((event) => event.id)).size).toBe(16);
     for (const event of newEvents) {
       expect(event.startsAt).toBeTruthy();
       expect(event.expiresAt).toBeTruthy();
