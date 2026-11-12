@@ -40,7 +40,8 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(agenda.some((event) => event.id === 'birosca-nojo-de-farra-2026-12-04')).toBe(true);
     expect(agenda.some((event) => event.id === 'birosca-lacre-001-2026-12-04')).toBe(true);
     expect(agenda.filter((event) => event.place === 'Infinu Comunidade Criativa' && event.startsAt?.slice(0, 10) === '2026-11-14')).toHaveLength(3);
-    expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(3);
+    expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(4);
+    expect(agenda.some((event) => event.id === 'porks-almost-unplugged-2026-11-20')).toBe(true);
     expect(agenda.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
     expect(agenda.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
     const weekly = getWeeklyAgenda(agenda);
