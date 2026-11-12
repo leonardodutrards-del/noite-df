@@ -128,6 +128,12 @@ Pesquisa local/Google Business apontou leads para revisão, sem fonte oficial su
 - **Meatz Burger — Sudoeste** — página oficial de delivery respondeu HTTP 200 e confirma endereço no CLSW 101, Bloco A, entrada 40; não divulga agenda de eventos. A página indica indisponibilidade no momento da consulta, o que não comprova encerramento. [Página da unidade](https://deliverydireto.com.br/meatzburger/sudoeste/pages/sobre-nos).
 - **Sauz Restaurante** — site cadastrado respondeu HTTP 404; isso indica falha da URL registrada, não encerramento confirmado. Manter o estabelecimento publicado e recomendar revisão da fonte. [URL cadastrada](https://www.sauz.com.br/).
 
+
+- **Portal Pub e Lounge — Novo Gama/GO:** perfil preparado em rascunho a partir de página Sympla do próprio produtor, com endereço e atividade de casa de shows confirmados. Sem Instagram oficial identificado nesta rodada.
+- **Club Gastrobar — Valparaíso/GO:** perfil preparado em rascunho com Linktree oficial, Instagram vinculado (@clubgastrobar), WhatsApp/localização e Google Business (4,2/15 avaliações). A página direta do Instagram falhou ao abrir; identidade do perfil foi confirmada pelo Linktree, mas visibilidade pública/privada não foi determinada.
+- **Dose Dupla — Ceilândia** e **Rancho do João Paulin — Novo Gama** foram identificados apenas como locais de eventos em páginas Sympla; sem fonte oficial permanente suficiente, ficaram como candidatos de local, sem perfil.
+- **Viracopos Gastro bar — Valparaíso** e **Chácara Três Passos — Águas Lindas** permanecem candidatos de local; o anúncio do Viracopos tem conflito de data e o anúncio da Chácara tem conflito entre intervalo do cabeçalho e horário descrito.
+
 ### Leads adicionais descobertos em pesquisa local
 
 A pesquisa de descoberta por Google Business encontrou os seguintes estabelecimentos, sem correspondência pelo nome no Supabase nesta rodada. Foram mantidos como **candidatos pendentes**, sem criação de perfil, porque ainda falta vincular uma fonte direta oficial (Instagram/site/página do próprio estabelecimento) e confirmar a identidade operacional:
