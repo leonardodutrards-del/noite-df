@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
+import { confirmedEventsNovember11 } from '@/data/seeds/events-2026-11-11';
+import { confirmedEventsNovember12 } from '@/data/seeds/events-2026-11-12';
+import { confirmedEventsNovember12Upcoming } from '@/data/seeds/events-2026-11-12-upcoming';
 import { additionalPlacesNovember10 } from '@/data/seeds/places-2026-11-10';
+import { additionalPlacesNovember12 } from '@/data/seeds/places-2026-11-12';
 import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { getWeeklyAgenda } from '@/lib/weekly-agenda';
 
@@ -26,6 +30,39 @@ describe('Agenda diária 10–16/11/2026', () => {
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.publicationStatus).toBe('published');
     }
+  });
+
+  it('includes 17 newly confirmed events and keeps five new venues in draft', async () => {
+    const newEvents = [
+      ...confirmedEventsNovember11,
+      ...confirmedEventsNovember12,
+      ...confirmedEventsNovember12Upcoming,
+    ];
+    expect(newEvents).toHaveLength(17);
+    expect(new Set(newEvents.map((event) => event.id)).size).toBe(17);
+    for (const event of newEvents) {
+      expect(event.startsAt).toBeTruthy();
+      expect(event.expiresAt).toBeTruthy();
+      expect(event.source?.kind).toBe('official');
+      expect(event.source?.url).toMatch(/^https:\/\//);
+      expect(event.publicationStatus).toBe('published');
+    }
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-10T08:00:00-03:00'));
+    const agenda = await getPublicAgenda();
+    for (const event of newEvents) {
+      expect(agenda.some((item) => item.id === event.id)).toBe(true);
+    }
+
+    expect(additionalPlacesNovember12).toHaveLength(5);
+    for (const place of additionalPlacesNovember12) {
+      expect(place.publicationStatus).toBe('draft');
+      expect(place.verified).toBe(false);
+      expect(place.source?.kind).toBe('official');
+    }
+    expect(additionalPlacesNovember12.some((place) => place.id === 'portal-pub-e-lounge')).toBe(true);
+    expect(additionalPlacesNovember12.some((place) => place.id === 'club-gastrobar-valparaiso')).toBe(true);
   });
 
   it('preserves multiple events that share an official weekly agenda URL', async () => {
