@@ -35,7 +35,10 @@ describe('Agenda diária 10–16/11/2026', () => {
     const agenda = await getPublicAgenda();
     expect(agenda.filter((event) => event.id.startsWith('ticiana-')).length).toBe(6);
     expect(agenda.filter((event) => event.id.startsWith('ambar-')).length).toBe(4);
-    expect(agenda.filter((event) => event.id.startsWith('birosca-')).length).toBe(2);
+    expect(agenda.filter((event) => event.id.startsWith('birosca-')).length).toBe(5);
+    expect(agenda.some((event) => event.id === 'birosca-cha-da-alice-2026-11-28')).toBe(true);
+    expect(agenda.some((event) => event.id === 'birosca-nojo-de-farra-2026-12-04')).toBe(true);
+    expect(agenda.some((event) => event.id === 'birosca-lacre-001-2026-12-04')).toBe(true);
     expect(agenda.filter((event) => event.place === 'Infinu Comunidade Criativa' && event.startsAt?.slice(0, 10) === '2026-11-14')).toHaveLength(3);
     expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(3);
     expect(agenda.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
