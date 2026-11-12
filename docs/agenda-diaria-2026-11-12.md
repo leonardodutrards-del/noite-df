@@ -49,11 +49,12 @@ Foram tentadas 29 URLs distintas: 28 URLs de perfil e uma URL que aponta para um
 | Resultado observado | URLs distintas |
 |---|---:|
 | Conteúdo acessível sem login | 0 |
-| Bloqueio/limitação explícita da ferramenta | 6 (4 HTTP 429, 2 robots.txt) |
-| Erro de busca/cache miss | 22 perfis |
-| URL de Reel em vez de perfil; tentativa também indisponível | 1 |
+| Bloqueio/limitação explícita da ferramenta | 6 URLs (4 HTTP 429, 2 robots.txt) |
+| Erro de busca/cache miss | 23 URLs distintas; 25 registros de checagem por causa de URLs repetidas |
+| URL de Reel em vez de perfil | 1 das 29 URLs distintas |
 | Privado confirmado | 0 |
 | Inexistente confirmado | 0 |
+| Sem Instagram cadastrado | 73 estabelecimentos publicados |
 
 Os erros não comprovam que uma conta seja privada ou inexistente. Não foi possível inspecionar posts, Reels ou Stories do Instagram nesta rodada. Não houve tentativa de contornar login, CAPTCHA, scraping ou controles da plataforma.
 
@@ -119,13 +120,30 @@ Os 33 candidatos em draft do PR #148 foram carregados para esta branch e permane
 
 Pesquisa local/Google Business apontou leads para revisão, sem fonte oficial suficiente para criar perfil: Rota 060 Beer e Via Park Bar (Samambaia); Toinha Rock Pub (Samambaia); DIG ROCK BAR, Santa Vibe e APICE Entretenimento (Santa Maria); Wiskytorio Cervejaria e Supremo Restaurante (Gama); Cheiro do Mato (Planaltina); Quintal do Sucupira, Praianos Restaurante e Bohemios Bar Espetinho (Valparaíso); Santo Butiquim (endereço/região divergente). Bar do Batata já está publicado e Origen Bar já está em draft.
 
+
+### Leads adicionais descobertos em pesquisa local
+
+A pesquisa de descoberta por Google Business encontrou os seguintes estabelecimentos, sem correspondência pelo nome no Supabase nesta rodada. Foram mantidos como **candidatos pendentes**, sem criação de perfil, porque ainda falta vincular uma fonte direta oficial (Instagram/site/página do próprio estabelecimento) e confirmar a identidade operacional:
+
+| Candidato | Região / endereço observado | Telefone público | Situação |
+|---|---|---|---|
+| Rota 060 Beer | ADE, Samambaia | +55 61 99913-9321 | Google Business indica bar com música ao vivo; falta URL oficial direta |
+| Estação do Chopp | QR 219, Conjunto B, Lote 06, Santa Maria Norte | +55 61 3686-5349 | Bar/gastropub; falta fonte oficial direta |
+| DIG ROCK BAR | QR 219, Conjunto B, Lote 01, Santa Maria Norte | +55 61 99155-4417 | Bar de música ao vivo; falta fonte oficial direta |
+| Central Bar | QC 2, Santa Maria | +55 61 3393-6662 | Bar; falta fonte oficial direta |
+| Supremo Restaurante | QI 03, Lote 220, Setor Leste Industrial, Gama | +55 61 3054-2020 | Bar/restaurante; falta fonte oficial direta |
+| Bar do Chorão Drinks and Snacks | Quadra 03, Conjunto G, Lote 41, Vila Buritis, Planaltina/DF | +55 61 99184-4207 | Listagem com poucas avaliações; identidade/endereço aguardam validação |
+| Tarumã Cozinha e Bar — unidade Gama | Setor Central / Ponte Alta Norte, Gama | +55 61 99408-8264 | Possível unidade distinta do rascunho Tarumã/SIG; não mesclar sem confirmação |
+
+**Deduplicação realizada:** VBQ Samambaia já está entre os rascunhos do PR #148; Bendito Bar e Dom ManJu Gama já estão publicados; Don Potiguar Planaltina, Cozinha Bar Pantanal, Grill Espeto Bar, Quiosque Maranhense, Roda Pizza e Pizzaria Opção 1/Bar do Serginho já existem como rascunhos no Supabase. Nenhum deles foi recriado. O Tarumã do Gama foi mantido separado do candidato Tarumã/SIG, sem criar segunda unidade.
+
 ## 6. Publicação e segurança
 
 - Branch: \`agenda/2026-11-12-daily-coverage\`
-- PR: será aberto em modo draft após os commits.
+- PR #154: https://github.com/leonardodutrards-del/noite-df/pull/154 (branch atualizada; sem merge).
 - A branch parte do \`main\` atual. O PR inclui os eventos novos, 28 eventos futuros já pesquisados, deduplicação por título + início + estabelecimento + fonte, testes e perfis novos em draft.
 - A lista pública filtra perfis \`draft\`; os três novos locais não serão exibidos.
-- **Nenhum merge ou deploy de produção foi executado.**
+- **Nenhum merge ou deploy de produção foi executado.** A produção foi conferida: a home informa 104 locais; `/fim-de-semana` mostra 27 eventos de 13–15/11; `/agenda-semanal` ainda está defasada, exibindo somente 4 eventos e mantendo 10/11 e 11/11 na seleção. Essa divergência deve ser validada no Preview antes de qualquer merge.
 - A produção estava Vercel \`READY\` no commit \`5b72d2b\` no início da rodada. A página pública de fim de semana tinha um snapshot indexado com 27 eventos; a rota semanal não pôde ser validada por acesso direto com cache-bust nesta execução.
 - Não houve postagem no Instagram, feed ou Stories e nenhum estabelecimento foi contatado.
 
