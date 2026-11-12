@@ -1,6 +1,6 @@
 # Operação diária de cobertura e agenda — 12/11/2026
 
-Horário da rodada: 08:18–08:30, America/Sao_Paulo.  
+Rodada realizada em 12/11/2026, horário local America/Sao_Paulo.  
 Projeto: \`leonardodutrards-del/noite-df\`.  
 Escopo: Brasília/DF e Entorno. Nenhuma alteração direta nas tabelas de conteúdo de produção.
 
@@ -12,7 +12,8 @@ Foram consultados todos os estabelecimentos com \`publication_status='published'
 - **22 regiões**
 - 31 registros com Instagram; 47 com site; 30 com \`agenda_url\`
 - 103 registros em \`data_sources\`, distribuídos por 80 estabelecimentos; 24 estabelecimentos publicados não têm fonte registrada nessa tabela
-- 0 registros em \`event_candidates\`
+- 43 verificações de fonte nesta rodada: 31 registros de Instagram e 12 fontes não-Instagram; histórico de \`agenda_source_checks\`: 164 checks de 52 fontes distintas
+- Tabela editorial \`events\`: 41 registros (25 \`published\`, 14 \`expired\`, 1 \`draft\`, 1 \`pending_review\`); 0 registros em \`event_candidates\`
 
 ### Distribuição por região
 
@@ -58,7 +59,7 @@ Foram tentadas 29 URLs distintas: 28 URLs de perfil e uma URL que aponta para um
 
 Os erros não comprovam que uma conta seja privada ou inexistente. Não foi possível inspecionar posts, Reels ou Stories do Instagram nesta rodada. Não houve tentativa de contornar login, CAPTCHA, scraping ou controles da plataforma.
 
-**Registro efetuado:** 31 verificações inseridas em \`public.agenda_source_checks\`, com data, source_id, URL direta e evidência observável na nota de cada registro. Os dois perfis compartilhados entre unidades são Figueiredo Cozinha e Bar e Palorama; a identidade específica de cada unidade continua pendente. A URL do Latinos Bar cadastrada na base é um Reel, não uma página de perfil.
+**Registro efetuado:** 43 verificações inseridas em \`public.agenda_source_checks\` nesta rodada, com data, source_id, URL direta e evidência observável na nota de cada registro. Das 12 fontes não-Instagram, 8 responderam HTTP 200 sem mudança relevante, 3 responderam HTTP 200 com conteúdo alterado (Savassi Carne de Sol, Quintal da Tia Sandra e Meatz Burger) e 1 URL retornou HTTP 404 (Sauz Restaurante). Os dois perfis compartilhados entre unidades são Figueiredo Cozinha e Bar e Palorama; a identidade específica de cada unidade continua pendente. A URL do Latinos Bar cadastrada na base é um Reel, não uma página de perfil.
 
 ## 3. Eventos novos confirmados e preparados
 
@@ -91,11 +92,19 @@ O evento Pagodão das Estrelas é mantido como **Amsterdã (antigo Bahrein)**, n
 
 Além desses 13 eventos novos, o PR consolida os 28 eventos futuros já documentados no PR #140, mantendo a data original de verificação de 10/11 para essas fontes.
 
+
+### Eventos adicionais confirmados em fontes oficiais
+
+- **13/11, 21h–03h — PAGODIN 0800**, Portal Pub e Lounge, Novo Gama/GO. Grupo Vibe Pura e DJ Junio Muniz; entrada gratuita via Sympla; happy hour 21h–22h30. [Fonte oficial Sympla](https://www.sympla.com.br/evento/pagodin-0800-13-11-sexta/3637153).
+- **14/11, 21h30–04h30 — Os Meninos de Barão no Dose Dupla**, QNM 09 (antigo Lá Casa), Ceilândia/DF. Data, horário e local confirmados; gênero não informado. [Fonte oficial Sympla](https://www.sympla.com.br/evento/lgc/3587126).
+- **14/11, 19h–04h — 5º Piseiro Mistura Louca**, Rancho do João Paulin, Quadra 2, S/N, Novo Gama/GO. Data, horário e local confirmados; atrações e preço não aparecem no conteúdo acessível. [Fonte oficial Sympla](https://www.sympla.com.br/evento/5o-piseiro-mistura-louca/3548228).
+- **15/11, 15h–23h59 — Tardezinha da Club**, Club Gastrobar, Rua 2, Qd 58, Lote 21, Jardim Oriente, Valparaíso de Goiás/GO. Data, horário e local confirmados; atrações e gênero não informados. [Fonte oficial Sympla](https://www.sympla.com.br/evento/tardezinha-da-club/3636567).
+
 ### Expirados, cancelados e pendentes
 
 - **Expirado:** Surra de Modão + Cardápio em Dobro, 11/11, Contexto. O horário divulgado terminava às 02h de 12/11; a edição está vencida e não deve aparecer na agenda futura.
 - **Cancelados:** nenhum cancelamento confirmado nesta rodada.
-- **Pendentes:** Quarta Delas no Quintal da Tia Sandra (apenas fonte secundária; site oficial não abriu); eventos do New Khoder Lounge & Bar e Royal Lounge (páginas oficiais com cache miss); evento de 14/11 no Texxas Bar (página de ingresso indisponível para leitura direta); 299 Club (sem endereço exato); Intense Lounges (identificação/local ambíguos); Moonshine (local não identificado); Poll Party (local “a definir”); Ressaca do Jorem (horário de início sem confirmação); eventos associados a Arena Conic/Arena Birosca (conflito de local); Dead Slug no Porks (sem horário de início).
+- **Pendentes (14 anúncios):** Quarta Delas no Quintal da Tia Sandra (sem line-up/datado na fonte oficial); New Khoder Lounge & Bar e Royal Lounge (páginas oficiais com cache miss); evento de 14/11 no Texxas Bar (página de ingresso indisponível para leitura direta); 299 Club (sem endereço exato); Intense Lounges (identificação/local ambíguos); Moonshine (local não identificado); Poll Party (local “a definir”); Ressaca do Jorem (horário de início sem confirmação); Arena Conic/Arena Birosca (conflito de local); Dead Slug no Porks (sem horário de início); Os Meninos de Barão no Viracopos (cabeçalho 15/11, descrição “domingo 11 de novembro”); Piseiro dos Brutos (intervalo do cabeçalho 07/11–05/12 diverge do horário de 05/12 às 21h na descrição); Corona Day no Osca (página de ingresso não abriu).
 - A página musical da Ticiana Werner ainda exibia 11/11 como “hoje” na consulta; eventos futuros anteriormente listados nessa página ficam em revalidação, sem cancelamento automático.
 
 ## 4. Prioridades solicitadas
@@ -105,14 +114,14 @@ Além desses 13 eventos novos, o PR consolida os 28 eventos futuros já document
 - **Contexto:** We The Funk (12/11), Deu Mó Love (13/11) e Sábado Mágico (14/11) permanecem na agenda; Terapia Sertaneja (18/11) foi confirmada e adicionada.
 - **Oscarito Brasília:** Sábadô (14/11) permanece confirmado.
 - **Telebar:** Os Meninos de Barão (15/11) permanece confirmado.
-- **Rancho do Vaqueiro, Rota do Piseiro/Bar LG, Eita Lounge Bar, Oito Gastrobar, P10 Gastrobar/Arena P10, Palahop, Quintal da Tia Sandra, Espaço LG/Bar LG, Galpão Zero 8, Narguimania, Decky Bar e Bar Stilo 10:** não foi encontrada nova programação oficial completa para esta rodada.
+- **Rancho do Vaqueiro, Rota do Piseiro/Bar LG, Eita Lounge Bar, Oito Gastrobar, P10 Gastrobar/Arena P10, Palahop, Quintal da Tia Sandra, Espaço LG/Bar LG, Galpão Zero 8, Narguimania, Decky Bar e Bar Stilo 10:** não foi encontrada nova programação oficial completa para esta rodada. Club Gastrobar (Valparaíso) e Portal Pub e Lounge (Novo Gama) foram descobertos e têm eventos confirmados nesta rodada.
 - **Galpão dos Brutos:** permanece tratado como parado; nenhum evento foi associado a ele. A Rota do Piseiro e o Bar LG continuam separados; não apareceu flyer/post oficial atual que confirme o Bar LG como local.
 
 ## 5. Descoberta de estabelecimentos
 
 ### Perfis preparados em draft no repositório
 
-Três novos perfis foram preparados como \`draft\`, \`verified=false\`, com endereço e fonte oficial de evento: **Worlld Brasília (SIA)**, **Zepelim Rock Bar (Asa Norte)** e **Eye Patch Panda (Asa Sul)**. Não foram inseridos no Supabase nem expostos ao público.
+Cinco novos perfis foram preparados como \`draft\`, \`verified=false\`: **Worlld Brasília (SIA)**, **Zepelim Rock Bar (Asa Norte)**, **Eye Patch Panda (Asa Sul)**, **Portal Pub e Lounge (Novo Gama/GO)** e **Club Gastrobar (Valparaíso/GO)**. Portal Pub foi identificado pelo próprio produtor em página Sympla; Club Gastrobar tem Linktree oficial, Instagram vinculado, localização e Google Business. O perfil direto do Instagram do Club Gastrobar não abriu; visibilidade pública/privada não foi determinada. Nenhum dos cinco foi inserido no Supabase nem exposto ao público.
 
 Os 33 candidatos em draft do PR #148 foram carregados para esta branch e permanecem não publicados. O perfil SamamBar já existe como publicado; Bar do Batata também já existe como publicado; Origen Bar já existe como draft. Nenhum desses foi duplicado.
 
@@ -154,8 +163,8 @@ A pesquisa de descoberta por Google Business encontrou os seguintes estabelecime
 
 - Branch: \`agenda/2026-11-12-daily-coverage\`
 - PR #154: https://github.com/leonardodutrards-del/noite-df/pull/154 (branch atualizada; sem merge).
-- A branch parte do \`main\` atual. O PR inclui os eventos novos, 28 eventos futuros já pesquisados, deduplicação por título + início + estabelecimento + fonte, testes e perfis novos em draft.
-- A lista pública filtra perfis \`draft\`; os três novos locais não serão exibidos.
+- A branch parte do \`main\` atual. O PR inclui 17 eventos novos confirmados, 28 eventos futuros já pesquisados (45 entradas futuras antes da revisão final), deduplicação por título + início + estabelecimento + fonte, testes e cinco perfis novos em draft.
+- A lista pública filtra perfis \`draft\`; os cinco novos locais não serão exibidos.
 - **Nenhum merge ou deploy de produção foi executado.** A produção atual está Vercel `READY` no commit `5b72d2b` (`main`), com aliases `noitedf.com.br` e `www.noitedf.com.br`. A home informa 104 locais; `/fim-de-semana` mostra 27 eventos de 13–15/11. A captura indexada de `/agenda-semanal` (rastreada há 2 dias) mostra 4 eventos e inclui 10/11 e 11/11; como não é uma captura live, a divergência ficou registrada para revalidação.
 - A produção estava Vercel \`READY\` no commit \`5b72d2b\` no início da rodada. A página pública de fim de semana tinha um snapshot indexado com 27 eventos; a rota semanal não pôde ser validada por acesso direto com cache-bust nesta execução.
 - Não houve postagem no Instagram, feed ou Stories e nenhum estabelecimento foi contatado.
