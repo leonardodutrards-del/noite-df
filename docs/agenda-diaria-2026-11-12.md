@@ -143,7 +143,7 @@ A pesquisa de descoberta por Google Business encontrou os seguintes estabelecime
 - PR #154: https://github.com/leonardodutrards-del/noite-df/pull/154 (branch atualizada; sem merge).
 - A branch parte do \`main\` atual. O PR inclui os eventos novos, 28 eventos futuros já pesquisados, deduplicação por título + início + estabelecimento + fonte, testes e perfis novos em draft.
 - A lista pública filtra perfis \`draft\`; os três novos locais não serão exibidos.
-- **Nenhum merge ou deploy de produção foi executado.** A produção foi conferida: a home informa 104 locais; `/fim-de-semana` mostra 27 eventos de 13–15/11; `/agenda-semanal` ainda está defasada, exibindo somente 4 eventos e mantendo 10/11 e 11/11 na seleção. Essa divergência deve ser validada no Preview antes de qualquer merge.
+- **Nenhum merge ou deploy de produção foi executado.** A produção atual está Vercel `READY` no commit `5b72d2b` (`main`), com aliases `noitedf.com.br` e `www.noitedf.com.br`. A home informa 104 locais; `/fim-de-semana` mostra 27 eventos de 13–15/11. A captura indexada de `/agenda-semanal` (rastreada há 2 dias) mostra 4 eventos e inclui 10/11 e 11/11; como não é uma captura live, a divergência ficou registrada para revalidação.
 - A produção estava Vercel \`READY\` no commit \`5b72d2b\` no início da rodada. A página pública de fim de semana tinha um snapshot indexado com 27 eventos; a rota semanal não pôde ser validada por acesso direto com cache-bust nesta execução.
 - Não houve postagem no Instagram, feed ou Stories e nenhum estabelecimento foi contatado.
 
