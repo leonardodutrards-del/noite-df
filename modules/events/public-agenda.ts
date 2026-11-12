@@ -27,7 +27,7 @@ function verifiedLocalAgenda(): EventItem[] {
 
   return fallback.filter((event) => {
     const sourceUrl = event.source?.url?.split('?')[0].replace(/\/$/, '');
-    const source = sourceUrl ? `${sourceUrl.toLowerCase()}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.place)}|${normalizeIdentity(event.title)}` : '';
+    const source = sourceUrl ? `${sourceUrl.toLowerCase()}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.place)}` : '';
     const key = `${normalizeIdentity(event.place)}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.title)}`;
     if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
     seenIds.add(event.id);
@@ -55,7 +55,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
       ) continue;
 
       const sourceUrl = row.official_url.split('?')[0].replace(/\/$/, '').toLowerCase();
-      const key = `${sourceUrl}|${Date.parse(row.starts_at || '')}|${row.establishment_id}|${normalizeIdentity(row.title)}`;
+      const key = `${sourceUrl}|${Date.parse(row.starts_at || '')}|${row.establishment_id}`;
       const previous = bySource.get(key);
       if (!previous || Date.parse(row.verified_at || '') >= Date.parse(previous.verified_at || '')) {
         bySource.set(key, row);
