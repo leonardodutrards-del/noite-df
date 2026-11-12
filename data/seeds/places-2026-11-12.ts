@@ -97,6 +97,16 @@ export const additionalPlacesNovember12: Establishment[] = [
     vibe: ['música ao vivo', 'pagode', 'shows'],
     music: ['pagode'],
     audience: [],
+    businessContact: {
+      phone: '(61) 98416-9671',
+      sourceUrl: 'https://restaurantguru.com.br/Portal-Pub-e-Lounge-Novo-Gama',
+      checkedAt: '2026-11-12',
+    },
+    operatingHours: {
+      text: 'Quinta: 21h–02h; sexta e sábado: 21h–03h; domingo: 21h–02h. Horários de listagem secundária, sujeitos a confirmação.',
+      sourceUrl: 'https://restaurantguru.com.br/Portal-Pub-e-Lounge-Novo-Gama',
+      checkedAt: '2026-11-12',
+    },
     mapsQuery: 'Portal Pub e Lounge, Avenida Central 22, Parque Estrela Dalva VI, Novo Gama, GO',
     source: {
       kind: 'official',
