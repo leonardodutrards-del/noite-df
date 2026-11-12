@@ -14,8 +14,12 @@ afterEach(() => vi.useRealTimers());
 
 describe('Cobertura diária Noite DF — 12/11/2026', () => {
   it('contains seven current-week events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember12).toHaveLength(7);
-    expect(new Set(confirmedEventsNovember12.map((event) => event.id)).size).toBe(7);
+    expect(confirmedEventsNovember12).toHaveLength(10);
+    expect(new Set(confirmedEventsNovember12.map((event) => event.id)).size).toBe(10);
+
+    expect(confirmedEventsNovember12.some((event) => event.id === 'portal-pub-pagodin-0800-2026-11-13')).toBe(true);
+    expect(confirmedEventsNovember12.some((event) => event.id === 'rancho-joao-paulin-piseiro-mistura-louca-2026-11-14')).toBe(true);
+    expect(confirmedEventsNovember12.some((event) => event.id === 'club-gastrobar-tardezinha-2026-11-15')).toBe(true);
 
     for (const event of confirmedEventsNovember12) {
       expect(event.startsAt).toBeTruthy();
@@ -51,9 +55,11 @@ describe('Cobertura diária Noite DF — 12/11/2026', () => {
     expect(weekly.some((event) => event.title.toLowerCase().includes('surra de modão'))).toBe(false);
   });
 
-  it('keeps the three newly identified venues as draft-only profiles', () => {
-    expect(additionalPlacesNovember12).toHaveLength(3);
-    expect(new Set(additionalPlacesNovember12.map((place) => place.id)).size).toBe(3);
+  it('keeps the five newly identified venues as draft-only profiles', () => {
+    expect(additionalPlacesNovember12).toHaveLength(5);
+    expect(new Set(additionalPlacesNovember12.map((place) => place.id)).size).toBe(5);
+    expect(additionalPlacesNovember12.some((place) => place.id === 'portal-pub-e-lounge')).toBe(true);
+    expect(additionalPlacesNovember12.some((place) => place.id === 'club-gastrobar-valparaiso')).toBe(true);
     const publicIds = new Set(places.map((place) => place.id));
 
     for (const place of additionalPlacesNovember12) {
