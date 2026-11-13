@@ -5,7 +5,6 @@ update public.establishments
 set address = 'SCLS 303, Bloco A, Via W3 Sul, Brasília - DF',
     instagram = 'https://www.instagram.com/dudubaroficial/',
     website = 'https://dudubar.com.br/',
-    whatsapp = '61995739741',
     agenda_url = null,
     operating_hours = jsonb_build_object(
       'text', 'Segunda a quinta: 12h às 15h e 18h à meia-noite. Sexta e sábado: 12h à 1h30. Domingo: 12h às 17h.',
@@ -39,6 +38,15 @@ set operating_hours = jsonb_build_object(
     updated_at = now()
 where id in ('xique-xique-asa-norte', 'xique-xique-asa-sul')
   and publication_status = 'published';
+
+-- Refresh the verification timestamps of the already-registered Xique Xique official sources.
+update public.data_sources
+set captured_at = now(),
+    verified_at = now(),
+    verified_by = null
+where entity_type = 'establishment'
+  and entity_id in ('xique-xique-asa-norte', 'xique-xique-asa-sul')
+  and url = 'https://www.restaurantexiquexique.com.br/';
 
 -- Preserve official source provenance for the profile corrections.
 insert into public.data_sources (entity_type, entity_id, source_kind, label, url, captured_at, verified_at, verified_by)
