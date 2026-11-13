@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { researchedEvents } from '@/data/seeds/events-2026-09';
-import { getWeekendDays, getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
+import { getNextConfirmedWeekend, getWeekendDays, getWeekendEvents, getWeekendWindow } from '@/lib/weekend';
 import { getWeekendRecommendations } from '@/lib/weekend-recommendations';
 import { places } from '@/data/places';
 
@@ -21,6 +21,16 @@ describe('Indicações do fim de semana', () => {
     expect(items.some(event => event.id === 'oscarito-sexta-2026-09-18')).toBe(true);
     expect(items.some(event => event.id === 'oscarito-quinta-2026-09-17')).toBe(false);
     expect(items.some(event => event.id === 'brutos-volkstreme-2026-10-18')).toBe(false);
+  });
+
+  it('avança para o próximo fim de semana com programação confirmada quando a janela atual está vazia', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-09T12:00:00-03:00'));
+    const selection = getNextConfirmedWeekend(researchedEvents, new Date(), 6, true);
+    expect(selection.start).toBe('2026-10-16');
+    expect(selection.end).toBe('2026-10-18');
+    expect(selection.shifted).toBe(true);
+    expect(selection.events.some(event => event.id === 'brutos-volkstreme-2026-10-18')).toBe(true);
   });
 
   it('sugere apenas estabelecimentos com programação do fim de semana, sem lista fixa', () => {
