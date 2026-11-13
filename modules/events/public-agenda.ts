@@ -41,8 +41,8 @@ function verifiedLocalAgenda(): EventItem[] {
   const seenEvents = new Set<string>();
 
   return fallback.filter((event) => {
-    const sourceUrl = event.source?.url?.split('?')[0].replace(/\/$/, '');
-    const source = sourceUrl ? `${sourceUrl.toLowerCase()}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.place)}` : '';
+    const sourceUrl = event.source?.url ? normalizeSourceIdentity(event.source.url) : '';
+    const source = sourceUrl ? `${sourceUrl}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.place)}` : '';
     const key = `${normalizeIdentity(event.place)}|${Date.parse(event.startsAt || '')}|${normalizeIdentity(event.title)}`;
     if (seenIds.has(event.id) || (source && seenSources.has(source)) || seenEvents.has(key)) return false;
     seenIds.add(event.id);
