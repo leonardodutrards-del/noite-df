@@ -3,6 +3,7 @@ import { additionalPlaces } from './places-2026-09';
 import { additionalPlacesNovember10 } from './places-2026-11-10';
 import { additionalPlacesNovember11 } from './places-2026-11-11';
 import { additionalPlacesNovember12 } from './places-2026-11-12';
+import { additionalPlacesNovember13 } from './places-2026-11-13';
 import { enrichContact } from './contact-updates';
 
 const createPlace = (overrides: Partial<Establishment> & Pick<Establishment, 'id' | 'name' | 'region' | 'type' | 'description' | 'address' | 'vibe' | 'music' | 'audience' | 'price' | 'mapsQuery'>): Establishment => {
@@ -89,4 +90,5 @@ export const places: Establishment[] = [
   ...additionalPlacesNovember10,
   ...additionalPlacesNovember11,
   ...additionalPlacesNovember12,
+  ...additionalPlacesNovember13,
 ].filter((place) => place.publicationStatus !== 'draft').map(enrichContact);
