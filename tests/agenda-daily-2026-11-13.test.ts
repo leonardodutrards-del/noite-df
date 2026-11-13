@@ -47,12 +47,12 @@ describe('Cobertura diária Noite DF — 13/11/2026', () => {
   });
 
   it('publishes the explicitly dated Ticiana schedule from the official site', async () => {
-    const heldIds = [
+    const confirmedIds = [
       'ticiana-marri-2026-11-13',
       'ticiana-alysson-takaki-2026-11-14',
       'ticiana-pj-camargo-2026-11-16',
     ];
-    for (const id of heldIds) {
+    for (const id of confirmedIds) {
       const event = confirmedEventsNovember10.find((item) => item.id === id);
       expect(event?.publicationStatus).toBe('published');
       expect(event?.source?.verifiedAt).toBe('2026-11-13');
@@ -61,7 +61,7 @@ describe('Cobertura diária Noite DF — 13/11/2026', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-11-13T08:00:00-03:00'));
     const agenda = await getPublicAgenda();
-    for (const id of heldIds) {
+    for (const id of confirmedIds) {
       expect(agenda.some((event) => event.id === id)).toBe(true);
     }
   });
