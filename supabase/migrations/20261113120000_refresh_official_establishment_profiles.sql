@@ -42,7 +42,7 @@ where id in ('xique-xique-asa-norte', 'xique-xique-asa-sul')
 
 -- Preserve official source provenance for the profile corrections.
 insert into public.data_sources (entity_type, entity_id, source_kind, label, url, captured_at, verified_at, verified_by)
-select 'establishment', s.entity_id, 'official', s.label, s.url, now(), now(), 'noite-df-daily-monitor'
+select 'establishment', s.entity_id, 'official', s.label, s.url, now(), now(), null
 from (values
   ('dudu-bar', 'Site oficial — endereço, horários, contatos e perfil social', 'https://dudubar.com.br/'),
   ('dudu-bar', 'Instagram oficial vinculado pelo site do estabelecimento', 'https://www.instagram.com/dudubaroficial/'),
