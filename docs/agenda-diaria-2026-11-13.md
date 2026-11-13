@@ -95,56 +95,52 @@ Doze fontes não-Instagram tiveram verificação automática no início da manh�
 
 ## 3. Agenda confirmada — 13 a 15/11
 
-**37 eventos confirmados** no recorte de sexta a domingo, incluindo **5 entradas novas desta rodada**. A agenda inclui as entradas anteriormente verificadas no PR e as cinco novas páginas oficiais adicionadas em 13/11. O total não inclui os três registros da Ticiana que foram movidos para pending_review.
+**38 eventos confirmados** no recorte de sexta a domingo, distribuídos por dia e região. Cinco entradas foram adicionadas nesta rodada; as demais já estavam verificadas em rodadas anteriores e foram mantidas sem duplicação. Os três registros da Ticiana em pending_review não entram nesta contagem.
 
 | Dia | Horário | Evento | Local / região | Estilo | Fonte direta |
 |---|---|---|---|---|---|
-| Sexta-feira 13–15/11 (13/11) | 19h–03h | Reconvexa em Casa Nova | ām.bar · Asa Sul | Samba / MPB / Forró / Pop | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/am-bar) |
-| Sexta-feira 13–15/11 (13/11) | 19h (encerramento não divulgado) | Sóxodó Apresenta Forró Cobogó + Legal | Infinu Comunidade Criativa · Asa Sul | Forró | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/infinu-comunidade-criativa) |
-| Sexta-feira 13–15/11 (13/11) | 19h–02h | Sextanejada no Oscarito | Oscarito Brasília · SIG | Sertanejo / DJs | [Página oficial de ingresso](https://www.sympla.com.br/evento/sextanejada-no-oscarito/3648813) |
-| Sexta-feira 13–15/11 (13/11) | 20h | Rádio Capital — show no Porks Sobradinho | Porks Sobradinho · Sobradinho | Rock ao vivo | [Porks oficial — última verificação 09/11](https://sobradinhoporks.com.br/) |
-| Sexta-feira 13–15/11 (13/11) | 20h às 02h | Rock da Sorte | Galpão 17 · Guará | Rock nacional / internacional | [Página oficial de ingresso](https://www.sympla.com.br/evento/rock-da-sorte-galpao-17/3563488) |
-| Sexta-feira 13–15/11 (13/11) | 20h–05h | Os Meninos de Barão + DJ Eddy Viana — Gala do Piseiro | Texxas Bar · Núcleo Bandeirante | Piseiro / Música ao vivo / DJs | [Página oficial de ingresso](https://www.sympla.com.br/evento/lgc/3586903) |
-| Sexta-feira 13–15/11 (13/11) | 20h–03h (14/11) | Sereníssima — Tributo Legião Urbana + Léo Martine | London Music Bar — Asa Sul · Asa Sul | Pop rock / Tributo | [Página oficial de ingresso](https://www.sympla.com.br/evento/sexta-13-11-serenissima-tributo-legiao-urbana-leo-martine-uma-noite-emocionante-celebrando/3651423) |
-| Sexta-feira 13–15/11 (13/11) | 21h às 05h | Festa do Pisa | Complexo Fora do Eixo · SAAN | Festa / DJs | [Página oficial de ingresso](https://www.sympla.com.br/evento/festa-do-pisa-13-de-novembro/3632580) |
-| Sexta-feira 13–15/11 (13/11) | 21h–05h | Noite dos Solteiros | Worlld Brasília · SIA | Festa / Música ao vivo / DJs | [Página oficial de ingresso](https://www.sympla.com.br/evento/lgc/3642160) |
-| Sexta-feira 13–15/11 (13/11) | 21h–03h (14/11) | PAGODIN 0800 — Portal Pub e Lounge | Portal Pub e Lounge · Novo Gama · Entorno | Pagode / DJ | [Página oficial de ingresso](https://www.sympla.com.br/evento/pagodin-0800-13-11-sexta/3637153) |
-| Sexta-feira 13–15/11 (13/11) | 22h–06h | BRIME!! | Birosca do Conic · Asa Sul | Grime / Rap / Funk | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/birosca) |
-| Sábado 13–15/11 (14/11) | 09h–16h | Corona Day no Osca | Oscarito Brasília · SIG | Samba / Esporte / Lazer | [Página oficial de ingresso](https://www.sympla.com.br/evento/corona-day-no-osca/3648831) |
-| Sábado 13–15/11 (14/11) | 11h às 04h | Sábado Mágico | 14.11 | Varanda Contexto Bar | Contexto Bar · Setor de Clubes Sul | Pagode / Samba / Funk | [Página oficial de ingresso](https://www.sympla.com.br/evento/sabado-magico-14-11-varanda-contexto-bar/3626205) |
-| Sábado 13–15/11 (14/11) | 16h–20h | Bella e o Olmo da Bruxa | Infinu Comunidade Criativa · Asa Sul | Rock alternativo | [Agenda oficial do local / Shotgun](https://shotgun.live/en/events/bella-e-o-olmo-da-bruxa-em-brasilia) |
-| Sábado 13–15/11 (14/11) | 17h–01h (15/11) | Butecada Sertaneja | New Mercadito Bar e Restaurante · Asa Sul | Sertanejo | [Página oficial de ingresso](https://www.sympla.com.br/evento/butecada-sertaneja-14-11-new-mercadito/3651288) |
-| Sábado 13–15/11 (14/11) | 18h–02h | Sábadô no Oscarito | Oscarito Brasília · SIG | Samba / Sertanejo / Música ao vivo | [Página oficial de ingresso](https://www.sympla.com.br/evento/sabado-no-oscarito/3648839) |
-| Sábado 13–15/11 (14/11) | 19h–03h | Pequila 12 Anos | ām.bar · Asa Sul | Música latina / Salsa / Reggaeton | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/am-bar) |
-| Sábado 13–15/11 (14/11) | 19h–23h45 | Encontro Alternativo Zepelim | Zepelim Rock Bar · Asa Norte | Show alternativo | [Página oficial de ingresso](https://www.sympla.com.br/evento/encontro-alternativo-zepelim/3638134) |
-| Sábado 13–15/11 (14/11) | 19h–04h (15/11) | 5º Piseiro Mistura Louca | Rancho do João Paulin · Novo Gama · Entorno | Piseiro | [Página oficial de ingresso](https://www.sympla.com.br/evento/5o-piseiro-mistura-louca/3548228) |
-| Sábado 13–15/11 (14/11) | 20h | Velho Olho Vermelho — show no Porks Sobradinho | Porks Sobradinho · Sobradinho | Rock ao vivo | [Porks oficial — última verificação 09/11](https://sobradinhoporks.com.br/#agenda) |
-| Sábado 13–15/11 (14/11) | 20h às 02h | Flashback 80s — Edição Disco | Galpão 17 · Guará | Disco / Pop / Rock / Dance / Eurodance | [Página oficial de ingresso](https://www.sympla.com.br/evento/flashback-80s-disco-galpao-17/3563368) |
-| Sábado 13–15/11 (14/11) | 20h (encerramento não divulgado) | BSB Punk Fest — Bullet Bane | Infinu Comunidade Criativa · Asa Sul | Punk / Hardcore | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/infinu-comunidade-criativa) |
-| Sábado 13–15/11 (14/11) | 20h–01h | Noite de Tributos | Trends Pub · Gama | Rock / Tributos | [Página oficial de ingresso](https://www.sympla.com.br/evento/noite-de-tributos/3631271) |
-| Sábado 13–15/11 (14/11) | 21h às 05h | Toca da Bruxa | Complexo Fora do Eixo · SAAN | Funk bruxaria | [Página oficial de ingresso](https://www.sympla.com.br/evento/toca-da-bruxa-14-de-novembro/3637835) |
-| Sábado 13–15/11 (14/11) | 21h–05h | Thiago Jhonathan | Worlld Brasília | Worlld Brasília · SIA | Música ao vivo / DJs | [Página oficial de ingresso](https://www.sympla.com.br/evento/thiago-jhonathan-worlld-brasilia/3645006) |
-| Sábado 13–15/11 (14/11) | 21h30–04h30 | Os Meninos de Barão no Dose Dupla | Arena Dose Dupla · Ceilândia | Música ao vivo | [Página oficial de ingresso](https://www.sympla.com.br/evento/os-meninos-de-barao-no-dose-dupla-ceilandia/3587126) |
-| Sábado 13–15/11 (14/11) | 22h–06h | Sambay BSB | Birosca do Conic · Asa Sul | Samba / Pagode / Pop | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/birosca) |
-| Sábado 13–15/11 (14/11) | 23h–03h | Seasons — Bailão | Infinu Comunidade Criativa · Asa Sul | DJs / Baile | [Agenda oficial do local / Shotgun](https://shotgun.live/fr/events/seasons) |
-| Domingo 13–15/11 (15/11) | 12h–23h | Pagodomm com Benza Deus | Dom Muster Cozinha & Bar · Samambaia | Pagode / Sertanejo | [Página oficial de ingresso](https://www.sympla.com.br/evento/pagodomm-com-benza-deus-domingo-15-no-dom-muster/3649858) |
-| Domingo 13–15/11 (15/11) | 15h–23h59 | Chama no Pagode — Sudário e Lucas Alves | Estação Beira Lago · Setor de Clubes Sul | Pagode / Samba | [Página oficial de ingresso](https://www.sympla.com.br/evento/lgc/3631552) |
-| Domingo 13–15/11 (15/11) | 15h–23h59 | Tardezinha da Club | Club Gastrobar · Valparaíso · Entorno | Festa / Música ao vivo (gênero não informado) | [Página oficial de ingresso](https://www.sympla.com.br/evento/tardezinha-da-club/3636567) |
-| Domingo 13–15/11 (15/11) | a partir das 16h | 10 Horas de Forró — Encontro dos Forrozeiros | Arena Dose Dupla · Ceilândia | Forró | [Página oficial de ingresso](https://www.sympla.com.br/evento/10-horas-de-forro/3614097) |
-| Domingo 13–15/11 (15/11) | 18h–23h59 | Cabaré Noturno — Plastique Noir | Infinu Comunidade Criativa · Asa Sul | Darkwave / Post-punk / Gothic rock | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/events/cabare-noturno-plastique-noir) |
-| Domingo 13–15/11 (15/11) | 18h–04h | Molhadêra — 15 de Novembro | Complexo Fora do Eixo · SAAN | Pagode / Funk / Pagode baiano / Swingueira | [Página oficial de ingresso](https://www.sympla.com.br/evento/molhadera-15-de-novembro/3649056) |
-| Domingo 13–15/11 (15/11) | 19h–23h | 3ª Dream Factory | Galpão 17 · Guará / SMAS | Dança / Pole Dance / Performance | [Página oficial de ingresso](https://www.sympla.com.br/evento/3a-dream-factory/3597505) |
-| Domingo 13–15/11 (15/11) | 21h–23h59 | Papangu | Infinu Comunidade Criativa · Asa Sul | Rock progressivo / Experimental | [Agenda oficial do local / Shotgun](https://shotgun.live/pt-br/venues/infinu-comunidade-criativa) |
-| Domingo 13–15/11 (15/11) | 22h às 05h | Os Meninos de Barão no Telebar | Telebar · Ceilândia | Show ao vivo / estilo não informado | [Página oficial de ingresso](https://www.sympla.com.br/evento/os-meninos-de-barao-no-telebar-15-11/3632223) |
+| Sexta-feira (13/11) | 18h | Deu Mó Love | 13.11 | Varanda do Contexto | Contexto Bar · Setor de Clubes Sul | Pagode / Funk | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/deu-mo-love-13-11-varanda-do-contexto/3628678) |
+| Sexta-feira (13/11) | 19h–03h | Reconvexa em Casa Nova | ām.bar · Asa Sul | Samba / MPB / Forró / Pop | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/am-bar) |
+| Sexta-feira (13/11) | 19h (encerramento não divulgado) | Sóxodó Apresenta Forró Cobogó + Legal | Infinu Comunidade Criativa · Asa Sul | Forró | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/infinu-comunidade-criativa) |
+| Sexta-feira (13/11) | 19h–02h | Sextanejada no Oscarito | Oscarito Brasília · SIG | Sertanejo / DJs | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/sextanejada-no-oscarito/3648813) |
+| Sexta-feira (13/11) | 20h | Rádio Capital — show no Porks Sobradinho | Porks Sobradinho · Sobradinho | Rock ao vivo | [Porks oficial — rechecagem não parseável hoje](https://sobradinhoporks.com.br/) |
+| Sexta-feira (13/11) | 20h às 02h | Rock da Sorte | Galpão 17 · Guará | Rock nacional / internacional | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/rock-da-sorte-galpao-17/3563488) |
+| Sexta-feira (13/11) | 20h–05h | Os Meninos de Barão + DJ Eddy Viana — Gala do Piseiro | Texxas Bar · Núcleo Bandeirante | Piseiro / Música ao vivo / DJs | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/lgc/3586903) |
+| Sexta-feira (13/11) | 20h–03h (14/11) | Sereníssima — Tributo Legião Urbana + Léo Martine | London Music Bar — Asa Sul · Asa Sul | Pop rock / Tributo | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/sexta-13-11-serenissima-tributo-legiao-urbana-leo-martine-uma-noite-emocionante-celebrando/3651423) |
+| Sexta-feira (13/11) | 21h às 05h | Festa do Pisa | Complexo Fora do Eixo · SAAN | Festa / DJs | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/festa-do-pisa-13-de-novembro/3632580) |
+| Sexta-feira (13/11) | 21h–05h | Noite dos Solteiros | Worlld Brasília · SIA | Festa / Música ao vivo / DJs | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/lgc/3642160) |
+| Sexta-feira (13/11) | 21h–03h (14/11) | PAGODIN 0800 — Portal Pub e Lounge | Portal Pub e Lounge · Novo Gama · Entorno | Pagode / DJ | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/pagodin-0800-13-11-sexta/3637153) |
+| Sexta-feira (13/11) | 22h–06h | BRIME!! | Birosca do Conic · Asa Sul | Grime / Rap / Funk | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/birosca) |
+| Sábado (14/11) | 09h–16h | Corona Day no Osca | Oscarito Brasília · SIG | Samba / Esporte / Lazer | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/corona-day-no-osca/3648831) |
+| Sábado (14/11) | 11h às 04h | Sábado Mágico | 14.11 | Varanda Contexto Bar | Contexto Bar · Setor de Clubes Sul | Pagode / Samba / Funk | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/sabado-magico-14-11-varanda-contexto-bar/3626205) |
+| Sábado (14/11) | 16h–20h | Bella e o Olmo da Bruxa | Infinu Comunidade Criativa · Asa Sul | Rock alternativo | [Shotgun — agenda oficial do local/evento](https://shotgun.live/en/events/bella-e-o-olmo-da-bruxa-em-brasilia) |
+| Sábado (14/11) | 17h–01h (15/11) | Butecada Sertaneja | New Mercadito Bar e Restaurante · Asa Sul | Sertanejo | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/butecada-sertaneja-14-11-new-mercadito/3651288) |
+| Sábado (14/11) | 18h–02h | Sábadô no Oscarito | Oscarito Brasília · SIG | Samba / Sertanejo / Música ao vivo | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/sabado-no-oscarito/3648839) |
+| Sábado (14/11) | 19h–03h | Pequila 12 Anos | ām.bar · Asa Sul | Música latina / Salsa / Reggaeton | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/am-bar) |
+| Sábado (14/11) | 19h–23h45 | Encontro Alternativo Zepelim | Zepelim Rock Bar · Asa Norte | Show alternativo | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/encontro-alternativo-zepelim/3638134) |
+| Sábado (14/11) | 19h–04h (15/11) | 5º Piseiro Mistura Louca | Rancho do João Paulin · Novo Gama · Entorno | Piseiro | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/5o-piseiro-mistura-louca/3548228) |
+| Sábado (14/11) | 20h | Velho Olho Vermelho — show no Porks Sobradinho | Porks Sobradinho · Sobradinho | Rock ao vivo | [Porks oficial — rechecagem não parseável hoje](https://sobradinhoporks.com.br/#agenda) |
+| Sábado (14/11) | 20h às 02h | Flashback 80s — Edição Disco | Galpão 17 · Guará | Disco / Pop / Rock / Dance / Eurodance | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/flashback-80s-disco-galpao-17/3563368) |
+| Sábado (14/11) | 20h (encerramento não divulgado) | BSB Punk Fest — Bullet Bane | Infinu Comunidade Criativa · Asa Sul | Punk / Hardcore | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/infinu-comunidade-criativa) |
+| Sábado (14/11) | 20h–01h | Noite de Tributos | Trends Pub · Gama | Rock / Tributos | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/noite-de-tributos/3631271) |
+| Sábado (14/11) | 21h às 05h | Toca da Bruxa | Complexo Fora do Eixo · SAAN | Funk bruxaria | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/toca-da-bruxa-14-de-novembro/3637835) |
+| Sábado (14/11) | 21h–05h | Thiago Jhonathan | Worlld Brasília | Worlld Brasília · SIA | Música ao vivo / DJs | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/thiago-jhonathan-worlld-brasilia/3645006) |
+| Sábado (14/11) | 21h30–04h30 | Os Meninos de Barão no Dose Dupla | Arena Dose Dupla · Ceilândia | Música ao vivo | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/os-meninos-de-barao-no-dose-dupla-ceilandia/3587126) |
+| Sábado (14/11) | 22h–06h | Sambay BSB | Birosca do Conic · Asa Sul | Samba / Pagode / Pop | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/birosca) |
+| Sábado (14/11) | 23h–03h | Seasons — Bailão | Infinu Comunidade Criativa · Asa Sul | DJs / Baile | [Shotgun — agenda oficial do local/evento](https://shotgun.live/fr/events/seasons) |
+| Domingo (15/11) | 12h–23h | Pagodomm com Benza Deus | Dom Muster Cozinha & Bar · Samambaia | Pagode / Sertanejo | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/pagodomm-com-benza-deus-domingo-15-no-dom-muster/3649858) |
+| Domingo (15/11) | 15h–23h59 | Chama no Pagode — Sudário e Lucas Alves | Estação Beira Lago · Setor de Clubes Sul | Pagode / Samba | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/lgc/3631552) |
+| Domingo (15/11) | 15h–23h59 | Tardezinha da Club | Club Gastrobar · Valparaíso · Entorno | Festa / Música ao vivo (gênero não informado) | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/tardezinha-da-club/3636567) |
+| Domingo (15/11) | a partir das 16h | 10 Horas de Forró — Encontro dos Forrozeiros | Arena Dose Dupla · Ceilândia | Forró | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/10-horas-de-forro/3614097) |
+| Domingo (15/11) | 18h–23h59 | Cabaré Noturno — Plastique Noir | Infinu Comunidade Criativa · Asa Sul | Darkwave / Post-punk / Gothic rock | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/events/cabare-noturno-plastique-noir) |
+| Domingo (15/11) | 18h–04h | Molhadêra — 15 de Novembro | Complexo Fora do Eixo · SAAN | Pagode / Funk / Pagode baiano / Swingueira | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/molhadera-15-de-novembro/3649056) |
+| Domingo (15/11) | 19h–23h | 3ª Dream Factory | Galpão 17 · Guará / SMAS | Dança / Pole Dance / Performance | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/3a-dream-factory/3597505) |
+| Domingo (15/11) | 21h–23h59 | Papangu | Infinu Comunidade Criativa · Asa Sul | Rock progressivo / Experimental | [Shotgun — agenda oficial do local/evento](https://shotgun.live/pt-br/venues/infinu-comunidade-criativa) |
+| Domingo (15/11) | 22h às 05h | Os Meninos de Barão no Telebar | Telebar · Ceilândia | Show ao vivo / estilo não informado | [Sympla — página oficial de ingresso](https://www.sympla.com.br/evento/os-meninos-de-barao-no-telebar-15-11/3632223) |
 
-**Nota sobre Porks Sobradinho:** Rádio Capital (13/11) e Velho Olho Vermelho (14/11) permanecem na agenda por verificação anterior da agenda oficial em 09/11. A rechecagem desta manhã abriu o site oficial, mas o conteúdo da agenda não ficou extraível; não foi possível confirmar alterações hoje.
+**Porks Sobradinho:** Rádio Capital (13/11) e Velho Olho Vermelho (14/11) permanecem com base na agenda oficial verificada em 09/11. A rechecagem de 13/11 abriu o site oficial, mas a agenda não ficou legível/extraível; não foi possível confirmar alterações nesta rodada.
 
-**Novos eventos incluídos nesta rodada:**
-- Sextanejada no Oscarito — 13/11, 19h–02h.
-- Sereníssima — Tributo Legião Urbana + Léo Martine, London Music Bar — Asa Sul — 13/11, 20h–03h.
-- Corona Day no Osca — 14/11, 09h–16h.
-- Butecada Sertaneja, New Mercadito — 14/11, 17h–01h. O resultado oficial do Sympla apresentou os dados completos, mas a abertura direta da página retornou cache miss.
-- Pagodomm com Benza Deus, Dom Muster — 15/11, 12h–23h.
+**Limitação de fonte:** a página oficial do Sympla para Butecada Sertaneja retornou todos os dados no resultado indexado, mas a abertura direta retornou cache miss. Data, horário e local foram preservados conforme a página oficial indexada e a limitação está sinalizada.
 
 ## 4. Eventos mantidos pendentes
 
