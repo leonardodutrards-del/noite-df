@@ -16,7 +16,7 @@ export const confirmedEventsNovember09: EventItem[] = [
     expiresAt: '2026-11-14T06:00:00-03:00',
     admissionNote: 'O site oficial informa que não há cobrança de entrada nem couvert, inclusive em dias de show. Confirme eventuais alterações diretamente com a casa.',
     sourceStatus: 'manual',
-    publicationStatus: 'published',
+    publicationStatus: 'pending_review',
     source: { kind: 'official', label: 'Agenda oficial do Porks Sobradinho', url: 'https://sobradinhoporks.com.br/', verifiedAt: '2026-11-09' },
   },
   {
@@ -80,7 +80,7 @@ export const confirmedEventsNovember09: EventItem[] = [
     expiresAt: '2026-11-15T06:00:00-03:00',
     admissionNote: 'O site oficial informa que não há cobrança de entrada nem couvert, inclusive em dias de show. Confirme eventuais alterações diretamente com a casa.',
     sourceStatus: 'manual',
-    publicationStatus: 'published',
+    publicationStatus: 'pending_review',
     source: { kind: 'official', label: 'Agenda oficial do Porks Sobradinho', url: 'https://sobradinhoporks.com.br/#agenda', verifiedAt: '2026-11-09' },
   },
   {
