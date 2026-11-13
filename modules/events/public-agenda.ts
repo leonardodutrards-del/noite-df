@@ -15,6 +15,7 @@ import { confirmedEventsNovember10Upcoming } from '@/data/seeds/events-2026-11-1
 import { confirmedEventsNovember11 } from '@/data/seeds/events-2026-11-11';
 import { confirmedEventsNovember12 } from '@/data/seeds/events-2026-11-12';
 import { confirmedEventsNovember12Upcoming } from '@/data/seeds/events-2026-11-12-upcoming';
+import { confirmedEventsNovember13 } from '@/data/seeds/events-2026-11-13';
 
 const normalizeIdentity = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 
@@ -81,7 +82,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
 
     return [
       ...publicEvents,
-      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember10Upcoming, ...confirmedEventsNovember11, ...confirmedEventsNovember12, ...confirmedEventsNovember12Upcoming].filter((event) =>
+      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember10Upcoming, ...confirmedEventsNovember11, ...confirmedEventsNovember12, ...confirmedEventsNovember12Upcoming, ...confirmedEventsNovember13].filter((event) =>
         Date.parse(event.expiresAt || '') > Date.now() &&
         !existing.has(key(event)) &&
         !existingSources.has(correctionSourceKey(event))
