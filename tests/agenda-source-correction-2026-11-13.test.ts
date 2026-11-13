@@ -49,9 +49,11 @@ describe('Correção de slug Sympla — Deu Mó Bailão', () => {
     }]);
 
     const agenda = await getPublicAgenda();
-    const event = agenda.find((item) => item.source?.url?.includes('/3628678'));
+    const matching = agenda.filter((item) => item.source?.url?.includes('/3628678'));
+    const event = matching[0];
 
-    expect(event).toBeDefined();
+    expect(matching).toHaveLength(1);
+    expect(event?.id).toBe('sympla-3628678');
     expect(event?.title).toBe('Deu Mó Bailão | 13.11 | Varanda do Contexto');
     expect(event?.source?.url).toBe('https://www.sympla.com.br/evento/lgc/3628678');
     expect(agenda.some((item) => item.title === 'Deu Mó Love | 13.11 | Varanda do Contexto')).toBe(false);
