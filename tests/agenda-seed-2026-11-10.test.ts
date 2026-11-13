@@ -24,11 +24,16 @@ describe('Agenda diária 10–16/11/2026', () => {
     expect(confirmedEventsNovember10.some((event) => event.id === 'arena-dose-dupla-os-meninos-barao-2026-11-14')).toBe(true);
     expect(confirmedEventsNovember10.some((event) => event.id === 'arena-dose-dupla-10-horas-forro-2026-11-15')).toBe(true);
 
+    const heldIds = new Set([
+      'ticiana-marri-2026-11-13',
+      'ticiana-alysson-takaki-2026-11-14',
+      'ticiana-pj-camargo-2026-11-16',
+    ]);
     for (const event of confirmedEventsNovember10) {
       expect(event.startsAt).toBeTruthy();
       expect(event.source?.kind).toBe('official');
       expect(event.source?.url).toMatch(/^https:\/\//);
-      expect(event.publicationStatus).toBe('published');
+      expect(event.publicationStatus).toBe(heldIds.has(event.id) ? 'pending_review' : 'published');
     }
   });
 
@@ -70,7 +75,8 @@ describe('Agenda diária 10–16/11/2026', () => {
     vi.setSystemTime(new Date('2026-11-10T08:00:00-03:00'));
 
     const agenda = await getPublicAgenda();
-    expect(agenda.filter((event) => event.id.startsWith('ticiana-')).length).toBe(6);
+    expect(agenda.filter((event) => event.id.startsWith('ticiana-')).length).toBe(3);
+    expect(agenda.some((event) => ['ticiana-marri-2026-11-13', 'ticiana-alysson-takaki-2026-11-14', 'ticiana-pj-camargo-2026-11-16'].includes(event.id))).toBe(false);
     expect(agenda.filter((event) => event.id.startsWith('ambar-')).length).toBe(4);
     expect(agenda.filter((event) => event.id.startsWith('birosca-')).length).toBe(5);
     expect(agenda.some((event) => event.id === 'birosca-cha-da-alice-2026-11-28')).toBe(true);
