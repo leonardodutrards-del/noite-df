@@ -15,8 +15,8 @@ afterEach(() => vi.useRealTimers());
 
 describe('Cobertura diária Noite DF — 13/11/2026', () => {
   it('contains twelve new events with official ticketing sources and unique identities', () => {
-    expect(confirmedEventsNovember13).toHaveLength(12);
-    expect(new Set(confirmedEventsNovember13.map((event) => event.id)).size).toBe(12);
+    expect(confirmedEventsNovember13).toHaveLength(13);
+    expect(new Set(confirmedEventsNovember13.map((event) => event.id)).size).toBe(13);
 
     for (const event of confirmedEventsNovember13) {
       expect(event.startsAt).toBeTruthy();
