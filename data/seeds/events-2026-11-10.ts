@@ -165,7 +165,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     admissionNote: 'Couvert artístico informado pela casa: R$18 por pessoa nas áreas indicadas na programação.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: officialSource('Programação musical oficial — Ticiana Werner', 'https://www.ticianawerner.com.br/musica.php'),
+    source: { kind: 'official', label: 'Programação musical oficial — Ticiana Werner', url: 'https://www.ticianawerner.com.br/musica.php', verifiedAt: '2026-11-13' },
   },
   {
     id: 'birosca-brime-2026-11-13',
@@ -229,7 +229,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     admissionNote: 'Couvert artístico informado pela casa: R$18 por pessoa nas áreas indicadas na programação.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: officialSource('Programação musical oficial — Ticiana Werner', 'https://www.ticianawerner.com.br/musica.php'),
+    source: { kind: 'official', label: 'Programação musical oficial — Ticiana Werner', url: 'https://www.ticianawerner.com.br/musica.php', verifiedAt: '2026-11-13' },
   },
   {
     id: 'infinu-bsb-punk-fest-2026-11-14',
@@ -372,7 +372,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     admissionNote: 'Couvert artístico informado pela casa: R$18 por pessoa nas áreas indicadas na programação.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: officialSource('Programação musical oficial — Ticiana Werner', 'https://www.ticianawerner.com.br/musica.php'),
+    source: { kind: 'official', label: 'Programação musical oficial — Ticiana Werner', url: 'https://www.ticianawerner.com.br/musica.php', verifiedAt: '2026-11-13' },
   },
 
   {

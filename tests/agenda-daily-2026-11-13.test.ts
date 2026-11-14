@@ -1,0 +1,106 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { confirmedEventsNovember13 } from '@/data/seeds/events-2026-11-13';
+import { additionalPlacesNovember13 } from '@/data/seeds/places-2026-11-13';
+import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
+import { confirmedEventsNovember09 } from '@/data/seeds/events-2026-11-09';
+import { places } from '@/data/seeds/places';
+import { getPublicAgenda } from '@/modules/events/public-agenda';
+import { getWeeklyAgenda } from '@/lib/weekly-agenda';
+
+vi.mock('@/lib/supabase-admin', () => ({
+  getSupabaseAdminConfig: () => null,
+}));
+
+afterEach(() => vi.useRealTimers());
+
+describe('Cobertura diária Noite DF — 13/11/2026', () => {
+  it('contains thirteen new events with official ticketing sources and unique identities', () => {
+    expect(confirmedEventsNovember13).toHaveLength(13);
+    expect(new Set(confirmedEventsNovember13.map((event) => event.id)).size).toBe(13);
+
+    for (const event of confirmedEventsNovember13) {
+      expect(event.startsAt).toBeTruthy();
+      expect(event.endsAt || event.expiresAt).toBeTruthy();
+      expect(event.source?.kind).toBe('official');
+      expect(event.source?.url).toMatch(/^https:\/\//);
+      expect(event.source?.verifiedAt).toBe('2026-11-13');
+      expect(event.publicationStatus).toBe('published');
+
+      const weekday = new Intl.DateTimeFormat('pt-BR', {
+        weekday: 'long',
+        timeZone: 'America/Sao_Paulo',
+      }).format(new Date(event.startsAt || '')).toLowerCase();
+      expect(event.dateLabel.toLowerCase()).toContain(weekday);
+    }
+  });
+
+  it('keeps the thirteen additions visible in the public weekly agenda', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-13T08:00:00-03:00'));
+
+    const agenda = await getPublicAgenda();
+    const weekly = getWeeklyAgenda(agenda);
+    for (const event of confirmedEventsNovember13) {
+      expect(agenda.some((item) => item.id === event.id)).toBe(true);
+      expect(weekly.some((item) => item.id === event.id)).toBe(true);
+    }
+  });
+
+  it('publishes the explicitly dated Ticiana schedule from the official site', async () => {
+    const confirmedIds = [
+      'ticiana-marri-2026-11-13',
+      'ticiana-alysson-takaki-2026-11-14',
+      'ticiana-pj-camargo-2026-11-16',
+    ];
+    for (const id of confirmedIds) {
+      const event = confirmedEventsNovember10.find((item) => item.id === id);
+      expect(event?.publicationStatus).toBe('published');
+      expect(event?.source?.verifiedAt).toBe('2026-11-13');
+    }
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-13T08:00:00-03:00'));
+    const agenda = await getPublicAgenda();
+    for (const id of confirmedIds) {
+      expect(agenda.some((event) => event.id === id)).toBe(true);
+    }
+  });
+
+  it('keeps new venue profiles as draft-only until manual review', () => {
+    expect(additionalPlacesNovember13).toHaveLength(7);
+    expect(new Set(additionalPlacesNovember13.map((place) => place.id)).size).toBe(7);
+    const publicIds = new Set(places.map((place) => place.id));
+
+    for (const place of additionalPlacesNovember13) {
+      expect(place.publicationStatus).toBe('draft');
+      expect(place.verified).toBe(false);
+      expect(place.source?.url).toMatch(/^https:\/\//);
+      expect(publicIds.has(place.id)).toBe(false);
+    }
+
+    expect(additionalPlacesNovember13.some((place) => place.id === 'new-mercadito-asa-sul')).toBe(true);
+    expect(additionalPlacesNovember13.some((place) => place.id === 'london-music-bar-asa-sul')).toBe(true);
+    expect(additionalPlacesNovember13.some((place) => place.id === 'moto-rock-cia-pub')).toBe(true);
+    expect(additionalPlacesNovember13.some((place) => place.id === 'espaco-cultural-galpaozinho')).toBe(true);
+    expect(additionalPlacesNovember13.some((place) => place.id === 'aplausos-clube-comedia-guara')).toBe(true);
+    expect(additionalPlacesNovember13.some((place) => place.id === 'olinda-bar-e-restaurante-asa-sul')).toBe(true);
+    expect(additionalPlacesNovember13.some((place) => place.id === 'xique-xique-aguas-claras')).toBe(true);
+  });
+  it('holds Porks events when the current official agenda cannot be rechecked', async () => {
+    const heldIds = [
+      'radio-capital-porks-sobradinho-2026-11-13',
+      'velho-olho-vermelho-porks-sobradinho-2026-11-14',
+    ];
+    for (const id of heldIds) {
+      expect(confirmedEventsNovember09.find((event) => event.id === id)?.publicationStatus).toBe('pending_review');
+    }
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-13T08:00:00-03:00'));
+    const agenda = await getPublicAgenda();
+    for (const id of heldIds) {
+      expect(agenda.some((event) => event.id === id)).toBe(false);
+    }
+  });
+
+});

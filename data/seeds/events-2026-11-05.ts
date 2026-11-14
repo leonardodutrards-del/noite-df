@@ -178,22 +178,7 @@ export const confirmedEventsNovember05: EventItem[] = [
     publicationStatus: 'published',
     source: { kind: 'official', label: 'Sympla · Contexto Bar', url: 'https://www.sympla.com.br/evento/we-the-funk-12-11-varanda-do-contexto-o-funk-e-nosso/3625196', verifiedAt: '2026-11-05' },
   },
-  {
-    id: 'deu-mo-love-contexto-2026-11-13',
-    title: 'Deu Mó Love | 13.11 | Varanda do Contexto',
-    place: 'Contexto Bar',
-    region: 'Setor de Clubes Sul',
-    dateLabel: '13/11/2026 · 18h',
-    category: 'Pagode / Funk',
-    description: 'Edição especial com pagode do Grupo Doze Por Oito e DJs residentes de funk. Evento exclusivo para maiores de 18 anos.',
-    startsAt: '2026-11-13T18:00:00-03:00',
-    endsAt: '2026-11-14T04:00:00-03:00',
-    expiresAt: '2026-11-14T04:00:00-03:00',
-    admissionNote: 'Couvert artístico obrigatório para ingressos VIP; consulte lotes e condições na Sympla.',
-    sourceStatus: 'manual',
-    publicationStatus: 'published',
-    source: { kind: 'official', label: 'Sympla · Contexto Bar', url: 'https://www.sympla.com.br/evento/deu-mo-love-13-11-varanda-do-contexto/3628678', verifiedAt: '2026-11-05' },
-  },
+
 
   {
     id: 'sextanejada-oscarito-2026-11-06',

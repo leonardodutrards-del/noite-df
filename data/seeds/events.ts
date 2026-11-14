@@ -5,6 +5,12 @@ import { confirmedEventsOctober26 } from './events-2026-10-26';
 import { confirmedEventsNovember05 } from './events-2026-11-05';
 import { confirmedEventsNovember09 } from './events-2026-11-09';
 import { confirmedEventsNovember10 } from './events-2026-11-10';
+import { confirmedEventsNovember10Upcoming } from './events-2026-11-10-upcoming';
+import { confirmedEventsNovember11 } from './events-2026-11-11';
+import { confirmedEventsNovember12 } from './events-2026-11-12';
+import { confirmedEventsNovember12Upcoming } from './events-2026-11-12-upcoming';
+import { confirmedEventsNovember13 } from './events-2026-11-13';
+import { confirmedEventsNovember14Upcoming } from './events-2026-11-14-upcoming';
 
 export const events: EventItem[] = [
   {
@@ -69,5 +75,11 @@ export const events: EventItem[] = [
   ...confirmedEventsOctober26,
   ...confirmedEventsNovember05,
   ...confirmedEventsNovember09,
-  ...confirmedEventsNovember10
+  ...confirmedEventsNovember10,
+  ...confirmedEventsNovember10Upcoming,
+  ...confirmedEventsNovember11,
+  ...confirmedEventsNovember12,
+  ...confirmedEventsNovember12Upcoming,
+  ...confirmedEventsNovember13,
+  ...confirmedEventsNovember14Upcoming
 ];

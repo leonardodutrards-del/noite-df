@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
+import { confirmedEventsNovember11 } from '@/data/seeds/events-2026-11-11';
+import { confirmedEventsNovember12 } from '@/data/seeds/events-2026-11-12';
+import { confirmedEventsNovember12Upcoming } from '@/data/seeds/events-2026-11-12-upcoming';
 import { additionalPlacesNovember10 } from '@/data/seeds/places-2026-11-10';
+import { additionalPlacesNovember12 } from '@/data/seeds/places-2026-11-12';
 import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { getWeeklyAgenda } from '@/lib/weekly-agenda';
 
@@ -28,16 +32,57 @@ describe('Agenda diária 10–16/11/2026', () => {
     }
   });
 
+  it('includes 17 newly confirmed events and keeps five new venues in draft', async () => {
+    const newEvents = [
+      ...confirmedEventsNovember11,
+      ...confirmedEventsNovember12,
+      ...confirmedEventsNovember12Upcoming,
+    ];
+    expect(newEvents).toHaveLength(16);
+    expect(new Set(newEvents.map((event) => event.id)).size).toBe(16);
+    for (const event of newEvents) {
+      expect(event.startsAt).toBeTruthy();
+      expect(event.expiresAt).toBeTruthy();
+      expect(event.source?.kind).toBe('official');
+      expect(event.source?.url).toMatch(/^https:\/\//);
+      expect(event.publicationStatus).toBe('published');
+    }
+
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-10T08:00:00-03:00'));
+    expect(Date.now()).toBe(new Date('2026-11-10T08:00:00-03:00').getTime());
+    const agenda = await getPublicAgenda();
+    for (const event of newEvents) {
+      expect(agenda.some((item) => item.id === event.id)).toBe(true);
+    }
+
+    expect(additionalPlacesNovember12).toHaveLength(5);
+    for (const place of additionalPlacesNovember12) {
+      expect(place.publicationStatus).toBe('draft');
+      expect(place.verified).toBe(false);
+      expect(place.source?.kind).toBe('official');
+    }
+    expect(additionalPlacesNovember12.some((place) => place.id === 'portal-pub-e-lounge')).toBe(true);
+    expect(additionalPlacesNovember12.some((place) => place.id === 'club-gastrobar-valparaiso')).toBe(true);
+  });
+
   it('preserves multiple events that share an official weekly agenda URL', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-11-10T08:00:00-03:00'));
 
     const agenda = await getPublicAgenda();
     expect(agenda.filter((event) => event.id.startsWith('ticiana-')).length).toBe(6);
-    expect(agenda.filter((event) => event.id.startsWith('ambar-')).length).toBe(3);
-    expect(agenda.filter((event) => event.id.startsWith('birosca-')).length).toBe(2);
+    for (const id of ['ticiana-marri-2026-11-13', 'ticiana-alysson-takaki-2026-11-14', 'ticiana-pj-camargo-2026-11-16']) {
+      expect(agenda.some((event) => event.id === id)).toBe(true);
+    }
+    expect(agenda.filter((event) => event.id.startsWith('ambar-')).length).toBe(4);
+    expect(agenda.filter((event) => event.id.startsWith('birosca-')).length).toBe(5);
+    expect(agenda.some((event) => event.id === 'birosca-cha-da-alice-2026-11-28')).toBe(true);
+    expect(agenda.some((event) => event.id === 'birosca-nojo-de-farra-2026-12-04')).toBe(true);
+    expect(agenda.some((event) => event.id === 'birosca-lacre-001-2026-12-04')).toBe(true);
     expect(agenda.filter((event) => event.place === 'Infinu Comunidade Criativa' && event.startsAt?.slice(0, 10) === '2026-11-14')).toHaveLength(3);
-    expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(3);
+    expect(agenda.filter((event) => event.place === 'Porks Sobradinho').length).toBe(2);
+    expect(agenda.some((event) => event.id === 'porks-almost-unplugged-2026-11-20')).toBe(true);
     expect(agenda.some((event) => event.id === 'oscarito-sabado-2026-11-14')).toBe(true);
     expect(agenda.some((event) => event.id === 'texxas-bar-os-meninos-barao-2026-11-13')).toBe(true);
     const weekly = getWeeklyAgenda(agenda);
