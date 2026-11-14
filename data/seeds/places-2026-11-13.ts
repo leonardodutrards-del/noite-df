@@ -145,7 +145,7 @@ export const additionalPlacesNovember13: Establishment[] = [
     id: 'olinda-bar-e-restaurante-asa-sul',
     name: 'Olinda Bar e Restaurante — Asa Sul',
     region: 'Asa Sul',
-    type: 'Restaurante / Bar',
+    type: 'Restaurante',
     description: 'Unidade Asa Sul do Olinda Bar e Restaurante, separada da unidade já cadastrada em Taguatinga. O Linktree oficial oferece canais próprios de contato, cardápio e localização para a unidade Asa Sul; endereço e WhatsApp foram cruzados com a ficha pública de mapas.',
     address: 'SHCS CLS 202, Bloco B, Loja 38, Asa Sul, Brasília/DF, 70232-525',
     vibe: ['comida nordestina', 'bar'],
