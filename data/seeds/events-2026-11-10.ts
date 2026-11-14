@@ -164,7 +164,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     expiresAt: '2026-11-13T23:00:00-03:00',
     admissionNote: 'Couvert artístico informado pela casa: R$18 por pessoa nas áreas indicadas na programação.',
     sourceStatus: 'manual',
-    publicationStatus: 'pending_review',
+    publicationStatus: 'published',
     source: { kind: 'official', label: 'Programação musical oficial — Ticiana Werner', url: 'https://www.ticianawerner.com.br/musica.php', verifiedAt: '2026-11-13' },
   },
   {
@@ -228,7 +228,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     expiresAt: '2026-11-14T23:00:00-03:00',
     admissionNote: 'Couvert artístico informado pela casa: R$18 por pessoa nas áreas indicadas na programação.',
     sourceStatus: 'manual',
-    publicationStatus: 'pending_review',
+    publicationStatus: 'published',
     source: { kind: 'official', label: 'Programação musical oficial — Ticiana Werner', url: 'https://www.ticianawerner.com.br/musica.php', verifiedAt: '2026-11-13' },
   },
   {
@@ -371,7 +371,7 @@ export const confirmedEventsNovember10: EventItem[] = [
     expiresAt: '2026-11-16T23:00:00-03:00',
     admissionNote: 'Couvert artístico informado pela casa: R$18 por pessoa nas áreas indicadas na programação.',
     sourceStatus: 'manual',
-    publicationStatus: 'pending_review',
+    publicationStatus: 'published',
     source: { kind: 'official', label: 'Programação musical oficial — Ticiana Werner', url: 'https://www.ticianawerner.com.br/musica.php', verifiedAt: '2026-11-13' },
   },
 
