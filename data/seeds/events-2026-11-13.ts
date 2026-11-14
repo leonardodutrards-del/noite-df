@@ -9,6 +9,23 @@ const officialSource = (label: string, url: string) => ({
 
 export const confirmedEventsNovember13: EventItem[] = [
   {
+    id: 'contexto-deu-mo-bailao-2026-11-13',
+    title: 'Deu Mó Bailão | 13.11 | Varanda do Contexto',
+    place: 'Contexto Bar e Restaurante',
+    region: 'Setor de Clubes Sul',
+    dateLabel: 'Sexta-feira, 13/11/2026 · 18h–04h (14/11)',
+    category: 'Funk / Pagode',
+    description: 'Edição Deu Mó Bailão com funk de Costa, John Saucer, Sidharta B2B Dendê e Sámon B2B Pepê, além de dois blocos do grupo residente Doze Por Oito no pagode. Varanda do Contexto: SCES Trecho 2, conjuntos 26/27, lotes 02A e 02B, Brasília/DF. Evento para maiores de 18 anos.',
+    startsAt: '2026-11-13T18:00:00-03:00',
+    endsAt: '2026-11-14T04:00:00-03:00',
+    expiresAt: '2026-11-14T04:00:00-03:00',
+    admissionNote: 'Couvert artístico obrigatório para ingressos retirados na opção VIP. Consulte lotes e valores na página oficial.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: { kind: 'official', label: 'Sympla oficial — Deu Mó Bailão 13/11', url: 'https://www.sympla.com.br/evento/lgc/3628678', verifiedAt: '2026-11-13' },
+  },
+
+  {
     id: 'oscarito-sextanejada-2026-11-13',
     title: 'Sextanejada no Oscarito',
     place: 'Oscarito Brasília',
