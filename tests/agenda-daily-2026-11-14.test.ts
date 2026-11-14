@@ -10,9 +10,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Cobertura diária — 14/11/2026', () => {
-  it('includes only the three newly confirmed dated events with official sources', () => {
-    expect(confirmedEventsNovember14Upcoming).toHaveLength(3);
-    expect(new Set(confirmedEventsNovember14Upcoming.map((event) => event.id)).size).toBe(3);
+  it('includes nine confirmed dated events with official sources', () => {
+    expect(confirmedEventsNovember14Upcoming).toHaveLength(9);
+    expect(new Set(confirmedEventsNovember14Upcoming.map((event) => event.id)).size).toBe(9);
 
     for (const event of confirmedEventsNovember14Upcoming) {
       expect(event.startsAt).toBeTruthy();
@@ -23,7 +23,13 @@ describe('Cobertura diária — 14/11/2026', () => {
     }
 
     expect(confirmedEventsNovember14Upcoming.map((event) => event.startsAt?.slice(0, 10))).toEqual([
+      '2026-11-14',
+      '2026-11-14',
+      '2026-11-14',
       '2026-11-19',
+      '2026-11-20',
+      '2026-11-20',
+      '2026-11-20',
       '2026-11-21',
       '2026-11-21',
     ]);
@@ -38,15 +44,21 @@ describe('Cobertura diária — 14/11/2026', () => {
       expect(agenda.some((item) => item.id === event.id)).toBe(true);
     }
 
-    expect(additionalPlacesNovember14).toHaveLength(2);
+    expect(additionalPlacesNovember14).toHaveLength(8);
     for (const place of additionalPlacesNovember14) {
       expect(place.publicationStatus).toBe('draft');
       expect(place.verified).toBe(false);
-      expect(place.source?.kind).toBe('official');
+      expect(['official', 'external']).toContain(place.source?.kind);
     }
     expect(additionalPlacesNovember14.map((place) => place.id)).toEqual([
       'saguari-gastro-house-samambaia',
       'toinha-brasil-show-guara',
+      'estacao-beira-lago-setor-de-clubes-sul',
+      'london-music-bar-aguas-claras',
+      'moto-rock-e-cia-taguatinga',
+      'brasilia-motonautica-clube',
+      'mansao-rotineira-santa-maria',
+      'babylon-delicatessen-samambaia',
     ]);
   });
 });

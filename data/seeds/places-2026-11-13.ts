@@ -156,6 +156,7 @@ export const additionalPlacesNovember13: Establishment[] = [
       phone: '+55 61 99258-3670',
       whatsapp: '+55 61 99258-3670',
       sourceUrl: 'https://linktr.ee/olindaoficial1',
+      checkedAt,
     },
     verified: false,
     publicationStatus: 'draft',
@@ -186,6 +187,7 @@ export const additionalPlacesNovember13: Establishment[] = [
     businessContact: {
       phone: '+55 61 3797-6077',
       sourceUrl: 'https://www.restaurantexiquexique.com.br/',
+      checkedAt,
     },
     verified: false,
     publicationStatus: 'draft',
