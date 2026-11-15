@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmedEventsNovember15 } from '@/data/seeds/events-2026-11-15';
 import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { getWeeklyAgenda } from '@/lib/weekly-agenda';
-import { candidatePlacesNovember15 } from '@/data/seeds/place-candidates-2026-11-15';
+import { additionalPlacesNovember10 } from '@/data/seeds/places-2026-11-10';
 
 vi.mock('@/lib/supabase-admin', () => ({
   getSupabaseAdminConfig: () => null,
@@ -68,12 +68,14 @@ describe('Agenda diária 15–28/11/2026', () => {
   });
 
   it('keeps the three new venue candidates as unverified drafts outside the public seed', () => {
-    expect(candidatePlacesNovember15).toHaveLength(3);
-    for (const candidate of candidatePlacesNovember15) {
-      expect(candidate.status).toBe('confirmed_candidate');
-      expect(candidate.place.publicationStatus).toBe('draft');
-      expect(candidate.place.verified).toBe(false);
-      expect(candidate.sources.some((source) => source.kind === 'official')).toBe(true);
+    const candidateIds = ['texxas-bar', 'estacao-beira-lago', 'arena-dose-dupla'];
+    const candidates = additionalPlacesNovember10.filter((place) => candidateIds.includes(place.id));
+    expect(candidates).toHaveLength(3);
+    for (const candidate of candidates) {
+      expect(candidate.publicationStatus).toBe('draft');
+      expect(candidate.verified).toBe(false);
+      expect(candidate.source?.kind).toBe('official');
+      expect(candidate.source?.url).toMatch(/^https:\/\//);
     }
   });
 
