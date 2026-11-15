@@ -1,14 +1,14 @@
 # Operação diária de cobertura e agenda — 15/11/2026
 
-**Verificação:** domingo, 15/11/2026, 09h21 (Brasília).  
+**Verificação:** domingo, 15/11/2026, 09h51 (Brasília).  
 **Escopo:** Brasília/DF e Entorno.  
 **Status:** atualização preparada em branch/PR; nenhuma alteração direta no Supabase, nenhum merge e nenhuma publicação em produção.
 
 ## 1. Resumo executivo
 
 - **104 estabelecimentos publicados** carregados do Supabase, cobrindo **22 regiões**.
-- **31 registros de Instagram** no banco, correspondentes a **29 URLs distintas**. As 29 URLs foram testadas; nenhuma abriu nesta ferramenta. Isso não permite concluir se são públicas, privadas ou inexistentes.
-- **39 eventos confirmados** preparados no arquivo diário da PR, com URL de fonte e data de verificação em cada registro. Um deles (Alberto Moreno) já existe publicado no Supabase e permanece como fallback local; a agenda pública deduplica por local, data/hora e título.
+- **31 registros de Instagram** no banco, correspondentes a **29 URLs distintas**. As 29 URLs foram testadas; nenhuma abriu nesta ferramenta. As 31 tentativas por estabelecimento foram gravadas em `agenda_source_checks` no Supabase em 15/11/2026. Isso não permite concluir se são públicas, privadas ou inexistentes.
+- **48 eventos confirmados** preparados no arquivo diário da PR, com URL de fonte e data de verificação em cada registro. Um deles (Alberto Moreno) já existe publicado no Supabase e permanece como fallback local; a agenda pública deduplica por local, data/hora e título.
 - **1 correção de qualidade**: 10 Horas de Forró mantido com início às 16h e sem horário final, pois a Sympla exibe 16h como início e fim, enquanto a descrição diz apenas “a partir de 16h”. Festa TOMA permanece 21h–06h de 22/11, conforme a página oficial.
 - **3 novos estabelecimentos confirmados como candidatos** e preparados como rascunhos no repositório: Texxas Bar, Estação Beira Lago e Arena Dose Dupla. Nenhum foi inserido no Supabase nem publicado.
 - **10 anúncios/eventos permanecem pendentes** por conflito de data/horário, falta de local, falta de horário inicial ou identidade do local não reconciliada.
@@ -109,7 +109,25 @@ Cada registro abaixo tem `startsAt`, `endsAt`, `expiresAt`, local, região, cate
 | 28/11 sáb. | Motal e Infinu recebem YMA — Sentimental Palace | 20h–23h59 | Infinu | [Shotgun](https://r.shotgun.live/es/events/ymaembsb) |
 | 28/11 sáb. | Salada Sonora × Trisal Batidão com Bya Alves | 19h–03h (29/11) | ām.bar | [Shotgun](https://shotgun.live/pt-pt/events/salada-sonora-x-trisal-batidao) |
 
-**Observação:** a lista acima inclui eventos de 15–28/11 para alimentar a agenda semanal e o calendário mensal. O evento Alberto Moreno já está publicado no Supabase; o fallback local é deduplicado pela chave de identidade.
+**Observação:** a lista acima inclui eventos de 15/11 a 20/12 para alimentar a agenda semanal e o calendário mensal. O evento Alberto Moreno já está publicado no Supabase; o fallback local é deduplicado pela chave de identidade.
+
+
+### Eventos adicionais confirmados na varredura ampliada
+
+| Data | Evento | Horário | Local | Fonte direta |
+|---|---|---|---|---|
+| 15/11 dom. | Tardezinha da Club | 15h–23h59 | Club Gastrobar · Valparaíso/GO | [Sympla](https://www.sympla.com.br/evento/tardezinha-da-club/3636567) |
+| 19/11 qui. | TBT do Benza | 20h–23h59 | Arena CCB - FUTSOCIETY · Cruzeiro | [Sympla](https://www.sympla.com.br/evento/tbt-do-benza/3654005) |
+| 20/11 sex. | Almost Unplugged | 21h · encerramento não informado | Porks Sobradinho | [Agenda oficial](https://sobradinhoporks.com.br/) |
+| 21/11 sáb. | Gudinaite Brasília | 18h–23h | Salão A - Clube AABB · Asa Sul | [Sympla](https://www.sympla.com.br/evento/lgc/3579097) |
+| 21/11 sáb. | Flashback Luziânia — 3ª edição | 21h–04h (22/11) | Espaço JDC · Luziânia/GO | [Sympla](https://www.sympla.com.br/evento/lgc/3629501) |
+| 22/11 dom. | Dominguinho da Club | 15h–23h59 | Club Gastrobar · Valparaíso/GO | [Sympla](https://www.sympla.com.br/evento/dominguinho-da-club/3636579) |
+| 29/11 dom. | Aquele Domingo na Club | 15h–23h59 | Club Gastrobar · Valparaíso/GO | [Sympla](https://www.sympla.com.br/evento/aquele-domingo-na-club/3636586) |
+| 29/11 dom. | Chrigor em Brasília — Véspera de Feriado | 15h30–23h30 | Estação Beira Lago · Setor de Clubes Sul | [Sympla](https://www.sympla.com.br/evento/lgc/3592107) |
+| 20/12 dom. | Orla Party | 13h–23h | Chácara Eles Reis · Planaltina/GO | [Sympla](https://www.sympla.com.br/evento/lgc/3559433) |
+
+A programação adicional eleva o lote diário a **48 eventos confirmados**. Não foram incluídos anúncios com conflito de data/horário ou local pendente.
+
 
 ## 5. Agenda de hoje e eventos já existentes no seed principal
 
@@ -117,40 +135,51 @@ Além dos dois registros novos da PR para 15/11, o seed principal já contém ev
 - 10 Horas de Forró — Arena Dose Dupla, início às 16h; a Sympla não fornece encerramento confiável.
 - Chama no Pagode — Estação Beira Lago, 15h–23h59.
 - Os Meninos de Barão — Telebar, 22h.
+- Tardezinha da Club — Club Gastrobar, Valparaíso/GO, 15h.
 - Cabaré Noturno e Papangu — Infinu.
 - Dream Factory — Galpão 17.
 
 O evento 10 Horas de Forró não recebe horário final inferido: a página mostra 16h como início e fim, mas a descrição informa apenas “a partir de 16h”.
 
-## 6. Novos estabelecimentos — rascunhos preparados
+## 6. Novos estabelecimentos — rascunhos e candidatos pendentes
 
-Três candidatos foram deduplicados no Supabase por nome normalizado, variações, slug, Instagram quando existente, endereço e telefones. Não houve correspondência. Os três registros já existentes no seed `data/seeds/places-2026-11-10.ts` foram enriquecidos com fontes oficiais recentes e mantidos com `publicationStatus='draft'` e `verified=false`; o filtro público continua excluindo rascunhos.
+Três candidatos já existentes no seed foram deduplicados no Supabase por nome normalizado, variações, slug, Instagram quando existente, endereço e telefones. Não houve correspondência. Os registros foram enriquecidos com fontes oficiais e mantidos como `publicationStatus='draft'` e `verified=false`; o filtro público continua excluindo rascunhos.
 
 1. **Texxas Bar** — SIBS Q 1, Conjunto D, Brasília/DF; perfil oficial de eventos do próprio TEXXAS BAR no Sympla, Instagram indicado como @texxasbarbsb e WhatsApp 61 99450-8262. Região sugerida: Núcleo Bandeirante, rótulo ainda ausente das 22 regiões cadastradas.
-2. **Estação Beira Lago** — SCES Trecho 1, Conjunto 03, térreo, Brasília/DF; CNPJ 62.006.612/0001-49 com nome fantasia Estação Beira Lago e situação ativa em 08/08/2026; páginas oficiais Sympla do próprio produtor confirmam eventos em 15 e 21/11. O cadastro CNPJ lista bairro Asa Sul; os eventos localizam o espaço no Setor de Clubes Sul. O CNPJ lista 61 99558-1303 e a página do evento lista 61 99958-1311; nenhum desses números foi mantido como contato definitivo no rascunho até reconciliação.
-3. **Arena Dose Dupla** — QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul; CNPJ 30.103.636/0001-20 / Esquina Choperia LTDA em situação ativa no cadastro consultado; Sympla confirma o evento de 15/11 e o endereço. A página do evento informa 61 99943-9720, mas o número não foi armazenado como contato permanente do estabelecimento.
+2. **Estação Beira Lago** — SCES Trecho 1, Conjunto 03, térreo, Brasília/DF; CNPJ 62.006.612/0001-49 com nome fantasia Estação Beira Lago e situação ativa em 08/08/2026; páginas oficiais Sympla do próprio produtor confirmam eventos em novembro. O cadastro CNPJ lista bairro Asa Sul; os eventos localizam o espaço no Setor de Clubes Sul. Telefones divergentes foram mantidos fora do contato definitivo até reconciliação.
+3. **Arena Dose Dupla** — QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul; CNPJ 30.103.636/0001-20 / Esquina Choperia LTDA em situação ativa no cadastro consultado; Sympla confirma evento e endereço.
 
-Nenhum candidato foi inserido no Supabase ou publicado. A criação definitiva exige revisão do endereço/região e conferência humana do cadastro.
+**Seis locais adicionais identificados apenas como candidatos a perfil**, sem criação porque a evidência disponível nesta rodada é de páginas de eventos, ainda insuficiente para uma ficha empresarial completa e inequívoca:
+- **Club Gastrobar** — Rua 2, Qd. 58, Valparaíso de Goiás/GO; duas páginas Sympla do produtor Papá Produção confirmam eventos e o mesmo endereço.
+- **Espaço JDC** — Fazenda Tabocão, Jardim Brasília Sul/Zona Rural, Luziânia/GO; página Sympla confirma evento, data e endereço rural.
+- **Arena CCB - FUTSOCIETY** — SRES, Cruzeiro, Brasília/DF; Sympla confirma evento e localização, mas o endereço cadastral completo não foi reconciliado.
+- **Clube AABB / Salão A** — Asa Sul, Trecho 2, conjunto 17/20; página oficial de evento confirma o salão e o endereço.
+- **Chácara Eles Reis** — Lagoa Formosa, Planaltina/GO; Sympla confirma evento em 20/12, mas não fornece endereço de rua.
+- **Viracopos Gastrobar** — Rua 100, 2-192, Valparaíso de Goiás/GO; página de evento identifica o local, mas o anúncio tem conflito de data e a ficha comercial independente ainda precisa ser confirmada.
+
+Nenhum perfil novo foi inserido no Supabase ou publicado. Os seis locais permanecem candidatos pendentes; os três rascunhos existentes continuam fora do catálogo público.
 
 ## 7. Pendências e anúncios não publicados
 
-1. **Sábado Mágico — Contexto, 21/11:** página informa 11h, mas a descrição menciona programação regular a partir de 12h. Horário conflitante.
-2. **FeijoADA com Amor de Aluguel — Contexto, 21/11:** título/listagem indica 21/11 às 15h; descrição menciona 14/11 às 11h. Data e horário conflitantes.
+1. **Sábado Mágico — Contexto, 21/11:** a página informa início às 11h, mas a descrição menciona a programação regular a partir de 12h. Horário conflitante.
+2. **FeijoADA com Amor de Aluguel — Contexto, 21/11:** título/listagem indica 21/11 às 15h; descrição menciona 14/11 às 11h. Data e horário conflitantes; pode ser anúncio duplicado do Sábado Mágico.
 3. **Pagodão das Estrelas — 20/11:** página identifica Bahrein Comida de Boteco, mas a descrição chama o local de Amsterdã (antigo Bahrein). Endereço é Setor Hortigranjeiro, Chácara 12, km 1/2, Santa Maria. Não associar ao Bahrein Cozinha e Bar de Valparaíso.
 4. **Marília Tavares no Amsterdam — 21/11:** a Sympla identifica Bahrein Comida de Boteco no mesmo endereço de Santa Maria, enquanto a descrição usa Amsterdam. A identidade comercial precisa ser confirmada.
-5. **Ressaca do Jorem — Luziânia:** não foi possível confirmar horário de início em página oficial acessível.
-6. **TBT do Benza — Arena CCB:** anúncio localizado para 19/11, mas o endereço completo e a identidade do espaço não foram confirmados.
-7. **Quarta Delas — Quintal da Tia Sandra:** menção secundária sem data/horário em fonte oficial acessível.
-8. **Festa de Interior — Piseiro Estilizado — 21/11:** horário encontrado, mas local não identificado.
-9. **IN DA CLUB — 20/11:** anúncio localizado, mas sem local verificável.
-10. **REGALO — Funk e Brindes — 20/11:** anúncio localizado, mas sem local verificável.
+5. **Ressaca do Jorem — Luziânia:** não foi possível confirmar data e horário de início em página oficial acessível.
+6. **Festa de Interior — Piseiro Estilizado — 21/11:** anúncio localizado com horário, mas sem local identificável.
+7. **IN DA CLUB — 20/11:** duas páginas oficiais de ingresso divergem no início (20h e 21h); manter pendente até reconciliação.
+8. **REGALO — Funk e Brindes — 20/11:** anúncio localizado, mas sem local verificável.
+9. **Os Meninos de Barão no Viracopos — 15/11:** cabeçalho Sympla indica 15/11 às 18h, mas a descrição informa “domingo 11 de novembro”. Não publicar por conflito de data.
+10. **Dead Slug — Porks Sobradinho, 21/11:** agenda oficial lista a banda para sábado, mas não informa horário de início; manter pendente.
+
+**Quarta Delas — Quintal da Tia Sandra:** menção secundária sem data/horário e sem flyer oficial acessível; não foi tratada como evento atual. O site oficial mostra apenas a seção “Programação Musical” sem conteúdo datado legível.
 
 **Rota do Piseiro / Bar LG:** não foi localizado perfil oficial inequívoco da Rota do Piseiro nem flyer atual confirmando Bar LG como local. Bar LG/Espaço LG não foi misturado com Galpão dos Brutos. Nenhum evento foi atribuído ao Bar LG sem evidência oficial.  
 **Galpão dos Brutos:** permanece tratado como parado, conforme informação do usuário; não foi usado como local de programação atual.
 
 ## 8. Estabelecimentos sem agenda futura confirmada
 
-A busca por programação futura não encontrou confirmação publicável para **94 dos 104 estabelecimentos publicados** nas fontes acessíveis desta rodada. Isso é “sem agenda confirmada encontrada”, não prova de ausência de evento.
+A busca por programação futura não encontrou confirmação publicável para **93 dos 104 estabelecimentos publicados** nas fontes acessíveis desta rodada. O Porks Sobradinho foi retirado desta lista após confirmação de Almost Unplugged em 20/11. Isso é “sem agenda confirmada encontrada”, não prova de ausência de evento.
 
 Prioridades sem anúncio futuro confirmado: Rancho do Vaqueiro, Rota do Piseiro, Eita Lounge Bar, Oito Gastrobar, P10 Gastrobar, Palahop, Oscarito Brasília, Quintal da Tia Sandra, Espaço LG/Bar LG, Galpão Zero 8, Narguimania, Decky Bar, Bar Stilo 10 e Arena P10. O site do Quintal informa música ao vivo de forma geral, mas não apresenta datas/atrações verificáveis para a semana. O Galpão dos Brutos permanece parado, sem programação atribuída.
 
@@ -162,6 +191,6 @@ Prioridades sem anúncio futuro confirmado: Rancho do Vaqueiro, Rota do Piseiro,
 - **Candidatos em rascunho:** https://github.com/leonardodutrards-del/noite-df/blob/agenda/2026-11-15-daily-coverage/data/seeds/places-2026-11-10.ts
 - **Relatório:** https://github.com/leonardodutrards-del/noite-df/blob/agenda/2026-11-15-daily-coverage/docs/agenda-diaria-2026-11-15.md
 
-A PR permanece em rascunho. Após esta atualização, CI e preview precisam terminar novamente; só serão considerados verdes quando o head atualizado estiver com testes, lint, build e Vercel Preview READY. Não houve merge nem publicação em produção. A produção continua no deployment da branch principal; a prévia desta PR não foi usada como substituta da produção.
+A PR permanece em rascunho. Após esta atualização, CI e preview precisam terminar novamente; só serão considerados verdes quando o head atualizado estiver com testes, lint, build e Vercel Preview READY. Não houve merge nem publicação em produção. A produção continua no deployment da branch principal; a prévia desta PR não foi usada como substituta da produção. O último head desta atualização precisa manter CI e Vercel Preview verdes antes de qualquer revisão para merge.
 
 Na verificação pública atual, `/agenda-semanal` ainda retorna 4 eventos e `/fim-de-semana` retorna 18 itens de 13–15/11. A agenda nova ainda não foi publicada, portanto essas páginas não refletem o lote desta PR. Não foi feita publicação em feed/Stories e nenhum estabelecimento foi contatado.
