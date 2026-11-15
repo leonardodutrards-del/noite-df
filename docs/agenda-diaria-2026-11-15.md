@@ -8,10 +8,10 @@
 
 - **104 estabelecimentos publicados** carregados do Supabase, cobrindo **22 regiões**.
 - **31 registros de Instagram** no banco, correspondentes a **29 URLs distintas**. As 29 URLs foram testadas; nenhuma abriu nesta ferramenta. As 31 tentativas por estabelecimento foram gravadas em `agenda_source_checks` no Supabase em 15/11/2026. Isso não permite concluir se são públicas, privadas ou inexistentes.
-- **48 eventos confirmados** preparados no arquivo diário da PR, com URL de fonte e data de verificação em cada registro. Um deles (Alberto Moreno) já existe publicado no Supabase e permanece como fallback local; a agenda pública deduplica por local, data/hora e título.
+- **69 eventos confirmados** preparados no arquivo diário da PR, com URL de fonte e data de verificação em cada registro. Um deles (Alberto Moreno) já existe publicado no Supabase e permanece como fallback local; a agenda pública deduplica por local, data/hora e título.
 - **1 correção de qualidade**: 10 Horas de Forró mantido com início às 16h e sem horário final, pois a Sympla exibe 16h como início e fim, enquanto a descrição diz apenas “a partir de 16h”. Festa TOMA permanece 21h–06h de 22/11, conforme a página oficial.
 - **3 novos estabelecimentos confirmados como candidatos** e preparados como rascunhos no repositório: Texxas Bar, Estação Beira Lago e Arena Dose Dupla. Nenhum foi inserido no Supabase nem publicado.
-- **10 anúncios/eventos permanecem pendentes** por conflito de data/horário, falta de local, falta de horário inicial ou identidade do local não reconciliada.
+- **13 anúncios/eventos permanecem pendentes** por conflito de data/horário, falta de local, falta de horário inicial ou identidade do local não reconciliada.
 - Não houve cancelamento confirmado nesta rodada. Eventos vencidos não foram promovidos; não houve despublicação automática de estabelecimentos.
 
 ## 2. Base publicada e regiões
@@ -126,7 +126,38 @@ Cada registro abaixo tem `startsAt`, `endsAt`, `expiresAt`, local, região, cate
 | 29/11 dom. | Chrigor em Brasília — Véspera de Feriado | 15h30–23h30 | Estação Beira Lago · Setor de Clubes Sul | [Sympla](https://www.sympla.com.br/evento/lgc/3592107) |
 | 20/12 dom. | Orla Party | 13h–23h | Chácara Eles Reis · Planaltina/GO | [Sympla](https://www.sympla.com.br/evento/lgc/3559433) |
 
-A programação adicional eleva o lote diário a **48 eventos confirmados**. Não foram incluídos anúncios com conflito de data/horário ou local pendente.
+A programação adicional eleva o lote diário a **69 eventos confirmados**. Não foram incluídos anúncios com conflito de data/horário ou local pendente.
+
+
+### Eventos adicionais confirmados — Birosca, Infinu e agenda oficial
+
+| Data | Evento | Horário | Local | Fonte direta |
+|---|---|---|---|---|
+| 16/11 seg. | PJ Camargo — Jazz lounge | 19h30–23h | Ticiana Werner Wine Bar · Asa Sul | [Agenda oficial](https://www.ticianawerner.com.br/musica.php) — já constava no seed anterior, não entra na contagem de 69 |
+| 21/11 sáb. | Na Batida do Morro — 10 Anos | 22h–06h (22/11) | Birosca do Conic Pub / Arena Conic · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/21-11-na-batida-do-morro-10-anos) |
+| 29/11 dom. | BSB Punk Fest — Rancore | 16h–20h30 | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/festivals/bsb-punk-fest-rancore) |
+| 02/12 qua. | Isso É Jazz?! Esdras e Marcus tocam Moacir Santos | 20h15–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/isso-e-jazz-60) |
+| 03/12 qui. | Tranquilo apresenta Jonatas Belgrande | 19h–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/tranquilobrasilia-2026-12-03) |
+| 04/12 sex. | Nojo de Farra — A Confraternização | 19h–03h (05/12) | Birosca do Conic Pub · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/04-12-nojo-de-farra) |
+| 04/12 sex. | Lacre 001 | 22h–06h (05/12) | Birosca do Conic Pub · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/lacre-001) |
+| 05/12 sáb. | Infinu apresenta Daparte (MG) | 17h–20h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/daparteembsb) |
+| 05/12 sáb. | Infinu recebe Mombojó | 20h–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/infinurecebemombojo) |
+| 05/12 sáb. | Garoto: O Circo Dançante | 23h–07h (06/12) | Birosca do Conic Pub / Arena Conic · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/05-12-garoto-o-circo-dancante) |
+| 06/12 dom. | Tom Ribeira — lançamento do EP Vovóvovô | 21h–23h30 | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/tomribeiraembsb-3) |
+| 09/12 qua. | Isso É Jazz?! Iara Gomes toca Thelonious Monk | 20h15–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/isso-e-jazz-62) |
+| 10/12 qui. | Tranquilo apresenta Yoún | 19h–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/tranquilobrasilia-2026-12-10) |
+| 11/12 sex. | Conclave Furacão 2000 — Funks de 2000 a 2020 | 22h–06h (12/12) | Birosca do Conic · Asa Sul | [Agenda oficial Birosca/Shotgun](https://shotgun.live/pt-br/venues/birosca) |
+| 12/12 sáb. | Club Vittar com Pabllo Vittar | 21h–06h (13/12) | Arena Birosca · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/12-12-club-vittar-com-pabllo-vittar) |
+| 12/12 sáb. | Infinu recebe Os Replicantes | 20h30–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/osreplicantes) |
+| 13/12 dom. | Valhalla + Device = Death Metal Chaos | 20h30–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/valhalladevice) |
+| 16/12 qua. | Isso É Jazz?! Esdras Nogueira e Grupo tocam O Transa | 20h15–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/isso-e-jazz-61) |
+| 23/12 qua. | Isso É Jazz?! Esdras Nogueira e Passo Largo tocam Dominguinhos | 20h15–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-pt/events/isso-e-jazz-63) |
+| 30/12 qua. | Isso É Jazz?! Bailão de Fim de Ano | 20h15–23h | Infinu Comunidade Criativa · Asa Sul | [Shotgun](https://shotgun.live/pt-pt/events/isso-e-jazz-64) |
+| 02/01 sáb. | Garoto New Year | 23h–07h (03/01) | Birosca do Conic Pub / Arena Conic · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/02-01-garoto-new-year) |
+| 16/01 sáb. | Garoto Festival — Especial Anitta | 23h de 16/01 até 05h30 de 18/01 | Birosca do Conic Pub / Arena Conic · Asa Sul | [Shotgun](https://shotgun.live/pt-br/events/16-17-01-garoto-festival-especial-anitta) |
+
+A contagem da seed diária passa a **69 eventos confirmados**. Os eventos de Birosca e Infinu foram conferidos em suas agendas oficiais Shotgun; PJ Camargo já estava no seed anterior. O evento Club Vittar foi mantido separado em **Arena Birosca**, cujo endereço é diferente do Birosca do Conic Pub.
+
 
 
 ## 5. Agenda de hoje e eventos já existentes no seed principal
@@ -149,13 +180,14 @@ Três candidatos já existentes no seed foram deduplicados no Supabase por nome 
 2. **Estação Beira Lago** — SCES Trecho 1, Conjunto 03, térreo, Brasília/DF; CNPJ 62.006.612/0001-49 com nome fantasia Estação Beira Lago e situação ativa em 08/08/2026; páginas oficiais Sympla do próprio produtor confirmam eventos em novembro. O cadastro CNPJ lista bairro Asa Sul; os eventos localizam o espaço no Setor de Clubes Sul. Telefones divergentes foram mantidos fora do contato definitivo até reconciliação.
 3. **Arena Dose Dupla** — QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul; CNPJ 30.103.636/0001-20 / Esquina Choperia LTDA em situação ativa no cadastro consultado; Sympla confirma evento e endereço.
 
-**Seis locais adicionais identificados apenas como candidatos a perfil**, sem criação porque a evidência disponível nesta rodada é de páginas de eventos, ainda insuficiente para uma ficha empresarial completa e inequívoca:
+**Sete locais adicionais identificados apenas como candidatos a perfil**, sem criação porque a evidência disponível nesta rodada é de páginas de eventos, ainda insuficiente para uma ficha empresarial completa e inequívoca:
 - **Club Gastrobar** — Rua 2, Qd. 58, Valparaíso de Goiás/GO; duas páginas Sympla do produtor Papá Produção confirmam eventos e o mesmo endereço.
 - **Espaço JDC** — Fazenda Tabocão, Jardim Brasília Sul/Zona Rural, Luziânia/GO; página Sympla confirma evento, data e endereço rural.
 - **Arena CCB - FUTSOCIETY** — SRES, Cruzeiro, Brasília/DF; Sympla confirma evento e localização, mas o endereço cadastral completo não foi reconciliado.
 - **Clube AABB / Salão A** — Asa Sul, Trecho 2, conjunto 17/20; página oficial de evento confirma o salão e o endereço.
 - **Chácara Eles Reis** — Lagoa Formosa, Planaltina/GO; Sympla confirma evento em 20/12, mas não fornece endereço de rua.
 - **Viracopos Gastrobar** — Rua 100, 2-192, Valparaíso de Goiás/GO; página de evento identifica o local, mas o anúncio tem conflito de data e a ficha comercial independente ainda precisa ser confirmada.
+- **Arena Birosca** — SDS, Edifício Darcy Ribeiro, Asa Sul, Brasília/DF; evento oficial com Pabllo Vittar confirma endereço distinto do Birosca do Conic Pub; manter como unidade/local separado até validação cadastral.
 
 Nenhum perfil novo foi inserido no Supabase ou publicado. Os seis locais permanecem candidatos pendentes; os três rascunhos existentes continuam fora do catálogo público.
 
@@ -171,6 +203,9 @@ Nenhum perfil novo foi inserido no Supabase ou publicado. Os seis locais permane
 8. **REGALO — Funk e Brindes — 20/11:** anúncio localizado, mas sem local verificável.
 9. **Os Meninos de Barão no Viracopos — 15/11:** cabeçalho Sympla indica 15/11 às 18h, mas a descrição informa “domingo 11 de novembro”. Não publicar por conflito de data.
 10. **Dead Slug — Porks Sobradinho, 21/11:** agenda oficial lista a banda para sábado, mas não informa horário de início; manter pendente.
+11. **Chá da Alice — Birosca, 28/11:** cabeçalho da Shotgun informa 28/11 às 22h, mas a descrição ainda fala em “maio”. Manter pendente até correção do texto oficial.
+12. **Seasons — Infinu, 05/12:** cabeçalho da Shotgun indica 05/12, mas a descrição informa 14/11. Data conflitante.
+13. **Bastardos da Noite — Infinu, 06/12:** cabeçalho da Shotgun informa 16h, enquanto o serviço na descrição informa bilheteria às 17h e show às 18h. Início conflitante.
 
 **Quarta Delas — Quintal da Tia Sandra:** menção secundária sem data/horário e sem flyer oficial acessível; não foi tratada como evento atual. O site oficial mostra apenas a seção “Programação Musical” sem conteúdo datado legível.
 
@@ -179,7 +214,7 @@ Nenhum perfil novo foi inserido no Supabase ou publicado. Os seis locais permane
 
 ## 8. Estabelecimentos sem agenda futura confirmada
 
-A busca por programação futura não encontrou confirmação publicável para **93 dos 104 estabelecimentos publicados** nas fontes acessíveis desta rodada. O Porks Sobradinho foi retirado desta lista após confirmação de Almost Unplugged em 20/11. Isso é “sem agenda confirmada encontrada”, não prova de ausência de evento.
+A busca por programação futura não encontrou confirmação publicável para **92 dos 104 estabelecimentos publicados** nas fontes acessíveis desta rodada. O Porks Sobradinho foi retirado desta lista após confirmação de Almost Unplugged em 20/11. Isso é “sem agenda confirmada encontrada”, não prova de ausência de evento.
 
 Prioridades sem anúncio futuro confirmado: Rancho do Vaqueiro, Rota do Piseiro, Eita Lounge Bar, Oito Gastrobar, P10 Gastrobar, Palahop, Oscarito Brasília, Quintal da Tia Sandra, Espaço LG/Bar LG, Galpão Zero 8, Narguimania, Decky Bar, Bar Stilo 10 e Arena P10. O site do Quintal informa música ao vivo de forma geral, mas não apresenta datas/atrações verificáveis para a semana. O Galpão dos Brutos permanece parado, sem programação atribuída.
 
