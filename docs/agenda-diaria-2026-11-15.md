@@ -124,11 +124,11 @@ O evento 10 Horas de Forró não recebe horário final inferido: a página mostr
 
 ## 6. Novos estabelecimentos — rascunhos preparados
 
-Três candidatos foram deduplicados no Supabase por nome normalizado, variações, slug, Instagram quando existente, endereço e telefones. Não houve correspondência. Os três registros já existentes no seed `data/seeds/places-2026-11-10.ts` foram enriquecidos com fontes oficiais recentes, mantidos com `publicationStatus='draft'` e `verified=false`; não são publicados no catálogo.
+Três candidatos foram deduplicados no Supabase por nome normalizado, variações, slug, Instagram quando existente, endereço e telefones. Não houve correspondência. Os três registros já existentes no seed `data/seeds/places-2026-11-10.ts` foram enriquecidos com fontes oficiais recentes e mantidos com `publicationStatus='draft'` e `verified=false`; o filtro público continua excluindo rascunhos.
 
 1. **Texxas Bar** — SIBS Q 1, Conjunto D, Brasília/DF; perfil oficial de eventos do próprio TEXXAS BAR no Sympla, Instagram indicado como @texxasbarbsb e WhatsApp 61 99450-8262. Região sugerida: Núcleo Bandeirante, rótulo ainda ausente das 22 regiões cadastradas.
-2. **Estação Beira Lago** — SCES Trecho 1, Conjunto 03, térreo, Brasília/DF; CNPJ 62.006.612/0001-49 com nome fantasia Estação Beira Lago e situação ativa em 08/08/2026; páginas oficiais Sympla do próprio produtor confirmam eventos em 15 e 21/11. O cadastro CNPJ lista bairro Asa Sul; os eventos localizam o espaço no Setor de Clubes Sul. Contatos divergentes entre CNPJ e página de evento ficam anotados para revisão.
-3. **Arena Dose Dupla** — QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul; CNPJ 30.103.636/0001-20 / Esquina Choperia LTDA em situação ativa no cadastro consultado; Sympla confirma o evento de 15/11 e o endereço. Telefone da página do evento: 61 99943-9720.
+2. **Estação Beira Lago** — SCES Trecho 1, Conjunto 03, térreo, Brasília/DF; CNPJ 62.006.612/0001-49 com nome fantasia Estação Beira Lago e situação ativa em 08/08/2026; páginas oficiais Sympla do próprio produtor confirmam eventos em 15 e 21/11. O cadastro CNPJ lista bairro Asa Sul; os eventos localizam o espaço no Setor de Clubes Sul. O CNPJ lista 61 99558-1303 e a página do evento lista 61 99958-1311; nenhum desses números foi mantido como contato definitivo no rascunho até reconciliação.
+3. **Arena Dose Dupla** — QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul; CNPJ 30.103.636/0001-20 / Esquina Choperia LTDA em situação ativa no cadastro consultado; Sympla confirma o evento de 15/11 e o endereço. A página do evento informa 61 99943-9720, mas o número não foi armazenado como contato permanente do estabelecimento.
 
 Nenhum candidato foi inserido no Supabase ou publicado. A criação definitiva exige revisão do endereço/região e conferência humana do cadastro.
 
