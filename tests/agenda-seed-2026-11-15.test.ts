@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmedEventsNovember15 } from '@/data/seeds/events-2026-11-15';
 import { getPublicAgenda } from '@/modules/events/public-agenda';
 import { getWeeklyAgenda } from '@/lib/weekly-agenda';
+import { candidatePlacesNovember15 } from '@/data/seeds/place-candidates-2026-11-15';
 
 vi.mock('@/lib/supabase-admin', () => ({
   getSupabaseAdminConfig: () => null,
@@ -10,9 +11,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 15–28/11/2026', () => {
-  it('contains 20 dated events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember15).toHaveLength(20);
-    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(20);
+  it('contains 39 dated events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember15).toHaveLength(39);
+    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(39);
 
     for (const event of confirmedEventsNovember15) {
       expect(event.startsAt).toBeTruthy();
@@ -46,4 +47,34 @@ describe('Agenda diária 15–28/11/2026', () => {
     const agenda = await getPublicAgenda();
     expect(agenda.filter((event) => event.id === 'alberto-moreno-adega-2026-11-21')).toHaveLength(1);
   });
+
+  it('includes the verified venue schedules in the next Monday–Sunday window', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-16T08:00:00-03:00'));
+
+    const agenda = await getPublicAgenda();
+    const weekly = getWeeklyAgenda(agenda);
+
+    for (const id of [
+      'surra-de-modao-contexto-2026-11-18',
+      'ticiana-rosana-brown-2026-11-17',
+      'infinu-jimi-oliver-2026-11-18',
+      'infinu-joyce-alane-2026-11-19',
+      'infinu-soxodo-2026-11-20',
+      'ambar-sexta-mtv-summer-eletro-clipes-2026-11-20',
+    ]) {
+      expect(weekly.some((event) => event.id === id)).toBe(true);
+    }
+  });
+
+  it('keeps the three new venue candidates as unverified drafts outside the public seed', () => {
+    expect(candidatePlacesNovember15).toHaveLength(3);
+    for (const candidate of candidatePlacesNovember15) {
+      expect(candidate.status).toBe('confirmed_candidate');
+      expect(candidate.place.publicationStatus).toBe('draft');
+      expect(candidate.place.verified).toBe(false);
+      expect(candidate.sources.some((source) => source.kind === 'official')).toBe(true);
+    }
+  });
+
 });
