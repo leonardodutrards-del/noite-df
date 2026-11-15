@@ -10,10 +10,10 @@ vi.mock('@/lib/supabase-admin', () => ({
 
 afterEach(() => vi.useRealTimers());
 
-describe('Agenda diária 15–28/11/2026', () => {
-  it('contains 48 dated events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember15).toHaveLength(48);
-    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(48);
+describe('Agenda diária 15/11/2026–16/01/2027', () => {
+  it('contains 69 dated events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember15).toHaveLength(69);
+    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(69);
 
     for (const event of confirmedEventsNovember15) {
       expect(event.startsAt).toBeTruthy();
@@ -94,6 +94,7 @@ describe('Agenda diária 15–28/11/2026', () => {
       'gudinaite-aabb-2026-11-21',
       'flashback-luziania-2026-11-21',
       'dominguinho-club-2026-11-22',
+      'na-batida-do-morro-10-anos-2026-11-21',
     ]) {
       expect(weekly.some((event) => event.id === id)).toBe(true);
     }
@@ -102,6 +103,26 @@ describe('Agenda diária 15–28/11/2026', () => {
       'aquele-domingo-club-2026-11-29',
       'chrigor-estacao-beira-lago-2026-11-29',
       'orla-party-chacara-eles-reis-2026-12-20',
+      'nojo-de-farra-birosca-2026-12-04',
+      'lacre-001-birosca-2026-12-04',
+      'garoto-circo-dancante-birosca-2026-12-05',
+      'conclave-furacao-2000-birosca-2026-12-11',
+      'club-vittar-pabllo-vittar-arena-birosca-2026-12-12',
+      'garoto-new-year-birosca-2027-01-02',
+      'garoto-festival-anitta-birosca-2027-01-16',
+      'bsb-punk-fest-rancore-infinu-2026-11-29',
+      'isso-e-jazz-esdras-marcus-moacir-santos-infinu-2026-12-02',
+      'tranquilo-jonatas-belgrande-infinu-2026-12-03',
+      'infinu-daparte-2026-12-05',
+      'infinu-mombojo-2026-12-05',
+      'tom-ribeira-vovovovo-infinu-2026-12-06',
+      'isso-e-jazz-iara-gomes-monk-infinu-2026-12-09',
+      'tranquilo-youn-infinu-2026-12-10',
+      'infinu-replicantes-2026-12-12',
+      'valhalla-device-death-metal-infinu-2026-12-13',
+      'isso-e-jazz-esdras-grupo-transa-infinu-2026-12-16',
+      'isso-e-jazz-dominguinhos-infinu-2026-12-23',
+      'isso-e-jazz-bailao-fim-ano-infinu-2026-12-30',
     ]) {
       expect(agenda.some((event) => event.id === id)).toBe(true);
     }
