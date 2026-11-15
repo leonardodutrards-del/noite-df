@@ -124,7 +124,7 @@ O evento 10 Horas de Forró não recebe horário final inferido: a página mostr
 
 ## 6. Novos estabelecimentos — rascunhos preparados
 
-Três candidatos foram deduplicados no Supabase por nome normalizado, variações, slug, Instagram quando existente, endereço e telefones. Não houve correspondência. Os registros estão no arquivo separado `data/seeds/place-candidates-2026-11-15.ts`, tipados pelo modelo existente e com `publicationStatus='draft'`, `verified=false`; não são importados pelo seed público.
+Três candidatos foram deduplicados no Supabase por nome normalizado, variações, slug, Instagram quando existente, endereço e telefones. Não houve correspondência. Os três registros já existentes no seed `data/seeds/places-2026-11-10.ts` foram enriquecidos com fontes oficiais recentes, mantidos com `publicationStatus='draft'` e `verified=false`; não são publicados no catálogo.
 
 1. **Texxas Bar** — SIBS Q 1, Conjunto D, Brasília/DF; perfil oficial de eventos do próprio TEXXAS BAR no Sympla, Instagram indicado como @texxasbarbsb e WhatsApp 61 99450-8262. Região sugerida: Núcleo Bandeirante, rótulo ainda ausente das 22 regiões cadastradas.
 2. **Estação Beira Lago** — SCES Trecho 1, Conjunto 03, térreo, Brasília/DF; CNPJ 62.006.612/0001-49 com nome fantasia Estação Beira Lago e situação ativa em 08/08/2026; páginas oficiais Sympla do próprio produtor confirmam eventos em 15 e 21/11. O cadastro CNPJ lista bairro Asa Sul; os eventos localizam o espaço no Setor de Clubes Sul. Contatos divergentes entre CNPJ e página de evento ficam anotados para revisão.
@@ -159,7 +159,7 @@ Prioridades sem anúncio futuro confirmado: Rancho do Vaqueiro, Rota do Piseiro,
 - **PR:** https://github.com/leonardodutrards-del/noite-df/pull/155
 - **Branch:** `agenda/2026-11-15-daily-coverage`
 - **Arquivo de eventos:** https://github.com/leonardodutrards-del/noite-df/blob/agenda/2026-11-15-daily-coverage/data/seeds/events-2026-11-15.ts
-- **Candidatos em rascunho:** https://github.com/leonardodutrards-del/noite-df/blob/agenda/2026-11-15-daily-coverage/data/seeds/place-candidates-2026-11-15.ts
+- **Candidatos em rascunho:** https://github.com/leonardodutrards-del/noite-df/blob/agenda/2026-11-15-daily-coverage/data/seeds/places-2026-11-10.ts
 - **Relatório:** https://github.com/leonardodutrards-del/noite-df/blob/agenda/2026-11-15-daily-coverage/docs/agenda-diaria-2026-11-15.md
 
 A PR permanece em rascunho. Após esta atualização, CI e preview precisam terminar novamente; só serão considerados verdes quando o head atualizado estiver com testes, lint, build e Vercel Preview READY. Não houve merge nem publicação em produção. A produção continua no deployment da branch principal; a prévia desta PR não foi usada como substituta da produção.
