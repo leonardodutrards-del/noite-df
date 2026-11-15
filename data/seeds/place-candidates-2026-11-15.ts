@@ -107,11 +107,6 @@ export const candidatePlacesNovember15: EstablishmentCandidate[] = [
       vibe: ['música ao vivo', 'dança', 'eventos'],
       music: ['forró', 'piseiro'],
       audience: ['maiores de 18 anos'],
-      businessContact: {
-        phone: '+55 61 99943-9720',
-        sourceUrl: 'https://www.sympla.com.br/evento/10-horas-de-forro/3614097',
-        checkedAt: '2026-11-15',
-      },
       mapsQuery: 'Arena Dose Dupla QNM 09 Conjunto A Lotes 02 e 04 Ceilândia Sul Brasília DF',
       verified: false,
       ownerManaged: false,
