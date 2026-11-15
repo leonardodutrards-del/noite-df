@@ -9,7 +9,7 @@
 - **104 estabelecimentos publicados** carregados do Supabase, cobrindo **22 regiões**.
 - **31 registros de Instagram** no banco, correspondentes a **29 URLs distintas**. As 29 URLs foram testadas; nenhuma abriu nesta ferramenta. Isso não permite concluir se são públicas, privadas ou inexistentes.
 - **39 eventos confirmados** preparados no arquivo diário da PR, com URL de fonte e data de verificação em cada registro. Um deles (Alberto Moreno) já existe publicado no Supabase e permanece como fallback local; a agenda pública deduplica por local, data/hora e título.
-- **2 correções de horário/qualidade**: Festa TOMA corrigida para encerramento às 09h de 22/11; 10 Horas de Forró mantido com início às 16h e sem horário final, pois a Sympla exibe 16h como início e fim, enquanto a descrição diz apenas “a partir de 16h”.
+- **1 correção de qualidade**: 10 Horas de Forró mantido com início às 16h e sem horário final, pois a Sympla exibe 16h como início e fim, enquanto a descrição diz apenas “a partir de 16h”. Festa TOMA permanece 21h–06h de 22/11, conforme a página oficial.
 - **3 novos estabelecimentos confirmados como candidatos** e preparados como rascunhos no repositório: Texxas Bar, Estação Beira Lago e Arena Dose Dupla. Nenhum foi inserido no Supabase nem publicado.
 - **10 anúncios/eventos permanecem pendentes** por conflito de data/horário, falta de local, falta de horário inicial ou identidade do local não reconciliada.
 - Não houve cancelamento confirmado nesta rodada. Eventos vencidos não foram promovidos; não houve despublicação automática de estabelecimentos.
@@ -69,14 +69,14 @@ Cada registro abaixo tem `startsAt`, `endsAt`, `expiresAt`, local, região, cate
 
 | Data | Evento | Horário | Local | Fonte direta |
 |---|---|---|---|---|
-| 15/11 dom. | MOLHADÊRA | 19h–04h | Complexo Fora do Eixo | [Sympla](https://www.sympla.com.br/evento/molhadera-15-de-novembro/3649056) |
+| 15/11 dom. | MOLHADÊRA | 19h–04h | Complexo Fora do Eixo | [Sympla](https://www.sympla.com.br/evento/lgc/3649056) |
 | 15/11 dom. | Choppada do Madá | 12h–23h30 | Boteco da Madá | [Sympla](https://www.sympla.com.br/evento/choppada-do-mada-domingo-15-11-12h/3653590) |
 | 17/11 ter. | Forró na Varanda | 18h–01h | Contexto Bar | [Sympla](https://www.sympla.com.br/evento/forro-na-varanda-17-11-varanda-do-contexto/3625155) |
 | 17/11 ter. | Rosana Brown | 19h30–23h | Ticiana Werner | [Agenda oficial](https://www.ticianawerner.com.br/musica.php) |
 | 18/11 qua. | Surra de Modão + Cardápio em Dobro | 18h–02h | Contexto Bar | [Sympla](https://www.sympla.com.br/evento/surra-de-modao-cardapio-em-dobro-18-11-varanda-do-contexto/3626362) |
 | 18/11 qua. | Andresa Sousa | 19h30–23h | Ticiana Werner | [Agenda oficial](https://www.ticianawerner.com.br/musica.php) |
 | 18/11 qua. | Isso É Jazz?! — Jimi Oliver | 20h15–23h | Infinu | [Shotgun](https://shotgun.live/nl/events/isso-e-jazz-58) |
-| 19/11 qui. | Nu Metal Festival | 20h–02h | Galpão 17 | [Sympla](https://www.sympla.com.br/evento/lgc/3563513) |
+| 19/11 qui. | Nu Metal Festival | 20h–02h | Galpão 17 | [Sympla](https://www.sympla.com.br/evento/nu-metal-festival-galpao-17/3563513) |
 | 19/11 qui. | Quinta do CPX | 21h–05h | Complexo Fora do Eixo | [Sympla](https://www.sympla.com.br/evento/quinta-do-cpx-19-11-pre-feriado/3652478) |
 | 19/11 qui. | We The Funk | 21h–04h | Contexto Bar | [Sympla](https://www.sympla.com.br/evento/lgc/3625200) |
 | 19/11 qui. | As Sertanejas + Nego Rainner + DJ Eddy Viana | 20h–05h | Texxas Bar (candidato) | [Sympla](https://www.sympla.com.br/evento/texxas-bar-quinta-vespera-de-feriado-as-sertanejas-nego-rainner-dj-eddy-viana/3653610) |
@@ -96,7 +96,7 @@ Cada registro abaixo tem `startsAt`, `endsAt`, `expiresAt`, local, região, cate
 | 21/11 sáb. | Texxas Bar — Moleca 100 Vergonha / Só Pra Xamegar / DJ Hércules | 20h–05h | Texxas Bar (candidato) | [Sympla](https://www.sympla.com.br/evento/texxas-bar-moleca-100-vergonha-sabado-so-pra-xamegar-spx-dj-hercules/3637061) |
 | 21/11 sáb. | Alberto Moreno — O Rei do Brega-Pop | 21h–04h | Arena Adega dos Amigos | [Sympla](https://www.sympla.com.br/evento/alberto-moreno-o-rei-do-brega-pop-pela-1a-vez-em-brasilia-df/3586393) |
 | 21/11 sáb. | Miserável Cultura Fest — Lamento + Despenca + Sala de Gritos | 21h–23h59 | Infinu | [Shotgun — agenda oficial](https://shotgun.live/fr/venues/infinu-comunidade-criativa) |
-| 21/11 sáb. | Festa TOMA — Edição Agrobaile | 21h–09h (22/11) | Contexto Bar | [Sympla](https://www.sympla.com.br/evento/lgc/3642351) |
+| 21/11 sáb. | Festa TOMA — Edição Agrobaile | 21h–06h (22/11) | Contexto Bar | [Sympla](https://www.sympla.com.br/evento/festa-toma-edicao-agrobaile-club-contexto-boate-contexto-sabado-21-11-as-21h/3642351) |
 | 21/11 sáb. | Inflama | 22h–05h (22/11) | Complexo Fora do Eixo | [Sympla](https://www.sympla.com.br/evento/inflama-21-de-novembro/3650933) |
 | 24/11 ter. | Infinu recebe Luizga | 20h–23h | Infinu | [Shotgun](https://shotgun.live/nl/events/luizgaembsb) |
 | 25/11 qua. | Surra de Modão + Cardápio em Dobro | 18h–02h (26/11) | Contexto Bar | [Sympla](https://www.sympla.com.br/evento/lgc/3626412) |
