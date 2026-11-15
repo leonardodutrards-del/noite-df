@@ -47,7 +47,7 @@ export const additionalPlacesNovember10: Establishment[] = [
       sourceUrl: 'https://www.sympla.com.br/evento/texxas-bar-sexta-biu-do-piseiro-chama-na-bota-papai-gala-do-piseiro-dj-eddy-viana/3636959',
       checkedAt: '2026-11-15',
     },
-        admissionNote: 'O evento atual informa cobrança de couvert artístico; valores variam conforme a programação.',
+    admissionNote: 'Os eventos publicados informam cobrança de couvert artístico; valores variam conforme a programação.',
     mapsQuery: 'Texxas Bar, SIBS QI 1, Conjunto D, Núcleo Bandeirante, Brasília, DF',
     source: {
       kind: 'official',
@@ -70,10 +70,10 @@ export const additionalPlacesNovember10: Establishment[] = [
     region: 'Ceilândia',
     type: 'Bar',
     description: 'Bar e espaço de música ao vivo em Ceilândia Sul; a página oficial da Sympla confirma evento de forró em 15/11/2026 no endereço informado.',
-    address: 'QNM 09, Conjunto A, Lote 2/4, Ceilândia Sul, Brasília/DF.',
+    address: 'QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul, Brasília/DF.',
     vibe: ['forró', 'piseiro', 'música ao vivo'],
     music: ['forró', 'piseiro'],
-    mapsQuery: 'Arena Dose Dupla, QNM 09, Conjunto A, Lote 2/4, Ceilândia Sul, Brasília, DF',
+    mapsQuery: 'Arena Dose Dupla, QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul, Brasília, DF',
     source: {
       kind: 'official',
       label: 'Sympla oficial — 10 Horas de Forró; endereço confirmado no evento e conferido com o cadastro empresarial',
