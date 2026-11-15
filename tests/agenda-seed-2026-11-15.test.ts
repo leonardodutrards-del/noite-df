@@ -11,14 +11,14 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 15–28/11/2026', () => {
-  it('contains 39 dated events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember15).toHaveLength(39);
-    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(39);
+  it('contains 48 dated events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember15).toHaveLength(48);
+    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(48);
 
     for (const event of confirmedEventsNovember15) {
       expect(event.startsAt).toBeTruthy();
-      expect(event.endsAt).toBeTruthy();
-      expect(event.expiresAt).toBe(event.endsAt);
+      expect(event.expiresAt).toBeTruthy();
+      if (event.endsAt) expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.source?.verifiedAt).toBe('2026-11-15');
@@ -37,6 +37,7 @@ describe('Agenda diária 15–28/11/2026', () => {
     expect(agenda.filter((event) => event.id === 'choppada-mada-2026-11-15')).toHaveLength(1);
     expect(weekly.some((event) => event.id === 'molhadera-complexo-2026-11-15')).toBe(true);
     expect(weekly.some((event) => event.id === 'choppada-mada-2026-11-15')).toBe(true);
+    expect(weekly.some((event) => event.id === 'tardezinha-club-2026-11-15')).toBe(true);
     expect(weekly.some((event) => event.id === 'forro-varanda-contexto-2026-11-17')).toBe(false);
   });
 
@@ -77,6 +78,38 @@ describe('Agenda diária 15–28/11/2026', () => {
       expect(candidate.source?.kind).toBe('official');
       expect(candidate.source?.url).toMatch(/^https:\/\//);
     }
+  });
+
+
+  it('includes newly verified official events across Brasília and Entorno', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-16T08:00:00-03:00'));
+
+    const agenda = await getPublicAgenda();
+    const weekly = getWeeklyAgenda(agenda);
+
+    for (const id of [
+      'porks-almost-unplugged-2026-11-20',
+      'tbt-do-benza-arena-ccb-2026-11-19',
+      'gudinaite-aabb-2026-11-21',
+      'flashback-luziania-2026-11-21',
+      'dominguinho-club-2026-11-22',
+    ]) {
+      expect(weekly.some((event) => event.id === id)).toBe(true);
+    }
+
+    for (const id of [
+      'aquele-domingo-club-2026-11-29',
+      'chrigor-estacao-beira-lago-2026-11-29',
+      'orla-party-chacara-eles-reis-2026-12-20',
+    ]) {
+      expect(agenda.some((event) => event.id === id)).toBe(true);
+    }
+
+    const porks = agenda.find((event) => event.id === 'porks-almost-unplugged-2026-11-20');
+    expect(porks?.startsAt).toBe('2026-11-20T21:00:00-03:00');
+    expect(porks?.endsAt).toBeUndefined();
+    expect(porks?.expiresAt).toBe('2026-11-21T00:00:00-03:00');
   });
 
 });
