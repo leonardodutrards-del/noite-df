@@ -202,9 +202,11 @@ Outros candidatos de eventos recentes, ainda sem fonte oficial do estabeleciment
 - Branch criada a partir do main atual: agenda/2026-11-15-daily-coverage.
 - Arquivo de novos eventos: data/seeds/events-2026-11-15.ts.
 - Integração feita no agregador local e na agenda servida com Supabase habilitado; teste novo valida datas, fontes, deduplicação e janela semanal.
-- PR: a ser aberto como rascunho após esta preparação.
-- CI/Preview: pendentes de execução após abertura do PR.
-- Produção atual continua no commit principal 5b72d2b2326cb12b9cad6959437c78baf04bb9f0, cujo último deployment Vercel foi reportado como READY. A leitura direta das páginas públicas retornou cache miss nesta execução; portanto não foi possível validar visualmente as rotas afetadas.
+- **PR #155:** https://github.com/leonardodutrards-del/noite-df/pull/155 — aberto, draft, mergeable=true; base main no commit 5b72d2b2326cb12b9cad6959437c78baf04bb9f0.
+- **CI:** workflow #587 concluído com sucesso; etapas de testes, lint e build todas verdes.
+- **Vercel Preview:** READY no commit 289daa84ed6a1b0143ee3f04e328c713939c497f: https://noite-omnlc34qa-leonardodutrards-dels-projects.vercel.app
+- **Produção:** continua READY em https://www.noitedf.com.br, no commit main 5b72d2b2326cb12b9cad6959437c78baf04bb9f0. Nenhum deployment de produção foi criado nesta rodada.
+- A leitura direta das rotas /agenda-semanal e /agenda-mensal do preview retornou “URL não acessível” pela ferramenta; o build está READY, mas a validação visual da página não pôde ser concluída.
 - PR anterior #148 permanece aberto e em rascunho; não foi mesclado nem reutilizado porque parte de um commit-base antigo.
 - Não houve merge, deploy de produção, escrita direta em conteúdo do Supabase, mensagem a estabelecimento ou publicação em feed/Stories do Instagram.
 
