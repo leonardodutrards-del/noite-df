@@ -63,7 +63,6 @@ export const additionalPlacesNovember10: Establishment[] = [
     lastUpdated: '2026-11-15',
   },
 
-
   {
     id: 'arena-dose-dupla',
     name: 'Arena Dose Dupla',
@@ -73,6 +72,7 @@ export const additionalPlacesNovember10: Establishment[] = [
     address: 'QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul, Brasília/DF.',
     vibe: ['forró', 'piseiro', 'música ao vivo'],
     music: ['forró', 'piseiro'],
+    audience: [],
     mapsQuery: 'Arena Dose Dupla, QNM 09, Conjunto A, Lotes 02 e 04, Ceilândia Sul, Brasília, DF',
     source: {
       kind: 'official',
