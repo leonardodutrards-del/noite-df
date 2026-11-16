@@ -82,7 +82,11 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     ),
     [places]
   );
-  const selectedPlace = places.find((place) => place.id === selectedPlaceId) ?? places[0] ?? null;
+  // Prefer a geolocated result by default so the details panel matches a visible map pin.
+  const selectedPlace = places.find((place) => place.id === selectedPlaceId)
+    ?? mappedPlaces[0]
+    ?? places[0]
+    ?? null;
 
   useEffect(() => {
     const element = containerRef.current;
