@@ -10,10 +10,10 @@ vi.mock('@/lib/supabase-admin', () => ({
 
 afterEach(() => vi.useRealTimers());
 
-describe('Agenda diária 15/11/2026–16/01/2027', () => {
-  it('contains 69 dated events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember15).toHaveLength(69);
-    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(69);
+describe('Agenda diária 16/11/2026–16/01/2027', () => {
+  it('contains 74 future-dated events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember15).toHaveLength(74);
+    expect(new Set(confirmedEventsNovember15.map((event) => event.id)).size).toBe(74);
 
     for (const event of confirmedEventsNovember15) {
       expect(event.startsAt).toBeTruthy();
@@ -21,29 +21,33 @@ describe('Agenda diária 15/11/2026–16/01/2027', () => {
       if (event.endsAt) expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
       expect(event.source?.url).toMatch(/^https:\/\//);
-      expect(event.source?.verifiedAt).toBe('2026-11-15');
+      expect(['2026-11-15', '2026-11-16']).toContain(event.source?.verifiedAt);
+      expect(new Date(event.startsAt!).getTime()).toBeGreaterThanOrEqual(new Date('2026-11-16T00:00:00-03:00').getTime());
       expect(event.publicationStatus).toBe('published');
     }
   });
 
-  it('includes the Sunday 15/11 additions in the current Monday–Sunday window only once', async () => {
+  it('removes expired 15/11 events and keeps the current Monday–Sunday window', async () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-11-15T08:53:00-03:00'));
+    vi.setSystemTime(new Date('2026-11-16T08:00:00-03:00'));
 
     const agenda = await getPublicAgenda();
     const weekly = getWeeklyAgenda(agenda);
 
-    expect(agenda.filter((event) => event.id === 'molhadera-complexo-2026-11-15')).toHaveLength(1);
-    expect(agenda.filter((event) => event.id === 'choppada-mada-2026-11-15')).toHaveLength(1);
-    expect(weekly.some((event) => event.id === 'molhadera-complexo-2026-11-15')).toBe(true);
-    expect(weekly.some((event) => event.id === 'choppada-mada-2026-11-15')).toBe(true);
-    expect(weekly.some((event) => event.id === 'tardezinha-club-2026-11-15')).toBe(true);
-    expect(weekly.some((event) => event.id === 'forro-varanda-contexto-2026-11-17')).toBe(false);
+    for (const id of [
+      'molhadera-complexo-2026-11-15',
+      'choppada-mada-2026-11-15',
+      'tardezinha-club-2026-11-15',
+    ]) {
+      expect(agenda.some((event) => event.id === id)).toBe(false);
+    }
+    expect(weekly.some((event) => event.id === 'forro-varanda-contexto-2026-11-17')).toBe(true);
+    expect(weekly.some((event) => event.id === 'surra-de-modao-contexto-2026-11-18')).toBe(true);
   });
 
   it('keeps the already-published Alberto Moreno event as a single local fallback entry', async () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-11-15T08:53:00-03:00'));
+    vi.setSystemTime(new Date('2026-11-16T08:00:00-03:00'));
 
     const agenda = await getPublicAgenda();
     expect(agenda.filter((event) => event.id === 'alberto-moreno-adega-2026-11-21')).toHaveLength(1);
@@ -69,9 +73,9 @@ describe('Agenda diária 15/11/2026–16/01/2027', () => {
   });
 
   it('keeps the three new venue candidates as unverified drafts outside the public seed', () => {
-    const candidateIds = ['texxas-bar', 'estacao-beira-lago', 'arena-dose-dupla'];
+    const candidateIds = ['texxas-bar', 'estacao-beira-lago', 'arena-dose-dupla', 'o-dalva-cozinha-bar-samambaia', 'khouse-sushi-valparaiso', 'villa-butiquim-samambaia', 'oca-do-lago-asa-norte', 'royal-lounge-ceilandia'];
     const candidates = additionalPlacesNovember10.filter((place) => candidateIds.includes(place.id));
-    expect(candidates).toHaveLength(3);
+    expect(candidates).toHaveLength(8);
     for (const candidate of candidates) {
       expect(candidate.publicationStatus).toBe('draft');
       expect(candidate.verified).toBe(false);
@@ -90,6 +94,14 @@ describe('Agenda diária 15/11/2026–16/01/2027', () => {
 
     for (const id of [
       'porks-almost-unplugged-2026-11-20',
+      'noite-dominicana-oca-2026-11-19',
+      'underbeat-royal-lounge-2026-11-19',
+      'amor-de-quinta-oscarito-2026-11-19',
+      'sextanejada-oscarito-2026-11-20',
+      'corona-day-oscarito-2026-11-21',
+      'sabado-oscarito-2026-11-21',
+      'sabado-magico-contexto-2026-11-21',
+      'moleca-arena-dose-dupla-2026-11-21',
       'tbt-do-benza-arena-ccb-2026-11-19',
       'gudinaite-aabb-2026-11-21',
       'flashback-luziania-2026-11-21',
