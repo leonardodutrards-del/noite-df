@@ -94,7 +94,6 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
     [query, region, vibe, places, priceFilter, typeFilter, musicFilter, radarFilter, intentFilter, todayEventPlaces]
   );
 
-  const selectedMapPlace = filteredPlaces.find((place) => place.id === selectedMapPlaceId) ?? filteredPlaces[0] ?? null;
   const selectedRadar = radarOptions.find((option) => option.id === radarFilter);
   const selectedIntent = intentOptions.find((option) => option.id === intentFilter);
   const hasFilters = Boolean(
@@ -306,7 +305,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
         </div>
       </section>
 
-      <SmartMap places={filteredPlaces} selectedPlaceId={selectedMapPlace?.id ?? null} onSelectPlace={setSelectedMapPlaceId} />
+      <SmartMap places={filteredPlaces} selectedPlaceId={selectedMapPlaceId} onSelectPlace={setSelectedMapPlaceId} />
 
       <section id="lugares">
         <div className="section-title">
