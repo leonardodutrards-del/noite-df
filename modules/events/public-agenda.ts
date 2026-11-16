@@ -16,7 +16,7 @@ import { confirmedEventsNovember15 } from '@/data/seeds/events-2026-11-15';
 const normalizeIdentity = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 
 function verifiedLocalAgenda(): EventItem[] {
-  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10]
+  const fallback = [...events, ...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember15]
     .filter(isConfirmedEvent);
   const seenIds = new Set<string>();
   const seenSources = new Set<string>();
