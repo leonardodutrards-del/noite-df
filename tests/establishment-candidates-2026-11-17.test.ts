@@ -18,4 +18,19 @@ describe('Candidatos de estabelecimentos — 17/11/2026', () => {
     expect(hop?.instagram).toBeUndefined();
     expect(places.some((place) => place.id === 'hop-capital-beer')).toBe(false);
   });
+
+  it('mantém Xique Xique Águas Claras pendente por divergência no complemento do endereço', () => {
+    const xique = additionalPlacesNovember17.find((place) => place.id === 'xique-xique-aguas-claras');
+
+    expect(xique).toBeDefined();
+    expect(xique?.region).toBe('Águas Claras');
+    expect(xique?.address).toContain('complemento do lote/loja a confirmar');
+    expect(xique?.source?.kind).toBe('official');
+    expect(xique?.source?.url).toBe('https://www.restaurantexiquexique.com.br/index.html');
+    expect(xique?.publicationStatus).toBe('draft');
+    expect(xique?.verified).toBe(false);
+    expect(xique?.businessContact).toBeUndefined();
+    expect(xique?.instagram).toBeUndefined();
+    expect(places.some((place) => place.id === 'xique-xique-aguas-claras')).toBe(false);
+  });
 });
