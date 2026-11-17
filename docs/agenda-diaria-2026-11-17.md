@@ -108,8 +108,9 @@ Não foi localizada programação futura oficial nova, acessível e suficienteme
 
 ## 7. GitHub, testes e publicação
 
-- **Branch desta rodada:** `agenda/2026-11-17-daily-coverage`.
-- Arquivos preparados: atualização de `data/seeds/events-2026-11-15.ts`, novo `data/seeds/events-2026-11-17.ts`, inclusão do novo lote em `data/seeds/events.ts) e este relatório.
-- **PR #155 anterior:** mergeado; CI registrou 77 arquivos de teste e 313 testes aprovados, além de lint/build aprovados.
-- **Produção atual antes desta rodada:** Vercel **READY**, commit `3162d11112723377aa123fcbeafeb1ffd640f01b`. A agenda pública consultada continua com 42 eventos semanais e 55 eventos válidos em novembro.
-- Esta rodada ainda não foi mergeada nem publicada. A nova PR precisa concluir CI, testes, lint, build e Vercel Preview READY antes de qualquer publicação. Nenhum post foi feito nas redes sociais e nenhum estabelecimento foi contatado.
+- **Branch original:** `agenda/2026-11-17-daily-coverage`; **PR #156** foi mergeada em 17/11/2026 às 11:59 UTC, commit `7efab8efad863dbf68592ccecd90ca35aab05e32`.
+- Arquivos da PR #156: atualização de `data/seeds/events-2026-11-15.ts`, novo `data/seeds/events-2026-11-17.ts`, inclusão do lote em `data/seeds/events.ts), dois testes e este relatório.
+- **Validação da PR #156:** CI #611 concluiu com testes, lint e build aprovados; Vercel Preview ficou **READY**. A implantação de produção do commit `7efab8efad863dbf68592ccecd90ca35aab05e32` também ficou **READY**.
+- **Verificação pós-deploy:** a leitura externa da página pública ainda devolveu um snapshot antigo (41 eventos e o título/horário anteriores). Ao revisar `getPublicAgenda()`, foi identificado que o ramo usado quando Supabase está configurado acrescentava explicitamente seeds somente até 15/11; o lote de 17/11 estava ausente desse ramo. Por isso, os dois novos eventos ainda não podiam aparecer nesse caminho, apesar de o build/preview estarem prontos.
+- **Correção complementar:** branch `agenda/2026-11-17-db-enabled-feed` adiciona `confirmedEventsNovember17` ao fallback local usado com Supabase ativo e inclui teste de regressão para o ramo de produção. Esta correção complementar ainda precisa passar por CI, Vercel Preview e publicação.
+- Nenhuma alteração de conteúdo foi gravada diretamente nas tabelas de eventos ou estabelecimentos do Supabase; somente registros operacionais de verificação em `agenda_source_checks`. Nenhum post foi feito nas redes sociais e nenhum estabelecimento foi contatado.
