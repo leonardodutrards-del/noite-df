@@ -46,7 +46,14 @@ O mesmo conteúdo informa que a música ao vivo de sexta e sábado começa a par
 - A página oficial informa funcionamento do brewpub: quarta e quinta 16h–00h, sexta 16h–01h e sábado 12h–02h.
 - Fonte: [O Brewpub — Hop Capital Beer](https://hopcapital.com.br/brewpub).
 
-Foi preparado um **rascunho não publicado** no repositório, com fonte e data de verificação. O campo Instagram foi omitido porque não foi confirmado na página oficial consultada. Nenhum registro de estabelecimento foi inserido diretamente no Supabase; o perfil não aparece no catálogo público.
+Foi preparado um **rascunho não publicado** no repositório, com fonte e data de verificação. O campo Instagram foi omitido porque não foi confirmado na página oficial consultada.
+
+**Xique Xique — Águas Claras (pendente)**
+- O site oficial lista uma terceira unidade na Quadra 301, Águas Claras, além das unidades Asa Norte e Asa Sul; informa funcionamento de segunda a quarta e domingo 11h–16h, e quinta a sábado 11h–23h.
+- O complemento diverge: fontes empresariais apontam Lote 01/Loja 02, enquanto o resultado de negócios/LinkedIn aponta Lote 02/Loja 01. Os telefones também divergem. Não escolher um endereço ou telefone por inferência.
+- Foi preparado um rascunho não publicado apenas com a localização ampla e a pendência explícita; telefone e Instagram foram omitidos.
+
+Os dois candidatos estão no PR #158, em estado `draft` e `verified: false`. Nenhum registro de estabelecimento foi inserido diretamente no Supabase; nenhum dos dois aparece no catálogo público.
 
 Outros candidatos já existentes como rascunhos no Supabase: Abençoado Bar — Asa Norte, Boteco Sabiá, Vikings Pub Brasília e Boteco Boa Praça. Não foram duplicados. Toinha Brasil Show permanece pendente: a página oficial não abriu e as fontes acessíveis nesta rodada eram diretórios, insuficientes para criar perfil.
 
