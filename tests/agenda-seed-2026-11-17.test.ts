@@ -9,9 +9,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 17/11/2026', () => {
-  it('contains the two newly confirmed events with official sources and unique ids', () => {
-    expect(confirmedEventsNovember17).toHaveLength(2);
-    expect(new Set(confirmedEventsNovember17.map((event) => event.id)).size).toBe(2);
+  it('contains four newly confirmed events with official sources and unique ids', () => {
+    expect(confirmedEventsNovember17).toHaveLength(4);
+    expect(new Set(confirmedEventsNovember17.map((event) => event.id)).size).toBe(4);
 
     for (const event of confirmedEventsNovember17) {
       expect(event.startsAt).toBeTruthy();
@@ -33,6 +33,18 @@ describe('Agenda diária 17/11/2026', () => {
 
     expect(agenda.some((event) => event.id === 'consciencia-negra-babylon-2026-11-20')).toBe(true);
     expect(agenda.some((event) => event.id === 'noite-na-skina-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'pagodao-das-estrelas-amsterdam-2026-11-20')).toBe(true);
+    expect(agenda.some((event) => event.id === 'marilia-tavares-amsterdam-2026-11-21')).toBe(true);
+
+    const pagodao = agenda.find((event) => event.id === 'pagodao-das-estrelas-amsterdam-2026-11-20');
+    expect(pagodao?.startsAt).toBe('2026-11-20T15:00:00-03:00');
+    expect(pagodao?.endsAt).toBe('2026-11-21T01:00:00-03:00');
+    expect(pagodao?.source?.url).toBe('https://www.sympla.com.br/evento/pagodao-das-estrelas/3637448');
+
+    const marilia = agenda.find((event) => event.id === 'marilia-tavares-amsterdam-2026-11-21');
+    expect(marilia?.startsAt).toBe('2026-11-21T20:00:00-03:00');
+    expect(marilia?.endsAt).toBe('2026-11-22T03:00:00-03:00');
+    expect(marilia?.source?.url).toBe('https://www.sympla.com.br/evento/lgc/3642490');
 
     const sertanejada = agenda.find((event) => event.id === 'surra-de-modao-contexto-2026-11-18');
     expect(sertanejada?.title).toBe('A Sertajenada convida + Cardápio em Dobro');
