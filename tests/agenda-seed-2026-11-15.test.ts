@@ -72,10 +72,15 @@ describe('Agenda diária 16/11/2026–16/01/2027', () => {
     }
   });
 
-  it('keeps the three new venue candidates as unverified drafts outside the public seed', () => {
-    const candidateIds = ['texxas-bar', 'estacao-beira-lago', 'arena-dose-dupla', 'o-dalva-cozinha-bar-samambaia', 'khouse-sushi-valparaiso', 'villa-butiquim-samambaia', 'oca-do-lago-asa-norte', 'royal-lounge-ceilandia'];
+  it('keeps verified venue candidates as unverified drafts outside the public seed', () => {
+    const candidateIds = ['texxas-bar', 'estacao-beira-lago', 'arena-dose-dupla', 'o-dalva-cozinha-bar-samambaia', 'khouse-sushi-valparaiso', 'villa-butiquim-samambaia', 'oca-do-lago-asa-norte', 'royal-lounge-ceilandia', 'amsterdam-bar-santa-maria'];
     const candidates = additionalPlacesNovember10.filter((place) => candidateIds.includes(place.id));
-    expect(candidates).toHaveLength(8);
+    expect(candidates).toHaveLength(9);
+    const amsterdam = candidates.find((candidate) => candidate.id === 'amsterdam-bar-santa-maria');
+    expect(amsterdam?.name).toBe('Amsterdam Bar');
+    expect(amsterdam?.address).toContain('DF-290');
+    expect(amsterdam?.source?.url).toBe('https://crm.amsterdams.live/');
+
     for (const candidate of candidates) {
       expect(candidate.publicationStatus).toBe('draft');
       expect(candidate.verified).toBe(false);

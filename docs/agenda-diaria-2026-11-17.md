@@ -112,5 +112,32 @@ Não foi localizada programação futura oficial nova, acessível e suficienteme
 - Arquivos da PR #156: atualização de `data/seeds/events-2026-11-15.ts`, novo `data/seeds/events-2026-11-17.ts`, inclusão do lote em `data/seeds/events.ts), dois testes e este relatório.
 - **Validação da PR #156:** CI #611 concluiu com testes, lint e build aprovados; Vercel Preview ficou **READY**. A implantação de produção do commit `7efab8efad863dbf68592ccecd90ca35aab05e32` também ficou **READY**.
 - **Verificação pós-deploy:** a leitura externa da página pública ainda devolveu um snapshot antigo (41 eventos e o título/horário anteriores). Ao revisar `getPublicAgenda()`, foi identificado que o ramo usado quando Supabase está configurado acrescentava explicitamente seeds somente até 15/11; o lote de 17/11 estava ausente desse ramo. Por isso, os dois novos eventos ainda não podiam aparecer nesse caminho, apesar de o build/preview estarem prontos.
-- **Correção complementar — PR #157:** [fix: incluir agenda de 17/11 com Supabase ativo](https://github.com/leonardodutrards-del/noite-df/pull/157). O branch `agenda/2026-11-17-db-enabled-feed` adiciona `confirmedEventsNovember17` ao fallback local usado com Supabase ativo e inclui teste de regressão para o ramo de produção. CI #613 concluiu com testes, lint e build aprovados; Vercel Preview ficou **READY**. No momento deste registro, a merge/publicação de #157 ainda estava pendente.
+- **Correção complementar — PR #157:** [fix: incluir agenda de 17/11 com Supabase ativo](https://github.com/leonardodutrards-del/noite-df/pull/157). O branch `agenda/2026-11-17-db-enabled-feed` adiciona `confirmedEventsNovember17` ao fallback local usado com Supabase ativo e inclui teste de regressão para o ramo de produção. CI #613 concluiu com testes, lint e build aprovados; Vercel Preview ficou **READY**. A PR #157 foi posteriormente incorporada à main no commit a09d562861593877434020a5b6933539ff7aef09; o deployment de produção correspondente foi confirmado como READY.
 - Nenhuma alteração de conteúdo foi gravada diretamente nas tabelas de eventos ou estabelecimentos do Supabase; somente registros operacionais de verificação em `agenda_source_checks`. Nenhum post foi feito nas redes sociais e nenhum estabelecimento foi contatado.
+
+## 8. Complemento da verificação — 17/11/2026, 09h40–10h00 (Brasília)
+
+### Atualização operacional
+- Nova leitura do Supabase: **104 estabelecimentos publicados em 22 regiões** e **288 fontes** registradas.
+- Até este complemento, **26 fontes distintas** tiveram verificação registrada hoje, em **29 linhas**: 11 ok, 5 changed, 1 blocked e 9 error. Isso é cobertura parcial de fontes, não auditoria completa dos 104 estabelecimentos.
+- Instagram: 32 registros vinculados a 32 estabelecimentos, em 30 URLs distintas; o último status de todos continua error. Outros 72 estabelecimentos publicados não têm URL de Instagram cadastrada. A ferramenta de navegação não permite classificar esses perfis como públicos, privados ou inexistentes.
+- Nenhum lote foi considerado integralmente auditado. Os demais estabelecimentos/fontes permanecem pendentes na rotação.
+
+### Eventos novos confirmados
+1. **Pagodão das Estrelas — 20/11, 15h–01h (21/11)**, Amsterdam Bar, Santa Maria. A Sympla confirma horário, endereço legado e line-up de Jean Mussa, Nossa Cor, Papel Marchê, Forte Atração, Jaque, Gabriel Vizy, Nosso Rolê, Lucas Alves, Clara Muniz, Leozinho, Daniel Pinheiro, Marcelo B1 e DJ Geovanna. [Sympla](https://www.sympla.com.br/evento/pagodao-das-estrelas/3637448)
+2. **Marília Tavares no Amsterdam — 21/11, 20h–03h (22/11)**, Amsterdam Bar, Santa Maria. A Sympla confirma data, horário, título e local; a página usa o nome antigo Bahrein no campo do estabelecimento, mas o texto do evento já chama a casa de Amsterdam. [Sympla](https://www.sympla.com.br/evento/lgc/3642490)
+
+### Novo estabelecimento candidato
+- **Amsterdam Bar — Santa Maria:** o site oficial atual confirma nome, CNPJ, endereço na DF-290, KM 01, Chácaras 11 e 12, Lote 02B, e telefone (61) 98103-9197. O domínio anteriormente usado pelo Bahrein redireciona para a página oficial atual; o nome atual e o endereço foram conferidos. [Site oficial](https://crm.amsterdams.live/)
+- O perfil foi incluído apenas como draft no repositório. Não foi inserido no Supabase nem publicado. Horários regulares, Instagram e agenda permanente ainda não foram confirmados.
+
+### Evento verificado, mas excluído da agenda pública
+- **Soft Opening UK // Grupo VIP — 20/11, 19h–03h (21/11)**: página oficial confirma UK Music Hall, CLS 411, mas descreve acesso exclusivo a integrantes do Grupo VIP. Não foi incluído como evento público. [Sympla](https://www.sympla.com.br/evento/soft-opening-uk-grupo-vip/3654288)
+
+### GitHub, CI e preview desta complementação
+- **PR #159:** [Agenda: incluir eventos confirmados do Amsterdam Bar](https://github.com/leonardodutrards-del/noite-df/pull/159).
+- A PR contém dois eventos novos, um perfil draft e testes para a agenda local e para o fallback com Supabase ativo.
+- **CI #619:** testes, lint e build concluídos com sucesso.
+- **Vercel Preview:** deployment noite-q7qlh54ky-leonardodutrards-dels-projects.vercel.app em estado READY. A abertura externa do preview pelo navegador de pesquisa não foi possível; a confirmação de READY vem do painel de deployment.
+- A PR #159 ainda não foi mergeada neste registro; portanto, os dois eventos e o perfil draft ainda não estão em produção.
+- Nenhuma tabela de conteúdo de eventos ou estabelecimentos do Supabase foi alterada diretamente; nenhum post foi feito nas redes sociais e nenhum estabelecimento foi contatado.
