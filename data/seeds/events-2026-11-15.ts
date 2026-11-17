@@ -14,6 +14,13 @@ const symplaSource16 = (url: string) => ({
   verifiedAt: '2026-11-16',
 });
 
+const symplaSource17 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-17',
+});
+
 const shotgunSource = (url: string) => ({
   kind: 'official' as const,
   label: 'Shotgun — página oficial do evento ou agenda do estabelecimento',
@@ -194,16 +201,16 @@ export const confirmedEventsNovember15: EventItem[] = [
     title: 'Festa Toma — Edição Agrobaile',
     place: 'Contexto Bar',
     region: 'Setor de Clubes Sul',
-    dateLabel: 'Sábado, 21/11/2026 · 21h–06h',
+    dateLabel: 'Sábado, 21/11/2026 · 21h–09h (22/11)',
     category: 'Funk / Eletrofunk / 808',
-    description: 'Edição Agrobaile no Club Contexto: a página oficial descreve a mistura de estética agro com funk, eletrofunk e 808.',
+    description: 'Edição Agrobaile no Club Contexto, com line-up confirmado de K2, Samon Pessoa, Wendel Silva, Manu Soares, Ana Ximenes, NitroX, Arthur Lopes, 3 Tenores, Madru, Edson Sales e Johnzin.',
     startsAt: '2026-11-21T21:00:00-03:00',
-    endsAt: '2026-11-22T06:00:00-03:00',
-    expiresAt: '2026-11-22T06:00:00-03:00',
+    endsAt: '2026-11-22T09:00:00-03:00',
+    expiresAt: '2026-11-22T09:00:00-03:00',
     admissionNote: 'Convites VIP sujeitos à cobrança de R$ 15,00 de couvert artístico na entrada.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/festa-toma-edicao-agrobaile-club-contexto-boate-contexto-sabado-21-11-as-21h/3642351'),
+    source: symplaSource17('https://www.sympla.com.br/evento/lgc/3642351'),
   },
   {
     id: 'inflama-complexo-2026-11-21',
@@ -320,19 +327,19 @@ export const confirmedEventsNovember15: EventItem[] = [
 
   {
     id: 'surra-de-modao-contexto-2026-11-18',
-    title: 'Surra de Modão + Cardápio em Dobro',
+    title: 'A Sertajenada convida + Cardápio em Dobro',
     place: 'Contexto Bar',
     region: 'Setor de Clubes Sul',
     dateLabel: 'Quarta-feira, 18/11/2026 · 18h–02h',
     category: 'Sertanejo raiz / Modão',
-    description: 'Marlon, Melão e Júnior Ferreira convidam A Sertanejada e Dalmi. A promoção de cardápio em dobro vale das 18h às 21h.',
+    description: 'A Sertanejada, Juliana Fer e participações de Lucas e Barbara na Varanda do Contexto. A promoção de cardápio em dobro para combos, petiscos e drinks vale das 18h às 21h.',
     startsAt: '2026-11-18T18:00:00-03:00',
     endsAt: '2026-11-19T02:00:00-03:00',
     expiresAt: '2026-11-19T02:00:00-03:00',
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; confira as condições do ingresso na Sympla.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/surra-de-modao-cardapio-em-dobro-18-11-varanda-do-contexto/3626362'),
+    source: symplaSource17('https://www.sympla.com.br/evento/a-sertajenada-convida-cardapio-em-dobro-18-11-varanda-do-contexto/3626362'),
   },
   {
     id: 'ticiana-rosana-brown-2026-11-17',
