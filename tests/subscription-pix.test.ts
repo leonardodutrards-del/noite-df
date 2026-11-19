@@ -8,12 +8,11 @@ const mercadoPago = readFileSync(resolve(process.cwd(), 'lib/mercado-pago.ts'), 
 const plans = readFileSync(resolve(process.cwd(), 'lib/plans.ts'), 'utf8');
 
 describe('Pagamento Pix de 30 dias', () => {
-  it('oferece Pix sem remover a assinatura recorrente no cartão', () => {
+  it('oferece Pix sem remover a assinatura recorrente', () => {
     expect(planList).toContain('Pagar 30 dias com Pix');
     expect(planList).toContain("handleSubscribe(plan.id, 'pix')");
-    expect(planList).toContain('QR Code');
-    expect(planList).toContain('Copia e Cola');
-    expect(planList).toContain('renovação via Pix é manual');
+    expect(planList).toContain('Assinar ');
+    expect(planList).toContain('O Pix libera 30 dias após a aprovação e tem renovação manual');
   });
 
   it('usa exatamente os preços publicados dos planos', () => {
@@ -43,7 +42,7 @@ describe('Pagamento Pix de 30 dias', () => {
     expect(mercadoPago).toContain("await syncCommercialPipeline(reference.establishmentId, 'active'");
   });
 
-  it('preserva trial e registra o início do Pix no servidor', () => {
+  it('preserva trial legado no servidor e registra o início do Pix', () => {
     expect(subscriptionRoute).toContain("currentStage === 'trial'");
     expect(subscriptionRoute).toContain("currentVisitStatus === 'signed'");
     expect(subscriptionRoute).toContain('providerPaymentId: pixPayment.id');
