@@ -21,6 +21,8 @@ describe('navegação e oferta comercial', () => {
   it('apresenta planos regulares na página inicial', () => {
     expect(home).toContain('href="/planos"');
     expect(home).not.toContain('Divulgação assistida por R$30');
+    expect(home).not.toContain('Divulgar por R$30/mês');
+    expect(home).toContain('Planos para estabelecimentos');
   });
 
   it('não exibe checkout promocional de teste gratuito', () => {

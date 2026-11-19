@@ -473,7 +473,7 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
           <div style={{ display: 'flex', gap: 14 }}>
             <a href="/privacidade" style={{ color: 'var(--muted)', fontSize: 13 }}>Privacidade</a>
             <a href="/termos" style={{ color: 'var(--muted)', fontSize: 13 }}>Termos</a>
-            <a href="/divulgar" style={{ color: 'var(--muted)', fontSize: 13 }}>Divulgar por R$30/mês</a>
+            <a href="/planos" style={{ color: 'var(--muted)', fontSize: 13 }}>Planos para estabelecimentos</a>
             <a href="/sobre" style={{ color: 'var(--muted)', fontSize: 13 }}>Leonardo Dutra · fundador e CEO</a>
             <a href="/parceiro" style={{ color: 'var(--muted)', fontSize: 13 }}>Área do Parceiro</a>
           </div>
