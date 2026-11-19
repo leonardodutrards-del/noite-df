@@ -21,7 +21,7 @@ describe('Agenda diária 16/11/2026–16/01/2027', () => {
       if (event.endsAt) expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
       expect(event.source?.url).toMatch(/^https:\/\//);
-      expect(['2026-11-15', '2026-11-16', '2026-11-17']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-15', '2026-11-16', '2026-11-17', '2026-11-19']).toContain(event.source?.verifiedAt);
       expect(new Date(event.startsAt!).getTime()).toBeGreaterThanOrEqual(new Date('2026-11-16T00:00:00-03:00').getTime());
       expect(event.publicationStatus).toBe('published');
     }
@@ -148,6 +148,22 @@ describe('Agenda diária 16/11/2026–16/01/2027', () => {
     expect(porks?.startsAt).toBe('2026-11-20T21:00:00-03:00');
     expect(porks?.endsAt).toBeUndefined();
     expect(porks?.expiresAt).toBe('2026-11-21T00:00:00-03:00');
+  });
+
+
+  it('uses the latest official Sympla schedule for MOLHADÊRA on 20/11', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-19T08:00:00-03:00'));
+
+    const agenda = await getPublicAgenda();
+    const molhadera = agenda.find((event) => event.id === 'molhadera-complexo-2026-11-20');
+
+    expect(molhadera?.startsAt).toBe('2026-11-20T21:00:00-03:00');
+    expect(molhadera?.dateLabel).toContain('21h–05h');
+    expect(molhadera?.description).toContain('Gustavo Machado 98');
+    expect(molhadera?.description).toContain('Matteo');
+    expect(molhadera?.description).not.toContain('Pagode do Edu');
+    expect(molhadera?.source?.verifiedAt).toBe('2026-11-19');
   });
 
 });
