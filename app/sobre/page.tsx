@@ -1,7 +1,34 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ASSISTED_OFFER, programmingContactUrl } from '@/lib/assisted-offer';
-export const metadata: Metadata = { title: 'Sobre o Noite DF e seu fundador', description: 'Conheça Leonardo Dutra, fundador e CEO do Noite DF.' };
+
+export const metadata: Metadata = {
+  title: 'Sobre o Noite DF e seu fundador',
+  description: 'Conheça o Noite DF, sua proposta e seu fundador.',
+};
+
 export default function AboutPage() {
-  return <main className="container legal"><header className="topbar"><Link className="brand" href="/">Noite DF</Link><nav><Link href="/divulgar">Divulgar meu local</Link></nav></header><span className="badge">Quem está por trás</span><h1>Leonardo Dutra</h1><p>Fundador e CEO do Noite DF · Brasília/DF</p><h2>Uma ideia local, com responsabilidade</h2><p>Criei o Noite DF para facilitar a descoberta de bares, restaurantes, eventos e experiências no Distrito Federal e Entorno. Meu trabalho envolve a concepção do produto, organização de informações, evolução da plataforma e relacionamento com estabelecimentos.</p><h2>Perfil profissional</h2><p>Experiência em rotinas administrativas, organização documental, atendimento e acompanhamento de processos. No Noite DF, aplico essa experiência à operação de um produto digital e à divulgação de programação local.</p><h2>Formação</h2><p>Ensino superior não concluído.</p><h2>Atuação no projeto</h2><ul><li>Concepção e coordenação do Noite DF.</li><li>Organização do guia e da programação local.</li><li>Relacionamento comercial e atendimento aos estabelecimentos.</li><li>Acompanhamento de melhorias de usabilidade e operação.</li></ul><h2>Contato direto</h2><p><a href={programmingContactUrl}>WhatsApp: {ASSISTED_OFFER.phoneLabel}</a></p><p>Atendimento, parcerias e assuntos sobre o projeto: <a href={`mailto:${ASSISTED_OFFER.email}`}>{ASSISTED_OFFER.email}</a>.</p><p><Link href="/divulgar">Divulgação assistida por R$30/mês →</Link></p><footer className="footer"><Link href="/">Voltar ao Noite DF</Link></footer></main>;
+  return (
+    <main className="container legal">
+      <header className="topbar">
+        <Link className="brand" href="/">Noite DF</Link>
+        <nav><Link href="/planos">Planos para estabelecimentos</Link></nav>
+      </header>
+      <span className="badge">Quem está por trás</span>
+      <h1>Leonardo Dutra</h1>
+      <p>Fundador do Noite DF · Brasília/DF</p>
+      <h2>Uma ideia local, com visão de produto</h2>
+      <p>O Noite DF foi criado para facilitar a descoberta de bares, restaurantes, eventos e experiências no Distrito Federal e Entorno. A proposta é reunir informações locais em uma experiência simples, organizada e útil para quem procura o que fazer e para estabelecimentos que desejam fortalecer sua presença digital.</p>
+      <h2>Atuação no projeto</h2>
+      <ul>
+        <li>Concepção e evolução do produto digital.</li>
+        <li>Organização do guia, dos estabelecimentos e da programação local.</li>
+        <li>Relacionamento com estabelecimentos e parceiros.</li>
+        <li>Acompanhamento de tecnologia, experiência do usuário e operação.</li>
+      </ul>
+      <h2>Contato institucional</h2>
+      <p>Para assuntos comerciais, parcerias e informações sobre o projeto, consulte os canais oficiais apresentados no site.</p>
+      <p><Link href="/planos">Conheça os planos para estabelecimentos</Link></p>
+      <footer className="footer"><Link href="/">Voltar ao Noite DF</Link></footer>
+    </main>
+  );
 }
