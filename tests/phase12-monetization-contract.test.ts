@@ -3,14 +3,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 describe('Fase 12 - monetização', () => {
-  it('usa checkout autenticado e catálogo único', () => {
+  it('usa checkout autenticado e catálogo único sem oferta de trial na interface', () => {
     const checkout = readFileSync(resolve(process.cwd(), 'app/api/payments/checkout/route.ts'), 'utf8');
     const subscription = readFileSync(resolve(process.cwd(), 'app/api/payments/subscriptions/route.ts'), 'utf8');
     const plans = readFileSync(resolve(process.cwd(), 'components/PlanList.tsx'), 'utf8');
     expect(checkout).toContain('AUTHENTICATED_CHECKOUT_REQUIRED');
     expect(subscription).toContain('getPlan(planId)');
     expect(plans).toContain('/api/payments/subscriptions');
-    expect(plans).toContain("'trial_start'");
+    expect(plans).not.toContain("'trial_start'");
     expect(plans).toContain("'subscription_checkout'");
   });
 

@@ -8,6 +8,10 @@
     {
       "path": "/api/cron/agenda-sources",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/expire-events",
+      "schedule": "0 * * * *"
     }
   ]
 }
