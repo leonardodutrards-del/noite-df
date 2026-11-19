@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type BillingState = {
@@ -46,9 +47,7 @@ export function PartnerBillingCard() {
         if (!cancelled && payload) setState(payload);
       })
       .catch(() => undefined);
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   async function cancelSubscription() {
@@ -74,71 +73,46 @@ export function PartnerBillingCard() {
   }
 
   if (!state) return null;
-
   const billing = state.billing;
 
   return (
     <section className="panel" style={{ marginTop: 24 }}>
       <span className="badge">Cobrança</span>
       <h2 style={{ marginBottom: 8 }}>
-        {billing?.paymentType === 'pix_30_days' ? 'Pagamento via Pix' : 'Assinatura e cobrança automática'}
+        {billing?.paymentType === 'pix_30_days' ? 'Pagamento via Pix' : 'Assinatura e cobrança'}
       </h2>
-
       {billing ? (
         <>
-          <p>
-            <b>{billing.planName}</b> · {money(billing.amountCents)}
-            {billing.recurring ? '/mês' : ' por 30 dias'} · Mercado Pago
-          </p>
+          <p><b>{billing.planName}</b> · {money(billing.amountCents)}{billing.recurring ? '/mês' : ' por 30 dias'} · Mercado Pago</p>
           <p style={{ color: 'var(--muted)' }}>
             {billing.paymentType === 'pix_30_days'
               ? billing.status === 'active'
-                ? 'Pix aprovado. O plano está ativo e os recursos pagos já foram liberados.'
-                : 'Pix aguardando confirmação. O painel consulta o Mercado Pago e ativa o plano automaticamente assim que o pagamento for aprovado.'
-              : 'A cobrança é recorrente. O meio de pagamento é escolhido e autorizado no checkout do Mercado Pago. Você pode cancelar quando quiser para impedir novas cobranças.'}
+                ? 'Pix aprovado. O plano está ativo e os recursos contratados foram liberados.'
+                : 'Pix aguardando confirmação. Os recursos serão liberados após a aprovação do pagamento.'
+              : 'Assinatura recorrente autorizada no Mercado Pago. Você pode cancelar quando quiser para impedir novas cobranças.'}
           </p>
           <div className="metrics-grid" style={{ marginTop: 16 }}>
             <article><span>Status</span><strong>{billing.status}</strong></article>
-            <article>
-              <span>Primeira adesão</span>
-              <strong>{new Date(billing.startedAt).toLocaleDateString('pt-BR')}</strong>
-            </article>
+            <article><span>Primeira adesão</span><strong>{new Date(billing.startedAt).toLocaleDateString('pt-BR')}</strong></article>
             <article>
               <span>{billing.recurring ? 'Próxima renovação / acesso até' : 'Acesso liberado até'}</span>
               <strong>{billing.currentPeriodEnd ? new Date(billing.currentPeriodEnd).toLocaleDateString('pt-BR') : 'A confirmar'}</strong>
             </article>
           </div>
           {billing.canCancel ? (
-            <button
-              type="button"
-              className="button ghost"
-              disabled={busy}
-              onClick={() => void cancelSubscription()}
-              style={{ marginTop: 16 }}
-            >
+            <button type="button" className="button ghost" disabled={busy} onClick={() => void cancelSubscription()} style={{ marginTop: 16 }}>
               {busy ? 'Cancelando…' : 'Cancelar assinatura'}
             </button>
           ) : null}
         </>
       ) : (
         <>
-          <p>Você ainda não possui cobrança recorrente ativa.</p>
-          <p style={{ color: 'var(--muted)' }}>
-            Seu cadastro permanece salvo. Você pode contratar um plano quando quiser.
-          </p>
-          <Link className="button" href="/assinaturas">Consultar planos do painel</Link>
-        </>
-      ) : (
-        <>
-          <p>Você ainda não possui cobrança recorrente ativa.</p>
-          <p style={{ color: 'var(--muted)' }}>
-            Seu cadastro permanece salvo. Você pode contratar um plano quando quiser.
-          </p>
-          <Link className="button" href="/assinaturas">Consultar planos do painel</Link>
+          <p>Você ainda não possui uma assinatura paga ativa.</p>
+          <p style={{ color: 'var(--muted)' }}>Seu cadastro permanece salvo. Consulte os planos disponíveis quando quiser.</p>
+          <Link className="button" href="/planos">Consultar planos</Link>
         </>
       )}
-
-      {message ? <div className="notice" style={{ marginTop: 16 }}>{message}</div> : null}
+      {message ? <div className="notice" role="status" style={{ marginTop: 16 }}>{message}</div> : null}
     </section>
   );
 }
