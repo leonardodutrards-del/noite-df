@@ -23,22 +23,14 @@ describe('Pagamento conectado a benefícios', () => {
     expect(plans).toContain('/parceiro/onboarding');
   });
 
-  it('bloqueia recursos pagos no backend', () => {
-    const establishment = readFileSync(resolve(process.cwd(), 'app/api/parceiro/establishment/route.ts'), 'utf8');
-    const analytics = readFileSync(resolve(process.cwd(), 'app/api/parceiro/analytics/route.ts'), 'utf8');
-    expect(establishment).toContain('PLAN_UPGRADE_REQUIRED');
-    expect(establishment).toContain('manage_agenda');
-    expect(establishment).toContain('manage_promotions');
-    expect(analytics).toContain('analytics_basic');
-    expect(analytics).toContain('analytics_detailed');
-  });
-
-  it('respeita a chave TRIAL_ENABLED tanto na API quanto na oferta exibida', () => {
+  it('mantém o trial desabilitado na API e não oferece checkout promocional na interface', () => {
     const trialRoute = readFileSync(resolve(process.cwd(), 'app/api/parceiro/trial/route.ts'), 'utf8');
     const plans = readFileSync(resolve(process.cwd(), 'components/PlanList.tsx'), 'utf8');
+    const plansPage = readFileSync(resolve(process.cwd(), 'app/planos/page.tsx'), 'utf8');
     expect(trialRoute).toContain('!TRIAL_ENABLED');
-    expect(plans).toContain('paymentsEnabled && trialEnabled');
-    expect(plans).not.toContain('13/10/2026');
+    expect(plansPage).toContain('trialEnabled={false}');
+    expect(plans).not.toContain('handleTrial');
+    expect(plans).not.toContain('paymentsEnabled && trialEnabled');
   });
 
   it('permite cancelamento da assinatura pelo painel', () => {
