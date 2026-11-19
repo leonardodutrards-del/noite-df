@@ -452,9 +452,9 @@ export function ExperienceHub({ initialPlaces, initialEvents }: { initialPlaces:
 
       <section className="cta">
         <div>
-          <span className="eyebrow">Para parceiros</span>
-          <h2>Você envia a programação. A gente publica.</h2>
-          <p>Divulgação assistida por R$30/mês por estabelecimento. Até quatro atualizações mensais, com informações e imagens enviadas pela casa.</p>
+          <span className="eyebrow">Soluções para estabelecimentos</span>
+          <h2>Mais autonomia para a presença digital da sua casa.</h2>
+          <p>Gerencie seu perfil, publique sua programação e acompanhe o interesse do público com os planos do Noite DF.</p>
         </div>
         <a className="button light" href="/planos">Conhecer os planos</a>
       </section>
