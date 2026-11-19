@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type BillingState = {
-  promotion?: { freeUntil: string } | null;
   entitlements: {
     planCode: 'free' | 'pro' | 'premium' | 'enterprise';
     source: 'free' | 'trial' | 'subscription' | 'admin';
@@ -78,7 +76,6 @@ export function PartnerBillingCard() {
   if (!state) return null;
 
   const billing = state.billing;
-  const isTrial = state.entitlements.source === 'trial';
 
   return (
     <section className="panel" style={{ marginTop: 24 }}>
@@ -87,7 +84,6 @@ export function PartnerBillingCard() {
         {billing?.paymentType === 'pix_30_days' ? 'Pagamento via Pix' : 'Assinatura e cobrança automática'}
       </h2>
 
-      {state.promotion && <p><b>Enterprise grátis até {new Date(state.promotion.freeUntil).toLocaleDateString('pt-BR')}.</b> Depois, R$ 150/mês conforme o aceite no Mercado Pago. Cancele antes da renovação para impedir a cobrança.</p>}
       {billing ? (
         <>
           <p>
@@ -124,13 +120,13 @@ export function PartnerBillingCard() {
             </button>
           ) : null}
         </>
-      ) : isTrial ? (
+      ) : (
         <>
-          <p><b>Teste gratuito ativo.</b></p>
+          <p>Você ainda não possui cobrança recorrente ativa.</p>
           <p style={{ color: 'var(--muted)' }}>
-            Nenhuma cobrança é feita pelo Noite DF durante o período de teste. Para continuar depois, escolha um plano e conclua a autorização no Mercado Pago.
+            Seu cadastro permanece salvo. Você pode contratar um plano quando quiser.
           </p>
-          <Link className="button" href="/divulgar">Conhecer divulgação assistida</Link>
+          <Link className="button" href="/assinaturas">Consultar planos do painel</Link>
         </>
       ) : (
         <>
