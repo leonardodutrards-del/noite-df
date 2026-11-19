@@ -82,11 +82,12 @@ export function SmartMap({ places, selectedPlaceId, onSelectPlace }: SmartMapPro
     ),
     [places]
   );
-  // Prefer a geolocated result by default so the details panel matches a visible map pin.
-  const selectedPlace = places.find((place) => place.id === selectedPlaceId)
+  // Prefer a geolocated establishment over event-only map entries for the initial details panel.
+  const defaultMappedPlace = mappedPlaces.find((place) => !/(^|[\s/])eventos?([\s/]|$)/i.test(place.type))
     ?? mappedPlaces[0]
-    ?? places[0]
     ?? null;
+  const selectedPlace = places.find((place) => place.id === selectedPlaceId)
+    ?? defaultMappedPlace;
 
   useEffect(() => {
     const element = containerRef.current;
