@@ -49,8 +49,8 @@ describe('Prontidão comercial de Sobradinho', () => {
     expect(operation).toContain('Ativar parceiro');
   });
 
-  it('encaminha a página comercial antiga à oferta assistida sem perder locais', () => {
-    expect(salesPage).toContain("redirect('/divulgar')");
+  it('encaminha a página comercial antiga aos planos regulares sem perder locais', () => {
+    expect(salesPage).toContain("redirect('/planos')");
     expect(places).toContain("'palorama-sobradinho-i'");
     expect(places).toContain("'palorama-sobradinho-ii'");
   });
