@@ -1,2 +1,5 @@
 import { redirect } from 'next/navigation';
-export default function SobradinhoPartnersPage() { redirect('/divulgar'); }
+
+export default function SobradinhoPartnersPage() {
+  redirect('/planos');
+}
