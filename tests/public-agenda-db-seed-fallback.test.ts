@@ -32,6 +32,6 @@ describe('Agenda local verificada com Supabase ativo', () => {
     expect(sertanejada?.title).toBe('A Sertajenada convida + Cardápio em Dobro');
 
     const toma = agenda.find((event) => event.id === 'festa-toma-contexto-2026-11-21');
-    expect(toma?.endsAt).toBe('2026-11-22T09:00:00-03:00');
+    expect(toma?.endsAt).toBe('2026-11-22T06:00:00-03:00');
   });
 });

@@ -21,6 +21,13 @@ const symplaSource17 = (url: string) => ({
   verifiedAt: '2026-11-17',
 });
 
+const symplaSource19 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-19',
+});
+
 const shotgunSource = (url: string) => ({
   kind: 'official' as const,
   label: 'Shotgun — página oficial do evento ou agenda do estabelecimento',
@@ -137,16 +144,16 @@ export const confirmedEventsNovember15: EventItem[] = [
     title: 'MOLHADÊRA + Feriado',
     place: 'Complexo Fora do Eixo',
     region: 'SAAN',
-    dateLabel: 'Sexta-feira, 20/11/2026 · 18h–05h',
+    dateLabel: 'Sexta-feira, 20/11/2026 · 21h–05h',
     category: 'Pagode / Funk / Pagode baiano',
-    description: 'Edição de feriado com Gustavo Machado 98, Pagode do Edu, Matteo, Sanchez, Nyka e Kaca no Complexo Fora do Eixo.',
-    startsAt: '2026-11-20T18:00:00-03:00',
+    description: 'Edição de feriado com Gustavo Machado 98, Matteo, Sanchez, Nyka e Kaca no Complexo Fora do Eixo, conforme line-up publicado na página oficial da Sympla.',
+    startsAt: '2026-11-20T21:00:00-03:00',
     endsAt: '2026-11-21T05:00:00-03:00',
     expiresAt: '2026-11-21T05:00:00-03:00',
     admissionNote: 'Valores e lotes devem ser conferidos na página oficial; podem sofrer alterações.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/molhadera-feriado-20-de-novembro/3652518'),
+    source: symplaSource19('https://www.sympla.com.br/evento/molhadera-feriado-20-de-novembro/3652518'),
   },
   {
     id: 'samambar-sexta-feriado-2026-11-20',
@@ -201,16 +208,16 @@ export const confirmedEventsNovember15: EventItem[] = [
     title: 'Festa Toma — Edição Agrobaile',
     place: 'Contexto Bar',
     region: 'Setor de Clubes Sul',
-    dateLabel: 'Sábado, 21/11/2026 · 21h–09h (22/11)',
+    dateLabel: 'Sábado, 21/11/2026 · 21h–06h (22/11)',
     category: 'Funk / Eletrofunk / 808',
-    description: 'Edição Agrobaile no Club Contexto, com line-up confirmado de K2, Samon Pessoa, Wendel Silva, Manu Soares, Ana Ximenes, NitroX, Arthur Lopes, 3 Tenores, Madru, Edson Sales e Johnzin.',
+    description: 'Edição Agrobaile no Club Contexto, com line-up confirmado de K2, Samon Pessoa, Wendel Silva, Manu Soares, Ana Ximenes, NitroX, Arthur Lopes, 3 Tenores, Madru, Edson Sales, Johnzin e Artur Campos.',
     startsAt: '2026-11-21T21:00:00-03:00',
-    endsAt: '2026-11-22T09:00:00-03:00',
-    expiresAt: '2026-11-22T09:00:00-03:00',
+    endsAt: '2026-11-22T06:00:00-03:00',
+    expiresAt: '2026-11-22T06:00:00-03:00',
     admissionNote: 'Convites VIP sujeitos à cobrança de R$ 15,00 de couvert artístico na entrada.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource17('https://www.sympla.com.br/evento/lgc/3642351'),
+    source: symplaSource19('https://www.sympla.com.br/evento/lgc/3642351'),
   },
   {
     id: 'inflama-complexo-2026-11-21',

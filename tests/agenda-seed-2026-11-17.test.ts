@@ -51,8 +51,9 @@ describe('Agenda diária 17/11/2026', () => {
     expect(sertanejada?.source?.verifiedAt).toBe('2026-11-17');
 
     const toma = agenda.find((event) => event.id === 'festa-toma-contexto-2026-11-21');
-    expect(toma?.endsAt).toBe('2026-11-22T09:00:00-03:00');
-    expect(toma?.expiresAt).toBe('2026-11-22T09:00:00-03:00');
-    expect(toma?.source?.verifiedAt).toBe('2026-11-17');
+    expect(toma?.endsAt).toBe('2026-11-22T06:00:00-03:00');
+    expect(toma?.expiresAt).toBe('2026-11-22T06:00:00-03:00');
+    expect(toma?.description).toContain('Artur Campos');
+    expect(toma?.source?.verifiedAt).toBe('2026-11-19');
   });
 });
