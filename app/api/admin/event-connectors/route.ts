@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/service';
 import { requireMasterAdmin } from '@/modules/auth/session';
+import { isBlockedEventSourceHost } from '@/modules/events/ingestion';
 import { supabaseAdminJson } from '@/lib/supabase-admin';
 
 type ConnectorType = 'rss' | 'atom' | 'ics' | 'html';
@@ -36,8 +37,7 @@ function validHttpsUrl(value: string | null): boolean {
     const url = new URL(value);
     return url.protocol === 'https:' && !url.username && !url.password &&
       (!url.port || url.port === '443') &&
-      url.hostname !== 'instagram.com' && !url.hostname.endsWith('.instagram.com') &&
-      url.hostname !== 'linktr.ee' && !url.hostname.endsWith('.linktr.ee');
+      !isBlockedEventSourceHost(url.hostname);
   } catch {
     return false;
   }

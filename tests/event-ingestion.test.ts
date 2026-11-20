@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeEventCandidate } from '../modules/events/ingestion';
+import { isBlockedEventSourceHost, normalizeEventCandidate } from '../modules/events/ingestion';
 
 const base = {
   title: 'Festival de Teste',
@@ -75,6 +75,21 @@ describe('event ingestion normalization', () => {
     expect(result.reasons).not.toContain('invalid_or_missing_start');
   });
 
+  it('keeps timezone-less feed timestamps in human review', () => {
+    const result = normalizeEventCandidate({
+      ...base,
+      startsAt: 'LOCAL=20261108T200000',
+      endsAt: 'LOCAL=20261109T020000',
+    }, {
+      connectorType: 'rss',
+      officialSourceVerified: true,
+      hostAllowed: true,
+    });
+
+    expect(result.status).toBe('pending_review');
+    expect(result.reasons).toContain('timezone_confirmation_required');
+  });
+
   it('does not auto-publish candidates with possible duplicates', () => {
     const result = normalizeEventCandidate(base, {
       connectorType: 'webhook',
@@ -85,6 +100,14 @@ describe('event ingestion normalization', () => {
 
     expect(result.status).toBe('blocked');
     expect(result.reasons).toContain('possible_duplicate');
+  });
+
+  it('blocks social and link aggregator hosts from ingestion', () => {
+    expect(isBlockedEventSourceHost('instagram.com')).toBe(true);
+    expect(isBlockedEventSourceHost('www.instagram.com')).toBe(true);
+    expect(isBlockedEventSourceHost('linktr.ee')).toBe(true);
+    expect(isBlockedEventSourceHost('sub.linktr.ee')).toBe(true);
+    expect(isBlockedEventSourceHost('example.org')).toBe(false);
   });
 
   it('keeps incomplete manual submissions in review', () => {

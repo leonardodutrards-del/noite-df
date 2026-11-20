@@ -4,7 +4,7 @@ import { request as httpsRequest } from 'node:https';
 import { isIP } from 'node:net';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdminJson, supabaseAdminRequest } from '@/lib/supabase-admin';
-import { normalizeEventCandidate, type EventConnectorType } from '@/modules/events/ingestion';
+import { isBlockedEventSourceHost, normalizeEventCandidate, type EventConnectorType } from '@/modules/events/ingestion';
 import { parseHtmlJsonLdEvents, parseIcsCalendar, parseRssAtomFeed } from '@/modules/events/feed-parsers';
 
 export const runtime = 'nodejs';
@@ -60,7 +60,8 @@ function safeSourceUrl(raw: string): URL | null {
   try {
     const url = new URL(raw);
     if (url.protocol !== 'https:' || url.username || url.password ||
-      (url.port && url.port !== '443') || unsafeHost(url.hostname)) return null;
+      (url.port && url.port !== '443') || unsafeHost(url.hostname) ||
+      isBlockedEventSourceHost(url.hostname)) return null;
     return url;
   } catch {
     return null;
