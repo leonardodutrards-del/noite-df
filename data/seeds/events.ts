@@ -7,6 +7,7 @@ import { confirmedEventsNovember09 } from './events-2026-11-09';
 import { confirmedEventsNovember10 } from './events-2026-11-10';
 import { confirmedEventsNovember15 } from './events-2026-11-15';
 import { confirmedEventsNovember17 } from './events-2026-11-17';
+import { confirmedEventsNovember20 } from './events-2026-11-20';
 
 export const events: EventItem[] = [
   {
@@ -73,5 +74,6 @@ export const events: EventItem[] = [
   ...confirmedEventsNovember09,
   ...confirmedEventsNovember10,
   ...confirmedEventsNovember15,
-  ...confirmedEventsNovember17
+  ...confirmedEventsNovember17,
+  ...confirmedEventsNovember20
 ];
