@@ -29,6 +29,12 @@ describe('Agenda local verificada com Supabase ativo', () => {
     expect(agenda.some((event) => event.id === 'marilia-tavares-amsterdam-2026-11-21')).toBe(true);
     expect(agenda.some((event) => event.id === 'domingo-cpx-complexo-2026-11-22')).toBe(true);
     expect(agenda.some((event) => event.id === 'conexao-delas-oscarito-2026-11-22')).toBe(true);
+    expect(agenda.some((event) => event.id === 'deu-mo-love-contexto-2026-11-20')).toBe(true);
+    expect(agenda.some((event) => event.id === 'sabado-magico-contexto-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'london-music-bar-asa-sul-2026-11-20')).toBe(true);
+    expect(agenda.some((event) => event.id === 'london-music-bar-aguas-claras-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'ticiana-werner-mikaelen-barbosa-2026-11-20')).toBe(true);
+    expect(agenda.some((event) => event.id === 'ticiana-werner-fernanda-rabelo-2026-11-21')).toBe(true);
 
     const sertanejada = agenda.find((event) => event.id === 'surra-de-modao-contexto-2026-11-18');
     expect(sertanejada?.title).toBe('A Sertajenada convida + Cardápio em Dobro');
