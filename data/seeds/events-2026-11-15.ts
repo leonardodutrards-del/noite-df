@@ -28,6 +28,13 @@ const symplaSource19 = (url: string) => ({
   verifiedAt: '2026-11-19',
 });
 
+const symplaSource20 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-20',
+});
+
 const shotgunSource = (url: string) => ({
   kind: 'official' as const,
   label: 'Shotgun — página oficial do evento ou agenda do estabelecimento',
@@ -1162,14 +1169,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'SIG',
     dateLabel: 'Sexta-feira, 20/11/2026 · 19h–02h',
     category: 'Sertanejo / DJs',
-    description: 'Noite de sertanejo, sofrência e hits. O line-up oficial lista DJ MJay às 19h, 22h30 e 1h; há dois blocos intermediários sem artista identificado.',
+    description: 'Noite de sertanejo, sofrência e hits. Line-up da página oficial atualizado: DJ MJay às 19h, 22h30 e 1h; Violada Original às 20h30 e Henrique & Ruan às 23h.',
     startsAt: '2026-11-20T19:00:00-03:00',
     endsAt: '2026-11-21T02:00:00-03:00',
     expiresAt: '2026-11-21T02:00:00-03:00',
     admissionNote: 'Taxa de conveniência antecipada de R$ 20 no happy hour até 21h; após 21h, a página informa complemento da diferença do ingresso vigente.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource16('https://www.sympla.com.br/evento/sextanejada-no-oscarito/3655650'),
+    source: symplaSource20('https://www.sympla.com.br/evento/sextanejada-no-oscarito/3655650'),
   },
   {
     id: 'corona-day-oscarito-2026-11-21',
