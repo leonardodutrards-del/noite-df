@@ -1,0 +1,43 @@
+import type { EventItem } from '@/modules/events/types';
+
+const symplaSource20 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-20',
+});
+
+export const confirmedEventsNovember20: EventItem[] = [
+  {
+    id: 'domingo-cpx-complexo-2026-11-22',
+    title: 'Domingo do CPX — 22 de Novembro',
+    place: 'Complexo Fora do Eixo',
+    region: 'SAAN',
+    dateLabel: 'Domingo, 22/11/2026 · 20h–04h (23/11)',
+    category: 'Funk / DJs',
+    description: 'Edição de domingo no Complexo Fora do Eixo, com Gustavo Machado às 20h, Nyka às 22h, Youssef às 23h, Kaio Vinnicius à meia-noite, Uchoa e Rios à 1h e Kaca às 2h15.',
+    startsAt: '2026-11-22T20:00:00-03:00',
+    endsAt: '2026-11-23T04:00:00-03:00',
+    expiresAt: '2026-11-23T04:00:00-03:00',
+    admissionNote: 'Valores e lotes não especificados no conteúdo acessível; consultar a página oficial da Sympla.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource20('https://www.sympla.com.br/evento/lgc/3656762'),
+  },
+  {
+    id: 'conexao-delas-oscarito-2026-11-22',
+    title: 'Conexão Delas',
+    place: 'Oscarito Brasília',
+    region: 'SIG',
+    dateLabel: 'Domingo, 22/11/2026 · 09h–12h',
+    category: 'Bem-estar / Confraternização',
+    description: 'Confraternização do grupo Gym Rats preparada por Amanda e Oscarito, com café da manhã premium, aula de Fit Dance, welcome drink e atividades esportivas nas quadras de areia.',
+    startsAt: '2026-11-22T09:00:00-03:00',
+    endsAt: '2026-11-22T12:00:00-03:00',
+    expiresAt: '2026-11-22T12:00:00-03:00',
+    admissionNote: 'O texto acessível da página oficial não especifica o valor; consultar a página da Sympla.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource20('https://www.sympla.com.br/evento/conexao-delas/3654214'),
+  },
+];
