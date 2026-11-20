@@ -61,11 +61,11 @@ describe('Agenda diária 20/11/2026', () => {
 
     const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
-    expect(mikaelen?.source?.url).toBe('https://www.ticianawerner.com.br/');
+    expect(mikaelen?.source?.url).toBe('https://www.ticianawerner.com.br/musica.php');
 
     const fernanda = agenda.find((event) => event.id === 'ticiana-fernanda-rabelo-2026-11-21');
     expect(fernanda?.startsAt).toBe('2026-11-21T19:30:00-03:00');
-    expect(fernanda?.source?.url).toBe('https://www.ticianawerner.com.br/');
+    expect(fernanda?.source?.url).toBe('https://www.ticianawerner.com.br/musica.php');
 
     const sextanejada = agenda.find((event) => event.id === 'sextanejada-oscarito-2026-11-20');
     expect(sextanejada?.description).toContain('Violada Original às 20h30');
