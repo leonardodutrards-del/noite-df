@@ -13,6 +13,7 @@ import { confirmedEventsNovember09 } from '@/data/seeds/events-2026-11-09';
 import { confirmedEventsNovember10 } from '@/data/seeds/events-2026-11-10';
 import { confirmedEventsNovember15 } from '@/data/seeds/events-2026-11-15';
 import { confirmedEventsNovember17 } from '@/data/seeds/events-2026-11-17';
+import { confirmedEventsNovember20 } from '@/data/seeds/events-2026-11-20';
 
 const normalizeIdentity = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 
@@ -80,7 +81,7 @@ export async function getPublicAgenda(): Promise<EventItem[]> {
 
     return [
       ...publicEvents,
-      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember15, ...confirmedEventsNovember17].filter((event) =>
+      ...[...confirmedEventsOctober16, ...confirmedEventsOctober26, ...confirmedEventsNovember05, ...confirmedEventsNovember09, ...confirmedEventsNovember10, ...confirmedEventsNovember15, ...confirmedEventsNovember17, ...confirmedEventsNovember20].filter((event) =>
         Date.parse(event.expiresAt || '') > Date.now() &&
         !existing.has(key(event)) &&
         !existingSources.has(sourceKey(event))
