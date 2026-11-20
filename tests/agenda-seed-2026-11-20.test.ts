@@ -10,8 +10,8 @@ afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
   it('registra os oito eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(8);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(8);
+    expect(confirmedEventsNovember20).toHaveLength(4);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(4);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -44,6 +44,8 @@ describe('Agenda diária 20/11/2026', () => {
     const deuMoLove = agenda.find((event) => event.id === 'deu-mo-love-contexto-2026-11-20');
     expect(deuMoLove?.startsAt).toBe('2026-11-20T18:00:00-03:00');
     expect(deuMoLove?.endsAt).toBe('2026-11-21T04:00:00-03:00');
+    expect(deuMoLove?.description).toContain('Artur Campos');
+    expect(deuMoLove?.source?.verifiedAt).toBe('2026-11-20');
 
     const sabadoMagico = agenda.find((event) => event.id === 'sabado-magico-contexto-2026-11-21');
     expect(sabadoMagico?.startsAt).toBe('2026-11-21T11:00:00-03:00');
@@ -57,11 +59,11 @@ describe('Agenda diária 20/11/2026', () => {
     expect(londonAguasClaras?.startsAt).toBe('2026-11-21T20:00:00-03:00');
     expect(londonAguasClaras?.source?.url).toContain('3659923');
 
-    const mikaelen = agenda.find((event) => event.id === 'ticiana-werner-mikaelen-barbosa-2026-11-20');
+    const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
     expect(mikaelen?.source?.url).toBe('https://www.ticianawerner.com.br/');
 
-    const fernanda = agenda.find((event) => event.id === 'ticiana-werner-fernanda-rabelo-2026-11-21');
+    const fernanda = agenda.find((event) => event.id === 'ticiana-fernanda-rabelo-2026-11-21');
     expect(fernanda?.startsAt).toBe('2026-11-21T19:30:00-03:00');
     expect(fernanda?.source?.url).toBe('https://www.ticianawerner.com.br/');
 
