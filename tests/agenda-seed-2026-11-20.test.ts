@@ -9,8 +9,8 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
-  it('registra apenas os dois novos eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(2);
+  it('registra os oito eventos confirmados em fontes oficiais', () => {
+    expect(confirmedEventsNovember20).toHaveLength(8);
     expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(2);
 
     for (const event of confirmedEventsNovember20) {
@@ -40,6 +40,30 @@ describe('Agenda diária 20/11/2026', () => {
     expect(conexao?.startsAt).toBe('2026-11-22T09:00:00-03:00');
     expect(conexao?.endsAt).toBe('2026-11-22T12:00:00-03:00');
     expect(conexao?.source?.url).toBe('https://www.sympla.com.br/evento/conexao-delas/3654214');
+
+    const deuMoLove = agenda.find((event) => event.id === 'deu-mo-love-contexto-2026-11-20');
+    expect(deuMoLove?.startsAt).toBe('2026-11-20T18:00:00-03:00');
+    expect(deuMoLove?.endsAt).toBe('2026-11-21T04:00:00-03:00');
+
+    const sabadoMagico = agenda.find((event) => event.id === 'sabado-magico-contexto-2026-11-21');
+    expect(sabadoMagico?.startsAt).toBe('2026-11-21T11:00:00-03:00');
+    expect(sabadoMagico?.endsAt).toBe('2026-11-22T04:00:00-03:00');
+
+    const londonAsaSul = agenda.find((event) => event.id === 'london-music-bar-asa-sul-2026-11-20');
+    expect(londonAsaSul?.startsAt).toBe('2026-11-20T20:00:00-03:00');
+    expect(londonAsaSul?.source?.url).toContain('3659936');
+
+    const londonAguasClaras = agenda.find((event) => event.id === 'london-music-bar-aguas-claras-2026-11-21');
+    expect(londonAguasClaras?.startsAt).toBe('2026-11-21T20:00:00-03:00');
+    expect(londonAguasClaras?.source?.url).toContain('3659923');
+
+    const mikaelen = agenda.find((event) => event.id === 'ticiana-werner-mikaelen-barbosa-2026-11-20');
+    expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
+    expect(mikaelen?.source?.url).toBe('https://www.ticianawerner.com.br/');
+
+    const fernanda = agenda.find((event) => event.id === 'ticiana-werner-fernanda-rabelo-2026-11-21');
+    expect(fernanda?.startsAt).toBe('2026-11-21T19:30:00-03:00');
+    expect(fernanda?.source?.url).toBe('https://www.ticianawerner.com.br/');
 
     const sextanejada = agenda.find((event) => event.id === 'sextanejada-oscarito-2026-11-20');
     expect(sextanejada?.description).toContain('Violada Original às 20h30');
