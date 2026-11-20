@@ -3,7 +3,7 @@
 ## Resumo da rodada
 
 - Base Supabase ativa: **104 estabelecimentos publicados em 22 regiões**; **314 fontes** cadastradas.
-- Auditoria rotativa dos últimos 7 dias: ao menos uma fonte verificada para **63 dos 104 estabelecimentos publicados**; 41 ainda sem verificação registrada nesse intervalo. Foram 182 verificações de fonte em 64 estabelecimentos distintos (incluindo rascunhos).
+- Auditoria rotativa dos últimos 7 dias: ao menos uma fonte verificada para **69 dos 104 estabelecimentos publicados**; 35 ainda sem verificação registrada nesse intervalo. Foram 198 verificações de fonte nos últimos sete dias, distribuídas por 72 entidades de estabelecimentos (incluindo rascunhos) e oito entidades de eventos.
 - Verificações registradas hoje: **38** — 32 `ok`, 2 `changed`, 1 `blocked`, 1 `baseline`, 1 `error` e 1 `http_error`.
 - Lotes de fontes do Pontão consultados com HTTP 200: Café e Um Chêro, Chard by Chicago Prime, Castalia, Soho, Wine Garden, Sallva, Gran Bier e Fausto & Manoel.
 - Alterações que exigem conferência manual: Savassi Carne de Sol (Valparaíso) e Na Banca (Sobradinho). Quintal da Tia Sandra: redirecionamento não autorizado; não contornar a restrição. Porks Sobradinho: baseline da fonte oficial, sem mudança de conteúdo detectada.
