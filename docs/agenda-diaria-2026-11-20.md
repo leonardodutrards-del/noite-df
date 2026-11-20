@@ -22,6 +22,7 @@
 
 - **Perto de Casa — Gravação Audiovisual do Jotapê**, P10 Gastrobar, 22/11: a página apresenta 15h–23h30 no cabeçalho, mas descreve abertura às 16h e encerramento às 22h30. Mantido pendente por conflito de horário; não publicar. Fonte: https://www.sympla.com.br/evento/perto-de-casa-gravacao-audiovisual-do-jotape/3653975
 - **B DAY SEM DISTINÇÃO**, Arena P10, 21/11: cabeçalho indica 16h e descrição indica início às 17h. Mantido pendente. Fonte: https://www.sympla.com.br/evento/lgc/3650152
+- **FeijoADA com Amor de Aluguel**, Contexto, 21/11: página alternativa tem o mesmo local e janela de 11h–04h do Sábado Mágico, mas o corpo ainda informa a data antiga 14/11. Tratada como possível duplicata com conteúdo desatualizado; não criar um segundo evento nem copiar preço/promoção sem validação. Fontes: https://www.sympla.com.br/evento/lgc/3626134 e https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209
 - A busca encontrou eventos em Villa Lounge e Bar, Minas Brasília Tênis Clube e Orla do Clube de Engenharia; não criar fichas sem validação de identidade permanente e aderência ao catálogo.
 - Rota do Piseiro/Bar LG: nenhuma publicação oficial atual acessível confirmou a associação; não associar. Galpão dos Brutos permanece sem programação atual.
 
