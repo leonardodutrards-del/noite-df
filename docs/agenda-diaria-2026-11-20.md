@@ -32,6 +32,25 @@
 - Foram acrescentados **16 registros de fonte e 16 verificações** no Supabase: seis estabelecimentos publicados, dois candidatos London Music Bar e oito páginas oficiais de eventos. A cobertura recente passou a **69/104 estabelecimentos publicados**, com 35 ainda pendentes.
 - A página oficial do Sábado Mágico confirma a programação de 21/11 com Amor de Aluguel, BenzaDeus e Nossa Galera. A página alternativa “FeijoADA com Amor de Aluguel” não foi cadastrada como segundo evento, evitando duplicidade.
 
+
+## Próximo lote da auditoria — 35 estabelecimentos sem check nos últimos 7 dias
+- **Águas Claras:** Macaco Velho Chopp Bar.
+- **Asa Sul:** Bar Responsa; Club 904; UK Music Hall.
+- **Brasilinha · Entorno:** Circuito de Comitivas de Planaltina-GO.
+- **Ceilândia:** Bar do Chaguinha; Bar do Luis; Telebar.
+- **Gama:** Bar do Buchada.
+- **Granja do Torto:** Parque de Exposições Granja do Torto.
+- **Guará:** Bar do Galego; Galpão 17.
+- **Jardim Ingá · Entorno:** Chácara BWR.
+- **Lago Sul:** Manzuá — Pontão; Pontão do Lago Sul; Same Same — Pontão; Temporâneo (AABB).
+- **Planaltina:** Bar do Batata; Moema Pizzaria — Planaltina; Vila Madalena.
+- **Plano Piloto:** Arena Mané Garrincha.
+- **Samambaia:** SamamBar.
+- **SIG:** P.Ovo — SIG.
+- **Sobradinho:** Arena P10; CB7; Fogão Goiano; Horus Eventus; Oito Gastrobar; Pança Cheia; Santa Aldeia Bar.
+- **Sudoeste:** Abençoado Bar.
+- **Taguatinga:** Bardot Music Bar; Fiel Bar e Distribuidora; Outback Steakhouse — JK Shopping; SHOT Rock Bar.
+
 ## Pendências editoriais
 
 - **Perto de Casa — Gravação Audiovisual do Jotapê**, P10 Gastrobar, 22/11: a página apresenta 15h–23h30 no cabeçalho, mas descreve abertura às 16h e encerramento às 22h30. Mantido pendente por conflito de horário; não publicar. Fonte: https://www.sympla.com.br/evento/perto-de-casa-gravacao-audiovisual-do-jotape/3653975
@@ -44,5 +63,5 @@
 
 - A página pública `/fim-de-semana` respondeu HTTP 200 e apresentou 30 cards no snapshot consultado antes desta proposta. A tabela `events` do Supabase tem 49 registros, mas somente 5 publicados; a agenda editorial pública ainda depende principalmente de seeds locais/fallback.
 - As 28 execuções de ingestão registradas hoje: 26 `succeeded` e 2 `failed` com `REDIRECT_BLOCKED`; todas registraram zero eventos descobertos/criados/atualizados. Há 14 conectores ativos e 3 em `needs_attention` (dois `FEED_TOO_LARGE` no Alfredo's e um `HTTP_404` no Sauz). A descoberta manual por páginas oficiais encontrou os eventos acima.
-- Oito entradas de evento e a correção do line-up foram preparadas em branch/PR. O primeiro CI apontou uma falha de expectativa no teste de datas de verificação (o whitelist ainda não incluía 20/11); a expectativa foi corrigida e o CI está sendo reexecutado. A PR permanece draft e **não será mergeada/publicada nesta rodada**: a cobertura rotativa ainda não alcançou todos os 104 estabelecimentos e a instrução operacional proíbe publicar agenda parcial enquanto a varredura geral estiver em andamento.
+- Quatro novos eventos foram adicionados; quatro eventos já existentes (Contexto e Ticiana) foram revalidados e atualizados sem duplicação. A correção do line-up também foi preparada em branch/PR. O primeiro CI apontou uma falha de expectativa no teste de datas de verificação (o whitelist ainda não incluía 20/11); a expectativa foi corrigida e o CI está sendo reexecutado. A PR permanece draft e **não será mergeada/publicada nesta rodada**: a cobertura rotativa ainda não alcançou todos os 104 estabelecimentos e a instrução operacional proíbe publicar agenda parcial enquanto a varredura geral estiver em andamento.
 - Nenhum evento ou estabelecimento foi gravado diretamente nas tabelas de conteúdo do Supabase. Nenhuma publicação social ou contato com estabelecimentos foi realizado.
