@@ -21,7 +21,7 @@ describe('Agenda diária 16/11/2026–16/01/2027', () => {
       if (event.endsAt) expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
       expect(event.source?.url).toMatch(/^https:\/\//);
-      expect(['2026-11-15', '2026-11-16', '2026-11-17', '2026-11-19']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-15', '2026-11-16', '2026-11-17', '2026-11-19', '2026-11-20']).toContain(event.source?.verifiedAt);
       expect(new Date(event.startsAt!).getTime()).toBeGreaterThanOrEqual(new Date('2026-11-16T00:00:00-03:00').getTime());
       expect(event.publicationStatus).toBe('published');
     }
