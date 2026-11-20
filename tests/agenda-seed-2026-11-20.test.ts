@@ -9,7 +9,7 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
-  it('registra os oito eventos confirmados em fontes oficiais', () => {
+  it('registra os quatro eventos novos confirmados em fontes oficiais', () => {
     expect(confirmedEventsNovember20).toHaveLength(4);
     expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(4);
 
