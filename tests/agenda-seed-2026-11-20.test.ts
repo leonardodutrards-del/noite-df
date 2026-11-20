@@ -11,7 +11,7 @@ afterEach(() => vi.useRealTimers());
 describe('Agenda diária 20/11/2026', () => {
   it('registra os oito eventos confirmados em fontes oficiais', () => {
     expect(confirmedEventsNovember20).toHaveLength(8);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(2);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(8);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -24,7 +24,7 @@ describe('Agenda diária 20/11/2026', () => {
     }
   });
 
-  it('inclui os dois eventos na agenda pública e usa o line-up atualizado do Oscarito', async () => {
+  it('inclui os oito eventos na agenda pública e usa o line-up atualizado do Oscarito', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-11-20T09:00:00-03:00'));
 
