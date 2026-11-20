@@ -49,6 +49,13 @@ const ticianaSource = (url: string) => ({
   verifiedAt: '2026-11-15',
 });
 
+const ticianaSource20 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Ticiana Werner — agenda oficial de música ao vivo',
+  url,
+  verifiedAt: '2026-11-20',
+});
+
 export const confirmedEventsNovember15: EventItem[] = [
   {
     id: 'forro-varanda-contexto-2026-11-17',
@@ -137,14 +144,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'Setor de Clubes Sul',
     dateLabel: 'Sexta-feira, 20/11/2026 · 18h–04h',
     category: 'Pagode / Funk',
-    description: 'Edição especial com pagode do Grupo Doze Por Oito e DJs residentes de funk na Varanda do Contexto.',
+    description: 'Edição especial com Grupo Doze Por Oito em dois blocos de pagode; DJ Costa, Artur Campos, Fiiklay B2B Gabs e Larbac na pista da Varanda do Contexto.',
     startsAt: '2026-11-20T18:00:00-03:00',
     endsAt: '2026-11-21T04:00:00-03:00',
     expiresAt: '2026-11-21T04:00:00-03:00',
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/deu-mo-love-20-11-varanda-do-contexto/3628682'),
+    source: symplaSource20('https://www.sympla.com.br/evento/deu-mo-love-20-11-varanda-do-contexto/3628682'),
   },
   {
     id: 'molhadera-complexo-2026-11-20',
@@ -369,7 +376,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'Couvert artístico de R$ 18 por pessoa na varanda, salões do wine bar e restaurante; demais ambientes sem cobrança.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: ticianaSource('https://www.ticianawerner.com.br/musica.php'),
+    source: ticianaSource20('https://www.ticianawerner.com.br/musica.php'),
   },
   {
     id: 'ticiana-andresa-sousa-2026-11-18',
@@ -1224,7 +1231,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource16('https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209'),
+    source: symplaSource20('https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209'),
   },
   {
     id: 'moleca-arena-dose-dupla-2026-11-21',
