@@ -2,9 +2,9 @@
 
 ## Resumo da rodada
 
-- Base Supabase ativa: **104 estabelecimentos publicados em 22 regiões**; **298 fontes** cadastradas.
+- Base Supabase ativa: **104 estabelecimentos publicados em 22 regiões**; **314 fontes** cadastradas.
 - Auditoria rotativa dos últimos 7 dias: ao menos uma fonte verificada para **63 dos 104 estabelecimentos publicados**; 41 ainda sem verificação registrada nesse intervalo. Foram 182 verificações de fonte em 64 estabelecimentos distintos (incluindo rascunhos).
-- Verificações registradas hoje: **22** — 16 `ok`, 2 `changed`, 1 `blocked`, 1 `baseline`, 1 `error` e 1 `http_error`.
+- Verificações registradas hoje: **38** — 32 `ok`, 2 `changed`, 1 `blocked`, 1 `baseline`, 1 `error` e 1 `http_error`.
 - Lotes de fontes do Pontão consultados com HTTP 200: Café e Um Chêro, Chard by Chicago Prime, Castalia, Soho, Wine Garden, Sallva, Gran Bier e Fausto & Manoel.
 - Alterações que exigem conferência manual: Savassi Carne de Sol (Valparaíso) e Na Banca (Sobradinho). Quintal da Tia Sandra: redirecionamento não autorizado; não contornar a restrição. Porks Sobradinho: baseline da fonte oficial, sem mudança de conteúdo detectada.
 - **Dez fontes oficiais adicionais** foram registradas: quatro unidades Jotaká (endereço e funcionamento diário 11h–00h), duas unidades Outback (endereço/horários), página oficial do Infinu na Shotgun (três eventos já presentes no site) e página do evento Jean Tassy no ām.bar (abertura da casa às 19h; show às 20h; evento 19h–03h). Essas quatro unidades Jotaká já existem na base; nenhum perfil novo foi criado.
@@ -18,6 +18,20 @@
 
 **Correção preparada:** Sextanejada no Oscarito, 20/11, mantém 19h–02h e passa a refletir o line-up atual da página oficial: DJ MJay às 19h, 22h30 e 01h; Violada Original às 20h30; Henrique & Ruan às 23h. Fonte: https://www.sympla.com.br/evento/sextanejada-no-oscarito/3655650
 
+
+3. **Deu Mó Love**, Contexto Bar, sexta 20/11, 18h–04h (21/11), com Grupo Doze Por Oito em dois blocos, DJ Costa, Artur Campos, Fiiklay B2B Gabs e Larbac. Fonte: https://www.sympla.com.br/evento/deu-mo-love-20-11-varanda-do-contexto/3628682
+4. **Sábado Mágico**, Contexto Bar, sábado 21/11, 11h–04h (22/11), com feijoada, Amor de Aluguel, BenzaDeus, Nossa Galera e DJs. Fonte: https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209
+5. **Pop Rock — Magoo + Almost Unplugged**, London Music Bar — Asa Sul, sexta 20/11, 20h–03h (21/11); abertura às 20h, shows a partir das 22h. Antecipados R$ 20; portaria conforme faixa horária e política da página. Fonte: https://www.sympla.com.br/evento/sexta-o-20-11-pop-rock-bandas-magoo-almost-unplugged-bandamagoo-almostunpluggedoficial/3659936
+6. **Tributo Guns N’ Roses + Pop Rock — Utriu + BKD Guns**, London Music Bar — Águas Claras, sábado 21/11, 20h–03h (22/11); abertura às 20h, shows a partir das 22h. Antecipados R$ 20; portaria conforme faixa horária e política da página. Fonte: https://www.sympla.com.br/evento/sabado-21-11-tributo-guns-n-roses-pop-rock-bandas-utriu-bkd-guns/3659923
+7. **Música ao vivo — Mikaelen Barbosa**, Ticiana Werner Wine Bar, sexta 20/11, 19h30–23h, repertório Pop, Jazz, Bossa e Internacional. Fonte: https://www.ticianawerner.com.br/
+8. **Música ao vivo — Fernanda Rabelo**, Ticiana Werner Wine Bar, sábado 21/11, 19h30–23h, repertório Bossa e Jazz. Fonte: https://www.ticianawerner.com.br/
+
+## Estabelecimentos e fontes adicionais verificados
+- Fontes oficiais consultadas para seis estabelecimentos publicados: Dom ManJu Restaurante Bar — Gama; Frango no Pote — Ceilândia; Mangút Restaurante — Guará; Mormaii Surf Bar — Lago Sul; Patú Anú — Park Way; Ticiana Werner Wine Bar — Asa Sul.
+- **London Music Bar** foi identificado em duas unidades distintas: Asa Sul (CLS 409, Bloco C, Loja 36) e Águas Claras (Avenida Jacarandá, 22, Loja 1). Foram preparados dois perfis separados como rascunhos; não entram no catálogo público até revisão.
+- Foram acrescentados **16 registros de fonte e 16 verificações** no Supabase: seis estabelecimentos publicados, dois candidatos London Music Bar e oito páginas oficiais de eventos. A cobertura recente passou a **69/104 estabelecimentos publicados**, com 35 ainda pendentes.
+- A página oficial do Sábado Mágico confirma a programação de 21/11 com Amor de Aluguel, BenzaDeus e Nossa Galera. A página alternativa “FeijoADA com Amor de Aluguel” não foi cadastrada como segundo evento, evitando duplicidade.
+
 ## Pendências editoriais
 
 - **Perto de Casa — Gravação Audiovisual do Jotapê**, P10 Gastrobar, 22/11: a página apresenta 15h–23h30 no cabeçalho, mas descreve abertura às 16h e encerramento às 22h30. Mantido pendente por conflito de horário; não publicar. Fonte: https://www.sympla.com.br/evento/perto-de-casa-gravacao-audiovisual-do-jotape/3653975
@@ -30,5 +44,5 @@
 
 - A página pública `/fim-de-semana` respondeu HTTP 200 e apresentou 30 cards no snapshot consultado antes desta proposta. A tabela `events` do Supabase tem 49 registros, mas somente 5 publicados; a agenda editorial pública ainda depende principalmente de seeds locais/fallback.
 - As 28 execuções de ingestão registradas hoje: 26 `succeeded` e 2 `failed` com `REDIRECT_BLOCKED`; todas registraram zero eventos descobertos/criados/atualizados. Há 14 conectores ativos e 3 em `needs_attention` (dois `FEED_TOO_LARGE` no Alfredo's e um `HTTP_404` no Sauz). A descoberta manual por páginas oficiais encontrou os eventos acima.
-- As duas novas entradas e a correção do line-up foram preparadas em branch/PR. O primeiro CI apontou uma falha de expectativa no teste de datas de verificação (o whitelist ainda não incluía 20/11); a expectativa foi corrigida e o CI está sendo reexecutado. A PR permanece draft e **não será mergeada/publicada nesta rodada**: a cobertura rotativa ainda não alcançou todos os 104 estabelecimentos e a instrução operacional proíbe publicar agenda parcial enquanto a varredura geral estiver em andamento.
+- Oito entradas de evento e a correção do line-up foram preparadas em branch/PR. O primeiro CI apontou uma falha de expectativa no teste de datas de verificação (o whitelist ainda não incluía 20/11); a expectativa foi corrigida e o CI está sendo reexecutado. A PR permanece draft e **não será mergeada/publicada nesta rodada**: a cobertura rotativa ainda não alcançou todos os 104 estabelecimentos e a instrução operacional proíbe publicar agenda parcial enquanto a varredura geral estiver em andamento.
 - Nenhum evento ou estabelecimento foi gravado diretamente nas tabelas de conteúdo do Supabase. Nenhuma publicação social ou contato com estabelecimentos foi realizado.
