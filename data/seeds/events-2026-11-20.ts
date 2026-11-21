@@ -177,7 +177,7 @@ export const confirmedEventsNovember20: EventItem[] = [
     sourceStatus: 'manual',
     publicationStatus: 'published',
     source: symplaSource21('https://www.sympla.com.br/evento/temporium-2o-edicao-o-tempo-passa-a-musica-continua/3652189'),
-  },,
+  },
 
   {
     id: 'pagode-do-beli-orla-clube-2026-11-21',
