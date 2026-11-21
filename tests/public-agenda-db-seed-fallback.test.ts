@@ -33,6 +33,10 @@ describe('Agenda local verificada com Supabase ativo', () => {
     expect(agenda.some((event) => event.id === 'sabado-magico-contexto-2026-11-21')).toBe(true);
     expect(agenda.some((event) => event.id === 'london-music-bar-asa-sul-2026-11-20')).toBe(true);
     expect(agenda.some((event) => event.id === 'london-music-bar-aguas-claras-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'girls-just-wanna-rock-fun-london-asa-sul-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'butecada-sertaneja-new-mercadito-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'sambinha-da-vila-minas-brasilia-2026-11-21')).toBe(true);
+    expect(agenda.some((event) => event.id === 'choppada-da-mada-boteco-2026-11-22')).toBe(true);
     expect(agenda.some((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20')).toBe(true);
     expect(agenda.some((event) => event.id === 'ticiana-fernanda-rabelo-2026-11-21')).toBe(true);
 
