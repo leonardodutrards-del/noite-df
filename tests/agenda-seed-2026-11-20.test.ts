@@ -9,9 +9,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
-  it('registra nove eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(9);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(9);
+  it('registra dez eventos confirmados em fontes oficiais', () => {
+    expect(confirmedEventsNovember20).toHaveLength(10);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(10);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -24,7 +24,7 @@ describe('Agenda diária 20/11/2026', () => {
     }
   });
 
-  it('inclui os oito eventos na agenda pública e usa o line-up atualizado do Oscarito', async () => {
+  it('inclui os eventos confirmados do lote na agenda pública e usa o line-up atualizado do Oscarito', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-11-20T09:00:00-03:00'));
 
@@ -91,6 +91,13 @@ describe('Agenda diária 20/11/2026', () => {
     expect(curral?.endsAt).toBe('2026-12-06T05:00:00-03:00');
     expect(curral?.place).toBe('Cais do Lago');
     expect(curral?.source?.url).toContain('3653158');
+
+    const temporium = agenda.find((event) => event.id === 'temporium-uk-music-hall-2026-12-10');
+    expect(temporium?.startsAt).toBe('2026-12-10T20:00:00-03:00');
+    expect(temporium?.endsAt).toBe('2026-12-11T03:00:00-03:00');
+    expect(temporium?.description).toContain('Strangeways');
+    expect(temporium?.description).toContain('Dr. Rock');
+    expect(temporium?.source?.url).toContain('3652189');
 
     const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
