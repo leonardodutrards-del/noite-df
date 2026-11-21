@@ -5,9 +5,9 @@
 - Estabelecimentos com `publication_status='published'`: **104** em **22 regiões**.
 - Com pelo menos uma verificação de fonte nos últimos sete dias: **80/104**.
 - Pendentes na rotação de sete dias: **24**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
-- `data_sources`: **341**; `agenda_source_checks`: **481**.
-- Verificações nas últimas 24 horas: **65** — 55 `ok`, 4 `changed`, 3 `error`, 2 `http_error` e 1 `blocked`.
-- Foram acrescentados **23 registros de fonte** e **23 registros de verificação** ao Supabase. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- data_sources: **341**; agenda_source_checks: **485**.
+- Verificações nas últimas 24 horas: **69** — 59 ok, 4 changed, 3 error, 2 http_error e 1 blocked.
+- Foram acrescentados **23 registros de fonte** e **27 registros de verificação** ao Supabase (23 fontes novas e quatro revalidações adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
