@@ -10,8 +10,8 @@ afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
   it('registra dez eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(17);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(17);
+    expect(confirmedEventsNovember20).toHaveLength(18);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(18);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -140,6 +140,14 @@ describe('Agenda diária 20/11/2026', () => {
     expect(tamborzao?.endsAt).toBe('2026-11-29T04:00:00-03:00');
     expect(tamborzao?.place).toBe('Orla do Clube de Engenharia — Pier 21');
     expect(tamborzao?.source?.url).toContain('3653788');
+
+
+    const reveillonSamamBar = agenda.find((event) => event.id === 'reveillon-samambar-2027-2026-12-31');
+    expect(reveillonSamamBar?.startsAt).toBe('2026-12-31T20:00:00-03:00');
+    expect(reveillonSamamBar?.endsAt).toBe('2027-01-01T06:00:00-03:00');
+    expect(reveillonSamamBar?.place).toBe('SamamBar');
+    expect(reveillonSamamBar?.description).toContain('Grupo Moleque');
+    expect(reveillonSamamBar?.source?.url).toContain('3652554');
 
     const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
