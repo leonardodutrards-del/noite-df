@@ -50,6 +50,8 @@ describe('Agenda local verificada com Supabase ativo', () => {
     expect(agenda.some((event) => event.id === 'feijoada-amor-de-aluguel-contexto-2026-11-28')).toBe(true);
     expect(agenda.some((event) => event.id === 'tamborzao-orla-clube-engenharia-2026-11-28')).toBe(true);
 
+    expect(agenda.some((event) => event.id === 'reveillon-samambar-2027-2026-12-31')).toBe(true);
+
     const sertanejada = agenda.find((event) => event.id === 'surra-de-modao-contexto-2026-11-18');
     expect(sertanejada?.title).toBe('A Sertajenada convida + Cardápio em Dobro');
 
