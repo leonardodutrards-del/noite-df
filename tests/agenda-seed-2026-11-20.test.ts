@@ -9,9 +9,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
-  it('registra oito eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(8);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(8);
+  it('registra nove eventos confirmados em fontes oficiais', () => {
+    expect(confirmedEventsNovember20).toHaveLength(9);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(9);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -84,6 +84,13 @@ describe('Agenda diária 20/11/2026', () => {
     expect(choppada?.startsAt).toBe('2026-11-22T13:00:00-03:00');
     expect(choppada?.endsAt).toBe('2026-11-22T23:30:00-03:00');
     expect(choppada?.description).toContain('Leozinho');
+
+
+    const curral = agenda.find((event) => event.id === 'curral-surra-de-modao-cais-do-lago-2026-12-05');
+    expect(curral?.startsAt).toBe('2026-12-05T20:00:00-03:00');
+    expect(curral?.endsAt).toBe('2026-12-06T05:00:00-03:00');
+    expect(curral?.place).toBe('Cais do Lago');
+    expect(curral?.source?.url).toContain('3653158');
 
     const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
