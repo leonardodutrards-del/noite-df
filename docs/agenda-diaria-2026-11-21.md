@@ -7,7 +7,7 @@
 - Pendentes na rotação de sete dias: **23**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
 - data_sources: **341**; agenda_source_checks: **485**.
 - Verificações nas últimas 24 horas: **69** — 59 ok, 4 changed, 3 error, 2 http_error e 1 blocked.
-- Foram acrescentados **24 registros de fonte** e **29 registros de verificação** ao Supabase (24 fontes novas e cinco revalidações/correções adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Foram acrescentados **27 registros de fonte** e **33 registros de verificação** ao Supabase (27 fontes novas e seis revalidações/correções adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
@@ -41,7 +41,7 @@ Restrições de identidade/endereço:
 
 ## Eventos confirmados e preparados na PR #163
 
-### Quatro novos eventos adicionados à seed
+### Cinco novos eventos adicionados à seed
 
 | Data e horário local | Evento | Local | Fonte |
 |---|---|---|---|
@@ -49,6 +49,7 @@ Restrições de identidade/endereço:
 | Sáb. 21/11, 17h–02h (22/11) | Butecada Sertaneja | New Mercadito Bar e Restaurante, Asa Sul | [Sympla](https://www.sympla.com.br/evento/butecada-sertaneja-21-11-new-mercadito/3660539) |
 | Sáb. 21/11, 20h–03h (22/11) | Girls Just Wanna Have Rock N’ Fun — Arthemis + Liberty U | London Music Bar — Asa Sul | [Sympla](https://www.sympla.com.br/evento/sabado-21-11-girls-just-wanna-have-rock-n-fun-bandas-arthemis-liberty-u-arthemisrock-ba/3659947) |
 | Dom. 22/11, 13h–23h30 | Choppada da Madá — Pagode do Leozinho | Boteco da Madá, Taguatinga | [Sympla](https://www.sympla.com.br/evento/lgc/3651776) |
+| Sáb. 05/12, 20h–05h (06/12) | CURRAL — Surra de Modão (Edição Beira Lago) | Cais do Lago, Setor de Clubes Sul | [Sympla](https://www.sympla.com.br/evento/lgc/3653158) |
 
 Detalhes relevantes:
 - Sambinha da Vila: a página oficial confirma início às **15h30**, até 02h, e transmissão da partida às 16h. Uma listagem secundária anterior indicava 18h; prevalece a fonte oficial.
@@ -77,6 +78,7 @@ Detalhes relevantes:
 - **Minas Brasília Tênis Clube — Asa Norte:** site oficial confirma SCEN Trecho 03, Conjunto 06, telefone e espaços para eventos. O clube é normalmente restrito a sócios/convidados; o evento ticketado foi confirmado na Sympla. Perfil preparado como `draft` até revisão de aderência ao catálogo e acesso público.
 - **London Music Bar — Asa Sul e Águas Claras:** dois perfis separados continuam como `draft`; fontes oficiais confirmam endereços e programação.
 - **Estação Beira Lago:** a Sympla identifica o local e a produtora, com endereço entre AABR e ASEEL; perfil permanente continua pendente por falta de fonte própria independente.
+- **Quintal da Tia Sandra:** site oficial indexado confirma funcionamento de terça a domingo, almoço a partir das 11h e música ao vivo semanal, no SIG Qd. 6 Rua L Lote 1515. A captura direta do site segue bloqueada e não há apresentação com data/horário específicos para 21–22/11.
 - Ascade e Cápsula Bar continuam candidatos pendentes; nenhuma inserção foi feita no catálogo público.
 
 ## GitHub, testes e publicação
