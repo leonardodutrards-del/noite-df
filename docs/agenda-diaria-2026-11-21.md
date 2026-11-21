@@ -7,7 +7,7 @@
 - Pendentes na rotação de sete dias: **19**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
 - data_sources: **365**; agenda_source_checks: **511**.
 - Verificações nas últimas 24 horas: **94** — 82 ok, 4 changed, 3 error, 2 http_error, 2 blocked e 1 baseline; os registros cobrem **45 estabelecimentos publicados distintos** em 16 regiões.
-- Nesta revisão foram inseridas **17 fontes e 17 verificações** no Supabase: sete páginas de eventos confirmados, duas páginas de eventos pendentes, três fontes de estabelecimentos candidatos e cinco fontes de estabelecimentos publicados. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Nesta revisão foram inseridas **18 fontes e 18 verificações** no Supabase: oito páginas de eventos confirmados, duas páginas de eventos pendentes, três fontes de estabelecimentos candidatos e cinco fontes de estabelecimentos publicados. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 - Perfis publicados com agenda_url cadastrada: **30/104**; **74** sem agenda_url cadastrada.
 - Estabelecimentos publicados sem qualquer fonte registrada: **2** — CB7 e Horus Eventus, ambos pendentes de descoberta/identidade.
