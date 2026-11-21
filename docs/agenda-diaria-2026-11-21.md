@@ -3,11 +3,11 @@
 ## Base, cobertura e checkpoint
 
 - Estabelecimentos com `publication_status='published'`: **104** em **22 regiões**.
-- Com pelo menos uma verificação de fonte nos últimos sete dias: **81/104**.
-- Pendentes na rotação de sete dias: **23**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
-- data_sources: **359**; agenda_source_checks: **505**.
-- Verificações nas últimas 24 horas: **77** — 65 ok, 4 changed, 3 error, 2 http_error, 2 blocked e 1 baseline; os registros cobrem **41 estabelecimentos publicados distintos** em 14 regiões.
-- Nesta revisão foram inseridas **12 fontes e 12 verificações** no Supabase: nove páginas de eventos e três fontes de estabelecimentos candidatos. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Com pelo menos uma verificação de fonte nos últimos sete dias: **85/104**.
+- Pendentes na rotação de sete dias: **19**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
+- data_sources: **365**; agenda_source_checks: **511**.
+- Verificações nas últimas 24 horas: **94** — 82 ok, 4 changed, 3 error, 2 http_error, 2 blocked e 1 baseline; os registros cobrem **45 estabelecimentos publicados distintos** em 16 regiões.
+- Nesta revisão foram inseridas **17 fontes e 17 verificações** no Supabase: nove páginas de eventos confirmados, duas páginas de eventos pendentes, três fontes de estabelecimentos candidatos e cinco fontes de estabelecimentos publicados. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
@@ -20,19 +20,23 @@
 | Macaco Velho Chopp Bar | Águas Claras | Solutudo informa Rua 31 Sul Lote 9; resultado separado de Maps cita QS 5 e pode ser outra unidade — não consolidar sem confirmação |
 | Telebar | Ceilândia | Cadastro empresarial ativo e endereço em Ceilândia Norte; sem agenda oficial recente |
 | Bar do Galego | Guará | Listagem de negócio atualizada em 06/11/2026, endereço e telefone |
+| Temporâneo (AABB) | Lago Sul | Sympla confirma uso em 23/10; AABB publicou encerramento da temporada em abril — manter como espaço sazonal, sem agenda futura confirmada |
+| Moema Pizzaria — Planaltina | Planaltina | Solutudo/CNPJ ativo, atividade de restaurante, endereço e telefones; Instagram cadastrado ainda não acessado |
+| Arena Mané Garrincha | Plano Piloto | Site oficial confirma complexo multiuso e endereço; agenda oficial mostra novos eventos em breve |
+| SamamBar | Samambaia | Sympla confirma Réveillon 31/12/2026, 20h–06h, endereço e atrações |
 
 Também foi registrada uma fonte oficial de localização e canais para o Boteco da Madá.
 
 ### Regiões e perfis
 
-- Auditoria de estabelecimentos nesta rodada: Asa Sul, Sobradinho, Gama, Águas Claras, Ceilândia e Guará.
+- Auditoria de estabelecimentos nesta rodada: Asa Sul, Sobradinho, Gama, Águas Claras, Ceilândia, Guará, Lago Sul, Planaltina, Plano Piloto e Samambaia.
 - Fontes de eventos e locais também cobriram Taguatinga, Asa Norte, Setor de Clubes Sul, SAAN e SIG.
 - Oito perfis prioritários tiveram tentativa direta em 19/11: seis erros de fetch, um bloqueio por `robots.txt` e um HTTP 429. Não houve repetição idêntica hoje. Nenhum foi classificado como privado ou inexistente sem evidência.
 - Oito tentativas não equivalem a oito perfis acessíveis; a classificação individual continua pendente.
 
-### 23 estabelecimentos pendentes na rotação
+### 19 estabelecimentos pendentes na rotação
 
-Club 904; UK Music Hall; Circuito de Comitivas de Planaltina-GO; Bar do Chaguinha; Bar do Luis; Parque de Exposições Granja do Torto; Galpão 17; Chácara BWR; Pontão do Lago Sul; Temporâneo (AABB); Bar do Batata; Moema Pizzaria — Planaltina; Vila Madalena; Arena Mané Garrincha; SamamBar; CB7; Fogão Goiano; Horus Eventus; Santa Aldeia Bar; Abençoado Bar; Bardot Music Bar; Fiel Bar e Distribuidora; SHOT Rock Bar.
+Club 904; UK Music Hall; Circuito de Comitivas de Planaltina-GO; Bar do Chaguinha; Bar do Luis; Parque de Exposições Granja do Torto; Galpão 17; Chácara BWR; Pontão do Lago Sul; Bar do Batata; Vila Madalena; CB7; Fogão Goiano; Horus Eventus; Santa Aldeia Bar; Abençoado Bar; Bardot Music Bar; Fiel Bar e Distribuidora; SHOT Rock Bar.
 
 Restrições de identidade/endereço:
 - A busca por Bar do Chaguinha retornou um endereço QNM 22 Casa 04, diferente do QNM 22 Conjunto D Lote 4 registrado na base; não associar sem confirmação.
@@ -84,9 +88,10 @@ Detalhes relevantes:
 | Sex. 27/11, 22h–01h30 (28/11) | Samba do Povo da Rua | A Casa de Jorge, SAAN | [Sympla](https://www.sympla.com.br/evento/lgc/3658614) |
 | Sáb. 28/11, 11h–04h (29/11) | FeijoADA com Amor de Aluguel | Contexto Bar, Setor de Clubes Sul | [Sympla](https://www.sympla.com.br/evento/feijoada-com-amor-de-aluguel-28-11-varanda-contexto-bar/3626169) |
 | Sáb. 28/11, 20h–04h (29/11) | Tamborzão — FP do Trem Bala + DJ Zullu + Noobreak | Orla do Clube de Engenharia — Pier 21, Lago Sul | [Sympla](https://www.sympla.com.br/evento/fp-do-trem-bala-dj-zullu-noobreak-orla-do-pier-21-sabado-28-11/3653788) |
+| Qui. 31/12, 20h–06h (01/01/2027) | Réveillon SamamBar 2027 — Leandro Lucca, Lia Almeida, DJ Salles e Grupo Moleque | SamamBar, Samambaia | [Sympla](https://www.sympla.com.br/evento/lgc/3652554) |
 
 Observações:
-- A Casa de Jorge foi incluída como perfil draft, com endereço SAAN Quadra 01, Lote 940, tipo bar, e fontes de eventos oficiais. A matéria de apresentação confirma a proposta de bar/restaurante, palco, programação musical e endereço; o rascunho não entra no catálogo público.
+- A Casa de Jorge foi incluída como perfil draft, com endereço SAAN Quadra 01, Lote 940, tipo bar, e fontes de eventos oficiais. SamamBar tem Réveillon confirmado para 31/12/2026, incluído na seed como evento futuro. A matéria de apresentação confirma a proposta de bar/restaurante, palco, programação musical e endereço; o rascunho não entra no catálogo público.
 - Amsterdam Bar permanece em draft; o evento de 27/11 está confirmado na Sympla, mas o nome do produtor ainda aparece como Bahrein — Comida de Boteco. O local do evento está descrito como Amsterdam Bar, Santa Maria; não alterar identidade do estabelecimento sem revisão.
 - A Sympla usa o nome Clube de Engenharia e endereço SCES Trecho 2, 32 para o Sambinha Na Orla, enquanto as páginas de Pagode do Béli e Tamborzão usam Orla do Clube de Engenharia — Pier 21, SCES Trecho 1, Lote 7. Mantidos como locais distintos no texto do evento; não criar nem fundir perfis até conciliar a diferença.
 - SUB de FAVELA / Truvis Bar continua pendente: cabeçalho da Sympla indica 21h, mas o corpo mantém o campo de abertura como “[Inserir horário de abertura]”.
