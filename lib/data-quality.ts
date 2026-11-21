@@ -42,9 +42,12 @@ export function isPlaceholder(value: unknown): boolean {
       return true;
     }
     const normalized = normalizeString(trimmed);
-    return PLACEHOLDER_PATTERNS.some((pattern) =>
-      normalized === pattern || (!['-', '—'].includes(pattern) && normalized.includes(pattern))
-    );
+    return PLACEHOLDER_PATTERNS.some((pattern) => {
+      if (pattern === 'pendente') {
+        return /(^|[^a-z0-9])pendentes?([^a-z0-9]|$)/.test(normalized);
+      }
+      return normalized === pattern || (!['-', '—'].includes(pattern) && normalized.includes(pattern));
+    });
   }
 
   return false;
