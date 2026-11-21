@@ -92,11 +92,11 @@ export const additionalPlacesNovember20: Establishment[] = [
     name: 'Minas Brasília Tênis Clube',
     region: 'Asa Norte',
     type: 'Clube / espaço de eventos',
-    description: 'Clube esportivo com salão social e espaços comerciais para eventos. Site oficial confirma endereço, contato e programação de eventos sociais; o acesso geral ao clube é restrito a sócios/convidados, e o perfil permanece em rascunho até revisão da aderência ao catálogo e das regras de acesso.',
+    description: 'Clube esportivo com salão social e espaços comerciais para eventos. Site oficial confirma endereço, contato e programação de eventos sociais; o acesso geral para não associados não foi confirmado, então o perfil permanece em rascunho até revisão da aderência ao catálogo e das regras de acesso.',
     address: 'SCEN Trecho 03, Conjunto 06 — Asa Norte, Brasília/DF, 70800-130.',
     vibe: ['eventos sociais'],
     music: [],
-    audience: ['sócios', 'convidados', 'eventos'],
+    audience: [],
     mapsQuery: 'Minas Brasília Tênis Clube, SCEN Trecho 03 Conjunto 06, Brasília, DF',
     businessContact: {
       phone: '(61) 3686-1240',
