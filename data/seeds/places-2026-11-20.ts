@@ -187,5 +187,33 @@ export const additionalPlacesNovember20: Establishment[] = [
     lastUpdated: '2026-11-21',
     publicRatings: [],
     publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-21' },
+  },,
+
+  {
+    id: 'a-casa-de-jorge-saan',
+    name: 'A Casa de Jorge',
+    region: 'SAAN',
+    type: 'Bar',
+    description: 'Bar e restaurante com palco e arena de shows, programação musical e proposta cultural. A atividade atual é corroborada por páginas oficiais de eventos de novembro de 2026; o perfil permanece em rascunho para revisão editorial.',
+    address: 'SAAN, Quadra 01, Lote 940 — Brasília/DF.',
+    vibe: ['gastronomia', 'música ao vivo', 'cultura'],
+    music: ['forró', 'samba', 'pagode', 'MPB', 'rock', 'reggae'],
+    audience: ['grupos', 'famílias'],
+    mapsQuery: 'A Casa de Jorge, SAAN Quadra 01 Lote 940, Brasília, DF',
+    source: {
+      kind: 'official',
+      label: 'Sympla — página oficial de evento produzido pela A Casa de Jorge',
+      url: 'https://www.sympla.com.br/evento/lgc/3658614',
+      verifiedAt: '2026-11-21',
+    },
+    verified: false,
+    publicationStatus: 'draft',
+    ownerManaged: false,
+    crowdStatus: 'a confirmar',
+    weeklySchedule: [],
+    lastUpdated: '2026-11-21',
+    publicRatings: [],
+    publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-21' },
   },
+
 ];
