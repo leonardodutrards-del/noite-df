@@ -35,6 +35,14 @@ const symplaSource20 = (url: string) => ({
   verifiedAt: '2026-11-20',
 });
 
+
+const symplaSource21 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-21',
+});
+
 const shotgunSource = (url: string) => ({
   kind: 'official' as const,
   label: 'Shotgun — página oficial do evento ou agenda do estabelecimento',
@@ -199,7 +207,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'Quem estiver com camisa do Palmeiras ou Flamengo tem entrada gratuita até 16h30; demais condições e lotes na página oficial.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/bola-samba-e-feijao/3653111'),
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3653111'),
   },
   {
     id: 'te-vejo-na-praca-cpx-2026-11-21',
@@ -231,7 +239,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'Convites VIP sujeitos à cobrança de R$ 15,00 de couvert artístico na entrada.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource19('https://www.sympla.com.br/evento/lgc/3642351'),
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3642351'),
   },
   {
     id: 'inflama-complexo-2026-11-21',
@@ -1208,14 +1216,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'SIG',
     dateLabel: 'Sábado, 21/11/2026 · 18h–02h',
     category: 'Samba / Sertanejo / Música ao vivo',
-    description: 'Roda de samba, sertanejo e música ao vivo. O line-up oficial lista DJ Primo às 18h, 21h, 23h e 1h30, Boteco do Clima às 19h e Banda Dexcomplica às 23h30; um bloco intermediário está sem artista identificado.',
+    description: 'Roda de samba, sertanejo e música ao vivo. A página oficial confirma DJ Primo às 18h, 21h, 23h e 1h30; Boteco do Clima às 19h; Zé Felipe e Miguel às 21h30; e Banda Dexcomplica às 23h30.',
     startsAt: '2026-11-21T18:00:00-03:00',
     endsAt: '2026-11-22T02:00:00-03:00',
     expiresAt: '2026-11-22T02:00:00-03:00',
     admissionNote: 'Taxa de conveniência antecipada de R$ 20 no happy hour até 21h; após 21h, a página informa complemento da diferença do ingresso vigente.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource16('https://www.sympla.com.br/evento/sabado-no-oscarito/3655652'),
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3655652'),
   },
   {
     id: 'sabado-magico-contexto-2026-11-21',
@@ -1231,7 +1239,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource20('https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209'),
+    source: symplaSource21('https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209'),
   },
   {
     id: 'moleca-arena-dose-dupla-2026-11-21',
