@@ -7,7 +7,7 @@
 - Pendentes na rotação de sete dias: **23**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
 - data_sources: **359**; agenda_source_checks: **505**.
 - Verificações nas últimas 24 horas: **77** — 65 ok, 4 changed, 3 error, 2 http_error, 2 blocked e 1 baseline; os registros cobrem **41 estabelecimentos publicados distintos** em 14 regiões.
-- Foram acrescentados **39 registros de fonte** e **45 registros de verificação** ao Supabase neste ciclo (27 fontes do lote anterior e 12 fontes desta revisão, incluindo nove eventos e três fontes de estabelecimentos candidatos). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Nesta revisão foram inseridas **12 fontes e 12 verificações** no Supabase: nove páginas de eventos e três fontes de estabelecimentos candidatos. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
