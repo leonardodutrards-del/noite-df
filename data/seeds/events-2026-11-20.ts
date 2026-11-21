@@ -145,4 +145,21 @@ export const confirmedEventsNovember20: EventItem[] = [
     publicationStatus: 'published',
     source: symplaSource21('https://www.sympla.com.br/evento/lgc/3651776'),
   },
+
+  {
+    id: 'curral-surra-de-modao-cais-do-lago-2026-12-05',
+    title: 'CURRAL — Surra de Modão (Edição Beira Lago)',
+    place: 'Cais do Lago',
+    region: 'Setor de Clubes Sul',
+    dateLabel: 'Sábado, 05/12/2026 · 20h–05h (06/12)',
+    category: 'Sertanejo / Modão',
+    description: 'Edição Beira Lago do projeto Surra de Modão, com produção independente. A página oficial identifica o evento como 100% Surra de Modão e não lista outros artistas individuais.',
+    startsAt: '2026-12-05T20:00:00-03:00',
+    endsAt: '2026-12-06T05:00:00-03:00',
+    expiresAt: '2026-12-06T05:00:00-03:00',
+    admissionNote: 'Preço e lotes não aparecem no conteúdo acessível da Sympla; consultar a página oficial.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3653158'),
+  },
 ];
