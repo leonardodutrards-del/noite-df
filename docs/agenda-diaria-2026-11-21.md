@@ -3,11 +3,11 @@
 ## Base, cobertura e checkpoint
 
 - Estabelecimentos com `publication_status='published'`: **104** em **22 regiões**.
-- Com pelo menos uma verificação de fonte nos últimos sete dias: **80/104**.
-- Pendentes na rotação de sete dias: **24**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
+- Com pelo menos uma verificação de fonte nos últimos sete dias: **81/104**.
+- Pendentes na rotação de sete dias: **23**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
 - data_sources: **341**; agenda_source_checks: **485**.
 - Verificações nas últimas 24 horas: **69** — 59 ok, 4 changed, 3 error, 2 http_error e 1 blocked.
-- Foram acrescentados **23 registros de fonte** e **28 registros de verificação** ao Supabase (23 fontes novas e quatro revalidações adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Foram acrescentados **24 registros de fonte** e **29 registros de verificação** ao Supabase (24 fontes novas e cinco revalidações/correções adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
@@ -32,7 +32,7 @@ Também foi registrada uma fonte oficial de localização e canais para o Boteco
 
 ### 24 estabelecimentos pendentes na rotação
 
-Club 904; UK Music Hall; Circuito de Comitivas de Planaltina-GO; Bar do Chaguinha; Bar do Luis; Parque de Exposições Granja do Torto; Galpão 17; Chácara BWR; Pontão do Lago Sul; Temporâneo (AABB); Bar do Batata; Moema Pizzaria — Planaltina; Vila Madalena; Arena Mané Garrincha; SamamBar; Arena P10; CB7; Fogão Goiano; Horus Eventus; Santa Aldeia Bar; Abençoado Bar; Bardot Music Bar; Fiel Bar e Distribuidora; SHOT Rock Bar.
+Club 904; UK Music Hall; Circuito de Comitivas de Planaltina-GO; Bar do Chaguinha; Bar do Luis; Parque de Exposições Granja do Torto; Galpão 17; Chácara BWR; Pontão do Lago Sul; Temporâneo (AABB); Bar do Batata; Moema Pizzaria — Planaltina; Vila Madalena; Arena Mané Garrincha; SamamBar; CB7; Fogão Goiano; Horus Eventus; Santa Aldeia Bar; Abençoado Bar; Bardot Music Bar; Fiel Bar e Distribuidora; SHOT Rock Bar.
 
 Restrições de identidade/endereço:
 - A busca por Bar do Chaguinha retornou um endereço QNM 22 Casa 04, diferente do QNM 22 Conjunto D Lote 4 registrado na base; não associar sem confirmação.
