@@ -103,7 +103,7 @@ describe('Agenda diária 20/11/2026', () => {
     const beli = agenda.find((event) => event.id === 'pagode-do-beli-orla-clube-2026-11-21');
     expect(beli?.startsAt).toBe('2026-11-21T16:00:00-03:00');
     expect(beli?.endsAt).toBe('2026-11-22T02:00:00-03:00');
-    expect(beli?.description).toContain('DJ Vinny');
+    expect(beli?.description).toContain('DJs Vinny');
     expect(beli?.source?.url).toContain('3657546');
 
     const forroVitrola = agenda.find((event) => event.id === 'forro-de-vitrola-casa-de-jorge-2026-11-22');
