@@ -24,12 +24,13 @@
 | Macaco Velho Chopp Bar | Águas Claras | Solutudo informa Rua 31 Sul Lote 9; resultado separado de Maps cita QS 5 e pode ser outra unidade — não consolidar sem confirmação |
 | Telebar | Ceilândia | Cadastro empresarial ativo e endereço em Ceilândia Norte; sem agenda oficial recente |
 | Bar do Galego | Guará | Listagem de negócio atualizada em 06/11/2026, endereço e telefone |
+| Arena P10 | Sobradinho | Páginas oficiais da Sympla para B DAY e Perto de Casa; divergências de horário mantidas pendentes |
 | Temporâneo (AABB) | Lago Sul | Sympla confirma uso em 23/10; AABB publicou encerramento da temporada em abril — manter como espaço sazonal, sem agenda futura confirmada |
 | Moema Pizzaria — Planaltina | Planaltina | Solutudo/CNPJ ativo, atividade de restaurante, endereço e telefones; Instagram cadastrado ainda não acessado |
 | Arena Mané Garrincha | Plano Piloto | Site oficial confirma complexo multiuso e endereço; agenda oficial mostra novos eventos em breve |
 | SamamBar | Samambaia | Sympla confirma Réveillon 31/12/2026, 20h–06h, endereço e atrações |
 
-Total desta revisão: **11 estabelecimentos** tiveram revisão de fonte individualizada. Também foi registrada uma fonte oficial de localização e canais para o Boteco da Madá.
+Total desta revisão: **12 estabelecimentos** tiveram revisão de fonte individualizada. Também foi registrada uma fonte oficial de localização e canais para o Boteco da Madá.
 
 ### Regiões e perfis
 
