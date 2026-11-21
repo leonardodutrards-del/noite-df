@@ -292,4 +292,22 @@ export const confirmedEventsNovember20: EventItem[] = [
     source: symplaSource21('https://www.sympla.com.br/evento/fp-do-trem-bala-dj-zullu-noobreak-orla-do-pier-21-sabado-28-11/3653788'),
   },
 
+
+  {
+    id: 'reveillon-samambar-2027-2026-12-31',
+    title: 'Réveillon SamamBar 2027',
+    place: 'SamamBar',
+    region: 'Samambaia',
+    dateLabel: 'Quinta-feira, 31/12/2026 · 20h–06h (01/01/2027)',
+    category: 'Réveillon / Brasilidades / Sertanejo / Pagode',
+    description: 'Virada do ano com Leandro Lucca (20h), Lia Almeida (23h), DJ Salles (01h), Grupo Moleque (02h) e buffet de café da manhã durante a madrugada.',
+    startsAt: '2026-12-31T20:00:00-03:00',
+    endsAt: '2027-01-01T06:00:00-03:00',
+    expiresAt: '2027-01-01T06:00:00-03:00',
+    admissionNote: 'Ingressos adulto e infantil; buffet de café da manhã incluído. Consumo de comidas e bebidas por comanda individual, com preços de cardápio.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3652554'),
+  },
+
 ];
