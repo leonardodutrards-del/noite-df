@@ -187,7 +187,7 @@ export const additionalPlacesNovember20: Establishment[] = [
     lastUpdated: '2026-11-21',
     publicRatings: [],
     publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-21' },
-  },,
+  },
 
   {
     id: 'a-casa-de-jorge-saan',
