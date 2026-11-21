@@ -5,8 +5,8 @@
 - Estabelecimentos com `publication_status='published'`: **104** em **22 regiões**.
 - Com pelo menos uma verificação de fonte nos últimos sete dias: **81/104**.
 - Pendentes na rotação de sete dias: **23**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
-- data_sources: **341**; agenda_source_checks: **485**.
-- Verificações nas últimas 24 horas: **69** — 59 ok, 4 changed, 3 error, 2 http_error e 1 blocked.
+- data_sources: **347**; agenda_source_checks: **493**.
+- Verificações nas últimas 24 horas: **77** — 65 ok, 4 changed, 3 error, 2 http_error, 2 blocked e 1 baseline; os registros cobrem **41 estabelecimentos publicados distintos** em 14 regiões.
 - Foram acrescentados **27 registros de fonte** e **33 registros de verificação** ao Supabase (27 fontes novas e seis revalidações/correções adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
@@ -30,7 +30,7 @@ Também foi registrada uma fonte oficial de localização e canais para o Boteco
 - Oito perfis prioritários tiveram tentativa direta em 19/11: seis erros de fetch, um bloqueio por `robots.txt` e um HTTP 429. Não houve repetição idêntica hoje. Nenhum foi classificado como privado ou inexistente sem evidência.
 - Oito tentativas não equivalem a oito perfis acessíveis; a classificação individual continua pendente.
 
-### 24 estabelecimentos pendentes na rotação
+### 23 estabelecimentos pendentes na rotação
 
 Club 904; UK Music Hall; Circuito de Comitivas de Planaltina-GO; Bar do Chaguinha; Bar do Luis; Parque de Exposições Granja do Torto; Galpão 17; Chácara BWR; Pontão do Lago Sul; Temporâneo (AABB); Bar do Batata; Moema Pizzaria — Planaltina; Vila Madalena; Arena Mané Garrincha; SamamBar; CB7; Fogão Goiano; Horus Eventus; Santa Aldeia Bar; Abençoado Bar; Bardot Music Bar; Fiel Bar e Distribuidora; SHOT Rock Bar.
 
@@ -71,6 +71,26 @@ Detalhes relevantes:
 - **Perto de Casa / P10**, 22/11: cabeçalho indica 15h–23h30; descrição informa abertura às 16h, gravação às 18h30 e encerramento às 22h30.
 - **Festa de Interior / Piseiro Estilizado**: a página apresenta divergência entre Castelo Versailles e Palácio Ágape; local não confirmado.
 - Nenhum evento foi cancelado ou expirado nesta rodada por falta de evidência.
+
+
+### Eventos adicionais confirmados nesta revisão (21/11)
+
+| Data e horário local | Evento | Local | Fonte |
+|---|---|---|---|
+| Sáb. 21/11, 16h–02h (22/11) | DVD Pagode do Béli — FLA x PAL | Orla do Clube de Engenharia — Pier 21, Lago Sul | [Sympla](https://www.sympla.com.br/evento/lgc/3657546) |
+| Dom. 22/11, 18h–23h59 | Forró de Vitrola | A Casa de Jorge, SAAN | [Sympla](https://www.sympla.com.br/evento/forro-de-vitrola-22-de-novembro/3654904) |
+| Sex. 27/11, 20h–03h (28/11) | Biu do Piseiro no Amsterdam | Amsterdam Bar, Santa Maria | [Sympla](https://www.sympla.com.br/evento/lgc/3644812) |
+| Sex. 27/11, 20h–04h (28/11) | Sambinha Na Orla — PDJ + Caju Pra Baixo + Encontro de Batuqueiros | Clube de Engenharia, Lago Sul | [Sympla](https://www.sympla.com.br/evento/lgc/3649109) |
+| Sex. 27/11, 22h–01h30 (28/11) | Samba do Povo da Rua | A Casa de Jorge, SAAN | [Sympla](https://www.sympla.com.br/evento/lgc/3658614) |
+| Sáb. 28/11, 11h–04h (29/11) | FeijoADA com Amor de Aluguel | Contexto Bar, Setor de Clubes Sul | [Sympla](https://www.sympla.com.br/evento/feijoada-com-amor-de-aluguel-28-11-varanda-contexto-bar/3626169) |
+| Sáb. 28/11, 20h–04h (29/11) | Tamborzão — FP do Trem Bala + DJ Zullu + Noobreak | Orla do Clube de Engenharia — Pier 21, Lago Sul | [Sympla](https://www.sympla.com.br/evento/fp-do-trem-bala-dj-zullu-noobreak-orla-do-pier-21-sabado-28-11/3653788) |
+
+Observações:
+- A Casa de Jorge foi incluída como perfil draft, com endereço SAAN Quadra 01, Lote 940, tipo bar, e fontes de eventos oficiais. A matéria de apresentação confirma a proposta de bar/restaurante, palco, programação musical e endereço; o rascunho não entra no catálogo público.
+- Amsterdam Bar permanece em draft; o evento de 27/11 está confirmado na Sympla, mas o nome do produtor ainda aparece como Bahrein — Comida de Boteco. O local do evento está descrito como Amsterdam Bar, Santa Maria; não alterar identidade do estabelecimento sem revisão.
+- A Sympla usa o nome Clube de Engenharia e endereço SCES Trecho 2, 32 para o Sambinha Na Orla, enquanto as páginas de Pagode do Béli e Tamborzão usam Orla do Clube de Engenharia — Pier 21, SCES Trecho 1, Lote 7. Mantidos como locais distintos no texto do evento; não criar nem fundir perfis até conciliar a diferença.
+- SUB de FAVELA / Truvis Bar continua pendente: cabeçalho da Sympla indica 21h, mas o corpo mantém o campo de abertura como “[Inserir horário de abertura]”.
+- DE RODA Á MODA / Dom Muster continua pendente: cabeçalho indica 14h, porém a localização publicada traz apenas “conjunto, 05”, sem endereço completo verificável.
 
 ## Novos candidatos de estabelecimento
 
