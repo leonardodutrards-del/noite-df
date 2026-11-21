@@ -7,7 +7,7 @@
 - Pendentes na rotação de sete dias: **24**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
 - data_sources: **341**; agenda_source_checks: **485**.
 - Verificações nas últimas 24 horas: **69** — 59 ok, 4 changed, 3 error, 2 http_error e 1 blocked.
-- Foram acrescentados **23 registros de fonte** e **27 registros de verificação** ao Supabase (23 fontes novas e quatro revalidações adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Foram acrescentados **23 registros de fonte** e **28 registros de verificação** ao Supabase (23 fontes novas e quatro revalidações adicionais). Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
@@ -17,7 +17,7 @@
 | Pança Cheia | Sobradinho | Comida di Buteco; endereço, telefone e horários |
 | Oito Gastrobar | Sobradinho | Espelho público de publicações até 13/06/2026 e listagem de negócios; sem agenda recente |
 | Bar do Buchada | Gama | Cadastro empresarial/CNPJ e endereço |
-| Macaco Velho Chopp Bar | Águas Claras | Cadastro empresarial/CNPJ e endereço QS 5; o cadastro local também cita Rua 31, exigindo reconciliação de unidades |
+| Macaco Velho Chopp Bar | Águas Claras | Solutudo informa Rua 31 Sul Lote 9; resultado separado de Maps cita QS 5 e pode ser outra unidade — não consolidar sem confirmação |
 | Telebar | Ceilândia | Cadastro empresarial ativo e endereço em Ceilândia Norte; sem agenda oficial recente |
 | Bar do Galego | Guará | Listagem de negócio atualizada em 06/11/2026, endereço e telefone |
 
