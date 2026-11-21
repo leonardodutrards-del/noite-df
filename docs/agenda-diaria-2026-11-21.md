@@ -7,7 +7,11 @@
 - Pendentes na rotação de sete dias: **19**. A cobertura é de fonte verificada, não uma auditoria manual integral de cada perfil.
 - data_sources: **365**; agenda_source_checks: **511**.
 - Verificações nas últimas 24 horas: **94** — 82 ok, 4 changed, 3 error, 2 http_error, 2 blocked e 1 baseline; os registros cobrem **45 estabelecimentos publicados distintos** em 16 regiões.
-- Nesta revisão foram inseridas **17 fontes e 17 verificações** no Supabase: nove páginas de eventos confirmados, duas páginas de eventos pendentes, três fontes de estabelecimentos candidatos e cinco fontes de estabelecimentos publicados. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+- Nesta revisão foram inseridas **17 fontes e 17 verificações** no Supabase: sete páginas de eventos confirmados, duas páginas de eventos pendentes, três fontes de estabelecimentos candidatos e cinco fontes de estabelecimentos publicados. Nenhum dado de conteúdo de estabelecimento ou evento foi alterado diretamente.
+
+- Perfis publicados com agenda_url cadastrada: **30/104**; **74** sem agenda_url cadastrada.
+- Estabelecimentos publicados sem qualquer fonte registrada: **2** — CB7 e Horus Eventus, ambos pendentes de descoberta/identidade.
+- A tabela events do Supabase tem **3 eventos publicados futuros**: dois vinculados a estabelecimentos publicados e um vinculado a estabelecimento draft. Os 18 registros da seed da PR não foram inseridos diretamente na tabela events.
 
 ### Estabelecimentos publicados verificados nesta rodada
 
@@ -25,12 +29,11 @@
 | Arena Mané Garrincha | Plano Piloto | Site oficial confirma complexo multiuso e endereço; agenda oficial mostra novos eventos em breve |
 | SamamBar | Samambaia | Sympla confirma Réveillon 31/12/2026, 20h–06h, endereço e atrações |
 
-Também foi registrada uma fonte oficial de localização e canais para o Boteco da Madá.
+Total desta revisão: **11 estabelecimentos** tiveram revisão de fonte individualizada. Também foi registrada uma fonte oficial de localização e canais para o Boteco da Madá.
 
 ### Regiões e perfis
 
-- Auditoria de estabelecimentos nesta rodada: Asa Sul, Sobradinho, Gama, Águas Claras, Ceilândia, Guará, Lago Sul, Planaltina, Plano Piloto e Samambaia.
-- Fontes de eventos e locais também cobriram Taguatinga, Asa Norte, Setor de Clubes Sul, SAAN e SIG.
+- Os registros de verificação cobrem **16 regiões** nas últimas 24 horas: Águas Claras, Asa Norte, Asa Sul, Ceilândia, Gama, Guará, Lago Sul, Park Way, Planaltina, Plano Piloto, SAAN, Samambaia, SIG, Sobradinho, Sudoeste e Taguatinga.
 - Oito perfis prioritários tiveram tentativa direta em 19/11: seis erros de fetch, um bloqueio por `robots.txt` e um HTTP 429. Não houve repetição idêntica hoje. Nenhum foi classificado como privado ou inexistente sem evidência.
 - Oito tentativas não equivalem a oito perfis acessíveis; a classificação individual continua pendente.
 
@@ -77,7 +80,7 @@ Detalhes relevantes:
 - Nenhum evento foi cancelado ou expirado nesta rodada por falta de evidência.
 
 
-### Eventos adicionais confirmados nesta revisão (21/11)
+### Oito eventos adicionais confirmados nesta revisão (21/11)
 
 | Data e horário local | Evento | Local | Fonte |
 |---|---|---|---|
