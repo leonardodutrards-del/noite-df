@@ -481,4 +481,38 @@ export const confirmedEventsNovember20: EventItem[] = [
     source: symplaSource22('https://www.sympla.com.br/evento/reveillon-vbq-2027/3660940'),
   },
 
+
+  {
+    id: 'biu-do-piseiro-adega-dos-amigos-2026-11-28',
+    title: 'Biu do Piseiro na Adega dos Amigos',
+    place: 'Arena Adega dos Amigos',
+    region: 'Ceilândia',
+    dateLabel: 'Sábado, 28/11/2026 · 20h–04h (29/11)',
+    category: 'Piseiro / Sertanejo',
+    description: 'Circuito Celebration com Biu do Piseiro, DJ Juninho Sem Rumo, Biah Souza e Renan Diniz na Arena Adega dos Amigos, bar e petiscaria em Ceilândia Sul.',
+    startsAt: '2026-11-28T20:00:00-03:00',
+    endsAt: '2026-11-29T04:00:00-03:00',
+    expiresAt: '2026-11-29T04:00:00-03:00',
+    admissionNote: 'Valores e lotes não aparecem no conteúdo acessível; consultar a página oficial da Sympla.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource22('https://www.sympla.com.br/evento/lgc/3646093'),
+  },
+  {
+    id: 'voa-festival-caixa-cultural-2026-11-27',
+    title: 'VOA Festival 4ª Edição',
+    place: 'CAIXA Cultural Brasília — área externa/estacionamento',
+    region: 'Asa Sul',
+    dateLabel: 'Sexta a domingo, 27–29/11/2026 · 19h (27 e 28/11), 18h (29/11)–23h59',
+    category: 'Festival / Música ao vivo / Cultura',
+    description: 'Festival com Pratanes, Gabriel Grossi Trio convida Dora Sanches, Duda Beat, Kirá, Seu Pereira e Coletivo 401, Guiss Guiss Bou Bess, Gaby Amarantos, Mari Coelho, Melly e Arnaldo Antunes, além de DJs.',
+    startsAt: '2026-11-27T19:00:00-03:00',
+    endsAt: '2026-11-29T23:59:00-03:00',
+    expiresAt: '2026-11-29T23:59:00-03:00',
+    admissionNote: 'Valores e lotes não detalhados no texto oficial consultado; conferir a página oficial da Sympla.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource22('https://www.sympla.com.br/evento/voa-festival-4-edicao/3635345'),
+  },
+
 ];
