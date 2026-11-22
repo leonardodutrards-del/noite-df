@@ -301,4 +301,37 @@ export const additionalPlacesNovember20: Establishment[] = [
     publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-22' },
   },
 
+
+  {
+    id: 'abencoado-bar-asa-norte',
+    name: 'Abençoado Bar — Asa Norte',
+    region: 'Asa Norte',
+    type: 'Bar',
+    description: 'Segunda unidade distinta do Abençoado Bar, confirmada pelo site oficial da marca. Bar e restaurante com buffet no almoço, happy hour diário e música ao vivo de quinta a domingo. Mantida separada da unidade Sudoeste.',
+    address: 'CLN 207, Bloco A — Asa Norte, Brasília/DF, 70852-510.',
+    vibe: ['gastronomia', 'happy hour', 'música ao vivo'],
+    music: [],
+    audience: ['grupos', 'famílias'],
+    mapsQuery: 'Abençoado Bar Asa Norte, CLN 207 Bloco A, Brasília, DF',
+    businessContact: {
+      phone: '(61) 99686-6318',
+      sourceUrl: 'https://www.abencoadobar.com.br/',
+      checkedAt: '2026-11-22',
+    },
+    source: {
+      kind: 'official',
+      label: 'Site oficial — página da marca confirma unidade Asa Norte, endereço e telefone próprios',
+      url: 'https://www.abencoadobar.com.br/',
+      verifiedAt: '2026-11-22',
+    },
+    verified: false,
+    publicationStatus: 'draft',
+    ownerManaged: false,
+    crowdStatus: 'a confirmar',
+    weeklySchedule: [],
+    lastUpdated: '2026-11-22',
+    publicRatings: [],
+    publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-22' },
+  },
+
 ];
