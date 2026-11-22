@@ -22,6 +22,12 @@ describe('Agenda diária 20/11/2026', () => {
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.publicationStatus).toBe('published');
     }
+
+    const reveillonTexxas = confirmedEventsNovember20.find((event) => event.id === 'reveillon-texxas-prime-2027-2026-12-31');
+    expect(reveillonTexxas?.startsAt).toBe('2026-12-31T19:00:00-03:00');
+    expect(reveillonTexxas?.endsAt).toBe('2027-01-01T06:00:00-03:00');
+    expect(reveillonTexxas?.place).toBe('Texxas Bar');
+    expect(reveillonTexxas?.source?.url).toContain('3578484');
   });
 
   it('inclui os eventos confirmados do lote na agenda pública e usa o line-up atualizado do Oscarito', async () => {
@@ -173,12 +179,6 @@ describe('Agenda diária 20/11/2026', () => {
     expect(dexcomplica?.endsAt).toBe('2026-11-29T06:00:00-03:00');
     expect(dexcomplica?.place).toBe('Clube de Engenharia de Brasília');
     expect(dexcomplica?.source?.url).toContain('3634141');
-
-    const reveillonTexxas = agenda.find((event) => event.id === 'reveillon-texxas-prime-2027-2026-12-31');
-    expect(reveillonTexxas?.startsAt).toBe('2026-12-31T19:00:00-03:00');
-    expect(reveillonTexxas?.endsAt).toBe('2027-01-01T06:00:00-03:00');
-    expect(reveillonTexxas?.place).toBe('Texxas Bar');
-    expect(reveillonTexxas?.source?.url).toContain('3578484');
 
     const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
