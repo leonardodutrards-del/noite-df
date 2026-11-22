@@ -345,7 +345,6 @@ export const additionalPlacesNovember20: Establishment[] = [
     vibe: ['gastronomia', 'coquetelaria', 'eventos'],
     music: [],
     audience: ['famílias', 'grupos'],
-    website: 'https://www.saguarigastrohouse.com.br/',
     instagram: 'https://instagram.com/saguarigastrohouse',
     whatsapp: '5561998775943',
     businessContact: {
@@ -379,7 +378,7 @@ export const additionalPlacesNovember20: Establishment[] = [
     id: 'externa-club-asa-sul',
     name: 'EXTERNA',
     region: 'Asa Sul',
-    type: 'Casa noturna',
+    type: 'Boate',
     description: 'Casa noturna e espaço de eventos no Centro Comercial Amazonas, com festas recorrentes e pista. A página oficial da Sympla identifica EXTERNA como local e produtora; o endereço detalhado permanece em revisão antes de eventual publicação.',
     address: 'Centro Comercial Amazonas, SCS Quadra 5, Bloco B, Lote 74 — Asa Sul, Brasília/DF, 70300-908.',
     vibe: ['festas', 'pista', 'música eletrônica'],
