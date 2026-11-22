@@ -169,3 +169,34 @@ O seed de candidatos passa a conter **13 perfis em draft**. Nenhum perfil foi in
 - PR #163 permanece em draft: https://github.com/leonardodutrards-del/noite-df/pull/163
 - O commit `d63155338a67b15b0be19d0b4f03b3e8aa7a2cd8` contém os dois eventos novos. A execução de CI e o Preview correspondentes precisam ser conferidos antes de qualquer merge.
 - Produção não foi alterada nesta rodada. Não houve publicação em Instagram/feed/Stories nem contato com estabelecimentos.
+
+
+## Fechamento técnico e descoberta regional — 22/11/2026
+
+### CI e Preview após correção do teste
+- A primeira execução do CI após os dois eventos novos falhou apenas porque `tests/agenda-seed-2026-11-20.test.ts` ainda esperava 28 itens. Atualizei o teste para **30 registros** e acrescentei asserções específicas para Biu do Piseiro na Adega e VOA Festival.
+- No commit `8e71ff0a9e27fc3852bfef6e428165f77c046e00`: **81/81 arquivos de teste e 322/322 testes aprovados**, lint aprovado e build aprovado.
+- Preview Vercel do mesmo commit: **READY** — https://noite-jmjn7s7ma-leonardodutrards-dels-projects.vercel.app
+- A consulta autenticada ao Preview retornou HTTP 200 em `/agenda-mensal`; a página mostra os dois novos eventos, Biu do Piseiro na Adega dos Amigos e VOA Festival, além do Chrigor já existente. O Preview foi verificado; não é produção.
+- Produção continua READY no commit `2c79eadbebb7303d62c7488e4150c16d27c268a3`. A página pública ainda apresenta a agenda anterior de 20–22/11 e 32 eventos válidos em novembro; nenhum evento desta PR foi publicado em produção.
+
+### Descoberta em regiões sub-representadas
+A consulta de distribuição por região mostrou nove regiões com apenas um estabelecimento publicado (Brasilinha, Cidade Ocidental, Granja do Torto, Jardim Ingá, Park Way, Plano Piloto, SAAN, Samambaia e Setor de Clubes Sul). Foram pesquisados Planaltina-GO, Cidade Ocidental, Jardim Ingá e Samambaia.
+
+Leads encontrados em fontes públicas secundárias ou fichas de negócios:
+- **Cidade Ocidental:** Espetinho da Chegada / Chegada Cozinha & Bar (SQ 15, Quadra 17, lotes 14 e 15, Recanto das Garças); Bar do Aragão (Rua 2, Quadra 1, Lote 39, Parque Nova Friburgo A); Taberna do Ogro (Rua São Matheus, 46, loteamento São Matheus); Parada Eixo Cozinha e Bar (Rua Eixo II, Quadra 12, Lote 22, Ocidental Park).
+- **Jardim Ingá:** Choperia Altas Horas (Av. Lucena Roriz, Quadra 58, Lote 114); Cozinha Bar Pantanal e Krispy Cozinha e Bar já existem como perfis `draft` no Supabase e não foram duplicados.
+- **Planaltina-GO/Brasilinha:** Caverna Drinks e Petiscos já existe como `draft`; Sintonia apareceu em diretório local, mas ainda sem canal oficial confirmado.
+- **Samambaia:** Rota 060 Beer apareceu em diretório local; ainda sem fonte oficial própria confirmada.
+
+As páginas secundárias consultadas incluem [Choperia Altas Horas](https://www.locaisdobrasil.com.br/encontre/bares/luziania-go/choperia-altas-horas/660ccb5ea3f2688d6da6791a), [Cozinha Bar Pantanal](https://observatorioluziense.com.br/lugar/cozinha-bar-pantanal-luziania), [listagem de bares do Jardim Ingá](https://www.locaisdobrasil.com.br/encontre/bares/jardim-do-inga/luziania-go), [Taberna do Ogro](https://www.locaisdobrasil.com.br/encontre/bares/cidade-ocidental-go/taberna-do-ogro-bar-e-petiscaria/68a4fe2e2648b322fc601d5a) e [Sintonia](https://www.locaisdobrasil.com.br/encontre/bares/planaltina-go/sintonia/67afc15c9b19f6369f766f75).
+
+Nenhum desses leads novos foi inserido ou publicado: as buscas não localizaram canal oficial suficiente para confirmação final. Os perfis draft existentes permanecem pendentes de validação editorial. **Arena Adega dos Amigos** já consta como estabelecimento publicado e foi deduplicada por nome/endereço. **CAIXA Cultural Brasília** foi usada como local textual do VOA Festival, sem criar perfil institucional nesta rodada.
+
+### Situação final
+- 104 estabelecimentos published; 101 verificados na janela de sete dias; 3 pendentes.
+- 410 fontes e 568 verificações operacionais.
+- 30 registros no seed de eventos e 13 perfis em draft no seed de estabelecimentos.
+- PR #163 continua aberta em draft, sem merge.
+- Nenhuma alteração na tabela de conteúdo `events` ou `establishments`; os três novos registros operacionais são apenas fontes/verificações.
+- Sem publicação em redes sociais e sem contato com estabelecimentos.
