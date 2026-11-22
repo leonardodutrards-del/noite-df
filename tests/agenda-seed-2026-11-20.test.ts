@@ -9,16 +9,16 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
-  it('registra dez eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(18);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(18);
+  it('registra 23 eventos confirmados em fontes oficiais', () => {
+    expect(confirmedEventsNovember20).toHaveLength(23);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(23);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
       expect(event.endsAt).toBeTruthy();
       expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
-      expect(['2026-11-20', '2026-11-21']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-20', '2026-11-21', '2026-11-22']).toContain(event.source?.verifiedAt);
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.publicationStatus).toBe('published');
     }
@@ -147,7 +147,38 @@ describe('Agenda diária 20/11/2026', () => {
     expect(reveillonSamamBar?.endsAt).toBe('2027-01-01T06:00:00-03:00');
     expect(reveillonSamamBar?.place).toBe('SamamBar');
     expect(reveillonSamamBar?.description).toContain('Grupo Moleque');
+
     expect(reveillonSamamBar?.source?.url).toContain('3652554');
+
+    const texxasDomingo = agenda.find((event) => event.id === 'texxas-bar-domingo-top1-2026-11-22');
+    expect(texxasDomingo?.startsAt).toBe('2026-11-22T20:00:00-03:00');
+    expect(texxasDomingo?.endsAt).toBe('2026-11-23T05:00:00-03:00');
+    expect(texxasDomingo?.description).toContain('Gala do Piseiro');
+    expect(texxasDomingo?.source?.url).toContain('3656778');
+
+    const aNight = agenda.find((event) => event.id === 'a-night-to-remember-anexo-bz-2026-11-27');
+    expect(aNight?.startsAt).toBe('2026-11-27T21:00:00-03:00');
+    expect(aNight?.endsAt).toBe('2026-11-28T04:00:00-03:00');
+    expect(aNight?.place).toBe('Anexo BZ');
+    expect(aNight?.source?.url).toContain('3594013');
+
+    const vertice = agenda.find((event) => event.id === 'vertice-house-complexo-fora-do-eixo-2026-11-28');
+    expect(vertice?.startsAt).toBe('2026-11-28T22:00:00-03:00');
+    expect(vertice?.endsAt).toBe('2026-11-29T06:00:00-03:00');
+    expect(vertice?.place).toBe('Complexo Fora do Eixo');
+    expect(vertice?.source?.url).toContain('3657195');
+
+    const dexcomplica = agenda.find((event) => event.id === 'dexcomplica-clube-engenharia-2026-11-28');
+    expect(dexcomplica?.startsAt).toBe('2026-11-28T20:00:00-03:00');
+    expect(dexcomplica?.endsAt).toBe('2026-11-29T06:00:00-03:00');
+    expect(dexcomplica?.place).toBe('Clube de Engenharia de Brasília');
+    expect(dexcomplica?.source?.url).toContain('3634141');
+
+    const reveillonTexxas = agenda.find((event) => event.id === 'reveillon-texxas-prime-2027-2026-12-31');
+    expect(reveillonTexxas?.startsAt).toBe('2026-12-31T19:00:00-03:00');
+    expect(reveillonTexxas?.endsAt).toBe('2027-01-01T06:00:00-03:00');
+    expect(reveillonTexxas?.place).toBe('Texxas Bar');
+    expect(reveillonTexxas?.source?.url).toContain('3578484');
 
     const mikaelen = agenda.find((event) => event.id === 'ticiana-mikaelen-barbosa-2026-11-20');
     expect(mikaelen?.startsAt).toBe('2026-11-20T19:30:00-03:00');
