@@ -136,3 +136,36 @@ O seed de candidatos passa a conter **13 perfis em draft**. Nenhum perfil foi in
 - PR #163 permanece em draft: https://github.com/leonardodutrards-del/noite-df/pull/163
 - CI #686 e Preview Vercel estavam aprovados/READY no head anterior 9d598748; os novos arquivos e testes desta atualização precisam de nova execução de CI e novo Preview.
 - Nenhum merge ou deploy de produção foi feito. Nenhum conteúdo foi publicado em Instagram/feed/Stories e nenhum estabelecimento foi contatado.
+
+
+## Fechamento complementar — 22/11/2026, 09h09–09h30 (Brasília)
+
+### Base, cobertura e checkpoint
+- Supabase consultado diretamente: **104 estabelecimentos publicados em 22 regiões**.
+- **101/104** tiveram ao menos uma fonte verificada nos últimos sete dias; permanecem **3 pendentes**: Circuito de Comitivas de Planaltina-GO, Chácara BWR e Santa Aldeia Bar.
+- **410 data_sources e 568 agenda_source_checks** após esta rodada. Foram gravados três novos pares fonte/verificação: evento Biu do Piseiro na Arena Adega, fonte de estabelecimento Arena Adega e evento VOA Festival.
+- Nas últimas 24h: **75 verificações** — 36 baseline, 29 ok, 7 changed e 3 error.
+- **74 estabelecimentos publicados não têm agenda_url**.
+- 31 estabelecimentos têm Instagram preenchido. Há 30 URLs distintas de Instagram com status mais recente: 28 error, 1 blocked e 1 http_error. Não interpretar falhas de fetch/bloqueios como perfil privado ou inexistente.
+- Não foi identificada tabela dedicada de checkpoint; o progresso durável está em data_sources / agenda_source_checks. Os três estabelecimentos sem fonte permanecem explicitamente pendentes.
+
+### Dois eventos oficiais adicionais preparados
+1. **Biu do Piseiro na Adega dos Amigos** — sábado 28/11, 20h–04h (29/11), Arena Adega dos Amigos, EQNN 2/4 Bloco C Loja 5, Ceilândia Sul. A página oficial confirma Biu do Piseiro, DJ Juninho Sem Rumo, Biah Souza, Renan Diniz, local e produtor Arena Adega Eventos. [Sympla](https://www.sympla.com.br/evento/lgc/3646093)
+   - A consulta de duplicidade por nome/endereço confirmou que **Arena Adega dos Amigos já é estabelecimento publicado** no Supabase (id `arena-adega-dos-amigos`). Não foi criado novo perfil.
+2. **VOA Festival 4ª Edição** — 27 a 29/11, CAIXA Cultural Brasília, área externa/estacionamento, SBS Quadra 4, lotes 3/4, Asa Sul. Programação oficial: 27/11 a partir das 19h; 28/11 a partir das 19h; 29/11 a partir das 18h. Atrações incluem Duda Beat, Gaby Amarantos, Arnaldo Antunes, Melly, Pratanes, Gabriel Grossi Trio convida Dora Sanches, Kirá, Seu Pereira e Coletivo 401, Guiss Guiss Bou Bess e Mari Coelho. [Sympla](https://www.sympla.com.br/evento/voa-festival-4-edicao/3635345)
+   - O evento foi incluído como item de agenda com o local textual. Nenhum perfil de CAIXA Cultural foi criado nesta rodada.
+
+### Eventos e candidatos que permanecem pendentes
+- **Paparico / Anexo BZ:** a busca indexada da Sympla apresenta data 28/11, 21h–04h e endereço SAAN Q2 Lote 45, mas a abertura direta retornou 404 nesta rodada. Mantido pendente, sem publicação. [Sympla](https://www.sympla.com.br/evento/lgc/3644294)
+- **Beleléu no Lago / Estação Beira Lago:** a página oficial voltou a aparecer acessível em resultado de busca com data 28/11, 15h–23h, local Estação Beira Lago e atrações Béli & Leozinho; contudo, a verificação direta anterior retornou 404. A página ainda precisa ser reaberta/validada em fonte oficial acessível antes de sair de pendente. [Sympla](https://www.sympla.com.br/evento/lgc/3653094)
+- **Circuito de Comitivas de Planaltina-GO, Chácara BWR e Santa Aldeia Bar:** buscas públicas adicionais não localizaram fonte oficial atual suficiente; continuam na lista dos três estabelecimentos sem fonte verificada nesta janela.
+- **Rota do Piseiro / Bar LG:** nenhuma associação sem flyer/post atual confirmando o local. **Galpão dos Brutos** segue sem programação atual confirmada.
+- **PAPARICO** não foi incorporado ao seed; **VOA Festival** e **Biu do Piseiro na Adega** foram incorporados após validação direta da página oficial.
+
+### GitHub, testes e publicação
+- `data/seeds/events-2026-11-20.ts` recebeu dois objetos novos; o seed passa de **28 para 30 eventos**.
+- `data/seeds/places-2026-11-20.ts` permanece com **13 candidatos em draft**; nenhum perfil foi inserido diretamente na tabela `establishments`.
+- A tabela `events` do Supabase permanece com 49 registros: 45 expired, 3 draft e 1 pending_review; **zero eventos futuros publicados**. Os eventos novos continuam somente no seed/PR.
+- PR #163 permanece em draft: https://github.com/leonardodutrards-del/noite-df/pull/163
+- O commit `d63155338a67b15b0be19d0b4f03b3e8aa7a2cd8` contém os dois eventos novos. A execução de CI e o Preview correspondentes precisam ser conferidos antes de qualquer merge.
+- Produção não foi alterada nesta rodada. Não houve publicação em Instagram/feed/Stories nem contato com estabelecimentos.
