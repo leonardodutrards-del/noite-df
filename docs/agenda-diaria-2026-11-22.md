@@ -98,3 +98,41 @@ O perfil Texxas Bar existente em draft teve a fonte oficial atualizada para 22/1
   - https://www.noitedf.com.br/fim-de-semana
   - https://www.noitedf.com.br/agenda-mensal
 - Nenhum merge ou deploy de produção foi feito. Não publicar no Instagram/feed/Stories e não contatar estabelecimentos.
+
+
+## Complemento de 22/11/2026 — nova verificação de eventos e candidatos
+
+### Base e checkpoint
+- Supabase: **104 estabelecimentos publicados em 22 regiões**; **101/104** tiveram ao menos uma fonte verificada nos últimos sete dias; **3 permanecem pendentes**: Circuito de Comitivas de Planaltina-GO, Chácara BWR e Santa Aldeia Bar.
+- **407 fontes e 565 verificações** em data_sources / agenda_source_checks.
+- 74 verificações nas últimas 24h, distribuídas em 36 estabelecimentos distintos e nove páginas de eventos/candidatos: 37 baseline, 27 ok, 7 changed e 3 error.
+- 30 estabelecimentos têm agenda_url; 74 não têm. Há 31 estabelecimentos com Instagram preenchido; 32 registros de fonte Instagram (30 URLs distintas), com últimos status 30 error, 1 blocked e 1 http_error. Não classificar como privado/inexistente sem evidência.
+- Não há tabela dedicada de checkpoint identificada. O progresso verificável ficou persistido em data_sources / agenda_source_checks; os três estabelecimentos sem fonte permanecem explicitamente pendentes.
+
+### Cinco novos eventos preparados no seed
+- **Forró na Varanda**, terça 24/11, 18h–01h, Contexto Bar. Página oficial do produtor confirma endereço e horário. [Sympla](https://www.sympla.com.br/evento/lgc/3625162)
+- **Deu Mó Love**, sexta 27/11, 18h–04h, Contexto Bar; Grupo Doze Por Oito e DJs residentes. [Sympla](https://www.sympla.com.br/evento/deu-mo-love-27-11-varanda-do-contexto/3628685)
+- **BAILÃO 2000**, sexta 27/11, 22h–05h, EXTERNA, Centro Comercial Amazonas; LXKS, DJ A, New Nay, Ketlen e Ursula. Cortesias limitadas aos 500 primeiros até meia-noite; entrada fácil paga a partir de R$40. [Sympla](https://www.sympla.com.br/evento/lgc/3652711)
+- **Texxas Bar — Domingo Top 1**, domingo 29/11, 20h–05h, Núcleo Bandeirante; Violada Original, Gala do Piseiro e DJ Eddy Viana. Couvert artístico e classificação 18+. [Sympla](https://www.sympla.com.br/evento/texxas-bar-domingo-top-1-vespera-de-feriado-violada-original-gala-do-piseiro-dj-eddy-viana/3660509)
+- **Réveillon VBQ 2027**, 31/12, 20h–04h (01/01/2027), Villa Butiquim — Samambaia Sul; DJ Santini, Luiz Marcelo e Matheus, DJ Vinny, open food e queima de fogos. [Sympla](https://www.sympla.com.br/evento/reveillon-vbq-2027/3660940)
+
+Surra de Modão (25/11), We The Funk (26/11), Rock 90 (27/11) e Chrigor (29/11) já existiam em seeds anteriores; foram revalidados e não duplicados. Foram registrados oito novos pares de fonte/verificação para páginas oficiais já abertas, além de um registro baseline para a pendência abaixo.
+
+### Candidatos adicionados em draft
+- **Saguari Gastro House — Samambaia:** site oficial confirma QS 310, Conjunto 5, Lote 7, telefone, horários, cardápio, coquetelaria e estrutura para eventos. [Site oficial](https://www.saguarigastrohouse.com.br/)
+- **EXTERNA — Asa Sul:** Sympla identifica o local e o produtor no Centro Comercial Amazonas; endereço completo SCS Q.5 Bloco B Lote 74 é corroborado por diretórios públicos. [Evento oficial](https://www.sympla.com.br/evento/lgc/3652711)
+
+O seed de candidatos passa a conter **13 perfis em draft**. Nenhum perfil foi inserido diretamente em establishments.
+
+### Pendências de evento
+- **Sábado Mágico — 28/11, Contexto:** cabeçalho e campo Data/Horário da Sympla indicam 11h, mas a descrição diz que a programação começa às 12h. Fonte registrada como baseline com conflito; evento não incluído no seed até conciliação. [Sympla](https://www.sympla.com.br/evento/sabado-magico-28-11-varanda-contexto-bar/3626211)
+- Paparico / Anexo BZ e Beleléu no Lago / Estação Beira Lago continuam pendentes por erro 404 na abertura direta das páginas oficiais.
+- Inauguração Complexo do Povo permanece pendente por divergência entre Águas Lindas/GO e Brasília/DF.
+- Rota do Piseiro continua sem flyer atual que confirme vínculo com Bar LG; Galpão dos Brutos permanece sem programação atual confirmada.
+
+### Supabase, GitHub e publicação
+- events contém 49 registros: 45 expired, 3 draft e 1 pending_review; **zero eventos futuros com status published** e um draft futuro. Os cinco eventos novos estão somente no seed da PR.
+- events-2026-11-20.ts passa a conter **28 objetos**; places-2026-11-20.ts, **13 candidatos**.
+- PR #163 permanece em draft: https://github.com/leonardodutrards-del/noite-df/pull/163
+- CI #686 e Preview Vercel estavam aprovados/READY no head anterior 9d598748; os novos arquivos e testes desta atualização precisam de nova execução de CI e novo Preview.
+- Nenhum merge ou deploy de produção foi feito. Nenhum conteúdo foi publicado em Instagram/feed/Stories e nenhum estabelecimento foi contatado.

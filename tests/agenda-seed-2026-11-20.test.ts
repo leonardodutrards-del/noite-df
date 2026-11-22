@@ -10,8 +10,8 @@ afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
   it('registra 23 eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(23);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(23);
+    expect(confirmedEventsNovember20).toHaveLength(28);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(28);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -192,5 +192,39 @@ describe('Agenda diária 20/11/2026', () => {
     expect(sextanejada?.description).toContain('Violada Original às 20h30');
     expect(sextanejada?.description).toContain('Henrique & Ruan às 23h');
     expect(sextanejada?.source?.verifiedAt).toBe('2026-11-20');
+
+    const forroVaranda = agenda.find((event) => event.id === 'forro-na-varanda-contexto-2026-11-24');
+    expect(forroVaranda?.startsAt).toBe('2026-11-24T18:00:00-03:00');
+    expect(forroVaranda?.endsAt).toBe('2026-11-25T01:00:00-03:00');
+    expect(forroVaranda?.place).toBe('Contexto Bar');
+    expect(forroVaranda?.source?.url).toContain('3625162');
+    expect(forroVaranda?.source?.verifiedAt).toBe('2026-11-22');
+
+    const deuMoLove27 = agenda.find((event) => event.id === 'deu-mo-love-contexto-2026-11-27');
+    expect(deuMoLove27?.startsAt).toBe('2026-11-27T18:00:00-03:00');
+    expect(deuMoLove27?.endsAt).toBe('2026-11-28T04:00:00-03:00');
+    expect(deuMoLove27?.description).toContain('Doze Por Oito');
+    expect(deuMoLove27?.source?.url).toContain('3628685');
+
+    const bailao = agenda.find((event) => event.id === 'bailao-2000-externa-2026-11-27');
+    expect(bailao?.startsAt).toBe('2026-11-27T22:00:00-03:00');
+    expect(bailao?.endsAt).toBe('2026-11-28T05:00:00-03:00');
+    expect(bailao?.place).toBe('EXTERNA');
+    expect(bailao?.description).toContain('LXKS');
+    expect(bailao?.source?.url).toContain('3652711');
+
+    const texxasDomingo29 = agenda.find((event) => event.id === 'texxas-bar-domingo-top1-vespera-feriado-2026-11-29');
+    expect(texxasDomingo29?.startsAt).toBe('2026-11-29T20:00:00-03:00');
+    expect(texxasDomingo29?.endsAt).toBe('2026-11-30T05:00:00-03:00');
+    expect(texxasDomingo29?.place).toBe('Texxas Bar');
+    expect(texxasDomingo29?.description).toContain('Gala do Piseiro');
+    expect(texxasDomingo29?.source?.url).toContain('3660509');
+
+    const reveillonVbq = agenda.find((event) => event.id === 'reveillon-vbq-2027-2026-12-31');
+    expect(reveillonVbq?.startsAt).toBe('2026-12-31T20:00:00-03:00');
+    expect(reveillonVbq?.endsAt).toBe('2027-01-01T04:00:00-03:00');
+    expect(reveillonVbq?.place).toBe('Villa Butiquim — Samambaia Sul');
+    expect(reveillonVbq?.description).toContain('Luiz Marcelo e Matheus');
+    expect(reveillonVbq?.source?.url).toContain('3660940');
   });
 });
