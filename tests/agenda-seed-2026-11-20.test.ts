@@ -9,9 +9,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
-  it('registra 23 eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(28);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(28);
+  it('registra 30 eventos confirmados em fontes oficiais', () => {
+    expect(confirmedEventsNovember20).toHaveLength(30);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(30);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -226,5 +226,18 @@ describe('Agenda diária 20/11/2026', () => {
     expect(reveillonVbq?.place).toBe('Villa Butiquim — Samambaia Sul');
     expect(reveillonVbq?.description).toContain('Luiz Marcelo e Matheus');
     expect(reveillonVbq?.source?.url).toContain('3660940');
+    
+    const biuAdega = agenda.find((event) => event.id === 'biu-do-piseiro-adega-dos-amigos-2026-11-28');
+    expect(biuAdega?.startsAt).toBe('2026-11-28T20:00:00-03:00');
+    expect(biuAdega?.endsAt).toBe('2026-11-29T04:00:00-03:00');
+    expect(biuAdega?.place).toBe('Arena Adega dos Amigos');
+    expect(biuAdega?.source?.url).toContain('3646093');
+
+    const voaFestival = agenda.find((event) => event.id === 'voa-festival-caixa-cultural-2026-11-27');
+    expect(voaFestival?.startsAt).toBe('2026-11-27T19:00:00-03:00');
+    expect(voaFestival?.endsAt).toBe('2026-11-29T23:59:00-03:00');
+    expect(voaFestival?.place).toBe('CAIXA Cultural Brasília — área externa/estacionamento');
+    expect(voaFestival?.description).toContain('Duda Beat');
+    expect(voaFestival?.source?.url).toContain('3635345');
   });
 });
