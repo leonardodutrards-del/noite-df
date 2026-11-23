@@ -525,4 +525,22 @@ export const confirmedEventsNovember20: EventItem[] = [
 
 
 
+
+  {
+    id: 'tchau-e-benca-complexo-fora-do-eixo-2026-11-27',
+    title: 'Tchau e Bença',
+    place: 'Complexo Fora do Eixo — SAAN Quadra 1, 700',
+    region: 'SAAN',
+    dateLabel: 'Sexta, 27/11/2026 · 21h–05h (28/11)',
+    category: 'Pagode / Funk',
+    description: 'Noite de pagode e funk com Leo Gomes, Surra de Pagode, Kaio Vinnicius, Costa, PH e Kaca. A página oficial Sympla informa abertura às 21h e local no Complexo Fora do Eixo, SAAN Quadra 1, 700.',
+    startsAt: '2026-11-27T21:00:00-03:00',
+    endsAt: '2026-11-28T05:00:00-03:00',
+    expiresAt: '2026-11-28T05:00:00-03:00',
+    admissionNote: 'Evento 18+. Valores dos ingressos não exibidos no conteúdo indexado da página oficial.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource23('https://www.sympla.com.br/evento/tchau-e-benca-27-de-novembro/3663081'),
+  },
+
 ];
