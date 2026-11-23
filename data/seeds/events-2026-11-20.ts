@@ -20,6 +20,13 @@ const symplaSource22 = (url: string) => ({
   verifiedAt: '2026-11-22',
 });
 
+const symplaSource23 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-23',
+});
+
 
 export const confirmedEventsNovember20: EventItem[] = [
   {
@@ -513,6 +520,24 @@ export const confirmedEventsNovember20: EventItem[] = [
     sourceStatus: 'manual',
     publicationStatus: 'published',
     source: symplaSource22('https://www.sympla.com.br/evento/voa-festival-4-edicao/3635345'),
+  },
+
+
+  {
+    id: 'festa-tamborzão-orla-clube-engenharia-2026-11-28',
+    title: 'Festa Tamborzão — FP do Trem Bala + DJ Zullu + Noobreak',
+    place: 'Orla do Clube de Engenharia — SCES Trecho 1, Lote 7 (abaixo do Pier 21)',
+    region: 'Setor de Clubes Sul',
+    dateLabel: 'Sábado, 28/11/2026 · 20h–04h (29/11)',
+    category: 'Funk / Pagode',
+    description: 'Edição da Tamborzão na Orla do Clube de Engenharia, com FP do Trem Bala, DJ Zullu e Noobreak. A página oficial destaca a mistura de pagode e funk e confirma o endereço SCES Trecho 1, Lote 7, abaixo do Pier 21.',
+    startsAt: '2026-11-28T20:00:00-03:00',
+    endsAt: '2026-11-29T04:00:00-03:00',
+    expiresAt: '2026-11-29T04:00:00-03:00',
+    admissionNote: 'Evento 18+; couvert artístico cobrado para convites VIP. Valor dos ingressos não detalhado no conteúdo oficial acessível.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource23('https://www.sympla.com.br/evento/lgc/3636339'),
   },
 
 ];
