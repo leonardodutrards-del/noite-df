@@ -43,6 +43,13 @@ const symplaSource21 = (url: string) => ({
   verifiedAt: '2026-11-21',
 });
 
+const symplaSource23 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-23',
+});
+
 const shotgunSource = (url: string) => ({
   kind: 'official' as const,
   label: 'Shotgun — página oficial do evento ou agenda do estabelecimento',
@@ -280,14 +287,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'Setor de Clubes Sul',
     dateLabel: 'Quarta-feira, 25/11/2026 · 18h–02h',
     category: 'Sertanejo raiz / Modão',
-    description: 'Noite de sertanejo raiz e modão com Marlon, Melão e Júnior Ferreira; convidados A Sertanejada e Dalmi. A promoção de dobro no cardápio é anunciada das 18h às 21h.',
+    description: 'Noite de sertanejo raiz e modão com Marlon, Melão e Júnior Ferreira convidando Juliana Fer. A promoção de dobro no cardápio é anunciada das 18h às 21h.',
     startsAt: '2026-11-25T18:00:00-03:00',
     endsAt: '2026-11-26T02:00:00-03:00',
     expiresAt: '2026-11-26T02:00:00-03:00',
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/lgc/3626412'),
+    source: symplaSource23('https://www.sympla.com.br/evento/lgc/3626412'),
   },
   {
     id: 'we-the-funk-contexto-2026-11-26',
