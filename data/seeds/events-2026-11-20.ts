@@ -196,8 +196,8 @@ export const confirmedEventsNovember20: EventItem[] = [
   {
     id: 'pagode-do-beli-orla-clube-2026-11-21',
     title: 'DVD Pagode do Béli — FLA x PAL',
-    place: 'Orla do Clube de Engenharia — Pier 21',
-    region: 'Lago Sul',
+    place: 'Orla do Clube de Engenharia — SCES Trecho 1, Lote 7 (abaixo do Pier 21)',
+    region: 'Setor de Clubes Sul',
     dateLabel: 'Sábado, 21/11/2026 · 16h–02h (22/11)',
     category: 'Samba / Pagode / Transmissão esportiva',
     description: 'Gravação do audiovisual Pagode do Béli, com transmissão de Palmeiras x Flamengo, DJs Vinny, Barjud e Aragon e participações especiais.',
@@ -291,19 +291,19 @@ export const confirmedEventsNovember20: EventItem[] = [
   },
   {
     id: 'tamborzao-orla-clube-engenharia-2026-11-28',
-    title: 'Tamborzão — FP do Trem Bala + DJ Zullu + Noobreak',
+    title: 'Festa Tamborzão — FP do Trem Bala + DJ Zullu + Noobreak',
     place: 'Orla do Clube de Engenharia — Pier 21',
     region: 'Lago Sul',
     dateLabel: 'Sábado, 28/11/2026 · 20h–04h (29/11)',
     category: 'Pagode / Funk',
-    description: 'Edição Tamborzão na Orla do Clube de Engenharia, com FP do Trem Bala, DJ Zullu e Noobreak.',
+    description: 'Edição da Tamborzão na Orla do Clube de Engenharia, com FP do Trem Bala, DJ Zullu e Noobreak. A página oficial confirma o endereço SCES Trecho 1, Lote 7, abaixo do Pier 21, e informa a mistura de pagode e funk.',
     startsAt: '2026-11-28T20:00:00-03:00',
     endsAt: '2026-11-29T04:00:00-03:00',
     expiresAt: '2026-11-29T04:00:00-03:00',
     admissionNote: 'Couvert artístico para convites VIP; valor não detalhado no texto consultado. Evento 18+.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource21('https://www.sympla.com.br/evento/fp-do-trem-bala-dj-zullu-noobreak-orla-do-pier-21-sabado-28-11/3653788'),
+    source: symplaSource23('https://www.sympla.com.br/evento/lgc/3636339'),
   },
 
 
@@ -523,21 +523,6 @@ export const confirmedEventsNovember20: EventItem[] = [
   },
 
 
-  {
-    id: 'festa-tamborzão-orla-clube-engenharia-2026-11-28',
-    title: 'Festa Tamborzão — FP do Trem Bala + DJ Zullu + Noobreak',
-    place: 'Orla do Clube de Engenharia — SCES Trecho 1, Lote 7 (abaixo do Pier 21)',
-    region: 'Setor de Clubes Sul',
-    dateLabel: 'Sábado, 28/11/2026 · 20h–04h (29/11)',
-    category: 'Funk / Pagode',
-    description: 'Edição da Tamborzão na Orla do Clube de Engenharia, com FP do Trem Bala, DJ Zullu e Noobreak. A página oficial destaca a mistura de pagode e funk e confirma o endereço SCES Trecho 1, Lote 7, abaixo do Pier 21.',
-    startsAt: '2026-11-28T20:00:00-03:00',
-    endsAt: '2026-11-29T04:00:00-03:00',
-    expiresAt: '2026-11-29T04:00:00-03:00',
-    admissionNote: 'Evento 18+; couvert artístico cobrado para convites VIP. Valor dos ingressos não detalhado no conteúdo oficial acessível.',
-    sourceStatus: 'manual',
-    publicationStatus: 'published',
-    source: symplaSource23('https://www.sympla.com.br/evento/lgc/3636339'),
-  },
+
 
 ];
