@@ -401,4 +401,38 @@ export const additionalPlacesNovember20: Establishment[] = [
     publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-22' },
   },
 
+
+  {
+    id: 'parada-eixo-cozinha-e-bar',
+    name: 'Parada Eixo Cozinha e Bar',
+    region: 'Cidade Ocidental · Entorno',
+    type: 'Bar',
+    description: 'Bar e restaurante no Ocidental Park, com pratos executivos, espetos, pizzas, porções e bebidas. A página comercial vinculada ao estabelecimento confirma nome, localização e telefone; o endereço completo é corroborado por mapa e diretórios locais. Perfil mantido em rascunho para revisão editorial.',
+    address: 'Rua Eixo II, Quadra 12, Lote 22 — Ocidental Park, Cidade Ocidental/GO, 72883-128.',
+    vibe: ['gastronomia', 'petiscos', 'espetos'],
+    music: [],
+    audience: [],
+    instagram: 'https://www.instagram.com/paradaeixocozinhaebar/',
+    businessContact: {
+      phone: '(61) 98418-4970',
+      sourceUrl: 'https://paradaeixocozinhaebar.iloog.com.br/loja',
+      checkedAt: '2026-11-23',
+    },
+    mapsQuery: 'Parada Eixo Cozinha e Bar, Rua Eixo II, Quadra 12, Lote 22, Ocidental Park, Cidade Ocidental, GO',
+    source: {
+      kind: 'official',
+      label: 'Página comercial do próprio estabelecimento (Iloog) — identidade, localização, telefone e Instagram; endereço completo corroborado por mapa e diretórios locais',
+      url: 'https://paradaeixocozinhaebar.iloog.com.br/loja',
+      verifiedAt: '2026-11-23',
+    },
+    verified: false,
+    publicationStatus: 'draft',
+    ownerManaged: false,
+    crowdStatus: 'a confirmar',
+    weeklySchedule: [],
+    lastUpdated: '2026-11-23',
+    publicRatings: [],
+    publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-23' },
+  },
+
 ];
