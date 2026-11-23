@@ -10,8 +10,8 @@ afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
   it('registra 30 eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(31);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(31);
+    expect(confirmedEventsNovember20).toHaveLength(30);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(30);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
@@ -144,8 +144,11 @@ describe('Agenda diária 20/11/2026', () => {
     const tamborzao = agenda.find((event) => event.id === 'tamborzao-orla-clube-engenharia-2026-11-28');
     expect(tamborzao?.startsAt).toBe('2026-11-28T20:00:00-03:00');
     expect(tamborzao?.endsAt).toBe('2026-11-29T04:00:00-03:00');
-    expect(tamborzao?.place).toBe('Orla do Clube de Engenharia — Pier 21');
-    expect(tamborzao?.source?.url).toContain('3653788');
+    expect(tamborzao?.place).toContain('SCES Trecho 1, Lote 7');
+    expect(tamborzao?.region).toBe('Setor de Clubes Sul');
+    expect(tamborzao?.description).toContain('DJ Zullu');
+    expect(tamborzao?.source?.verifiedAt).toBe('2026-11-23');
+    expect(tamborzao?.source?.url).toContain('3636339');
 
 
     const reveillonSamamBar = agenda.find((event) => event.id === 'reveillon-samambar-2027-2026-12-31');
@@ -240,12 +243,5 @@ describe('Agenda diária 20/11/2026', () => {
     expect(voaFestival?.description).toContain('Duda Beat');
     expect(voaFestival?.source?.url).toContain('3635345');
 
-    const tamborzao = agenda.find((event) => event.id === 'festa-tamborzão-orla-clube-engenharia-2026-11-28');
-    expect(tamborzao?.startsAt).toBe('2026-11-28T20:00:00-03:00');
-    expect(tamborzao?.endsAt).toBe('2026-11-29T04:00:00-03:00');
-    expect(tamborzao?.place).toContain('SCES Trecho 1, Lote 7');
-    expect(tamborzao?.description).toContain('DJ Zullu');
-    expect(tamborzao?.source?.verifiedAt).toBe('2026-11-23');
-    expect(tamborzao?.source?.url).toContain('3636339');
   });
 });
