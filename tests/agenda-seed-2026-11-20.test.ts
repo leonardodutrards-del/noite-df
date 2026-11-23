@@ -10,15 +10,15 @@ afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 20/11/2026', () => {
   it('registra 30 eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(30);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(30);
+    expect(confirmedEventsNovember20).toHaveLength(31);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(31);
 
     for (const event of confirmedEventsNovember20) {
       expect(event.startsAt).toBeTruthy();
       expect(event.endsAt).toBeTruthy();
       expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
-      expect(['2026-11-20', '2026-11-21', '2026-11-22']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23']).toContain(event.source?.verifiedAt);
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.publicationStatus).toBe('published');
     }
@@ -239,5 +239,13 @@ describe('Agenda diária 20/11/2026', () => {
     expect(voaFestival?.place).toBe('CAIXA Cultural Brasília — área externa/estacionamento');
     expect(voaFestival?.description).toContain('Duda Beat');
     expect(voaFestival?.source?.url).toContain('3635345');
+
+    const tamborzao = agenda.find((event) => event.id === 'festa-tamborzão-orla-clube-engenharia-2026-11-28');
+    expect(tamborzao?.startsAt).toBe('2026-11-28T20:00:00-03:00');
+    expect(tamborzao?.endsAt).toBe('2026-11-29T04:00:00-03:00');
+    expect(tamborzao?.place).toContain('SCES Trecho 1, Lote 7');
+    expect(tamborzao?.description).toContain('DJ Zullu');
+    expect(tamborzao?.source?.verifiedAt).toBe('2026-11-23');
+    expect(tamborzao?.source?.url).toContain('3636339');
   });
 });
