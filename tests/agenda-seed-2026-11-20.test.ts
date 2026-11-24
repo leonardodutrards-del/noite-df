@@ -8,17 +8,22 @@ vi.mock('@/lib/supabase-admin', () => ({
 
 afterEach(() => vi.useRealTimers());
 
-describe('Agenda diária 20/11/2026', () => {
-  it('registra 30 eventos confirmados em fontes oficiais', () => {
-    expect(confirmedEventsNovember20).toHaveLength(31);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(31);
+describe('Agenda diária 24/11/2026', () => {
+  it('registra 35 eventos confirmados e um evento pendente de revisão', () => {
+    expect(confirmedEventsNovember20).toHaveLength(36);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(36);
 
-    for (const event of confirmedEventsNovember20) {
+    const publishedEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'published');
+    const pendingEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'pending_review');
+    expect(publishedEvents).toHaveLength(35);
+    expect(pendingEvents.map((event) => event.id)).toEqual(['tchau-e-benca-complexo-fora-do-eixo-2026-11-27']);
+
+    for (const event of publishedEvents) {
       expect(event.startsAt).toBeTruthy();
       expect(event.endsAt).toBeTruthy();
       expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
-      expect(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23', '2026-11-24']).toContain(event.source?.verifiedAt);
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.publicationStatus).toBe('published');
     }
@@ -243,14 +248,41 @@ describe('Agenda diária 20/11/2026', () => {
     expect(voaFestival?.description).toContain('Duda Beat');
     expect(voaFestival?.source?.url).toContain('3635345');
 
-    const tchauBenca = agenda.find((event) => event.id === 'tchau-e-benca-complexo-fora-do-eixo-2026-11-27');
-    expect(tchauBenca?.startsAt).toBe('2026-11-27T21:00:00-03:00');
-    expect(tchauBenca?.endsAt).toBe('2026-11-28T05:00:00-03:00');
-    expect(tchauBenca?.place).toContain('Complexo Fora do Eixo');
-    expect(tchauBenca?.description).toContain('Leo Gomes');
-    expect(tchauBenca?.description).toContain('Surra de Pagode');
-    expect(tchauBenca?.source?.verifiedAt).toBe('2026-11-23');
-    expect(tchauBenca?.source?.url).toContain('3663081');
+    const tchauPending = confirmedEventsNovember20.find((event) => event.id === 'tchau-e-benca-complexo-fora-do-eixo-2026-11-27');
+    expect(tchauPending?.publicationStatus).toBe('pending_review');
+    expect(tchauPending?.description).toContain('Sexta dos Cria');
+    expect(agenda.some((event) => event.id === 'tchau-e-benca-complexo-fora-do-eixo-2026-11-27')).toBe(false);
+
+    const amorDeQuinta = agenda.find((event) => event.id === 'amor-de-quinta-oscarito-2026-11-26');
+    expect(amorDeQuinta?.startsAt).toBe('2026-11-26T19:00:00-03:00');
+    expect(amorDeQuinta?.endsAt).toBe('2026-11-27T02:00:00-03:00');
+    expect(amorDeQuinta?.place).toBe('Oscarito Brasília');
+    expect(amorDeQuinta?.source?.url).toContain('/produtor/oscaritobrasilia');
+
+    const sextanejada27 = agenda.find((event) => event.id === 'sextanejada-oscarito-2026-11-27');
+    expect(sextanejada27?.startsAt).toBe('2026-11-27T19:00:00-03:00');
+    expect(sextanejada27?.endsAt).toBe('2026-11-28T02:00:00-03:00');
+    expect(sextanejada27?.place).toBe('Oscarito Brasília');
+    expect(sextanejada27?.source?.url).toContain('3664195');
+
+    const conexaoWellness = agenda.find((event) => event.id === 'conexao-wellness-oscarito-2026-11-28');
+    expect(conexaoWellness?.startsAt).toBe('2026-11-28T08:00:00-03:00');
+    expect(conexaoWellness?.endsAt).toBe('2026-11-28T12:00:00-03:00');
+    expect(conexaoWellness?.description).toContain('Clínica Elementar');
+    expect(conexaoWellness?.source?.url).toContain('3650907');
+
+    const ensaiosVerao = agenda.find((event) => event.id === 'ensaios-de-verao-oscarito-2026-11-29');
+    expect(ensaiosVerao?.startsAt).toBe('2026-11-29T16:00:00-03:00');
+    expect(ensaiosVerao?.endsAt).toBe('2026-11-30T01:00:00-03:00');
+    expect(ensaiosVerao?.place).toBe('Oscarito Brasília');
+    expect(ensaiosVerao?.source?.url).toContain('3664224');
+
+    const molhadera29 = agenda.find((event) => event.id === 'molhadera-complexo-2026-11-29');
+    expect(molhadera29?.startsAt).toBe('2026-11-29T20:00:00-03:00');
+    expect(molhadera29?.endsAt).toBe('2026-11-30T04:00:00-03:00');
+    expect(molhadera29?.place).toBe('Complexo Fora do Eixo');
+    expect(molhadera29?.description).toContain('Sanchez');
+    expect(molhadera29?.source?.url).toContain('3663082');
 
   });
 });
