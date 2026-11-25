@@ -34,6 +34,13 @@ const symplaSource24 = (url: string) => ({
   verifiedAt: '2026-11-24',
 });
 
+const symplaSource25 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-25',
+});
+
 const symplaProducerSource24 = (url: string) => ({
   kind: 'official' as const,
   label: 'Sympla — agenda oficial do produtor',
@@ -499,7 +506,7 @@ export const confirmedEventsNovember20: EventItem[] = [
     admissionNote: 'Pista por ordem de chegada; área VIP por reserva via WhatsApp. Open food incluído; bebidas não incluídas.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource22('https://www.sympla.com.br/evento/reveillon-vbq-2027/3660940'),
+    source: symplaSource25('https://www.sympla.com.br/evento/reveillon-vbq-2027/3660940'),
   },
 
 
@@ -638,6 +645,24 @@ export const confirmedEventsNovember20: EventItem[] = [
     sourceStatus: 'manual',
     publicationStatus: 'published',
     source: symplaSource24('https://www.sympla.com.br/evento/molhadera-29-de-novembro/3663082'),
+  },
+
+
+  {
+    id: 'sabado-final-libertadores-oscarito-2026-11-28',
+    title: 'Sábadô + Final da Libertadores no Oscarito',
+    place: 'Oscarito Brasília',
+    region: 'SIG',
+    dateLabel: 'Sábado, 28/11/2026 · 16h–02h (29/11)',
+    category: 'Samba / Sertanejo / Música ao vivo / Transmissão esportiva',
+    description: 'Abertura dos portões às 16h, transmissão ao vivo de Palmeiras x Estudiantes às 17h e programação com DJ Primo, Boteco do Clima, Henrique & Ruan e Banda Dexcomplica. Endereço informado: SIG, Quadra 01, Lotes 985.',
+    startsAt: '2026-11-28T16:00:00-03:00',
+    endsAt: '2026-11-29T02:00:00-03:00',
+    expiresAt: '2026-11-29T02:00:00-03:00',
+    admissionNote: 'Taxa de conveniência antecipada de R$ 20 para entrada até 21h; após 21h, complemento na bilheteria conforme ingresso vigente. Evento 18+.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource25('https://www.sympla.com.br/evento/sabado-final-da-libertadores-no-oscarito/3664203'),
   },
 
 ];

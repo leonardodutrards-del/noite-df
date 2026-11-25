@@ -8,14 +8,14 @@ vi.mock('@/lib/supabase-admin', () => ({
 
 afterEach(() => vi.useRealTimers());
 
-describe('Agenda diária 24/11/2026', () => {
-  it('registra 35 eventos confirmados e um evento pendente de revisão', () => {
-    expect(confirmedEventsNovember20).toHaveLength(36);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(36);
+describe('Agenda diária 25/11/2026', () => {
+  it('registra 36 eventos confirmados e um evento pendente de revisão', () => {
+    expect(confirmedEventsNovember20).toHaveLength(37);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(37);
 
     const publishedEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'published');
     const pendingEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'pending_review');
-    expect(publishedEvents).toHaveLength(35);
+    expect(publishedEvents).toHaveLength(36);
     expect(pendingEvents.map((event) => event.id)).toEqual(['tchau-e-benca-complexo-fora-do-eixo-2026-11-27']);
 
     for (const event of publishedEvents) {
@@ -23,7 +23,7 @@ describe('Agenda diária 24/11/2026', () => {
       expect(event.endsAt).toBeTruthy();
       expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
-      expect(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23', '2026-11-24']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23', '2026-11-24', '2026-11-25']).toContain(event.source?.verifiedAt);
       expect(event.source?.url).toMatch(/^https:\/\//);
       expect(event.publicationStatus).toBe('published');
     }
@@ -234,6 +234,7 @@ describe('Agenda diária 24/11/2026', () => {
     expect(reveillonVbq?.place).toBe('Villa Butiquim — Samambaia Sul');
     expect(reveillonVbq?.description).toContain('Luiz Marcelo e Matheus');
     expect(reveillonVbq?.source?.url).toContain('3660940');
+    expect(reveillonVbq?.source?.verifiedAt).toBe('2026-11-25');
     
     const biuAdega = agenda.find((event) => event.id === 'biu-do-piseiro-adega-dos-amigos-2026-11-28');
     expect(biuAdega?.startsAt).toBe('2026-11-28T20:00:00-03:00');
@@ -276,6 +277,13 @@ describe('Agenda diária 24/11/2026', () => {
     expect(ensaiosVerao?.endsAt).toBe('2026-11-30T01:00:00-03:00');
     expect(ensaiosVerao?.place).toBe('Oscarito Brasília');
     expect(ensaiosVerao?.source?.url).toContain('3664224');
+
+    const sabadoLibertadores = agenda.find((event) => event.id === 'sabado-final-libertadores-oscarito-2026-11-28');
+    expect(sabadoLibertadores?.startsAt).toBe('2026-11-28T16:00:00-03:00');
+    expect(sabadoLibertadores?.endsAt).toBe('2026-11-29T02:00:00-03:00');
+    expect(sabadoLibertadores?.place).toBe('Oscarito Brasília');
+    expect(sabadoLibertadores?.description).toContain('Palmeiras x Estudiantes');
+    expect(sabadoLibertadores?.source?.url).toContain('3664203');
 
     const molhadera29 = agenda.find((event) => event.id === 'molhadera-complexo-2026-11-29');
     expect(molhadera29?.startsAt).toBe('2026-11-29T20:00:00-03:00');
