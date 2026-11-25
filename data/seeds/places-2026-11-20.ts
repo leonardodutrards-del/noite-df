@@ -375,7 +375,6 @@ export const additionalPlacesNovember20: Establishment[] = [
     publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-22' },
   },
   {
-      {
     id: 'refugio-cozinha-e-bar-samambaia',
     name: 'Refúgio Cozinha e Bar',
     region: 'Samambaia',
@@ -408,7 +407,8 @@ export const additionalPlacesNovember20: Establishment[] = [
     publicRatings: [],
     publicRatingSummary: { sourceCount: 0, calculatedAt: '2026-11-25' },
   },
-id: 'externa-club-asa-sul',
+  {
+    id: 'externa-club-asa-sul',
     name: 'EXTERNA',
     region: 'Asa Sul',
     type: 'Boate',
