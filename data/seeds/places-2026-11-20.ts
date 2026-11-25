@@ -378,7 +378,7 @@ export const additionalPlacesNovember20: Establishment[] = [
     id: 'refugio-cozinha-e-bar-samambaia',
     name: 'Refúgio Cozinha e Bar',
     region: 'Samambaia',
-    type: 'Bar e restaurante',
+    type: 'Gastrobar',
     description: 'Bar temático com coquetelaria, petiscos, karaokê e música nacional, rock e flashback. A página oficial confirma a proposta da casa e sua localização na QN 508, em Samambaia Sul.',
     address: 'QN 508, Samambaia Sul, Brasília/DF, 72312-200.',
     vibe: ['temático', 'karaokê', 'coquetelaria'],
