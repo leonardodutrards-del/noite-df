@@ -21,7 +21,7 @@ describe('Agenda diária 16/11/2026–16/01/2027', () => {
       if (event.endsAt) expect(event.expiresAt).toBe(event.endsAt);
       expect(event.source?.kind).toBe('official');
       expect(event.source?.url).toMatch(/^https:\/\//);
-      expect(['2026-11-15', '2026-11-16', '2026-11-17', '2026-11-19']).toContain(event.source?.verifiedAt);
+      expect(['2026-11-15', '2026-11-16', '2026-11-17', '2026-11-19', '2026-11-20', '2026-11-21', '2026-11-23']).toContain(event.source?.verifiedAt);
       expect(new Date(event.startsAt!).getTime()).toBeGreaterThanOrEqual(new Date('2026-11-16T00:00:00-03:00').getTime());
       expect(event.publicationStatus).toBe('published');
     }
@@ -164,6 +164,22 @@ describe('Agenda diária 16/11/2026–16/01/2027', () => {
     expect(molhadera?.description).toContain('Matteo');
     expect(molhadera?.description).not.toContain('Pagode do Edu');
     expect(molhadera?.source?.verifiedAt).toBe('2026-11-19');
+  });
+
+
+  it('usa o line-up atualizado da página oficial para Surra de Modão em 25/11', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-23T08:00:00-03:00'));
+
+    const agenda = await getPublicAgenda();
+    const surra = agenda.find((event) => event.id === 'surra-de-modao-contexto-2026-11-25');
+
+    expect(surra?.startsAt).toBe('2026-11-25T18:00:00-03:00');
+    expect(surra?.endsAt).toBe('2026-11-26T02:00:00-03:00');
+    expect(surra?.description).toContain('Juliana Fer');
+    expect(surra?.description).not.toContain('A Sertanejada');
+    expect(surra?.description).not.toContain('Dalmi');
+    expect(surra?.source?.verifiedAt).toBe('2026-11-23');
   });
 
 });

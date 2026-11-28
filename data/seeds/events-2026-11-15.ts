@@ -28,6 +28,28 @@ const symplaSource19 = (url: string) => ({
   verifiedAt: '2026-11-19',
 });
 
+const symplaSource20 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-20',
+});
+
+
+const symplaSource21 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-21',
+});
+
+const symplaSource23 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-23',
+});
+
 const shotgunSource = (url: string) => ({
   kind: 'official' as const,
   label: 'Shotgun — página oficial do evento ou agenda do estabelecimento',
@@ -40,6 +62,13 @@ const ticianaSource = (url: string) => ({
   label: 'Ticiana Werner — agenda oficial de música ao vivo',
   url,
   verifiedAt: '2026-11-15',
+});
+
+const ticianaSource20 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Ticiana Werner — agenda oficial de música ao vivo',
+  url,
+  verifiedAt: '2026-11-20',
 });
 
 export const confirmedEventsNovember15: EventItem[] = [
@@ -130,14 +159,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'Setor de Clubes Sul',
     dateLabel: 'Sexta-feira, 20/11/2026 · 18h–04h',
     category: 'Pagode / Funk',
-    description: 'Edição especial com pagode do Grupo Doze Por Oito e DJs residentes de funk na Varanda do Contexto.',
+    description: 'Edição especial com Grupo Doze Por Oito em dois blocos de pagode; DJ Costa, Artur Campos, Fiiklay B2B Gabs e Larbac na pista da Varanda do Contexto.',
     startsAt: '2026-11-20T18:00:00-03:00',
     endsAt: '2026-11-21T04:00:00-03:00',
     expiresAt: '2026-11-21T04:00:00-03:00',
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/deu-mo-love-20-11-varanda-do-contexto/3628682'),
+    source: symplaSource20('https://www.sympla.com.br/evento/deu-mo-love-20-11-varanda-do-contexto/3628682'),
   },
   {
     id: 'molhadera-complexo-2026-11-20',
@@ -185,7 +214,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'Quem estiver com camisa do Palmeiras ou Flamengo tem entrada gratuita até 16h30; demais condições e lotes na página oficial.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/bola-samba-e-feijao/3653111'),
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3653111'),
   },
   {
     id: 'te-vejo-na-praca-cpx-2026-11-21',
@@ -217,7 +246,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'Convites VIP sujeitos à cobrança de R$ 15,00 de couvert artístico na entrada.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource19('https://www.sympla.com.br/evento/lgc/3642351'),
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3642351'),
   },
   {
     id: 'inflama-complexo-2026-11-21',
@@ -258,14 +287,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'Setor de Clubes Sul',
     dateLabel: 'Quarta-feira, 25/11/2026 · 18h–02h',
     category: 'Sertanejo raiz / Modão',
-    description: 'Noite de sertanejo raiz e modão com Marlon, Melão e Júnior Ferreira; convidados A Sertanejada e Dalmi. A promoção de dobro no cardápio é anunciada das 18h às 21h.',
+    description: 'Noite de sertanejo raiz e modão com Marlon, Melão e Júnior Ferreira convidando Juliana Fer. A promoção de dobro no cardápio é anunciada das 18h às 21h.',
     startsAt: '2026-11-25T18:00:00-03:00',
     endsAt: '2026-11-26T02:00:00-03:00',
     expiresAt: '2026-11-26T02:00:00-03:00',
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource('https://www.sympla.com.br/evento/lgc/3626412'),
+    source: symplaSource23('https://www.sympla.com.br/evento/lgc/3626412'),
   },
   {
     id: 'we-the-funk-contexto-2026-11-26',
@@ -362,7 +391,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'Couvert artístico de R$ 18 por pessoa na varanda, salões do wine bar e restaurante; demais ambientes sem cobrança.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: ticianaSource('https://www.ticianawerner.com.br/musica.php'),
+    source: ticianaSource20('https://www.ticianawerner.com.br/musica.php'),
   },
   {
     id: 'ticiana-andresa-sousa-2026-11-18',
@@ -1162,14 +1191,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'SIG',
     dateLabel: 'Sexta-feira, 20/11/2026 · 19h–02h',
     category: 'Sertanejo / DJs',
-    description: 'Noite de sertanejo, sofrência e hits. O line-up oficial lista DJ MJay às 19h, 22h30 e 1h; há dois blocos intermediários sem artista identificado.',
+    description: 'Noite de sertanejo, sofrência e hits. Line-up da página oficial atualizado: DJ MJay às 19h, 22h30 e 1h; Violada Original às 20h30 e Henrique & Ruan às 23h.',
     startsAt: '2026-11-20T19:00:00-03:00',
     endsAt: '2026-11-21T02:00:00-03:00',
     expiresAt: '2026-11-21T02:00:00-03:00',
     admissionNote: 'Taxa de conveniência antecipada de R$ 20 no happy hour até 21h; após 21h, a página informa complemento da diferença do ingresso vigente.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource16('https://www.sympla.com.br/evento/sextanejada-no-oscarito/3655650'),
+    source: symplaSource20('https://www.sympla.com.br/evento/sextanejada-no-oscarito/3655650'),
   },
   {
     id: 'corona-day-oscarito-2026-11-21',
@@ -1194,14 +1223,14 @@ export const confirmedEventsNovember15: EventItem[] = [
     region: 'SIG',
     dateLabel: 'Sábado, 21/11/2026 · 18h–02h',
     category: 'Samba / Sertanejo / Música ao vivo',
-    description: 'Roda de samba, sertanejo e música ao vivo. O line-up oficial lista DJ Primo às 18h, 21h, 23h e 1h30, Boteco do Clima às 19h e Banda Dexcomplica às 23h30; um bloco intermediário está sem artista identificado.',
+    description: 'Roda de samba, sertanejo e música ao vivo. A página oficial confirma DJ Primo às 18h, 21h, 23h e 1h30; Boteco do Clima às 19h; Zé Felipe e Miguel às 21h30; e Banda Dexcomplica às 23h30.',
     startsAt: '2026-11-21T18:00:00-03:00',
     endsAt: '2026-11-22T02:00:00-03:00',
     expiresAt: '2026-11-22T02:00:00-03:00',
     admissionNote: 'Taxa de conveniência antecipada de R$ 20 no happy hour até 21h; após 21h, a página informa complemento da diferença do ingresso vigente.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource16('https://www.sympla.com.br/evento/sabado-no-oscarito/3655652'),
+    source: symplaSource21('https://www.sympla.com.br/evento/lgc/3655652'),
   },
   {
     id: 'sabado-magico-contexto-2026-11-21',
@@ -1217,7 +1246,7 @@ export const confirmedEventsNovember15: EventItem[] = [
     admissionNote: 'A página informa couvert artístico obrigatório para ingressos VIP; valor não especificado no texto consultado.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource16('https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209'),
+    source: symplaSource21('https://www.sympla.com.br/evento/sabado-magico-21-11-varanda-contexto-bar/3626209'),
   },
   {
     id: 'moleca-arena-dose-dupla-2026-11-21',

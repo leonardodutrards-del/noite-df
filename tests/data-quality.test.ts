@@ -27,6 +27,8 @@ describe('Data Quality and Truth Filters', () => {
     expect(isPlaceholder('Exemplo de evento local')).toBe(true);
     expect(isPlaceholder('Demonstração do MVP; confirmar programação oficial')).toBe(true);
     expect(isPlaceholder('Monitorar')).toBe(true);
+    expect(isPlaceholder('Evento pendente de confirmação')).toBe(true);
+    expect(isPlaceholder('produção independente')).toBe(false);
     expect(isPlaceholder('—')).toBe(true);
     expect(isPlaceholder('-')).toBe(true);
   });
