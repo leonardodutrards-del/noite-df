@@ -41,6 +41,20 @@ const symplaSource25 = (url: string) => ({
   verifiedAt: '2026-11-25',
 });
 
+const symplaSource28 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Sympla — página oficial do evento',
+  url,
+  verifiedAt: '2026-11-28',
+});
+
+const shotgunSource28 = (url: string) => ({
+  kind: 'official' as const,
+  label: 'Shotgun — página oficial de ingresso/organizador',
+  url,
+  verifiedAt: '2026-11-28',
+});
+
 const symplaProducerSource24 = (url: string) => ({
   kind: 'official' as const,
   label: 'Sympla — agenda oficial do produtor',
@@ -308,7 +322,7 @@ export const confirmedEventsNovember20: EventItem[] = [
     admissionNote: 'Feijoada R$ 59,90; segunda feijoada gratuita na compra antecipada. VIP limitado; couvert artístico obrigatório para ingressos VIP.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource21('https://www.sympla.com.br/evento/feijoada-com-amor-de-aluguel-28-11-varanda-contexto-bar/3626169'),
+    source: symplaSource28('https://www.sympla.com.br/evento/feijoada-com-amor-de-aluguel-28-11-varanda-contexto-bar/3626169'),
   },
   {
     id: 'tamborzao-orla-clube-engenharia-2026-11-28',
@@ -628,7 +642,7 @@ export const confirmedEventsNovember20: EventItem[] = [
     admissionNote: 'Taxa de conveniência antecipada de R$ 20 até 21h; após 21h, complemento na bilheteria conforme ingresso vigente.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource24('https://www.sympla.com.br/evento/ensaios-de-verao-no-oscarito-vespera-de-feriado/3664224'),
+    source: symplaSource28('https://www.sympla.com.br/evento/ensaios-de-verao-no-oscarito-vespera-de-feriado/3664224'),
   },
   {
     id: 'molhadera-complexo-2026-11-29',
@@ -662,7 +676,73 @@ export const confirmedEventsNovember20: EventItem[] = [
     admissionNote: 'Taxa de conveniência antecipada de R$ 20 para entrada até 21h; após 21h, complemento na bilheteria conforme ingresso vigente. Evento 18+.',
     sourceStatus: 'manual',
     publicationStatus: 'published',
-    source: symplaSource25('https://www.sympla.com.br/evento/sabado-final-da-libertadores-no-oscarito/3664203'),
+    source: symplaSource28('https://www.sympla.com.br/evento/sabado-final-da-libertadores-no-oscarito/3664203'),
+  },
+
+
+  {
+    id: 'grupo-acordi-infinu-2026-11-28',
+    title: 'Grupo Acordi apresenta Pelos Caminhos da América',
+    place: 'Infinu Comunidade Criativa',
+    region: 'Asa Sul',
+    dateLabel: 'Sábado, 28/11/2026 · 17h30–19h30',
+    category: 'Música latino-americana / MPB',
+    description: 'Espetáculo do Grupo Acordi em homenagem a Mercedes Sosa, Victor Jara, Violeta Parra e Milton Nascimento. Bilheteria às 17h30; show às 18h.',
+    startsAt: '2026-11-28T17:30:00-03:00',
+    endsAt: '2026-11-28T19:30:00-03:00',
+    expiresAt: '2026-11-28T19:30:00-03:00',
+    admissionNote: 'Em pé: solidário/meia R$ 30 e inteira R$ 60; sentado: solidário/meia R$ 40 e inteira R$ 80. Ingresso solidário mediante doação de 1 kg de alimento não perecível.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: shotgunSource28('https://r.shotgun.live/fr/events/grupoaacorditocamercedessosa-3'),
+  },
+  {
+    id: 'salada-sonora-ambar-2026-11-28',
+    title: 'Salada Sonora × Trisal Batidão com Bya Alves',
+    place: 'Ām.bar',
+    region: 'Asa Sul',
+    dateLabel: 'Sábado, 28/11/2026 · 19h–03h (29/11)',
+    category: 'Piseiro / Batidão / Música brasileira',
+    description: 'Edição conjunta de Salada Sonora e Trisal Batidão no Ām.bar, com Bya Alves e DJs Tyrone e Magah.',
+    startsAt: '2026-11-28T19:00:00-03:00',
+    endsAt: '2026-11-29T03:00:00-03:00',
+    expiresAt: '2026-11-29T03:00:00-03:00',
+    admissionNote: 'Cortesia para os 200 primeiros até 21h; 1º lote R$ 20.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: shotgunSource28('https://shotgun.live/pt-pt/events/salada-sonora-x-trisal-batidao'),
+  },
+  {
+    id: 'yma-sentimental-palace-infinu-2026-11-28',
+    title: 'Motal e Infinu recebem YMA: Sentimental Palace em Brasília',
+    place: 'Infinu Comunidade Criativa',
+    region: 'Asa Sul',
+    dateLabel: 'Sábado, 28/11/2026 · 20h–23h59',
+    category: 'Indie / Pop alternativo',
+    description: 'Show de YMA (Yasmin Mamedio), com abertura da banda Portáteis. Bilheteria às 20h e shows às 21h.',
+    startsAt: '2026-11-28T20:00:00-03:00',
+    endsAt: '2026-11-28T23:59:00-03:00',
+    expiresAt: '2026-11-28T23:59:00-03:00',
+    admissionNote: 'Solidário/meia de R$ 30 a R$ 50; inteira de R$ 60 a R$ 100, conforme lote.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: shotgunSource28('https://r.shotgun.live/en/events/ymaembsb'),
+  },
+  {
+    id: 'farra-guterres-contexto-2026-11-29',
+    title: 'FARRA com Guterres',
+    place: 'Contexto Bar e Restaurante',
+    region: 'Setor de Clubes Sul',
+    dateLabel: 'Domingo, 29/11/2026 · 21h–04h (30/11)',
+    category: 'Piseiro / Funk / DJs',
+    description: 'Evento de domingo, véspera de feriado, com Guterres no piseiro e DJs de funk, na Varanda do Contexto Bar.',
+    startsAt: '2026-11-29T21:00:00-03:00',
+    endsAt: '2026-11-30T04:00:00-03:00',
+    expiresAt: '2026-11-30T04:00:00-03:00',
+    admissionNote: 'Valores e lotes não aparecem no conteúdo acessível; consultar a página oficial.',
+    sourceStatus: 'manual',
+    publicationStatus: 'published',
+    source: symplaSource28('https://www.sympla.com.br/evento/farra-com-guterres-29-11-varanda-contexto-bar/3667524'),
   },
 
 ];
