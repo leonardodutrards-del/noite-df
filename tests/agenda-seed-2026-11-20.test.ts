@@ -10,12 +10,12 @@ afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 28/11/2026', () => {
   it('registra 40 eventos confirmados e um evento pendente de revisão', () => {
-    expect(confirmedEventsNovember20).toHaveLength(41);
+    expect(confirmedEventsNovember20).toHaveLength(40);
     expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(41);
 
     const publishedEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'published');
     const pendingEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'pending_review');
-    expect(publishedEvents).toHaveLength(40);
+    expect(publishedEvents).toHaveLength(39);
     expect(pendingEvents.map((event) => event.id)).toEqual(['tchau-e-benca-complexo-fora-do-eixo-2026-11-27']);
 
     for (const event of publishedEvents) {
@@ -299,11 +299,12 @@ describe('Agenda diária 28/11/2026', () => {
     expect(grupoAcordi?.source?.url).toContain('grupoaacorditocamercedessosa-3');
     expect(grupoAcordi?.source?.verifiedAt).toBe('2026-11-28');
 
-    const saladaSonora = agenda.find((event) => event.id === 'salada-sonora-ambar-2026-11-28');
+    const saladaSonora = agenda.find((event) => event.id === 'ambar-salada-sonora-trisal-batidao-2026-11-28');
     expect(saladaSonora?.startsAt).toBe('2026-11-28T19:00:00-03:00');
     expect(saladaSonora?.endsAt).toBe('2026-11-29T03:00:00-03:00');
-    expect(saladaSonora?.place).toBe('Ām.bar');
+    expect(saladaSonora?.place).toBe('ām.bar');
     expect(saladaSonora?.source?.url).toContain('salada-sonora-x-trisal-batidao');
+    expect(agenda.some((event) => event.id === 'salada-sonora-ambar-2026-11-28')).toBe(false);
 
     const yma = agenda.find((event) => event.id === 'yma-sentimental-palace-infinu-2026-11-28');
     expect(yma?.startsAt).toBe('2026-11-28T20:00:00-03:00');
