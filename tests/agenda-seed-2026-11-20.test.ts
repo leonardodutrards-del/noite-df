@@ -11,7 +11,7 @@ afterEach(() => vi.useRealTimers());
 describe('Agenda diária 28/11/2026', () => {
   it('registra 40 eventos confirmados e um evento pendente de revisão', () => {
     expect(confirmedEventsNovember20).toHaveLength(40);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(41);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(40);
 
     const publishedEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'published');
     const pendingEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'pending_review');
