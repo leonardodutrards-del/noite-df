@@ -9,14 +9,14 @@ vi.mock('@/lib/supabase-admin', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('Agenda diária 28/11/2026', () => {
-  it('registra 40 eventos confirmados e um evento pendente de revisão', () => {
-    expect(confirmedEventsNovember20).toHaveLength(40);
-    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(40);
+  it('registra 39 eventos publicáveis e dois eventos pendentes de revisão', () => {
+    expect(confirmedEventsNovember20).toHaveLength(41);
+    expect(new Set(confirmedEventsNovember20.map((event) => event.id)).size).toBe(41);
 
     const publishedEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'published');
     const pendingEvents = confirmedEventsNovember20.filter((event) => event.publicationStatus === 'pending_review');
     expect(publishedEvents).toHaveLength(39);
-    expect(pendingEvents.map((event) => event.id)).toEqual(['tchau-e-benca-complexo-fora-do-eixo-2026-11-27']);
+    expect(pendingEvents.map((event) => event.id)).toEqual(['sabado-magico-contexto-2026-11-28', 'tchau-e-benca-complexo-fora-do-eixo-2026-11-27']);
 
     for (const event of publishedEvents) {
       expect(event.startsAt).toBeTruthy();
@@ -139,6 +139,8 @@ describe('Agenda diária 28/11/2026', () => {
     expect(sambinhaOrla?.endsAt).toBe('2026-11-28T04:00:00-03:00');
     expect(sambinhaOrla?.description).toContain('Caju Pra Baixo');
     expect(sambinhaOrla?.source?.url).toContain('3649109');
+
+    expect(agenda.some((event) => event.id === 'sabado-magico-contexto-2026-11-28')).toBe(false);
 
     const feijoadaContexto = agenda.find((event) => event.id === 'feijoada-amor-de-aluguel-contexto-2026-11-28');
     expect(feijoadaContexto?.startsAt).toBe('2026-11-28T11:00:00-03:00');
